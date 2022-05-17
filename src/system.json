@@ -3,12 +3,12 @@
 	"title": "foundryvtt-dndmashup",
 	"description": "",
 	"version": "This is auto replaced",
-	"author": "<your name>",
+	"author": "Matt DeKrey",
 	"authors": [
 		{
-			"name": "<your name>",
-			"email": "<optionally your e-mail address>",
-			"discord": "<optionally your discord username>"
+			"name": "Matt DeKrey",
+			"email": "matt.dekrey@gmail.com",
+			"discord": "DrinksDew#6095"
 		}
 	],
 	"minimumCoreVersion": "9",
