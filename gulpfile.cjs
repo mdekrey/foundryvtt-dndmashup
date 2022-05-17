@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const gulp = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
+const postcss = require('gulp-postcss');
 const path = require('node:path');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
@@ -48,7 +49,12 @@ function buildCode() {
  * Build style sheets
  */
 function buildStyles() {
-	return gulp.src(`${stylesDirectory}/${name}.${stylesExtension}`).pipe(gulp.dest(`${distDirectory}/styles`));
+	const tailwindcss = require('tailwindcss');
+
+	return gulp
+		.src(`${stylesDirectory}/${name}.${stylesExtension}`)
+		.pipe(postcss([tailwindcss('./tailwind.config.cjs'), require('autoprefixer')]))
+		.pipe(gulp.dest(`${distDirectory}/styles`));
 }
 
 /**
