@@ -1,6 +1,6 @@
-import { NpcDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
+import { MonsterDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
 import { calculateMaxHp } from './formulas';
-import { NpcDataProperties, PlayerCharacterDataProperties } from './types';
+import { MonsterDataProperties, PlayerCharacterDataProperties } from './types';
 
 export class MashupActor extends Actor {
 	/*
@@ -30,12 +30,16 @@ export class MashupActor extends Actor {
 		// all active effects and other linked objects should be loaded here
 		console.log({ type: allData._source.type, source: allData._source.data, data: allData.data });
 
-		// Make separate methods for each Actor type (character, npc, etc.) to keep
-		// things organized.
+		if (allData._source.type !== allData.type) {
+			// seriously, wtf?
+			console.error('Got two different actor types:', allData._source.type, allData.type);
+			return;
+		}
+
 		if (allData._source.type === 'pc' && allData.type === 'pc') {
 			this._prepareCharacterData(allData._source.data, allData.data);
 		}
-		if (allData._source.type === 'npc' && allData.type === 'npc') {
+		if (allData._source.type === 'monster' && allData.type === 'monster') {
 			this._prepareNpcData(allData._source.data, allData.data);
 		}
 	}
@@ -46,7 +50,7 @@ export class MashupActor extends Actor {
 		data.health.maxHp = calculateMaxHp(data);
 	}
 
-	private _prepareNpcData(source: Readonly<NpcDataSourceData>, data: NpcDataProperties) {
+	private _prepareNpcData(source: Readonly<MonsterDataSourceData>, data: MonsterDataProperties) {
 		// TODO: prepare NPC-specific data
 
 		data.health.maxHp = calculateMaxHp(data);

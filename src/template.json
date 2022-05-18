@@ -1,6 +1,6 @@
 {
 	"Actor": {
-		"types": ["pc", "npc"],
+		"types": ["pc", "monster"],
 		"templates": {
 			"base": {
 				"details": {
@@ -88,7 +88,7 @@
 					"adventuringCompany": ""
 				}
 			},
-			"npc": {
+			"monster": {
 				"details": {
 					"role": "Minion"
 				}
@@ -97,8 +97,8 @@
 		"pc": {
 			"templates": ["base", "pc"]
 		},
-		"npc": {
-			"templates": ["base", "npc"]
+		"monster": {
+			"templates": ["base", "monster"]
 		}
 	},
 	"Item": {

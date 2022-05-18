@@ -57,14 +57,14 @@ export type PcTemplateDataSourceData = {
 	};
 };
 
-export type NpcTemplateDataSourceData = {
+export type MonsterTemplateDataSourceData = {
 	details: {
 		role: string;
 	};
 };
 
 export type PlayerCharacterDataSourceData = Merge<BaseTemplateDataSourceData, PcTemplateDataSourceData>;
-export type NpcDataSourceData = Merge<BaseTemplateDataSourceData, NpcTemplateDataSourceData>;
+export type MonsterDataSourceData = Merge<BaseTemplateDataSourceData, MonsterTemplateDataSourceData>;
 
 declare global {
 	interface SourceConfig {
@@ -74,8 +74,8 @@ declare global {
 					data: PlayerCharacterDataSourceData;
 			  }
 			| {
-					type: 'npc';
-					data: NpcDataSourceData;
+					type: 'monster';
+					data: MonsterDataSourceData;
 			  };
 	}
 }

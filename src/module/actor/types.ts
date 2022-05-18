@@ -1,4 +1,4 @@
-import { BaseTemplateDataSourceData, NpcDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
+import { BaseTemplateDataSourceData, MonsterDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
 import { Ability, Defense } from 'src/types/types';
 
 export type CommonDataProperties = Merge<
@@ -28,10 +28,13 @@ export type PlayerCharacterDataProperties = Merge<
 	>
 >;
 
-export type NpcDataProperties = Merge<NpcDataSourceData, CommonDataProperties>;
+export type MonsterDataProperties = Merge<MonsterDataSourceData, CommonDataProperties>;
 
 declare global {
 	interface DataConfig {
-		Actor: { type: 'pc'; data: PlayerCharacterDataProperties } | { type: 'npc'; data: NpcDataProperties };
+		Actor:
+			| { type: 'pc'; data: PlayerCharacterDataProperties }
+			| { type: 'npc'; data: never }
+			| { type: 'monster'; data: MonsterDataProperties };
 	}
 }
