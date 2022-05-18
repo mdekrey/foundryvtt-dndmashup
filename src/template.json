@@ -1,10 +1,111 @@
 {
 	"Actor": {
-		"types": [],
-		"templates": {}
+		"types": ["pc", "npc"],
+		"templates": {
+			"base": {
+				"details": {
+					"level": 1
+				},
+				"abilityScores": {
+					"str": {
+						"base": 0
+					},
+					"con": {
+						"base": 0
+					},
+					"dex": {
+						"base": 0
+					},
+					"int": {
+						"base": 0
+					},
+					"wis": {
+						"base": 0
+					},
+					"cha": {
+						"base": 0
+					}
+				},
+				"health": {
+					"currentHp": 10,
+					"temporaryHp": 0,
+					"secondWindUsed": false,
+					"deathSavesRemaining": 3,
+					"surges": {
+						"base": 0
+					}
+				},
+
+				"actionPoints": {
+					"value": 1,
+					"usedThisEncounter": false
+				},
+
+				"magicItemUse": {
+					"currentRemaining": 1,
+					"usedThisEncounter": false
+				},
+
+				"languages": {
+					"spoken": {
+						"value": []
+					},
+					"script": {
+						"value": []
+					}
+				},
+				"senses": {
+					"vision": {
+						"value": []
+					},
+					"special": {
+						"value": []
+					},
+					"notes": ""
+				},
+				"currency": {
+					"ad": 0,
+					"pp": 0,
+					"gp": 0,
+					"sp": 0,
+					"cp": 0
+				}
+			},
+			"pc": {
+				"details": {
+					"tier": 1,
+					"exp": 0,
+					"class": "",
+					"paragon": "",
+					"epic": "",
+					"race": "",
+					"size": "Medium",
+					"age": "",
+					"pronouns": "",
+					"height": "",
+					"width": "",
+					"deity": "",
+					"adventuringCompany": ""
+				}
+			},
+			"npc": {
+				"details": {
+					"role": "Minion"
+				}
+			}
+		},
+		"pc": {
+			"templates": ["base", "pc"]
+		},
+		"npc": {
+			"templates": ["base", "npc"]
+		}
 	},
 	"Item": {
-		"types": [],
-		"templates": {}
+		"types": ["base"],
+		"templates": {},
+		"base": {
+			"templates": []
+		}
 	}
 }
