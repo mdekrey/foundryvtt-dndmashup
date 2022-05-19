@@ -9,7 +9,13 @@ export class MashupActorSheet extends ActorSheet {
 			template: `${templatePath}/actor/sheet.html`,
 			width: 780,
 			height: 600,
-			tabs: [{ navSelector: `nav[data-group='primary']`, contentSelector: 'section', initial: 'description' }],
+			tabs: [
+				{
+					navSelector: `nav[data-group='primary']`,
+					contentSelector: 'section[data-tab-section]',
+					initial: 'description',
+				},
+			],
 		});
 	}
 
