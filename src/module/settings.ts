@@ -1,4 +1,5 @@
 import { MashupActor } from './actor/mashup-actor';
+import { MashupActorSheet } from './sheets/MashupActorSheet';
 
 declare global {
 	interface DocumentClassConfig {
@@ -17,4 +18,5 @@ export function registerSettings(): void {
 	CONFIG.Actor.documentClass = MashupActor;
 
 	Actors.unregisterSheet('core', ActorSheet);
+	Actors.registerSheet('actor', MashupActorSheet, { makeDefault: true });
 }

@@ -13,7 +13,7 @@ export type BaseTemplateDataSourceData = {
 		secondWindUsed: boolean;
 		deathSavesRemaining: number;
 		surges: {
-			base: number;
+			remaining: number;
 		};
 		surgesRemaining: number;
 	};

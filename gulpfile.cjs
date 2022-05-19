@@ -53,7 +53,14 @@ function buildStyles() {
 
 	return gulp
 		.src(`${stylesDirectory}/${name}.${stylesExtension}`)
-		.pipe(postcss([tailwindcss('./tailwind.config.cjs'), require('autoprefixer')]))
+		.pipe(
+			postcss([
+				require('postcss-import'),
+				require('tailwindcss/nesting'),
+				tailwindcss('./tailwind.config.cjs'),
+				require('autoprefixer'),
+			])
+		)
 		.pipe(gulp.dest(`${distDirectory}/styles`));
 }
 
@@ -73,7 +80,16 @@ async function copyFiles() {
  */
 function watch() {
 	gulp.watch(`${sourceDirectory}/**/*.${sourceFileExtension}`, { ignoreInitial: false }, buildCode);
-	gulp.watch(`${stylesDirectory}/**/*.${stylesExtension}`, { ignoreInitial: false }, buildStyles);
+	gulp.watch(
+		[
+			`${stylesDirectory}/**/*.${stylesExtension}`,
+			`${sourceDirectory}/**/*.${sourceFileExtension}`,
+			`./tailwind.config.cjs`,
+			...staticFiles.map((file) => `${sourceDirectory}/${file}`),
+		],
+		{ ignoreInitial: false },
+		buildStyles
+	);
 	gulp.watch(
 		staticFiles.map((file) => `${sourceDirectory}/${file}`),
 		{ ignoreInitial: false },

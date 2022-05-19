@@ -9,9 +9,14 @@ export type CommonDataProperties = Merge<
 		};
 		health: {
 			maxHp: number;
+			bloodied: number;
+			surges: {
+				value: number;
+				max: number;
+			};
 		};
 		defenses: {
-			[defense in Defense]: { final: number };
+			[defense in Defense]: number;
 		};
 	}
 >;

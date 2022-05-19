@@ -31,9 +31,7 @@
 					"temporaryHp": 0,
 					"secondWindUsed": false,
 					"deathSavesRemaining": 3,
-					"surges": {
-						"base": 0
-					}
+					"surges": { "remaining": 0 }
 				},
 
 				"actionPoints": {

@@ -36,6 +36,8 @@ export class MashupActor extends Actor {
 			return;
 		}
 
+		allData.data.defenses ??= {} as typeof allData.data.defenses;
+
 		if (allData._source.type === 'pc' && allData.type === 'pc') {
 			this._prepareCharacterData(allData._source.data, allData.data);
 		}
@@ -48,12 +50,27 @@ export class MashupActor extends Actor {
 		// TODO: prepare PC-specific data
 
 		data.health.maxHp = calculateMaxHp(data);
+		data.health.bloodied = Math.floor(data.health.maxHp / 2);
+		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+		data.health.surges.max = 1;
+		data.defenses.ac = 10;
+		data.defenses.fort = 10;
+		data.defenses.refl = 10;
+		data.defenses.will = 10;
+		console.log(data);
 	}
 
 	private _prepareNpcData(source: Readonly<MonsterDataSourceData>, data: MonsterDataProperties) {
 		// TODO: prepare NPC-specific data
 
 		data.health.maxHp = calculateMaxHp(data);
+		data.health.bloodied = Math.floor(data.health.maxHp / 2);
+		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+		data.health.surges.max = 0;
+		data.defenses.ac = 10;
+		data.defenses.fort = 10;
+		data.defenses.refl = 10;
+		data.defenses.will = 10;
 	}
 
 	getRollData() {
