@@ -1,5 +1,5 @@
 import { MashupActor } from './mashup-actor';
-import { templatePath, templatePathActorParts } from '../constants';
+import { templatePathActorParts, templatePathActorSheet } from '../constants';
 
 type CharacterSheetHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 	rollData: object;
@@ -11,7 +11,6 @@ export class MashupActorSheet extends ActorSheet {
 		return mergeObject(super.defaultOptions, {
 			// CSS classes added to parent element of template
 			classes: [],
-			template: `${templatePath}/actor/sheet.html`,
 			width: 844,
 			height: 915,
 			tabs: [
@@ -25,7 +24,7 @@ export class MashupActorSheet extends ActorSheet {
 	}
 
 	override get template() {
-		return `${templatePath}/actor/${this.actor.data.type}-sheet.html`;
+		return templatePathActorSheet(this.actor.data._source.type);
 	}
 
 	override async getData() {

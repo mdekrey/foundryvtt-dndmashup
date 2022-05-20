@@ -1,7 +1,8 @@
 export const systemName = 'foundryvtt-dndmashup';
 export const rootPath = `systems/${systemName}` as const;
 export const templatePath = `systems/${systemName}/templates` as const;
-export const templatePathActorPc = `${templatePath}/actor/pc-sheet.html` as const;
+export const templatePathActorSheet = (type: SourceConfig['Actor']['type']) =>
+	`${templatePath}/actor/${type}-sheet.html` as const;
 
 export const templatePathActorParts = {
 	header: `${templatePath}/actor/parts/header.html` as const,
@@ -19,3 +20,6 @@ export const templatePathActorParts = {
 	feats: `${templatePath}/actor/parts/feats.html` as const,
 	effects: `${templatePath}/actor/parts/effects.html` as const,
 };
+
+export const templatePathItemSheet = (type: SourceConfig['Item']['type']) =>
+	`${templatePath}/item/${type}-sheet.html` as const;

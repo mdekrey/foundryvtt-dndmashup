@@ -101,9 +101,12 @@
 		}
 	},
 	"Item": {
-		"types": ["base"],
+		"types": ["class", "race"],
 		"templates": {},
-		"base": {
+		"class": {
+			"templates": []
+		},
+		"race": {
 			"templates": []
 		}
 	}

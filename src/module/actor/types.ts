@@ -1,8 +1,12 @@
-import { BaseTemplateDataSourceData, MonsterDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
+import {
+	BaseActorTemplateDataSourceData,
+	MonsterDataSourceData,
+	PlayerCharacterDataSourceData,
+} from 'src/template.types';
 import { Ability, Defense } from 'src/types/types';
 
 export type CommonDataProperties = Merge<
-	BaseTemplateDataSourceData,
+	BaseActorTemplateDataSourceData,
 	{
 		abilities: {
 			[ability in Ability]: { final: number };

@@ -1,6 +1,6 @@
 import { Ability, Currency } from './types/types';
 
-export type BaseTemplateDataSourceData = {
+export type BaseActorTemplateDataSourceData = {
 	details: {
 		level: number;
 	};
@@ -39,7 +39,7 @@ export type BaseTemplateDataSourceData = {
 	};
 };
 
-export type PcTemplateDataSourceData = {
+export type PcActorTemplateDataSourceData = {
 	details: {
 		tier: number;
 		exp: number;
@@ -57,14 +57,21 @@ export type PcTemplateDataSourceData = {
 	};
 };
 
-export type MonsterTemplateDataSourceData = {
+export type MonsterActorTemplateDataSourceData = {
 	details: {
 		role: string;
 	};
 };
 
-export type PlayerCharacterDataSourceData = Merge<BaseTemplateDataSourceData, PcTemplateDataSourceData>;
-export type MonsterDataSourceData = Merge<BaseTemplateDataSourceData, MonsterTemplateDataSourceData>;
+export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
+export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
+
+export type BaseItemTemplateDataSourceData = {
+	/* TODO */
+};
+
+export type ClassDataSourceData = BaseItemTemplateDataSourceData;
+export type RaceDataSourceData = BaseItemTemplateDataSourceData;
 
 declare global {
 	interface SourceConfig {
@@ -77,5 +84,6 @@ declare global {
 					type: 'monster';
 					data: MonsterDataSourceData;
 			  };
+		Item: { type: 'class'; data: ClassDataSourceData } | { type: 'race'; data: RaceDataSourceData };
 	}
 }
