@@ -13,10 +13,11 @@
 // Import TypeScript modules
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
+import { systemName } from './constants';
 
 // Initialize system
 Hooks.once('init', async () => {
-	console.log('foundryvtt-dndmashup | Initializing foundryvtt-dndmashup');
+	console.log(`${systemName} | Initializing ${systemName}`);
 
 	// Assign custom classes and constants here
 

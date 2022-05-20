@@ -4,35 +4,31 @@
 			<img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" class="w-24 h-24 border-2 border-black p-px" />
 			<div class="grid grid-cols-12 grid-rows-2 gap-x-1">
 				<label class="col-span-5">
-					<input
-						name="name"
-						type="text"
-						value="{{actor.name}}"
-						class="w-full border-solid border-b-2 border-black text-lg" />
+					<input name="name" type="text" value="{{actor.name}}" class="w-full input-text text-lg" />
 					<span class="text-sm">Character Name</span>
 				</label>
 				<label class="col-span-3">
 					<input
 						name="data.details.race"
 						type="text"
-						value="{{data.details.race}}"
-						class="w-full border-solid border-b-2 border-black text-lg" />
+						value="{{actorData.details.race}}"
+						class="w-full input-text text-lg" />
 					<span class="text-sm">Race</span>
 				</label>
 				<label class="col-span-3">
 					<input
 						name="data.details.class"
 						type="text"
-						value="{{data.details.class}}"
-						class="w-full border-solid border-b-2 border-black text-lg" />
+						value="{{actorData.details.class}}"
+						class="w-full input-text text-lg" />
 					<span class="text-sm">Class</span>
 				</label>
 				<label class="">
 					<input
 						name="data.details.level"
-						type="text"
-						value="{{data.details.level}}"
-						class="w-full border-solid border-b-2 border-black text-lg text-center"
+						type="number"
+						value="{{actorData.details.level}}"
+						class="w-full input-text text-lg text-center"
 						data-dtype="Number" />
 					<span class="text-sm">Level</span>
 				</label>
@@ -40,24 +36,24 @@
 					<input
 						name="data.details.paragonPath"
 						type="text"
-						value="{{data.details.paragonPath}}"
-						class="w-full border-solid border-b-2 border-black text-lg" />
+						value="{{actorData.details.paragonPath}}"
+						class="w-full input-text text-lg" />
 					<span class="text-sm">Paragon Path</span>
 				</label>
 				<label class="col-span-5">
 					<input
 						name="data.details.epicDestiny"
 						type="text"
-						value="{{data.details.epicDestiny}}"
-						class="w-full border-solid border-b-2 border-black text-lg" />
+						value="{{actorData.details.epicDestiny}}"
+						class="w-full input-text text-lg" />
 					<span class="text-sm">Epic Destiny</span>
 				</label>
 				<label class="col-span-2">
 					<input
 						name="data.details.exp"
-						type="text"
-						value="{{data.details.exp}}"
-						class="w-full border-solid border-b-2 border-black text-lg text-center"
+						type="number"
+						value="{{actorData.details.exp}}"
+						class="w-full input-text text-lg text-center"
 						data-dtype="Number" />
 					<span class="text-sm">EXP</span>
 				</label>
@@ -70,23 +66,23 @@
 				<div class="flex justify-start items-center gap-1">
 					<label class="w-16 inline-block gap-1 flex-grow">
 						<input
-							type="text"
+							type="number"
 							name="data.health.currentHp"
-							value="{{data.health.currentHp}}"
+							value="{{actorData.health.currentHp}}"
 							data-dtype="Number"
-							class="w-full border-solid border-b-2 border-black text-lg text-center" />
+							class="w-full input-text text-lg text-center" />
 						<span>Current</span>
 					</label>
-					<span class="text-lg">/ {{data.health.maxHp}}</span>
+					<span class="text-lg pb-4">/ {{actorData.health.maxHp}}</span>
 				</div>
 				<label>
 					Temp HP
 					<input
-						type="text"
+						type="number"
 						name="data.health.temporaryHp"
-						value="{{data.health.temporaryHp}}"
+						value="{{actorData.health.temporaryHp}}"
 						data-dtype="Number"
-						class="w-16 border-solid border-b-2 border-black text-lg text-center" />
+						class="w-16 input-text text-lg text-center" />
 				</label>
 			</section>
 			<div class="border-r-2 border-black"></div>
@@ -95,26 +91,20 @@
 				<h2 class="text-lg">Defenses</h2>
 				<div class="flex flex-wrap gap-1">
 					<label class="w-8">
-						<span class="block w-full text-center border-solid border-b-2 border-black p-1">{{data.defenses.ac}}</span>
+						<span class="block w-full text-center input-text p-1">{{actorData.defenses.ac}}</span>
 						<span class="text-sm block w-full text-center">AC</span>
 					</label>
 
 					<label class="w-8">
-						<span class="block w-full text-center border-solid border-b-2 border-black p-1"
-							>{{data.defenses.fort}}</span
-						>
+						<span class="block w-full text-center input-text p-1">{{actorData.defenses.fort}}</span>
 						<span class="text-sm block w-full text-center">Fort</span>
 					</label>
 					<label class="w-8">
-						<span class="block w-full text-center border-solid border-b-2 border-black p-1"
-							>{{data.defenses.refl}}</span
-						>
+						<span class="block w-full text-center input-text p-1">{{actorData.defenses.refl}}</span>
 						<span class="text-sm block w-full text-center">Refl</span>
 					</label>
 					<label class="w-8">
-						<span class="block w-full text-center border-solid border-b-2 border-black p-1"
-							>{{data.defenses.will}}</span
-						>
+						<span class="block w-full text-center input-text p-1">{{actorData.defenses.will}}</span>
 						<span class="text-sm block w-full text-center">Will</span>
 					</label>
 				</div>
@@ -124,24 +114,24 @@
 			<section class="flex flex-col items-center">
 				<h2 class="text-lg">Healing Surges</h2>
 				<div>
-					<span>Value: {{data.health.surges.value}}</span>
+					<span>Value: {{actorData.health.surges.value}}</span>
 					/
 					<label>
-						<input type="checkbox" name="data.health.secondWindUsed" {{checked data.health.secondWindUsed}} />
+						<input type="checkbox" name="data.health.secondWindUsed" {{checked actorData.health.secondWindUsed}} />
 						Second Wind Used
 					</label>
 				</div>
 				<div class="flex justify-start items-center gap-1 flex-grow">
 					<label class="w-16 inline-block">
 						<input
-							type="text"
+							type="number"
 							name="data.health.surges.remaining"
-							value="{{data.health.surges.remaining}}"
+							value="{{actorData.health.surges.remaining}}"
 							data-dtype="Number"
-							class="w-full border-solid border-b-2 border-black text-lg text-center" />
+							class="w-full input-text text-lg text-center" />
 						<span>Remaining</span>
 					</label>
-					<span class="text-lg">/ {{data.health.surges.max}}</span>
+					<span class="text-lg pb-4">/ {{actorData.health.surges.max}}</span>
 				</div>
 			</section>
 			<div class="border-r-2 border-black"></div>
@@ -150,11 +140,11 @@
 				<h2 class="text-lg">Action Points</h2>
 				<label class="w-16 flex flex-col items-center">
 					<input
-						type="text"
+						type="number"
 						name="data.actionPoints.value"
-						value="{{data.actionPoints.value}}"
+						value="{{actorData.actionPoints.value}}"
 						data-dtype="Number"
-						class="w-full border-solid border-b-2 border-black text-lg text-center" />
+						class="w-full input-text text-lg text-center" />
 					<span>Current</span>
 				</label>
 				<label class="mt-2">
@@ -162,24 +152,32 @@
 						type="checkbox"
 						name="data.actionPoints.usedThisEncounter"
 						{{checked
-						data.actionPoints.usedThisEncounter}} />
+						actorData.actionPoints.usedThisEncounter}} />
 					Used
 				</label>
 			</section>
 		</div>
 
 		<div class="flex-grow flex flex-row gap-1">
-			<div>Abilities/Skills/Etc.</div>
+			<div>{{> (templates.abilities) }}</div>
 			<div class="border-r-2 border-black"></div>
-			<div class="flex-grow">
-				<nav data-group="primary">
-					<a data-tab="description">Description</a>
-					<a data-tab="items">Items</a>
+			<div class="flex-grow flex flex-col">
+				<nav data-group="primary" class="flex justify-around border-b border-black">
+					<label data-tab="details" class="link uppecase">Details</label>
+					<label data-tab="inventory" class="link uppecase">Inventory</label>
+					<label data-tab="powers" class="link uppecase">Powers</label>
+					<label data-tab="features" class="link uppecase">Features</label>
+					<label data-tab="feats" class="link uppecase">Feats</label>
+					<label data-tab="effects" class="link uppecase">Effects</label>
 				</nav>
 
-				<section data-tab-section>
-					<div class="tab" data-group="primary" data-tab="description">Description</div>
-					<div class="tab" data-group="primary" data-tab="items">Items</div>
+				<section class="flex-grow" data-tab-section>
+					<div class="tab w-full h-full" data-group="primary" data-tab="details">{{> (templates.details) }}</div>
+					<div class="tab w-full h-full" data-group="primary" data-tab="inventory">{{> (templates.inventory) }}</div>
+					<div class="tab w-full h-full" data-group="primary" data-tab="powers">{{> (templates.powers) }}</div>
+					<div class="tab w-full h-full" data-group="primary" data-tab="features">{{> (templates.features) }}</div>
+					<div class="tab w-full h-full" data-group="primary" data-tab="feats">{{> (templates.feats) }}</div>
+					<div class="tab w-full h-full" data-group="primary" data-tab="effects">{{> (templates.effects) }}</div>
 				</section>
 			</div>
 		</div>

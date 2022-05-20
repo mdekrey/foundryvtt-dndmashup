@@ -1,4 +1,5 @@
 import { MonsterDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
+import { Abilities } from 'src/types/types';
 import { calculateMaxHp } from './formulas';
 import { MonsterDataProperties, PlayerCharacterDataProperties } from './types';
 
@@ -52,11 +53,17 @@ export class MashupActor extends Actor {
 		data.health.maxHp = calculateMaxHp(data);
 		data.health.bloodied = Math.floor(data.health.maxHp / 2);
 		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+
+		// TODO: modifiers
 		data.health.surges.max = 1;
 		data.defenses.ac = 10;
 		data.defenses.fort = 10;
 		data.defenses.refl = 10;
 		data.defenses.will = 10;
+		Abilities.forEach((ability) => {
+			data.abilities[ability].final = data.abilities[ability].base;
+		});
+
 		console.log(data);
 	}
 
@@ -66,11 +73,15 @@ export class MashupActor extends Actor {
 		data.health.maxHp = calculateMaxHp(data);
 		data.health.bloodied = Math.floor(data.health.maxHp / 2);
 		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+		// TODO: modifiers
 		data.health.surges.max = 0;
 		data.defenses.ac = 10;
 		data.defenses.fort = 10;
 		data.defenses.refl = 10;
 		data.defenses.will = 10;
+		Abilities.forEach((ability) => {
+			data.abilities[ability].final = data.abilities[ability].base;
+		});
 	}
 
 	getRollData() {

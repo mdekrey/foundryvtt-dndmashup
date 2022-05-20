@@ -4,7 +4,7 @@ import { Ability, Defense } from 'src/types/types';
 export type CommonDataProperties = Merge<
 	BaseTemplateDataSourceData,
 	{
-		abilityScores: {
+		abilities: {
 			[ability in Ability]: { final: number };
 		};
 		health: {

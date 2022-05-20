@@ -1,3 +1,11 @@
 export const systemName = 'foundryvtt-dndmashup';
-export const rootPath = `systems/${systemName}`;
-export const templatePath = `systems/${systemName}/templates`;
+export const rootPath = `systems/${systemName}` as const;
+export const templatePath = `systems/${systemName}/templates` as const;
+export const templatePathActorPc = `${templatePath}/actor/pc-sheet.html` as const;
+export const templatePathActorAbilities = `${templatePath}/actor/parts/abilities.html` as const;
+export const templatePathActorDetails = `${templatePath}/actor/parts/details.html` as const;
+export const templatePathActorInventory = `${templatePath}/actor/parts/inventory.html` as const;
+export const templatePathActorPowers = `${templatePath}/actor/parts/powers.html` as const;
+export const templatePathActorFeatures = `${templatePath}/actor/parts/features.html` as const;
+export const templatePathActorFeats = `${templatePath}/actor/parts/feats.html` as const;
+export const templatePathActorEffects = `${templatePath}/actor/parts/effects.html` as const;

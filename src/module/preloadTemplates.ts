@@ -1,11 +1,27 @@
-import { templatePath } from './constants';
+import {
+	templatePath,
+	templatePathActorAbilities,
+	templatePathActorDetails,
+	templatePathActorInventory,
+	templatePathActorPc,
+	templatePathActorPowers,
+	templatePathActorFeatures,
+	templatePathActorFeats,
+	templatePathActorEffects,
+} from './constants';
 
 export async function preloadTemplates(): Promise<Handlebars.TemplateDelegate[]> {
 	const templatePaths: string[] = [
 		// Add paths to "systems/foundryvtt-dndmashup/templates"
-		`${templatePath}/actor/pc-sheet.html`,
+		templatePathActorPc,
 		`${templatePath}/actor/sheet.html`,
-		`${templatePath}/actor/_attributes.html`,
+		templatePathActorAbilities,
+		templatePathActorDetails,
+		templatePathActorInventory,
+		templatePathActorPowers,
+		templatePathActorFeatures,
+		templatePathActorFeats,
+		templatePathActorEffects,
 	];
 
 	return loadTemplates(templatePaths);

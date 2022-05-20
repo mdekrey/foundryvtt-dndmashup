@@ -4,7 +4,7 @@ export type BaseTemplateDataSourceData = {
 	details: {
 		level: number;
 	};
-	abilityScores: {
+	abilities: {
 		[ability in Ability]: { base: number };
 	};
 	health: {

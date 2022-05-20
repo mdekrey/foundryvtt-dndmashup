@@ -1,3 +1,4 @@
+const tailwindColors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
 
 const colors = {
@@ -21,6 +22,7 @@ const colors = {
 		900: '#1a1a1a',
 		dark: 'rgb(75, 76, 77)',
 	},
+	'blue-bright': tailwindColors.blue,
 	blue: {
 		50: '#edf1f8',
 		100: '#d4dae5',

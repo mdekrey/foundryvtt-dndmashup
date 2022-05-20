@@ -1,5 +1,19 @@
 import { MashupActor } from '../actor/mashup-actor';
-import { templatePath } from '../constants';
+import {
+	templatePath,
+	templatePathActorAbilities,
+	templatePathActorDetails,
+	templatePathActorEffects,
+	templatePathActorFeats,
+	templatePathActorFeatures,
+	templatePathActorInventory,
+	templatePathActorPowers,
+} from '../constants';
+
+type CharacterSheetHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
+	rollData: object;
+	actorData: DataConfig['Actor']['data'];
+};
 
 export class MashupActorSheet extends ActorSheet {
 	static override get defaultOptions() {
@@ -7,8 +21,8 @@ export class MashupActorSheet extends ActorSheet {
 			// CSS classes added to parent element of template
 			classes: [],
 			template: `${templatePath}/actor/sheet.html`,
-			width: 780,
-			height: 600,
+			width: 844,
+			height: 915,
 			tabs: [
 				{
 					navSelector: `nav[data-group='primary']`,
@@ -24,20 +38,31 @@ export class MashupActorSheet extends ActorSheet {
 	}
 
 	override async getData() {
-		// Handlebars context doesn't use types
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const context = (await super.getData()) as any;
+		console.log('getData');
+		const context = await super.getData();
 
 		const actorData: MashupActor = context.actor;
 
-		context.data = actorData.data.data;
+		const result: CharacterSheetHandlebarsContext = mergeObject(context, {
+			actorData: actorData.data.data,
 
-		// Add roll data for TinyMCE editors.
-		context.rollData = context.actor.getRollData();
+			// Add roll data for TinyMCE editors.
+			rollData: actorData.getRollData(),
 
-		console.log(context);
+			templates: {
+				abilities: () => templatePathActorAbilities,
+				details: () => templatePathActorDetails,
+				inventory: () => templatePathActorInventory,
+				powers: () => templatePathActorPowers,
+				features: () => templatePathActorFeatures,
+				feats: () => templatePathActorFeats,
+				effects: () => templatePathActorEffects,
+			},
+		});
 
-		return context;
+		console.log(result);
+
+		return result;
 	}
 
 	override activateListeners(html: JQuery<HTMLElement>): void {

@@ -6,7 +6,7 @@
 				"details": {
 					"level": 1
 				},
-				"abilityScores": {
+				"abilities": {
 					"str": {
 						"base": 0
 					},
@@ -84,7 +84,8 @@
 					"width": "",
 					"deity": "",
 					"adventuringCompany": ""
-				}
+				},
+				"biography": ""
 			},
 			"monster": {
 				"details": {
