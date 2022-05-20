@@ -1,14 +1,5 @@
 import { MashupActor } from '../actor/mashup-actor';
-import {
-	templatePath,
-	templatePathActorAbilities,
-	templatePathActorDetails,
-	templatePathActorEffects,
-	templatePathActorFeats,
-	templatePathActorFeatures,
-	templatePathActorInventory,
-	templatePathActorPowers,
-} from '../constants';
+import { templatePath, templatePathActorParts } from '../constants';
 
 type CharacterSheetHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 	rollData: object;
@@ -49,15 +40,7 @@ export class MashupActorSheet extends ActorSheet {
 			// Add roll data for TinyMCE editors.
 			rollData: actorData.getRollData(),
 
-			templates: {
-				abilities: () => templatePathActorAbilities,
-				details: () => templatePathActorDetails,
-				inventory: () => templatePathActorInventory,
-				powers: () => templatePathActorPowers,
-				features: () => templatePathActorFeatures,
-				feats: () => templatePathActorFeats,
-				effects: () => templatePathActorEffects,
-			},
+			templates: Object.fromEntries(Object.entries(templatePathActorParts).map(([k, v]) => [k, () => v])),
 		});
 
 		console.log(result);

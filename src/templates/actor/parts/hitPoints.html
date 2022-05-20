@@ -1,0 +1,22 @@
+<h2 class="text-lg">Hit Points</h2>
+<div class="flex justify-start items-center gap-1">
+	<label class="w-16 inline-block gap-1 flex-grow">
+		<input
+			type="number"
+			name="data.health.currentHp"
+			value="{{actorData.health.currentHp}}"
+			data-dtype="Number"
+			class="w-full input-text text-lg text-center" />
+		<span>Current</span>
+	</label>
+	<span class="text-lg pb-4">/ {{actorData.health.maxHp}}</span>
+</div>
+<label>
+	Temp HP
+	<input
+		type="number"
+		name="data.health.temporaryHp"
+		value="{{actorData.health.temporaryHp}}"
+		data-dtype="Number"
+		class="w-16 input-text text-lg text-center" />
+</label>
