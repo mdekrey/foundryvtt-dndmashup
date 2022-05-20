@@ -1,4 +1,4 @@
-import { MashupActor } from '../actor/mashup-actor';
+import { MashupActor } from './mashup-actor';
 import { templatePath, templatePathActorParts } from '../constants';
 
 type CharacterSheetHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {

@@ -1,5 +1,5 @@
 import { MashupActor } from './actor/mashup-actor';
-import { MashupActorSheet } from './sheets/MashupActorSheet';
+import { MashupActorSheet } from './actor/mashup-actor-sheet';
 
 declare global {
 	interface DocumentClassConfig {
