@@ -23,3 +23,5 @@ export const templatePathActorParts = {
 
 export const templatePathItemSheet = (type: SourceConfig['Item']['type']) =>
 	`${templatePath}/item/${type}-sheet.html` as const;
+
+export const templatePathItemParts = {};

@@ -73,10 +73,6 @@
 				"details": {
 					"tier": 1,
 					"exp": 0,
-					"class": "",
-					"paragon": "",
-					"epic": "",
-					"race": "",
 					"size": "Medium",
 					"age": "",
 					"pronouns": "",
@@ -104,10 +100,17 @@
 		"types": ["class", "race"],
 		"templates": {},
 		"class": {
-			"templates": []
+			"templates": [],
+			"role": "Striker",
+			"powerSource": "Martial",
+			"keyAbilities": ["str", "dex", "wis"],
+			"hpBase": 10,
+			"hpPerLevel": 4,
+			"healingSurgesBase": 6
 		},
 		"race": {
-			"templates": []
+			"templates": [],
+			"baseSpeed": 6
 		}
 	}
 }

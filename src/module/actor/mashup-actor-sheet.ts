@@ -1,9 +1,10 @@
 import { MashupActor } from './mashup-actor';
 import { templatePathActorParts, templatePathActorSheet } from '../constants';
 
-type CharacterSheetHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
+type ActorHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 	rollData: object;
 	actorData: DataConfig['Actor']['data'];
+	templates: Record<string, () => string>;
 };
 
 export class MashupActorSheet extends ActorSheet {
@@ -33,7 +34,7 @@ export class MashupActorSheet extends ActorSheet {
 
 		const actorData: MashupActor = context.actor;
 
-		const result: CharacterSheetHandlebarsContext = mergeObject(context, {
+		const result: ActorHandlebarsContext = mergeObject(context, {
 			actorData: actorData.data.data,
 
 			// Add roll data for TinyMCE editors.

@@ -6,6 +6,7 @@ import { MashupItemSheet } from './item/mashup-item-sheet';
 declare global {
 	interface DocumentClassConfig {
 		Actor: typeof MashupActor;
+		Item: typeof MashupItem;
 	}
 }
 

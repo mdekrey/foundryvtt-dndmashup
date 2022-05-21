@@ -1,6 +1,27 @@
-import { CommonDataProperties } from './types';
+import { ActorDataBaseProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
+import { MashupItem, SpecificItem } from '../item/mashup-item';
 
-export function calculateMaxHp(data: CommonDataProperties) {
-	// TODO: should use the final con score, but I didn't write anything to populate it yet
-	return 10 + data.abilities.con.base * 2;
+type Items = ActorDataBaseProperties['items'];
+
+function isClass(item: MashupItem): item is SpecificItem<'class'> {
+	return item instanceof MashupItem && item.type === 'class';
+}
+function isRace(item: MashupItem): item is SpecificItem<'race'> {
+	return item instanceof MashupItem && item.type === 'race';
+}
+
+export function findAppliedClass(items: Items) {
+	return items?.find(isClass);
+}
+
+export function findAppliedRace(items: Items) {
+	return items?.find(isRace);
+}
+
+export function calculateMaxHp(data: DataConfig['Actor']['data'], items?: Items) {
+	const appliedClass = items && findAppliedClass(items);
+	console.log({ data, appliedClass });
+
+	// TODO: should use the monster role
+	return 10 + (appliedClass?.data.data.hpBase ?? 0) + data.abilities.con.final * 2;
 }

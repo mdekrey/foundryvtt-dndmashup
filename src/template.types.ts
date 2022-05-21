@@ -43,10 +43,6 @@ export type PcActorTemplateDataSourceData = {
 	details: {
 		tier: number;
 		exp: number;
-		class: string;
-		paragon: string;
-		epic: string;
-		race: string;
 		size: string;
 		age: string;
 		pronouns: string;
@@ -63,27 +59,40 @@ export type MonsterActorTemplateDataSourceData = {
 	};
 };
 
-export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
-export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
-
 export type BaseItemTemplateDataSourceData = {
 	/* TODO */
 };
 
-export type ClassDataSourceData = BaseItemTemplateDataSourceData;
-export type RaceDataSourceData = BaseItemTemplateDataSourceData;
+export type ClassDataSourceData = Merge<
+	BaseItemTemplateDataSourceData,
+	{
+		role: string;
+		powerSource: string;
+		keyAbilities: Ability[];
+		hpBase: number;
+		hpPerLevel: number;
+		healingSurgesBase: number;
+	}
+>;
+export type RaceDataSourceData = Merge<
+	BaseItemTemplateDataSourceData,
+	{
+		baseSpeed: number;
+	}
+>;
+
+export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
+export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
+
+type DataSource<T extends string, TData> = { type: T; data: TData };
+export type PlayerCharacterDataSource = DataSource<'pc', PlayerCharacterDataSourceData>;
+export type MonsterDataSource = DataSource<'monster', MonsterDataSourceData>;
+export type ClassDataSource = DataSource<'class', ClassDataSourceData>;
+export type RaceDataSource = DataSource<'race', RaceDataSourceData>;
 
 declare global {
 	interface SourceConfig {
-		Actor:
-			| {
-					type: 'pc';
-					data: PlayerCharacterDataSourceData;
-			  }
-			| {
-					type: 'monster';
-					data: MonsterDataSourceData;
-			  };
-		Item: { type: 'class'; data: ClassDataSourceData } | { type: 'race'; data: RaceDataSourceData };
+		Actor: PlayerCharacterDataSource | MonsterDataSource;
+		Item: ClassDataSource | RaceDataSource;
 	}
 }
