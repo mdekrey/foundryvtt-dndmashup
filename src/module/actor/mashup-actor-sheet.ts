@@ -2,8 +2,9 @@ import { MashupActor } from './mashup-actor';
 import { templatePathActorParts, templatePathActorSheet } from '../constants';
 
 type ActorHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
-	rollData: object;
 	actorData: DataConfig['Actor']['data'];
+	rollData: object;
+
 	templates: Record<string, () => string>;
 };
 
@@ -35,7 +36,6 @@ export class MashupActorSheet extends ActorSheet {
 
 		const result: ActorHandlebarsContext = mergeObject(context, {
 			actorData: actorData.data.data,
-
 			// Add roll data for TinyMCE editors.
 			rollData: actorData.getRollData(),
 
@@ -48,6 +48,8 @@ export class MashupActorSheet extends ActorSheet {
 	override activateListeners(html: JQuery<HTMLElement>): void {
 		super.activateListeners(html);
 
-		// oof, jquery.
+		html.find('[data-show-item]').on('click', (event) => {
+			this.actor.items.find((item) => item.id === event.target.getAttribute('data-show-item'))?.sheet?.render(true);
+		});
 	}
 }

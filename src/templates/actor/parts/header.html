@@ -5,11 +5,15 @@
 		<span class="text-sm">Character Name</span>
 	</label>
 	<label class="col-span-3">
-		<span class="inline-block w-full input-text text-lg">{{actorData.details.race}}</span>
+		<span class="inline-block w-full input-text text-lg" data-show-item="{{actor.appliedRace.id}}"
+			>{{actor.appliedRace.name}}</span
+		>
 		<span class="text-sm">Race</span>
 	</label>
 	<label class="col-span-3">
-		<span class="inline-block w-full input-text text-lg">{{actorData.details.class}}</span>
+		<span class="inline-block w-full input-text text-lg" data-show-item="{{actor.appliedClass.id}}"
+			>{{actor.appliedClass.name}}</span
+		>
 		<span class="text-sm">Class</span>
 	</label>
 	<label class="">
@@ -22,19 +26,15 @@
 		<span class="text-sm">Level</span>
 	</label>
 	<label class="col-span-5">
-		<input
-			name="data.details.paragonPath"
-			type="text"
-			value="{{actorData.details.paragonPath}}"
-			class="w-full input-text text-lg" />
+		<span class="inline-block w-full input-text text-lg" data-show-item="{{actor.appliedParagonPath.id}}"
+			>{{actor.appliedParagonPath.name}}&nbsp;</span
+		>
 		<span class="text-sm">Paragon Path</span>
 	</label>
 	<label class="col-span-5">
-		<input
-			name="data.details.epicDestiny"
-			type="text"
-			value="{{actorData.details.epicDestiny}}"
-			class="w-full input-text text-lg" />
+		<span class="inline-block w-full input-text text-lg" data-show-item="{{actor.appliedEpicDestiny.id}}"
+			>{{actor.appliedEpicDestiny.name}}&nbsp;</span
+		>
 		<span class="text-sm">Epic Destiny</span>
 	</label>
 	<label class="col-span-2">
