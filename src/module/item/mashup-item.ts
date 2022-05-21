@@ -1,5 +1,4 @@
-import { ClassDataSourceData, RaceDataSourceData } from 'src/template.types';
-import { ClassDataProperties, PossibleItemData, RaceDataProperties, SpecificItemData } from './types';
+import { PossibleItemData, SpecificItemData } from './types';
 
 export class MashupItem extends Item {
 	data!: PossibleItemData;
@@ -8,33 +7,25 @@ export class MashupItem extends Item {
 		const allData = this.data;
 
 		// all active effects and other linked objects should be loaded here
-		console.log({
-			id: this.id,
-			effects: this.effects,
-			type: allData._source.type,
-			source: allData._source.data,
-			data: allData.data,
-		});
-
 		if (allData._source.type !== allData.type) {
 			// seriously, wtf?
 			console.error('Got two different item types:', allData._source.type, allData.type);
 			return;
 		}
 		if (allData._source.type === 'class' && allData.type === 'class') {
-			this._prepareClassData(allData._source.data, allData.data);
+			this._prepareClassData(allData);
 		}
 		if (allData._source.type === 'race' && allData.type === 'race') {
-			this._prepareRaceData(allData._source.data, allData.data);
+			this._prepareRaceData(allData);
 		}
 	}
 
-	private _prepareClassData(source: Readonly<ClassDataSourceData>, data: ClassDataProperties) {
-		console.log({ source, data });
+	private _prepareClassData(data: SpecificItemData<'class'>) {
+		// console.log({ data });
 	}
 
-	private _prepareRaceData(source: Readonly<RaceDataSourceData>, data: RaceDataProperties) {
-		console.log({ source, data });
+	private _prepareRaceData(data: SpecificItemData<'race'>) {
+		// console.log({ data });
 	}
 }
 

@@ -29,7 +29,6 @@ export class MashupActorSheet extends ActorSheet {
 	}
 
 	override async getData() {
-		console.log('getData');
 		const context = await super.getData();
 
 		const actorData: MashupActor = context.actor;
@@ -42,8 +41,6 @@ export class MashupActorSheet extends ActorSheet {
 
 			templates: Object.fromEntries(Object.entries(templatePathActorParts).map(([k, v]) => [k, () => v])),
 		});
-
-		console.log(result);
 
 		return result;
 	}

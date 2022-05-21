@@ -20,7 +20,6 @@ export function findAppliedRace(items: Items) {
 
 export function calculateMaxHp(data: DataConfig['Actor']['data'], items?: Items) {
 	const appliedClass = items && findAppliedClass(items);
-	console.log({ data, appliedClass });
 
 	// TODO: should use the monster role
 	return 10 + (appliedClass?.data.data.hpBase ?? 0) + data.abilities.con.final * 2;

@@ -21,7 +21,6 @@ export class MashupItemSheet extends ItemSheet {
 	}
 
 	override async getData() {
-		console.log('getData');
 		const context = await super.getData();
 
 		const itemData: MashupItem = context.item;
@@ -34,8 +33,6 @@ export class MashupItemSheet extends ItemSheet {
 
 			templates: Object.fromEntries(Object.entries(templatePathItemParts).map(([k, v]) => [k, () => v as never])),
 		});
-
-		console.log(result);
 
 		return result;
 	}

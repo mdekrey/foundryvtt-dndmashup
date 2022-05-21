@@ -1,8 +1,7 @@
 import { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
-import { MonsterDataSourceData, PlayerCharacterDataSourceData } from 'src/template.types';
 import { Abilities } from 'src/types/types';
 import { calculateMaxHp, findAppliedClass, findAppliedRace } from './formulas';
-import { MonsterDataProperties, PlayerCharacterDataProperties, PossibleActorData, SpecificActorData } from './types';
+import { PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes = ['class', 'race'] as const;
 
@@ -40,13 +39,6 @@ export class MashupActor extends Actor {
 		const allData = this.data;
 
 		// all active effects and other linked objects should be loaded here
-		console.log({
-			id: this.id,
-			items: this.items,
-			type: allData._source.type,
-			source: allData._source.data,
-			data: allData.data,
-		});
 
 		if (allData._source.type !== allData.type) {
 			// seriously, wtf?
@@ -57,55 +49,53 @@ export class MashupActor extends Actor {
 		allData.data.defenses ??= {} as typeof allData.data.defenses;
 
 		if (this.data.type === 'pc') {
-			this._prepareCharacterData(this.data._source.data, this.data.data);
+			this._prepareCharacterData(this.data);
 		}
 		if (this.data.type === 'monster') {
-			this._prepareNpcData(this.data._source.data, this.data.data);
+			this._prepareNpcData(this.data);
 		}
 	}
 
-	private _prepareCharacterData(source: Readonly<PlayerCharacterDataSourceData>, data: PlayerCharacterDataProperties) {
+	private _prepareCharacterData(data: SpecificActorData<'pc'>) {
 		// TODO: prepare PC-specific data
 
 		// TODO: modifiers
 		Abilities.forEach((ability) => {
-			data.abilities[ability].final = data.abilities[ability].base;
+			data.data.abilities[ability].final = data.data.abilities[ability].base;
 		});
 
-		data.health.maxHp = calculateMaxHp(data, this.items);
-		data.health.bloodied = Math.floor(data.health.maxHp / 2);
-		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+		data.data.health.maxHp = calculateMaxHp(data.data, this.items);
+		data.data.health.bloodied = Math.floor(data.data.health.maxHp / 2);
+		data.data.health.surges.value = Math.floor(data.data.health.maxHp / 4);
 
-		data.details.class = this.appliedClass?.name || 'No class';
-		data.details.race = this.appliedRace?.name || 'No race';
+		data.data.details.class = this.appliedClass?.name || 'No class';
+		data.data.details.race = this.appliedRace?.name || 'No race';
 
 		// TODO: modifiers
-		data.health.surges.max = 1;
-		data.defenses.ac = 10;
-		data.defenses.fort = 10;
-		data.defenses.refl = 10;
-		data.defenses.will = 10;
-
-		console.log(data);
+		data.data.health.surges.max = 1;
+		data.data.defenses.ac = 10;
+		data.data.defenses.fort = 10;
+		data.data.defenses.refl = 10;
+		data.data.defenses.will = 10;
 	}
 
-	private _prepareNpcData(source: Readonly<MonsterDataSourceData>, data: MonsterDataProperties) {
+	private _prepareNpcData(data: SpecificActorData<'monster'>) {
 		// TODO: prepare NPC-specific data
 
 		// TODO: modifiers
 		Abilities.forEach((ability) => {
-			data.abilities[ability].final = data.abilities[ability].base;
+			data.data.abilities[ability].final = data.data.abilities[ability].base;
 		});
 
-		data.health.maxHp = calculateMaxHp(data);
-		data.health.bloodied = Math.floor(data.health.maxHp / 2);
-		data.health.surges.value = Math.floor(data.health.maxHp / 4);
+		data.data.health.maxHp = calculateMaxHp(data.data);
+		data.data.health.bloodied = Math.floor(data.data.health.maxHp / 2);
+		data.data.health.surges.value = Math.floor(data.data.health.maxHp / 4);
 		// TODO: modifiers
-		data.health.surges.max = 0;
-		data.defenses.ac = 10;
-		data.defenses.fort = 10;
-		data.defenses.refl = 10;
-		data.defenses.will = 10;
+		data.data.health.surges.max = 0;
+		data.data.defenses.ac = 10;
+		data.data.defenses.fort = 10;
+		data.data.defenses.refl = 10;
+		data.data.defenses.will = 10;
 	}
 
 	getRollData() {
