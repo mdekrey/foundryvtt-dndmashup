@@ -36,4 +36,14 @@ export class MashupItemSheet extends ItemSheet {
 
 		return result;
 	}
+
+	override activateListeners(html: JQuery<HTMLElement>): void {
+		super.activateListeners(html);
+
+		html.find('select[value]').each(function () {
+			const target = $(this);
+			const value = target.attr('value');
+			target.find(`option[value=${value}]`).attr('selected', 'selected');
+		});
+	}
 }
