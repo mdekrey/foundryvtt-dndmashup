@@ -1,0 +1,54 @@
+<div class="w-full h-full {{className}}">
+	<table class="w-full border-collapse" data-bonus-list="{{dataPath}}">
+		<thead class="bg-theme text-white">
+			<tr>
+				<th>Amount</th>
+				<th>Type</th>
+				<th></th>
+				<th>Target</th>
+				<th>Condition</th>
+				<th>
+					<button type="button" data-bonus-add><i class="fa fa-plus"></i>Add</button>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each bonusList as | bonus bonusIndex |}}
+			<tr
+				data-bonus-index="{{bonusIndex}}"
+				class="even:bg-gradient-to-r from-transparent to-white odd:bg-transparent border-b-2 border-transparent {{#if bonus.disabled}} opacity-75 {{/if}}">
+				<td class="px-1">
+					<input
+						type="text"
+						data-name="amount"
+						value="{{bonus.amount}}"
+						class="w-full input-text text-sm text-center" />
+				</td>
+				<td class="px-1">
+					<input type="text" data-name="type" value="{{bonus.type}}" class="w-full input-text text-sm text-center" />
+				</td>
+				<td class="px-1 whitespace-nowrap">bonus to</td>
+				<td class="px-1">
+					<select data-name="target" class="w-full input-text text-sm text-center">
+						{{selectOptions ../context.targets selected=bonus.target}}
+					</select>
+				</td>
+				<td class="px-1">
+					<select data-name="condition" class="w-full input-text text-sm text-center">
+						<option value="">(always)</option>
+						{{selectOptions ../context.conditions selected=bonus.condition}}
+					</select>
+				</td>
+				<td class="text-right px-1 whitespace-nowrap">
+					{{#if bonus.disabled}}
+					<button type="button" data-bonus-enable title="Click to Enable"><i class="far fa-circle"></i></button>
+					{{else}}
+					<button type="button" data-bonus-disable title="Click to Disable"><i class="far fa-check-circle"></i></button>
+					{{/if}}
+					<button type="button" data-bonus-delete title="Click to Delete"><i class="fas fa-trash"></i></button>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</div>

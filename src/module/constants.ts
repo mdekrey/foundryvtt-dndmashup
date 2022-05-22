@@ -4,6 +4,10 @@ export const templatePath = `systems/${systemName}/templates` as const;
 export const templatePathActorSheet = (type: SourceConfig['Actor']['type']) =>
 	`${templatePath}/actor/${type}-sheet.html` as const;
 
+const templatePathSharedParts = {
+	bonuses: `${templatePath}/shared-parts/bonuses.html` as const,
+};
+
 export const templatePathActorParts = {
 	header: `${templatePath}/actor/parts/header.html` as const,
 
@@ -19,9 +23,13 @@ export const templatePathActorParts = {
 	features: `${templatePath}/actor/parts/features.html` as const,
 	feats: `${templatePath}/actor/parts/feats.html` as const,
 	effects: `${templatePath}/actor/parts/effects.html` as const,
+
+	...templatePathSharedParts,
 };
 
 export const templatePathItemSheet = (type: SourceConfig['Item']['type']) =>
 	`${templatePath}/item/${type}-sheet.html` as const;
 
-export const templatePathItemParts = {};
+export const templatePathItemParts = {
+	...templatePathSharedParts,
+};

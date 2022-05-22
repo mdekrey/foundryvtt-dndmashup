@@ -8,19 +8,19 @@ import {
 	FeatureBonusWithContext,
 	filterBonuses,
 	sumFinalBonuses,
-} from './bonuses';
+} from '../bonuses';
 import { findAppliedClass, findAppliedRace, isClassSource, isRaceSource } from './formulas';
 import { PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [isClassSource, isRaceSource];
 
 const standardBonuses: FeatureBonus[] = [
-	{ target: 'ability.str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
-	{ target: 'ability.con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
-	{ target: 'ability.dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
-	{ target: 'ability.int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
-	{ target: 'ability.wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
-	{ target: 'ability.cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
+	{ target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
+	{ target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
+	{ target: 'ability-dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
+	{ target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
+	{ target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
+	{ target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
 	{ target: 'maxHp', amount: `10 + 2 * @actor.data.data.abilities.con.final`, type: 'base' },
 	{
 		target: 'maxHp',
@@ -28,22 +28,22 @@ const standardBonuses: FeatureBonus[] = [
 		type: 'class',
 	},
 	{
-		target: 'surges.max',
+		target: 'surges-max',
 		amount: `@actor.appliedClass.data.data.healingSurgesBase`,
 		type: 'class',
 	},
-	{ target: 'surges.max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
-	{ target: 'defense.ac', amount: 10 },
-	{ target: 'defense.ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
-	{ target: 'defense.fort', amount: 10 },
-	{ target: 'defense.fort', amount: '@actor.data.data.abilities.str.final', type: 'ability' },
-	{ target: 'defense.fort', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
-	{ target: 'defense.refl', amount: 10 },
-	{ target: 'defense.refl', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
-	{ target: 'defense.refl', amount: '@actor.data.data.abilities.int.final', type: 'ability' },
-	{ target: 'defense.will', amount: 10 },
-	{ target: 'defense.will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
-	{ target: 'defense.will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
+	{ target: 'surges-max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ target: 'defense-ac', amount: 10 },
+	{ target: 'defense-ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
+	{ target: 'defense-fort', amount: 10 },
+	{ target: 'defense-fort', amount: '@actor.data.data.abilities.str.final', type: 'ability' },
+	{ target: 'defense-fort', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ target: 'defense-refl', amount: 10 },
+	{ target: 'defense-refl', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
+	{ target: 'defense-refl', amount: '@actor.data.data.abilities.int.final', type: 'ability' },
+	{ target: 'defense-will', amount: 10 },
+	{ target: 'defense-will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
+	{ target: 'defense-will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
 	{
 		target: 'speed',
 		amount: `@actor.appliedRace.data.data.baseSpeed`,
@@ -52,19 +52,19 @@ const standardBonuses: FeatureBonus[] = [
 ];
 
 const setters: Record<BonusTarget, (data: PossibleActorData, value: number) => void> = {
-	'ability.str': (data, value) => (data.data.abilities.str.final = value),
-	'ability.con': (data, value) => (data.data.abilities.con.final = value),
-	'ability.dex': (data, value) => (data.data.abilities.dex.final = value),
-	'ability.int': (data, value) => (data.data.abilities.int.final = value),
-	'ability.wis': (data, value) => (data.data.abilities.wis.final = value),
-	'ability.cha': (data, value) => (data.data.abilities.cha.final = value),
-	'defense.ac': (data, value) => (data.data.defenses.ac = value),
-	'defense.fort': (data, value) => (data.data.defenses.fort = value),
-	'defense.refl': (data, value) => (data.data.defenses.refl = value),
-	'defense.will': (data, value) => (data.data.defenses.will = value),
+	'ability-str': (data, value) => (data.data.abilities.str.final = value),
+	'ability-con': (data, value) => (data.data.abilities.con.final = value),
+	'ability-dex': (data, value) => (data.data.abilities.dex.final = value),
+	'ability-int': (data, value) => (data.data.abilities.int.final = value),
+	'ability-wis': (data, value) => (data.data.abilities.wis.final = value),
+	'ability-cha': (data, value) => (data.data.abilities.cha.final = value),
+	'defense-ac': (data, value) => (data.data.defenses.ac = value),
+	'defense-fort': (data, value) => (data.data.defenses.fort = value),
+	'defense-refl': (data, value) => (data.data.defenses.refl = value),
+	'defense-will': (data, value) => (data.data.defenses.will = value),
 	maxHp: (data, value) => (data.data.health.maxHp = value),
-	'surges.max': (data, value) => (data.data.health.surges.max = value),
-	'surges.value': (data, value) => (data.data.health.surges.value = value),
+	'surges-max': (data, value) => (data.data.health.surges.max = value),
+	'surges-value': (data, value) => (data.data.health.surges.value = value),
 	speed: (data, value) => (data.data.speed = value),
 };
 
@@ -170,7 +170,7 @@ export class MashupActor extends Actor {
 		userId: string
 	): void {
 		super._preCreateEmbeddedDocuments(embeddedName, result, options, userId);
-		const itemTypesToRemove = singleItemTypes.filter((type) => result.some((i) => i.type === type));
+		const itemTypesToRemove = singleItemTypes.filter((type) => result.some((i) => type(i as SourceConfig['Item'])));
 		const oldSingleItems = this.items.contents.filter((item) => itemTypesToRemove.some((t) => t(item.data._source)));
 		oldSingleItems.forEach((item) => {
 			console.log('Removing', item.name, item);

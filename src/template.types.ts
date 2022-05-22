@@ -1,4 +1,4 @@
-import { FeatureBonus } from './module/actor/bonuses';
+import { FeatureBonus } from './module/bonuses';
 import { Ability, Currency } from './types/types';
 
 export type BaseActorTemplateDataSourceData = {
