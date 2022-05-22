@@ -1,6 +1,8 @@
+import { FeatureBonus } from './module/actor/bonuses';
 import { Ability, Currency } from './types/types';
 
 export type BaseActorTemplateDataSourceData = {
+	bonuses: FeatureBonus[];
 	details: {
 		level: number;
 	};
@@ -41,7 +43,6 @@ export type BaseActorTemplateDataSourceData = {
 
 export type PcActorTemplateDataSourceData = {
 	details: {
-		tier: number;
 		exp: number;
 		size: string;
 		age: string;
@@ -60,7 +61,7 @@ export type MonsterActorTemplateDataSourceData = {
 };
 
 export type BaseItemTemplateDataSourceData = {
-	/* TODO */
+	grantedBonuses: FeatureBonus[];
 };
 
 export type ClassDataSourceData = Merge<

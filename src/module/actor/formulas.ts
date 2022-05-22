@@ -1,13 +1,21 @@
 import { ActorDataBaseProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
+import { ClassDataSource, RaceDataSource } from 'src/template.types';
 import { MashupItem, SpecificItem } from '../item/mashup-item';
 
 type Items = ActorDataBaseProperties['items'];
 
-function isClass(item: MashupItem): item is SpecificItem<'class'> {
-	return item instanceof MashupItem && item.type === 'class';
+export function isClassSource(item: SourceConfig['Item']): item is ClassDataSource {
+	return item.type === 'class';
 }
-function isRace(item: MashupItem): item is SpecificItem<'race'> {
-	return item instanceof MashupItem && item.type === 'race';
+export function isRaceSource(item: SourceConfig['Item']): item is RaceDataSource {
+	return item.type === 'race';
+}
+
+export function isClass(item: MashupItem): item is SpecificItem<'class'> {
+	return item instanceof MashupItem && isClassSource(item.data._source);
+}
+export function isRace(item: MashupItem): item is SpecificItem<'race'> {
+	return item instanceof MashupItem && isRaceSource(item.data._source);
 }
 
 export function findAppliedClass(items: Items) {
@@ -16,11 +24,4 @@ export function findAppliedClass(items: Items) {
 
 export function findAppliedRace(items: Items) {
 	return items?.find(isRace);
-}
-
-export function calculateMaxHp(data: DataConfig['Actor']['data'], items?: Items) {
-	const appliedClass = items && findAppliedClass(items);
-
-	// TODO: should use the monster role
-	return 10 + (appliedClass?.data.data.hpBase ?? 0) + data.abilities.con.final * 2;
 }

@@ -1,4 +1,5 @@
 const typescript = require('@rollup/plugin-typescript');
+const commonjs = require('@rollup/plugin-commonjs');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
 module.exports = () => ({
@@ -8,5 +9,5 @@ module.exports = () => ({
 		format: 'es',
 		sourcemap: true,
 	},
-	plugins: [nodeResolve(), typescript()],
+	plugins: [nodeResolve(), typescript(), commonjs()],
 });

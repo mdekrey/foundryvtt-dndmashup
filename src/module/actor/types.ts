@@ -25,6 +25,7 @@ export type CommonDataProperties = Merge<
 		defenses: {
 			[defense in Defense]: number;
 		};
+		speed: number;
 	}
 >;
 

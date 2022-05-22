@@ -68,5 +68,10 @@
 	"lint-staged": {
 		"*.(ts|js|cjs)": "eslint --fix",
 		"*.(json|yml|css)": "prettier --write"
+	},
+	"dependencies": {
+		"@rollup/plugin-commonjs": "^22.0.0",
+		"@types/lodash": "^4.14.182",
+		"lodash": "^4.17.21"
 	}
 }

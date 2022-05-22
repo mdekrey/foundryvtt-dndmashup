@@ -3,6 +3,7 @@
 		"types": ["pc", "monster"],
 		"templates": {
 			"base": {
+				"bonuses": [],
 				"details": {
 					"level": 1
 				},
@@ -71,7 +72,6 @@
 			},
 			"pc": {
 				"details": {
-					"tier": 1,
 					"exp": 0,
 					"size": "Medium",
 					"age": "",
@@ -98,9 +98,13 @@
 	},
 	"Item": {
 		"types": ["class", "race"],
-		"templates": {},
+		"templates": {
+			"base": {
+				"grantedBonuses": []
+			}
+		},
 		"class": {
-			"templates": [],
+			"templates": ["base"],
 			"role": "Striker",
 			"powerSource": "Martial",
 			"keyAbilities": ["str", "dex", "wis"],
@@ -109,7 +113,7 @@
 			"healingSurgesBase": 6
 		},
 		"race": {
-			"templates": [],
+			"templates": ["base"],
 			"baseSpeed": 6
 		}
 	}
