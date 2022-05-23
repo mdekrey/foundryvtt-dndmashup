@@ -72,7 +72,6 @@
 			</label>
 		</div>
 		<div class="border-b border-black"></div>
-		{{> (templates.bonuses) className="flex-grow" bonusList=itemData.grantedBonuses dataPath='data.grantedBonuses'
-		context=bonuses }}
+		{{> (templates.bonuses) className="flex-grow" bonusList=grantedBonuses dataPath='grantedBonuses' context=bonuses }}
 	</div>
 </form>

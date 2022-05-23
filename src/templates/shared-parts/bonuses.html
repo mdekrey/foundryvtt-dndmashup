@@ -20,32 +20,42 @@
 				<td class="px-1">
 					<input
 						type="text"
-						data-name="amount"
+						name="{{../dataPath}}.{{bonusIndex}}.amount"
 						value="{{bonus.amount}}"
 						class="w-full input-text text-sm text-center" />
 				</td>
 				<td class="px-1">
-					<input type="text" data-name="type" value="{{bonus.type}}" class="w-full input-text text-sm text-center" />
+					<input
+						type="text"
+						name="{{../dataPath}}.{{bonusIndex}}.type"
+						value="{{bonus.type}}"
+						class="w-full input-text text-sm text-center" />
 				</td>
 				<td class="px-1 whitespace-nowrap">bonus to</td>
 				<td class="px-1">
-					<select data-name="target" class="w-full input-text text-sm text-center">
+					<select name="{{../dataPath}}.{{bonusIndex}}.target" class="w-full input-text text-sm text-center">
 						{{selectOptions ../context.targets selected=bonus.target}}
 					</select>
 				</td>
 				<td class="px-1">
-					<select data-name="condition" class="w-full input-text text-sm text-center">
+					<select name="{{../dataPath}}.{{bonusIndex}}.condition" class="w-full input-text text-sm text-center">
 						<option value="">(always)</option>
 						{{selectOptions ../context.conditions selected=bonus.condition}}
 					</select>
 				</td>
 				<td class="text-right px-1 whitespace-nowrap">
 					{{#if bonus.disabled}}
-					<button type="button" data-bonus-enable title="Click to Enable"><i class="far fa-circle"></i></button>
+					<button type="button" data-bonus-enable title="Click to Enable" class="focusable">
+						<i class="far fa-circle"></i>
+					</button>
 					{{else}}
-					<button type="button" data-bonus-disable title="Click to Disable"><i class="far fa-check-circle"></i></button>
+					<button type="button" data-bonus-disable title="Click to Disable" class="focusable">
+						<i class="far fa-check-circle"></i>
+					</button>
 					{{/if}}
-					<button type="button" data-bonus-delete title="Click to Delete"><i class="fas fa-trash"></i></button>
+					<button type="button" data-bonus-delete title="Click to Delete" class="focusable">
+						<i class="fas fa-trash"></i>
+					</button>
 				</td>
 			</tr>
 			{{/each}}

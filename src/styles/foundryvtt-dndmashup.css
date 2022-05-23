@@ -19,6 +19,11 @@ html {
 
 	.input-text {
 		@apply border-solid border-b-2 border-black;
+		@apply focus:ring-blue-bright-600 focus:ring-1;
+	}
+
+	.focusable {
+		@apply focus:ring-blue-bright-600 focus:ring-1;
 	}
 
 	.link,

@@ -1,16 +1,7 @@
 import { BonusTarget, ConditionRule } from './constants';
 import { FeatureBonus } from './types';
 
-type BonusSheetListConfiguration = {
-	get: () => FeatureBonus[];
-	update: (mutator: (previous: readonly FeatureBonus[]) => FeatureBonus[]) => Promise<void>;
-};
-
-function update<T>(array: readonly T[], index: number, fn: (target: T) => T) {
-	const copy = array.slice();
-	copy[index] = fn(copy[index]);
-	return copy;
-}
+type BonusSheetListConfiguration = () => FeatureBonus[];
 
 const targets: Record<BonusTarget, string> = {
 	'ability-str': 'STR',
@@ -38,72 +29,71 @@ export function getBonusesContext() {
 	return { targets, conditions };
 }
 
-export function attachBonusSheet(html: JQuery<HTMLElement>, lists: Record<string, BonusSheetListConfiguration>) {
+export function attachBonusSheet(
+	html: JQuery<HTMLElement>,
+	sheet: DocumentSheet,
+	configs: Record<string, BonusSheetListConfiguration>
+) {
 	html.find('[data-bonus-add]').on('click', function (event) {
-		const listConfig = getListConfig(event.target);
-		listConfig.update((list) => {
-			const last: Partial<FeatureBonus> = list[list.length - 1];
-			const newElem: FeatureBonus = {
-				amount: '0',
-				target: 'defense-ac',
-				...last,
-			};
-			return [...list, newElem];
-		});
+		const { name, config } = getListInfo(event.target);
+		const list = config();
+		const idx = list?.length;
+		const newElem: FeatureBonus = {
+			amount: '0',
+			target: 'defense-ac',
+			...(list[idx - 1] as Partial<FeatureBonus>),
+		};
+
+		submit({ [`${name}.${idx}`]: newElem });
 	});
 
 	html.find('[data-bonus-disable]').on('click', function (event) {
-		const listConfig = getListConfig(event.target);
-		const index = getListIndex(event.target);
-		listConfig.update((list) => {
-			return update(list, index, (b) => ({ ...b, disabled: true }));
-		});
+		const { path } = getListInfo(event.target);
+		submit({ [`${path}.disabled`]: true });
 	});
 
 	html.find('[data-bonus-enable]').on('click', function (event) {
-		const listConfig = getListConfig(event.target);
-		const index = getListIndex(event.target);
-		// Removes 'disabled' from the elment
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		listConfig.update((list) => update(list, index, ({ disabled, ...b }) => b));
+		const { path } = getListInfo(event.target);
+		submit({ [`${path}.disabled`]: undefined });
 	});
 
-	html.find('[data-bonus-delete]').on('click', function (event) {
-		const listConfig = getListConfig(event.target);
-		const index = getListIndex(event.target);
-		listConfig.update((list) => {
-			const copy = list.slice();
-			copy.splice(index, 1);
-			return copy;
-		});
+	html.find('[data-bonus-delete]').on('click', async function (event) {
+		event.target.closest<HTMLElement>('[data-bonus-list]')?.remove();
+		await submit();
+		sheet.render();
 	});
 
-	html.find('[data-name]').on('change', function (event) {
-		const listConfig = getListConfig(event.target);
-		const index = getListIndex(event.target);
-		const property = event.target.getAttribute('data-name') as keyof FeatureBonus;
-		const newValue = $(event.target).val();
-
-		listConfig.update((list) => update(list, index, (bonus) => ({ ...bonus, [property]: newValue })));
-	});
-
-	function getListConfig(element: HTMLElement) {
-		const listName = element.closest('[data-bonus-list]')?.getAttribute('data-bonus-list');
-		const list = listName && lists[listName];
-		if (!list) {
-			console.error('could not find bonus list for', element);
-			throw new Error('could not find bonus list');
+	function getListInfo(element: HTMLElement) {
+		const name = element.closest<HTMLElement>('[data-bonus-list]')?.dataset.bonusList;
+		if (!name) {
+			console.error('could not find list name for', element);
+			throw new Error('could not find list name');
 		}
-		return list;
+		const index = Number(element.closest<HTMLElement>('[data-bonus-index]')?.dataset.bonusIndex);
+		return {
+			name,
+			get index() {
+				if (index === null || isNaN(index)) {
+					console.error('could not find bonus index for', element);
+					throw new Error('could not find bonus index');
+				}
+				return index;
+			},
+			get config() {
+				const config = name ? configs[name] : undefined;
+				if (!config) {
+					console.error('could not find bonus list config for', element);
+					throw new Error('could not find bonus list');
+				}
+				return config;
+			},
+			get path() {
+				return `${this.name}.${this.index}`;
+			},
+		};
 	}
 
-	function getListIndex(element: HTMLElement) {
-		const index = Number(element.closest('[data-bonus-index]')?.getAttribute('data-bonus-index'));
-		const n = Number(index);
-		if (index === null || isNaN(n)) {
-			console.error('could not find bonus index for', element);
-			throw new Error('could not find bonus index');
-		}
-		return n;
+	function submit(updateData?: object) {
+		return sheet.submit({ preventClose: true, updateData });
 	}
 }

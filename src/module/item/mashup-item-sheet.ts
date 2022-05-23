@@ -34,6 +34,7 @@ export class MashupItemSheet extends ItemSheet {
 			rollData: itemData.getRollData(),
 
 			templates: Object.fromEntries(Object.entries(templatePathItemParts).map(([k, v]) => [k, () => v as never])),
+			grantedBonuses: foundry.utils.deepClone(itemData.data.data.grantedBonuses),
 			bonuses: getBonusesContext(),
 		});
 
@@ -43,13 +44,8 @@ export class MashupItemSheet extends ItemSheet {
 	override activateListeners(html: JQuery<HTMLElement>): void {
 		super.activateListeners(html);
 
-		attachBonusSheet(html, {
-			'data.grantedBonuses': {
-				get: () => this.item.data.data.grantedBonuses,
-				update: async (mutator) => {
-					await this.item.update({ data: { grantedBonuses: mutator(this.item.data.data.grantedBonuses) } });
-				},
-			},
+		attachBonusSheet(html, this, {
+			grantedBonuses: () => this.item.data.data.grantedBonuses,
 		});
 
 		html.find('select[value]').each(function () {
@@ -57,5 +53,14 @@ export class MashupItemSheet extends ItemSheet {
 			const value = target.attr('value');
 			target.find(`option[value=${value}]`).attr('selected', 'selected');
 		});
+	}
+
+	protected override _getSubmitData(updateData?: object | null): Record<string, unknown> {
+		const fd = new FormDataExtended(this.form as HTMLFormElement, { editors: this.editors });
+		const data = foundry.utils.expandObject(fd.toObject());
+		if (updateData) foundry.utils.mergeObject(data, updateData);
+		console.log(data, updateData);
+		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
+		return data;
 	}
 }
