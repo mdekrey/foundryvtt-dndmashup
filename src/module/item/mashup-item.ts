@@ -1,7 +1,43 @@
-import { PossibleItemData, SpecificItemData } from './types';
+import { FeatureBonus } from '../bonuses';
+import { ClassDataProperties, PossibleItemData, RaceDataProperties, SpecificItemData } from './types';
 
 export class MashupItem extends Item {
 	data!: PossibleItemData;
+
+	allGrantedBonuses() {
+		const result = [
+			...this.data.data.grantedBonuses,
+			...(this.data.type === 'class' ? MashupItem.classModifiers(this.data.data) : []),
+			...(this.data.type === 'race' ? MashupItem.raceModifiers(this.data.data) : []),
+		];
+
+		return result;
+	}
+
+	static classModifiers(data: ClassDataProperties): FeatureBonus[] {
+		return [
+			{
+				target: 'maxHp',
+				amount: `${data.hpBase} + ${data.hpPerLevel} * @actor.extraLevels`,
+				type: 'class',
+			},
+			{
+				target: 'surges-max',
+				amount: data.healingSurgesBase,
+				type: 'class',
+			},
+		];
+	}
+
+	static raceModifiers(data: RaceDataProperties): FeatureBonus[] {
+		return [
+			{
+				target: 'speed',
+				amount: data.baseSpeed,
+				type: 'racial',
+			},
+		];
+	}
 
 	prepareDerivedData() {
 		const allData = this.data;

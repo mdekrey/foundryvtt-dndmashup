@@ -22,16 +22,6 @@ const standardBonuses: FeatureBonus[] = [
 	{ target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
 	{ target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
 	{ target: 'maxHp', amount: `10 + 2 * @actor.data.data.abilities.con.final`, type: 'base' },
-	{
-		target: 'maxHp',
-		amount: `@actor.appliedClass.data.data.hpBase + @actor.appliedClass.data.data.hpPerLevel * @actor.extraLevels`,
-		type: 'class',
-	},
-	{
-		target: 'surges-max',
-		amount: `@actor.appliedClass.data.data.healingSurgesBase`,
-		type: 'class',
-	},
 	{ target: 'surges-max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
 	{ target: 'defense-ac', amount: 10 },
 	{ target: 'defense-ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
@@ -44,11 +34,6 @@ const standardBonuses: FeatureBonus[] = [
 	{ target: 'defense-will', amount: 10 },
 	{ target: 'defense-will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
 	{ target: 'defense-will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
-	{
-		target: 'speed',
-		amount: `@actor.appliedRace.data.data.baseSpeed`,
-		type: 'racial',
-	},
 ];
 
 const setters: Record<BonusTarget, (data: PossibleActorData, value: number) => void> = {
@@ -114,7 +99,7 @@ export class MashupActor extends Actor {
 			...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
 			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
 			...this.data.items.contents.flatMap((item) =>
-				item.data.data.grantedBonuses.map((bonus) => ({ ...bonus, context: { actor: this, item } }))
+				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
 			),
 		];
 
