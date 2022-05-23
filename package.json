@@ -27,7 +27,7 @@
 		"typecheck": "tsc --noEmit",
 		"lint": "eslint --ext .ts,.js,.cjs .",
 		"lint:fix": "eslint --ext .ts,.js,.cjs --fix .",
-		"format": "prettier --write \"./**/*.(ts|js|cjs|json|yml|css)\"",
+		"format": "prettier --write \"./**/*.(ts|js|cjs|json|yml|css|html)\"",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:ci": "jest --ci --reporters=default --reporters=jest-junit",
