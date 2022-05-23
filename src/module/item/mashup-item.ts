@@ -22,10 +22,12 @@ export class MashupItem extends Item {
 
 	private _prepareClassData(data: SpecificItemData<'class'>) {
 		// console.log({ data });
+		return data;
 	}
 
 	private _prepareRaceData(data: SpecificItemData<'race'>) {
 		// console.log({ data });
+		return data;
 	}
 }
 

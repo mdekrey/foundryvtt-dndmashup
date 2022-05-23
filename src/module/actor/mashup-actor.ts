@@ -154,6 +154,7 @@ export class MashupActor extends Actor {
 
 	private _prepareNpcData(data: SpecificActorData<'monster'>) {
 		// TODO: prepare NPC-specific data
+		return data;
 	}
 
 	getRollData() {

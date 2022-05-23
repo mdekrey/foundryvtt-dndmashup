@@ -59,7 +59,6 @@ export class MashupItemSheet extends ItemSheet {
 		const fd = new FormDataExtended(this.form as HTMLFormElement, { editors: this.editors });
 		const data = foundry.utils.expandObject(fd.toObject());
 		if (updateData) foundry.utils.mergeObject(data, updateData);
-		console.log(data, updateData);
 		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
 		return data;
 	}
