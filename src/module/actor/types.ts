@@ -34,12 +34,6 @@ export type PlayerCharacterDataProperties = Merge<
 	Merge<
 		CommonDataProperties,
 		{
-			details: {
-				class: string;
-				paragon: string;
-				epic: string;
-				race: string;
-			};
 			magicItemUse: {
 				usesPerDay: number;
 			};

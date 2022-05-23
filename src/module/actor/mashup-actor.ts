@@ -10,6 +10,7 @@ import {
 	sumFinalBonuses,
 } from '../bonuses';
 import { findAppliedClass, findAppliedRace, isClassSource, isRaceSource } from './formulas';
+import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [isClassSource, isRaceSource];
@@ -55,6 +56,7 @@ const setters: Record<BonusTarget, (data: PossibleActorData, value: number) => v
 
 export class MashupActor extends Actor {
 	data!: PossibleActorData;
+	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
 	A few more methods:
 	- prepareData - performs:
@@ -66,6 +68,11 @@ export class MashupActor extends Actor {
 		- can use _source.data/data but has no access to embedded documents
 		- can be overridden
 	 */
+
+	override prepareData(): void {
+		this.subActorFunctions = actorSubtypeConfig[this.data.type] as typeof this.subActorFunctions;
+		super.prepareData();
+	}
 
 	get appliedClass() {
 		return findAppliedClass(this.items);
@@ -119,27 +126,10 @@ export class MashupActor extends Actor {
 			return;
 		}
 
-		if (this.data.type === 'pc') {
-			this._prepareCharacterData(this.data);
-		}
-		if (this.data.type === 'monster') {
-			this._prepareNpcData(this.data);
-		}
+		this.subActorFunctions.prepare(allData, this);
 
 		allData.data.health.bloodied = Math.floor(allData.data.health.maxHp / 2);
 		allData.data.health.surges.value = Math.floor(allData.data.health.maxHp / 4);
-	}
-
-	private _prepareCharacterData(data: SpecificActorData<'pc'>) {
-		// TODO: prepare PC-specific data
-
-		data.data.details.class = this.appliedClass?.name || 'No class';
-		data.data.details.race = this.appliedRace?.name || 'No race';
-	}
-
-	private _prepareNpcData(data: SpecificActorData<'monster'>) {
-		// TODO: prepare NPC-specific data
-		return data;
 	}
 
 	getRollData() {
