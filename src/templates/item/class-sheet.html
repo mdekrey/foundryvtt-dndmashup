@@ -63,9 +63,9 @@
 			</label>
 			<label class="col-span-2">
 				<input
-					name="data.healingSurgesBase"
+					name="healingSurgesBase"
 					type="number"
-					value="{{itemData.healingSurgesBase}}"
+					value="{{healingSurgesBase}}"
 					class="w-full input-text text-lg text-center"
 					data-dtype="Number" />
 				<span class="text-sm">Healing Surges</span>
@@ -73,5 +73,6 @@
 		</div>
 		<div class="border-b border-black"></div>
 		{{> (templates.bonuses) className="flex-grow" bonusList=grantedBonuses dataPath='grantedBonuses' context=bonuses }}
+		<textarea readonly class="h-32 flex-shrink-0">{{json}}</textarea>
 	</div>
 </form>

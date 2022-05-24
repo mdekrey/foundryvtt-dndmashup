@@ -1,3 +1,4 @@
+import { itemSlots } from '../item-slots';
 import { SubItemFunctions } from './sub-item-functions';
 
 export const equipmentConfig: SubItemFunctions<'equipment'> = {
@@ -7,9 +8,6 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 	},
 	sheetData: (data) => ({
 		totalWeight: data.data.weight * data.data.quantity,
-		itemSlots: {
-			body: 'Body',
-			armor: 'Armor',
-		},
+		itemSlots: Object.fromEntries(Object.entries(itemSlots).map(([k, v]) => [k, v.label])),
 	}),
 };
