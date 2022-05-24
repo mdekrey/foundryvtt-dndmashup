@@ -58,7 +58,7 @@ export function attachBonusSheet(
 	});
 
 	html.find('[data-bonus-delete]').on('click', async function (event) {
-		event.target.closest<HTMLElement>('[data-bonus-list]')?.remove();
+		event.target.closest<HTMLElement>('[data-bonus-index]')?.remove();
 		await submit();
 		sheet.render();
 	});
