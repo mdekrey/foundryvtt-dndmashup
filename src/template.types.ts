@@ -60,8 +60,26 @@ export type MonsterActorTemplateDataSourceData = {
 	};
 };
 
+export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
+export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
+
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
+};
+
+export type ItemDescriptionItemTemplateDataSourceData = {
+	description: {
+		text: string;
+		// TODO: how would unidentified work?
+		// unidentifiedText: string;
+		// isIdentified: boolean;
+	};
+};
+
+export type CarriedItemItemTemplateDataSourceData = {
+	quantity: number;
+	weight: number;
+	price: number;
 };
 
 export type ClassDataSourceData = Merge<
@@ -81,19 +99,27 @@ export type RaceDataSourceData = Merge<
 		baseSpeed: number;
 	}
 >;
-
-export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
-export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
+type ItemSlot = 'weapon' | 'body';
+type EquippedItemSlot = 'weapon-primary' | 'weapon-off-hand' | 'body';
+export type EquipmentDataSourceData = Merge<
+	BaseItemTemplateDataSourceData,
+	ItemDescriptionItemTemplateDataSourceData &
+		CarriedItemItemTemplateDataSourceData & {
+			itemSlot: ItemSlot;
+			equipped: '' | EquippedItemSlot;
+		}
+>;
 
 type DataSource<T extends string, TData> = { type: T; data: TData };
 export type PlayerCharacterDataSource = DataSource<'pc', PlayerCharacterDataSourceData>;
 export type MonsterDataSource = DataSource<'monster', MonsterDataSourceData>;
 export type ClassDataSource = DataSource<'class', ClassDataSourceData>;
 export type RaceDataSource = DataSource<'race', RaceDataSourceData>;
+export type EquipmentDataSource = DataSource<'equipment', EquipmentDataSourceData>;
 
 declare global {
 	interface SourceConfig {
 		Actor: PlayerCharacterDataSource | MonsterDataSource;
-		Item: ClassDataSource | RaceDataSource;
+		Item: ClassDataSource | RaceDataSource | EquipmentDataSource;
 	}
 }

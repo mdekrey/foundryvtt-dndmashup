@@ -31,5 +31,6 @@ export const templatePathItemSheet = (type: SourceConfig['Item']['type']) =>
 	`${templatePath}/item/${type}-sheet.html` as const;
 
 export const templatePathItemParts = {
+	details: `${templatePath}/item/parts/details.html` as const,
 	...templatePathSharedParts,
 };

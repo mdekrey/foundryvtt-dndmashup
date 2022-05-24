@@ -1,11 +1,18 @@
 import { uniq } from 'lodash/fp';
-import { templatePath, templatePathActorParts, templatePathActorSheet, templatePathItemParts } from './constants';
+import {
+	templatePathActorParts,
+	templatePathActorSheet,
+	templatePathItemParts,
+	templatePathItemSheet,
+} from './constants';
 
 export async function preloadTemplates(): Promise<Handlebars.TemplateDelegate[]> {
 	const templatePaths: string[] = uniq([
 		// Add paths to "systems/foundryvtt-dndmashup/templates"
 		templatePathActorSheet('pc'),
-		`${templatePath}/actor/sheet.html`,
+		templatePathItemSheet('race'),
+		templatePathItemSheet('class'),
+		templatePathItemSheet('equipment'),
 
 		...Object.values(templatePathActorParts),
 		...Object.values(templatePathItemParts),

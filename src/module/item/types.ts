@@ -2,6 +2,8 @@ import {
 	BaseItemTemplateDataSourceData,
 	ClassDataSource,
 	ClassDataSourceData,
+	EquipmentDataSource,
+	EquipmentDataSourceData,
 	RaceDataSource,
 	RaceDataSourceData,
 } from 'src/template.types';
@@ -11,18 +13,22 @@ import { ItemData } from './item.types';
 
 export type CommonDataProperties = BaseItemTemplateDataSourceData;
 
-export type ClassDataProperties = Merge<ClassDataSourceData, CommonDataProperties>;
-
-export type RaceDataProperties = Merge<RaceDataSourceData, CommonDataProperties>;
+export type ClassDataProperties = ClassDataSourceData;
+export type RaceDataProperties = RaceDataSourceData;
+export type EquipmentDataProperties = EquipmentDataSourceData;
 export type ClassData = { type: 'class'; data: ClassDataProperties };
 export type RaceData = { type: 'race'; data: RaceDataProperties };
+export type EquipmentData = { type: 'equipment'; data: EquipmentDataProperties };
 
 declare global {
 	interface DataConfig {
-		Item: ClassData | RaceData;
+		Item: ClassData | RaceData | EquipmentData;
 	}
 }
 
-export type PossibleItemData = ItemData<ClassData, ClassDataSource> | ItemData<RaceData, RaceDataSource>;
+export type PossibleItemData =
+	| ItemData<ClassData, ClassDataSource>
+	| ItemData<RaceData, RaceDataSource>
+	| ItemData<EquipmentData, EquipmentDataSource>;
 
 export type SpecificItemData<T extends PossibleItemData['type']> = PossibleItemData & { type: T };

@@ -15,6 +15,13 @@ export class MashupItemSheet extends ItemSheet {
 			classes: [],
 			width: 585,
 			height: 420,
+			tabs: [
+				{
+					navSelector: `nav[data-group='primary']`,
+					contentSelector: 'section[data-tab-section]',
+					initial: 'description',
+				},
+			],
 		});
 	}
 
@@ -36,6 +43,8 @@ export class MashupItemSheet extends ItemSheet {
 			templates: Object.fromEntries(Object.entries(templatePathItemParts).map(([k, v]) => [k, () => v as never])),
 			grantedBonuses: foundry.utils.deepClone(itemData.data.data.grantedBonuses),
 			bonuses: getBonusesContext(),
+
+			...context.item.subItemFunctions.sheetData(context.item.data),
 		});
 
 		return result;

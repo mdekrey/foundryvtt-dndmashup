@@ -5,4 +5,5 @@ import { PossibleItemData, SpecificItemData } from '../types';
 export type SubItemFunctions<T extends PossibleItemData['type']> = {
 	bonuses: (data: SpecificItemData<T>) => FeatureBonus[];
 	prepare: (data: SpecificItemData<T>, item: MashupItem) => void;
+	sheetData: (data: SpecificItemData<T>) => object;
 };

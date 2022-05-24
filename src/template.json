@@ -97,10 +97,20 @@
 		}
 	},
 	"Item": {
-		"types": ["class", "race"],
+		"types": ["class", "race", "equipment"],
 		"templates": {
 			"base": {
 				"grantedBonuses": []
+			},
+			"itemDescription": {
+				"description": {
+					"text": ""
+				}
+			},
+			"carriedItem": {
+				"quantity": 1,
+				"weight": 0,
+				"price": 0
 			}
 		},
 		"class": {
@@ -115,6 +125,11 @@
 		"race": {
 			"templates": ["base"],
 			"baseSpeed": 6
+		},
+		"equipment": {
+			"templates": ["base", "itemDescription", "carriedItem"],
+			"itemSlot": "armor",
+			"equippedItemSlot": null
 		}
 	}
 }
