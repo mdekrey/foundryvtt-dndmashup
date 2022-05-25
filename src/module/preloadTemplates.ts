@@ -1,12 +1,11 @@
 import { uniq } from 'lodash/fp';
+import { templatePathActorParts, templatePathActorSheet } from './actor/templates/template-paths';
 import {
 	otherEquipmentDetails,
-	templatePathActorParts,
-	templatePathActorSheet,
 	templatePathEquipmentParts,
 	templatePathItemParts,
 	templatePathItemSheet,
-} from './constants';
+} from './item/templates/template-paths';
 
 export async function preloadTemplates(): Promise<Handlebars.TemplateDelegate[]> {
 	const templatePaths: string[] = uniq([

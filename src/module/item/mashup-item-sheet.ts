@@ -1,6 +1,6 @@
 import { attachBonusSheet, getBonusesContext } from '../bonuses';
-import { templatePath, templatePathItemParts } from '../constants';
 import { MashupItem } from './mashup-item';
+import { templatePathItemSheet, templatePathItemParts } from './templates/template-paths';
 
 type ItemHandlebarsContext = Awaited<ReturnType<ItemSheet['getData']>> & {
 	rollData: object;
@@ -19,14 +19,14 @@ export class MashupItemSheet extends ItemSheet {
 				{
 					navSelector: `nav[data-group='primary']`,
 					contentSelector: 'section[data-tab-section]',
-					initial: 'description',
+					initial: 'details',
 				},
 			],
 		});
 	}
 
 	override get template() {
-		return `${templatePath}/item/${this.item.data.type}-sheet.html`;
+		return templatePathItemSheet(this.item.data.type);
 	}
 
 	override async getData() {

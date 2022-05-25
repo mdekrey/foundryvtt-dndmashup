@@ -22,7 +22,15 @@ const distDirectory = './dist';
 const stylesDirectory = `${sourceDirectory}/styles`;
 const stylesExtension = 'css';
 const sourceFileExtension = 'ts';
-const staticFiles = ['assets', 'fonts', 'lang', 'packs', 'templates', 'system.json', 'template.json'];
+const staticFiles = [
+	'assets/**/*',
+	'fonts/**/*',
+	'lang/**/*',
+	'packs/**/*',
+	'**/*.html',
+	'system.json',
+	'template.json',
+];
 
 /********************/
 /*      BUILD       */
@@ -68,11 +76,12 @@ function buildStyles() {
  * Copy static files
  */
 async function copyFiles() {
-	for (const file of staticFiles) {
-		if (fs.existsSync(`${sourceDirectory}/${file}`)) {
-			await fs.copy(`${sourceDirectory}/${file}`, `${distDirectory}/${file}`);
-		}
-	}
+	gulp
+		.src(
+			staticFiles.map((file) => `${sourceDirectory}/${file}`),
+			{ base: sourceDirectory }
+		)
+		.pipe(gulp.dest(distDirectory));
 }
 
 /**

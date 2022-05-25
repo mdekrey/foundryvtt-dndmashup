@@ -1,4 +1,4 @@
-import { otherEquipmentDetails, templatePathEquipmentParts } from 'src/module/constants';
+import { otherEquipmentDetails, templatePathEquipmentParts } from '../templates/template-paths';
 import { SubItemFunctions } from './sub-item-functions';
 
 const itemSlots = {

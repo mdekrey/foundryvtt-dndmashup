@@ -1,5 +1,5 @@
 import { MashupActor } from './mashup-actor';
-import { templatePathActorParts, templatePathActorSheet } from '../constants';
+import { templatePathActorParts, templatePathActorSheet } from './templates/template-paths';
 
 type ActorHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 	actorData: DataConfig['Actor']['data'];
