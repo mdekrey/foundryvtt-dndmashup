@@ -1,4 +1,5 @@
 import { FeatureBonus } from './module/bonuses';
+import { ItemSlotTemplates } from './module/item/item-slots';
 import { Ability, Currency } from './types/types';
 
 export type BaseActorTemplateDataSourceData = {
@@ -107,6 +108,7 @@ export type EquipmentDataSourceData = Merge<
 		CarriedItemItemTemplateDataSourceData & {
 			itemSlot: ItemSlot;
 			equipped: '' | EquippedItemSlot;
+			equipmentProperties?: ItemSlotTemplates[keyof ItemSlotTemplates] | null;
 		}
 >;
 

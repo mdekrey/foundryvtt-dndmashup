@@ -12,4 +12,5 @@ export const raceConfig: SubItemFunctions<'race'> = {
 		// nothing to prepare
 	},
 	sheetData: () => ({}),
+	getSubmitSheetData: (d) => d,
 };

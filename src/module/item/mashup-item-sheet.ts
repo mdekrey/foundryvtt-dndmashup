@@ -32,20 +32,23 @@ export class MashupItemSheet extends ItemSheet {
 	override async getData() {
 		const context = await super.getData();
 
-		const itemData: MashupItem = context.item;
+		const item: MashupItem = context.item;
 
-		const result: ItemHandlebarsContext = mergeObject(context, {
-			itemData: itemData.data.data,
+		const result: ItemHandlebarsContext = foundry.utils.mergeObject(
+			mergeObject(context, {
+				itemData: item.data.data,
 
-			// Add roll data for TinyMCE editors.
-			rollData: itemData.getRollData(),
+				// Add roll data for TinyMCE editors.
+				rollData: item.getRollData(),
 
-			templates: Object.fromEntries(Object.entries(templatePathItemParts).map(([k, v]) => [k, () => v as never])),
-			grantedBonuses: foundry.utils.deepClone(itemData.data.data.grantedBonuses),
-			bonuses: getBonusesContext(),
+				templates: Object.fromEntries(Object.entries(templatePathItemParts).map(([k, v]) => [k, () => v as never])),
+				grantedBonuses: foundry.utils.deepClone(item.data.data.grantedBonuses),
+				bonuses: getBonusesContext(),
+			}),
+			context.item.subItemFunctions.sheetData(context.item.data)
+		);
 
-			...context.item.subItemFunctions.sheetData(context.item.data),
-		});
+		console.log({ item, result });
 
 		return result;
 	}
@@ -69,6 +72,7 @@ export class MashupItemSheet extends ItemSheet {
 		const data = foundry.utils.expandObject(fd.toObject());
 		if (updateData) foundry.utils.mergeObject(data, updateData);
 		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
-		return data;
+		delete data.grantedBonuses;
+		return this.item.subItemFunctions.getSubmitSheetData(data, this.item);
 	}
 }

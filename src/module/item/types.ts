@@ -18,7 +18,10 @@ export type RaceDataProperties = RaceDataSourceData;
 export type EquipmentDataProperties = EquipmentDataSourceData;
 export type ClassData = { type: 'class'; data: ClassDataProperties };
 export type RaceData = { type: 'race'; data: RaceDataProperties };
-export type EquipmentData = { type: 'equipment'; data: EquipmentDataProperties };
+export type EquipmentData = {
+	type: 'equipment';
+	data: EquipmentDataProperties;
+};
 
 declare global {
 	interface DataConfig {

@@ -55,11 +55,13 @@
 		<div class="flex-grow flex flex-col">
 			<nav data-group="primary" class="flex justify-around border-b border-black">
 				<label data-tab="details" class="link uppecase">Details</label>
+				<label data-tab="description" class="link uppecase">Description</label>
 				<label data-tab="bonuses" class="link uppecase">Bonuses</label>
 			</nav>
 
 			<section class="flex-grow" data-tab-section>
 				<div class="tab w-full h-full" data-group="primary" data-tab="details">{{> (templates.details) }}</div>
+				<div class="tab w-full h-full" data-group="primary" data-tab="description">{{> (templates.description) }}</div>
 				<div class="tab w-full h-full" data-group="primary" data-tab="bonuses">
 					{{> (templates.bonuses) className="flex-grow" bonusList=grantedBonuses dataPath='grantedBonuses'
 					context=bonuses }}

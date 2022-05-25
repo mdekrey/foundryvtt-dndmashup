@@ -31,6 +31,12 @@ export const templatePathItemSheet = (type: SourceConfig['Item']['type']) =>
 	`${templatePath}/item/${type}-sheet.html` as const;
 
 export const templatePathItemParts = {
-	details: `${templatePath}/item/parts/details.html` as const,
+	description: `${templatePath}/item/parts/description.html` as const,
 	...templatePathSharedParts,
+};
+
+export const otherEquipmentDetails = `${templatePath}/item/parts/equipment-details/other.html` as const;
+
+export const templatePathEquipmentParts = {
+	armor: `${templatePath}/item/parts/equipment-details/armor.html` as const,
 };

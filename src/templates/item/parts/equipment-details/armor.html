@@ -1,0 +1,23 @@
+<div class="grid grid-cols-12 gap-1">
+	<label class="col-span-2">
+		<input
+			name="data.equipmentProperties.armorBonus"
+			type="number"
+			value="{{itemData.equipmentProperties.armorBonus}}"
+			class="w-full input-text text-lg text-center"
+			data-dtype="Number" />
+		<span class="text-sm">Armor Bonus</span>
+	</label>
+	<label class="col-span-5">
+		<select name="data.equipmentProperties.category" class="w-full input-text text-lg text-center">
+			{{selectOptions armorCategories selected=itemData.equipmentProperties.category}}
+		</select>
+		<span class="text-sm">Category</span>
+	</label>
+	<label class="col-span-5">
+		<select name="data.equipmentProperties.type" class="w-full input-text text-lg text-center">
+			{{selectOptions armorTypes selected=itemData.equipmentProperties.type}}
+		</select>
+		<span class="text-sm">Type</span>
+	</label>
+</div>
