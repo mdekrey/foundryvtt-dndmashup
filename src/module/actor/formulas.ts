@@ -1,5 +1,5 @@
 import { ActorDataBaseProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
-import { ClassDataSource, RaceDataSource } from '../item/template';
+import { ClassDataSource, RaceDataSource } from '../item/types';
 import { MashupItem, SpecificItem } from '../item/mashup-item';
 
 type Items = ActorDataBaseProperties['items'];
