@@ -44,3 +44,11 @@
 </label>
 
 {{> (templates.otherDetails) }}
+
+<span class="col-span-12 text-sm grid grid-cols-4">
+	{{#each weaponProperties as |name type|}}
+	<label class="whitespace-normal">
+		<input type="checkbox" name="properties.{{type}}" {{checked (lookup ../properties type)}}/> {{ name }}
+	</label>
+	{{/each}}
+</span>

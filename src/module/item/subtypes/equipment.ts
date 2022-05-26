@@ -1,4 +1,12 @@
-import { ArmorCategory, ArmorType, itemSlots, ItemSlotTemplates, WeaponCategory, WeaponGroup } from '../item-slots';
+import {
+	ArmorCategory,
+	ArmorType,
+	itemSlots,
+	ItemSlotTemplates,
+	WeaponCategory,
+	WeaponGroup,
+	WeaponProperties,
+} from '../item-slots';
 import { templatePathEquipmentParts } from '../templates/template-paths';
 import { SubItemFunctions } from './sub-item-functions';
 
@@ -40,6 +48,35 @@ const weaponGroups: Record<WeaponGroup, string> = {
 	staff: 'Staff',
 	unarmed: 'Unarmed',
 };
+const weaponProperties: Record<WeaponProperties, string> = {
+	'heavy-thrown': 'Heavy Thrown',
+	'high-crit': 'High Crit',
+	'light-thrown': 'Light Thrown',
+	load: 'Load',
+	'off-hand': 'Off Hand',
+	reach: 'Reach',
+	small: 'Small',
+	versatile: 'Versatile',
+};
+
+function weaponExtraData(equipmentProperties: ItemSlotTemplates['weapon']) {
+	return {
+		properties: Object.fromEntries(equipmentProperties.properties.map((p) => [p, true])),
+	};
+}
+function weaponFromExtraData(equipmentProperties: ItemSlotTemplates['weapon'], submittedData: any) {
+	if (
+		submittedData &&
+		typeof submittedData === 'object' &&
+		'properties' in submittedData &&
+		submittedData.properties &&
+		typeof submittedData.properties === 'object'
+	) {
+		equipmentProperties.properties = Object.entries(submittedData.properties)
+			.filter(([, v]) => v)
+			.map(([p]) => p as WeaponProperties);
+	}
+}
 
 export const equipmentConfig: SubItemFunctions<'equipment'> = {
 	bonuses: () => [],
@@ -52,6 +89,8 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 			({
 				...itemSlots[data.data.itemSlot].defaultEquipmentInfo,
 			} as ItemSlotTemplates[keyof ItemSlotTemplates]);
+		const extraProperties =
+			data.data.itemSlot === 'weapon' ? weaponExtraData(equipmentProperties as ItemSlotTemplates['weapon']) : {};
 		return {
 			itemData: { equipmentProperties },
 			totalWeight: data.data.weight * data.data.quantity,
@@ -61,15 +100,22 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 			weaponCategories,
 			weaponHands,
 			weaponGroups,
+			weaponProperties,
+
+			...extraProperties,
 
 			templates: {
 				details: () => templatePathEquipmentParts[data.data.itemSlot as keyof typeof templatePathEquipmentParts],
 			},
 		};
 	},
-	getSubmitSheetData: (d, item) => {
+	getSubmitSheetData: (d, item, sheet) => {
 		if (d.data.itemSlot !== item.data.data.itemSlot) {
 			d.data.equipmentProperties = null;
+		} else {
+			if (d.data.itemSlot === 'weapon') {
+				weaponFromExtraData(d.data.equipmentProperties, d);
+			}
 		}
 		return d;
 	},

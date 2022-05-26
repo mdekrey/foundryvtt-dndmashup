@@ -71,7 +71,7 @@ export class MashupItemSheet extends ItemSheet {
 		if (updateData) foundry.utils.mergeObject(data, updateData);
 		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
 		delete data.grantedBonuses;
-		const result = this.item.subItemFunctions.getSubmitSheetData(data, this.item);
+		const result = this.item.subItemFunctions.getSubmitSheetData(data, this.item, this);
 		return result;
 	}
 }
