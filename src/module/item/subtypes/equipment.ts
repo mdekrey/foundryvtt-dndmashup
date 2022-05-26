@@ -1,18 +1,8 @@
-import { otherEquipmentDetails, templatePathEquipmentParts } from '../templates/template-paths';
+import { itemSlots, ItemSlotTemplates } from '../item-slots';
+import { templatePathEquipmentParts } from '../templates/template-paths';
 import { SubItemFunctions } from './sub-item-functions';
 
-const itemSlots = {
-	weapon: 'Weapon',
-	shield: 'Shield',
-	armor: 'Armor',
-	arms: 'Arms',
-	feet: 'Feet',
-	hands: 'Hands',
-	head: 'Head',
-	neck: 'Neck',
-	ring: 'Ring',
-	waist: 'Waist',
-};
+const itemSlotsDropdown = Object.fromEntries(Object.entries(itemSlots).map(([k, v]) => [k, v.label]));
 const armorCategories = {
 	cloth: 'Cloth',
 	leather: 'Leather',
@@ -31,26 +21,28 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 	prepare: () => {
 		// nothing to prepare
 	},
-	sheetData: (data) => ({
-		totalWeight: data.data.weight * data.data.quantity,
-		itemSlots,
-		armorCategories,
-		armorTypes,
+	sheetData: (data) => {
+		const equipmentProperties =
+			data.data.equipmentProperties ??
+			({
+				...itemSlots[data.data.itemSlot].defaultEquipmentInfo,
+			} as ItemSlotTemplates[keyof ItemSlotTemplates]);
+		return {
+			itemData: { equipmentProperties },
+			totalWeight: data.data.weight * data.data.quantity,
+			itemSlots: itemSlotsDropdown,
+			armorCategories,
+			armorTypes,
 
-		templates: {
-			details: () =>
-				data.data.itemSlot in templatePathEquipmentParts
-					? templatePathEquipmentParts[data.data.itemSlot as keyof typeof templatePathEquipmentParts]
-					: otherEquipmentDetails,
-		},
-	}),
+			templates: {
+				details: () => templatePathEquipmentParts[data.data.itemSlot as keyof typeof templatePathEquipmentParts],
+			},
+		};
+	},
 	getSubmitSheetData: (d, item) => {
-		if (d.data.itemSlot !== item.data.data.itemSlot) d.data.equipmentProperties = null;
-		// d.data.equipmentProperties = {
-		// 	...Object.fromEntries(Object.entries(item.data.data.equipmentProperties).map(([k]) => [k, undefined])),
-		// 	...d.data.equipmentProperties,
-		// };
-		console.log(d);
+		if (d.data.itemSlot !== item.data.data.itemSlot) {
+			d.data.equipmentProperties = null;
+		}
 		return d;
 	},
 };

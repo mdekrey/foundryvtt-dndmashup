@@ -1,7 +1,7 @@
 import { Ability, DataSource } from 'src/types/types';
 import { ItemData } from './item.types';
 import { FeatureBonus } from '../bonuses';
-import { ItemSlotTemplates } from './item-slots';
+import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './item-slots';
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
@@ -39,8 +39,6 @@ export type RaceDataSourceData = Merge<
 		baseSpeed: number;
 	}
 >;
-type ItemSlot = 'weapon' | 'body';
-type EquippedItemSlot = 'weapon-primary' | 'weapon-off-hand' | 'body';
 export type EquipmentDataSourceData = Merge<
 	BaseItemTemplateDataSourceData,
 	ItemDescriptionItemTemplateDataSourceData &

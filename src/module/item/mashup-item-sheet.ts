@@ -48,8 +48,6 @@ export class MashupItemSheet extends ItemSheet {
 			context.item.subItemFunctions.sheetData(context.item.data)
 		);
 
-		console.log({ item, result });
-
 		return result;
 	}
 
@@ -73,6 +71,7 @@ export class MashupItemSheet extends ItemSheet {
 		if (updateData) foundry.utils.mergeObject(data, updateData);
 		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
 		delete data.grantedBonuses;
-		return this.item.subItemFunctions.getSubmitSheetData(data, this.item);
+		const result = this.item.subItemFunctions.getSubmitSheetData(data, this.item);
+		return result;
 	}
 }
