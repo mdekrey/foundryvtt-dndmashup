@@ -4,7 +4,7 @@ import {
 	MonsterDataSourceData,
 	PlayerCharacterDataSource,
 	PlayerCharacterDataSourceData,
-} from 'src/template.types';
+} from 'src/module/actor/template';
 import { Ability, Defense } from 'src/types/types';
 import { ActorData } from './actor.types';
 

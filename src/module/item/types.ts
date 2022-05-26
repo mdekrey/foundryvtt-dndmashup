@@ -1,4 +1,4 @@
-import {
+import type {
 	BaseItemTemplateDataSourceData,
 	ClassDataSource,
 	ClassDataSourceData,
@@ -6,7 +6,7 @@ import {
 	EquipmentDataSourceData,
 	RaceDataSource,
 	RaceDataSourceData,
-} from 'src/template.types';
+} from './template';
 import { ItemData } from './item.types';
 
 // TODO - any calculated properties? See actor/types.ts
