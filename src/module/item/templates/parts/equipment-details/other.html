@@ -1,3 +1,35 @@
-<div class="h-full flex items-center justify-center">
-	<span>No special details</span>
-</div>
+<label class="col-span-2">
+	<span class="w-full input-text flex items-baseline">
+		<input
+			name="data.weight"
+			type="number"
+			value="{{itemData.weight}}"
+			class="text-lg text-center min-w-0 flex-shrink"
+			data-dtype="Number" />
+		lbs.
+	</span>
+	<span class="text-sm">Weight ea.</span>
+</label>
+<label class="col-span-2">
+	<span class="w-full input-text flex items-baseline">
+		<input
+			name="data.quantity"
+			type="number"
+			value="{{itemData.quantity}}"
+			class="text-lg text-center min-w-0 flex-shrink"
+			data-dtype="Number" />
+	</span>
+	<span class="text-sm">Quantity</span>
+</label>
+<label class="col-span-2">
+	<span class="w-full input-text flex items-baseline">
+		<input
+			name="data.price"
+			type="number"
+			value="{{itemData.price}}"
+			class="text-lg text-center min-w-0 flex-shrink"
+			data-dtype="Number" />
+		gp
+	</span>
+	<span class="text-sm">Price</span>
+</label>

@@ -19,7 +19,7 @@ export class MashupItemSheet extends ItemSheet {
 				{
 					navSelector: `nav[data-group='primary']`,
 					contentSelector: 'section[data-tab-section]',
-					initial: 'details',
+					initial: 'description',
 				},
 			],
 		});

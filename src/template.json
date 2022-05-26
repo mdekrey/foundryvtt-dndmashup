@@ -128,8 +128,8 @@
 		},
 		"equipment": {
 			"templates": ["base", "itemDescription", "carriedItem"],
-			"itemSlot": "armor",
-			"equippedItemSlot": null
+			"itemSlot": "",
+			"equippedItemSlot": ""
 		}
 	}
 }

@@ -1,0 +1,26 @@
+<label class="col-span-4">
+	<select name="data.equipmentProperties.type" class="w-full input-text text-lg text-center">
+		{{selectOptions armorTypes selected=itemData.equipmentProperties.type}}
+	</select>
+	<span class="text-sm">Type</span>
+</label>
+<label class="col-span-4">
+	<input
+		name="data.equipmentProperties.shieldBonus"
+		type="number"
+		value="{{itemData.equipmentProperties.shieldBonus}}"
+		class="w-full input-text text-lg text-center"
+		data-dtype="Number" />
+	<span class="text-sm">Shield Bonus</span>
+</label>
+<label class="col-span-4">
+	<input
+		name="data.equipmentProperties.checkPenalty"
+		type="number"
+		value="{{itemData.equipmentProperties.checkPenalty}}"
+		class="w-full input-text text-lg text-center"
+		data-dtype="Number" />
+	<span class="text-sm">Check</span>
+</label>
+
+{{> (templates.otherDetails) }}

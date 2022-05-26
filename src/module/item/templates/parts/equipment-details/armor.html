@@ -1,23 +1,41 @@
-<div class="grid grid-cols-12 gap-1 items-end">
-	<label class="col-span-2">
-		<input
-			name="data.equipmentProperties.armorBonus"
-			type="number"
-			value="{{itemData.equipmentProperties.armorBonus}}"
-			class="w-full input-text text-lg text-center"
-			data-dtype="Number" />
-		<span class="text-sm">Armor Bonus</span>
-	</label>
-	<label class="col-span-5">
-		<select name="data.equipmentProperties.category" class="w-full input-text text-lg text-center">
-			{{selectOptions armorCategories selected=itemData.equipmentProperties.category}}
-		</select>
-		<span class="text-sm">Category</span>
-	</label>
-	<label class="col-span-5">
-		<select name="data.equipmentProperties.type" class="w-full input-text text-lg text-center">
-			{{selectOptions armorTypes selected=itemData.equipmentProperties.type}}
-		</select>
-		<span class="text-sm">Type</span>
-	</label>
-</div>
+<label class="col-span-6">
+	<select name="data.equipmentProperties.category" class="w-full input-text text-lg text-center">
+		{{selectOptions armorCategories selected=itemData.equipmentProperties.category}}
+	</select>
+	<span class="text-sm">Category</span>
+</label>
+<label class="col-span-6">
+	<select name="data.equipmentProperties.type" class="w-full input-text text-lg text-center">
+		{{selectOptions armorTypes selected=itemData.equipmentProperties.type}}
+	</select>
+	<span class="text-sm">Type</span>
+</label>
+<label class="col-span-4">
+	<input
+		name="data.equipmentProperties.armorBonus"
+		type="number"
+		value="{{itemData.equipmentProperties.armorBonus}}"
+		class="w-full input-text text-lg text-center"
+		data-dtype="Number" />
+	<span class="text-sm">Armor Bonus</span>
+</label>
+<label class="col-span-4">
+	<input
+		name="data.equipmentProperties.checkPenalty"
+		type="number"
+		value="{{itemData.equipmentProperties.checkPenalty}}"
+		class="w-full input-text text-lg text-center"
+		data-dtype="Number" />
+	<span class="text-sm">Check</span>
+</label>
+<label class="col-span-4">
+	<input
+		name="data.equipmentProperties.speedPenalty"
+		type="number"
+		value="{{itemData.equipmentProperties.speedPenalty}}"
+		class="w-full input-text text-lg text-center"
+		data-dtype="Number" />
+	<span class="text-sm">Speed</span>
+</label>
+
+{{> (templates.otherDetails) }}
