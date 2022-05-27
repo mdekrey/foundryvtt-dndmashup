@@ -14,23 +14,25 @@
 					<span class="text-sm">Item Slot</span>
 				</label>
 
-				{{> (templates.details) }}
+				<p class="col-span-12">{{summary}}</p>
 			</div>
 		</div>
 		<div class="border-b border-black"></div>
-		<div class="flex-grow flex flex-col">
-			<nav data-group="primary" class="flex justify-around border-b border-black">
-				<label data-tab="description" class="link uppecase">Description</label>
-				<label data-tab="bonuses" class="link uppecase">Bonuses</label>
-			</nav>
+		<nav data-group="primary" class="flex justify-around border-b border-black">
+			<label data-tab="details" class="link uppecase">Details</label>
+			<label data-tab="description" class="link uppecase">Description</label>
+			<label data-tab="bonuses" class="link uppecase">Bonuses</label>
+		</nav>
 
-			<section class="flex-grow" data-tab-section>
-				<div class="tab w-full h-full" data-group="primary" data-tab="description">{{> (templates.description) }}</div>
-				<div class="tab w-full h-full" data-group="primary" data-tab="bonuses">
-					{{> (templates.bonuses) className="flex-grow" bonusList=grantedBonuses dataPath='grantedBonuses'
-					context=bonuses }}
-				</div>
-			</section>
-		</div>
+		<section class="flex-grow" data-tab-section>
+			<div class="tab w-full h-full" data-group="primary" data-tab="details">
+				<div class="grid grid-cols-12 gap-x-1 items-end">{{> (templates.details) }}</div>
+			</div>
+			<div class="tab w-full h-full" data-group="primary" data-tab="description">{{> (templates.description) }}</div>
+			<div class="tab w-full h-full" data-group="primary" data-tab="bonuses">
+				{{> (templates.bonuses) className="flex-grow" bonusList=grantedBonuses dataPath='grantedBonuses' context=bonuses
+				}}
+			</div>
+		</section>
 	</div>
 </form>

@@ -85,6 +85,7 @@ export type ItemSlotInfo<T extends ItemSlot> = {
 	? {
 			bonuses: (inputData: ItemSlotTemplates[T]) => FeatureBonus[];
 			defaultEquipmentInfo: ItemSlotTemplates[T];
+			buildSummary: (inputData: ItemSlotTemplates[T]) => string;
 	  }
 	: {
 			defaultEquipmentInfo: null;
@@ -107,17 +108,27 @@ export const itemSlots: {
 			category: 'military',
 			hands: 1,
 		},
+		buildSummary: (input) =>
+			`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}, ${[
+				input.range,
+				...input.properties,
+			]
+				.filter(Boolean)
+				.join(', ')}`,
 	},
 	shield: {
 		label: 'Shield',
 		equippedSlots: ['off-hand'],
 		bonuses: () => [],
 		defaultEquipmentInfo: { type: 'light', shieldBonus: 1, checkPenalty: 0 },
+		buildSummary: (input) => `${input.type}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`,
 	},
 	armor: {
 		label: 'Armor',
 		bonuses: () => [],
 		defaultEquipmentInfo: { armorBonus: 0, type: 'light', category: 'cloth', checkPenalty: 0, speedPenalty: 0 },
+		buildSummary: (input) =>
+			`${input.type} ${input.category}, armor bonus +${input.armorBonus}, check penalty ${input.checkPenalty}, speed penalty ${input.speedPenalty}`,
 	},
 	arms: { label: 'Arms', defaultEquipmentInfo: null },
 	feet: { label: 'Feet', defaultEquipmentInfo: null },

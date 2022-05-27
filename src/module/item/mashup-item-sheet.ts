@@ -65,13 +65,17 @@ export class MashupItemSheet extends ItemSheet {
 		});
 	}
 
+	showDetails() {
+		this._tabs[0].activate('details');
+	}
+
 	protected override _getSubmitData(updateData?: object | null): Record<string, unknown> {
 		const fd = new FormDataExtended(this.form as HTMLFormElement, { editors: this.editors });
 		const data = foundry.utils.expandObject(fd.toObject());
 		if (updateData) foundry.utils.mergeObject(data, updateData);
 		data.data.grantedBonuses = Array.from(Object.values(data.grantedBonuses || {}));
 		delete data.grantedBonuses;
-		const result = this.item.subItemFunctions.getSubmitSheetData(data, this.item);
+		const result = this.item.subItemFunctions.getSubmitSheetData(data, this.item, this);
 		return result;
 	}
 }

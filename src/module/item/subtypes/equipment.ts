@@ -52,6 +52,11 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 			({
 				...itemSlots[data.data.itemSlot].defaultEquipmentInfo,
 			} as ItemSlotTemplates[keyof ItemSlotTemplates]);
+		const itemSlotFunc = itemSlots[data.data.itemSlot];
+		const buildSummary =
+			'buildSummary' in itemSlotFunc
+				? (itemSlotFunc.buildSummary as (param: typeof equipmentProperties) => string)
+				: () => `TODO: summary`;
 		return {
 			itemData: { equipmentProperties },
 			totalWeight: data.data.weight * data.data.quantity,
@@ -62,14 +67,17 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 			weaponHands,
 			weaponGroups,
 
+			summary: buildSummary(equipmentProperties),
+
 			templates: {
 				details: () => templatePathEquipmentParts[data.data.itemSlot as keyof typeof templatePathEquipmentParts],
 			},
 		};
 	},
-	getSubmitSheetData: (d, item) => {
+	getSubmitSheetData: (d, item, sheet) => {
 		if (d.data.itemSlot !== item.data.data.itemSlot) {
 			d.data.equipmentProperties = null;
+			sheet.showDetails();
 		}
 		return d;
 	},
