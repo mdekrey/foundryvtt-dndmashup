@@ -21,7 +21,6 @@ const sourceDirectory = './src';
 const distDirectory = './dist';
 const stylesDirectory = `${sourceDirectory}/styles`;
 const stylesExtension = 'css';
-const sourceFileExtension = 'ts';
 const staticFiles = [
 	'assets/**/*',
 	'fonts/**/*',
@@ -31,6 +30,7 @@ const staticFiles = [
 	'system.json',
 	'template.json',
 ];
+const sourceFiles = [`**/*.ts`, `**/*.tsx`];
 
 /********************/
 /*      BUILD       */
@@ -41,16 +41,18 @@ let cache;
 /**
  * Build the distributable JavaScript code
  */
-function buildCode() {
-	return rollupStream({ ...rollupConfig(), cache })
-		.on('bundle', (bundle) => {
-			cache = bundle;
-		})
-		.pipe(source(`${name}.js`))
-		.pipe(buffer())
-		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest(`${distDirectory}/module`));
+function buildCode(isProduction) {
+	return function buildCode() {
+		return rollupStream({ ...rollupConfig(isProduction), cache })
+			.on('bundle', (bundle) => {
+				cache = bundle;
+			})
+			.pipe(source(`${name}.js`))
+			.pipe(buffer())
+			.pipe(sourcemaps.init({ loadMaps: true }))
+			.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest(`${distDirectory}/module`));
+	};
 }
 
 /**
@@ -88,11 +90,15 @@ async function copyFiles() {
  * Watch for changes for each build step
  */
 function watch() {
-	gulp.watch(`${sourceDirectory}/**/*.${sourceFileExtension}`, { ignoreInitial: false }, buildCode);
+	gulp.watch(
+		sourceFiles.map((file) => `${sourceDirectory}/${file}`),
+		{ ignoreInitial: false },
+		buildCode(false)
+	);
 	gulp.watch(
 		[
 			`${stylesDirectory}/**/*.${stylesExtension}`,
-			`${sourceDirectory}/**/*.${sourceFileExtension}`,
+			...sourceFiles.map((file) => `${sourceDirectory}/${file}`),
 			`./tailwind.config.cjs`,
 			...staticFiles.map((file) => `${sourceDirectory}/${file}`),
 		],
@@ -106,7 +112,7 @@ function watch() {
 	);
 }
 
-const build = gulp.series(clean, gulp.parallel(buildCode, buildStyles, copyFiles));
+const build = gulp.series(clean, gulp.parallel(buildCode(true), buildStyles, copyFiles));
 
 /********************/
 /*      CLEAN       */

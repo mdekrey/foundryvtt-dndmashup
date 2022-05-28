@@ -1,5 +1,7 @@
 import { MashupActor } from './mashup-actor';
 import { templatePathActorParts, templatePathActorSheet } from './templates/template-paths';
+import { ActorSheetJsxDemo } from './sheet';
+import { createRoot, Root } from 'react-dom/client';
 
 type ActorHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 	actorData: DataConfig['Actor']['data'];
@@ -9,6 +11,7 @@ type ActorHandlebarsContext = Awaited<ReturnType<ActorSheet['getData']>> & {
 };
 
 export class MashupActorSheet extends ActorSheet {
+	private root: Root | null = null;
 	static override get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			// CSS classes added to parent element of template
@@ -42,7 +45,19 @@ export class MashupActorSheet extends ActorSheet {
 			templates: Object.fromEntries(Object.entries(templatePathActorParts).map(([k, v]) => [k, () => v])),
 		});
 
+		console.log({ data: result });
+
 		return result;
+	}
+
+	protected override async _renderInner(data: ActorSheet.Data<ActorSheet.Options>): Promise<JQuery<HTMLElement>> {
+		if (!this.root || !this.form) {
+			const result = $(`<form class="${data.cssClass} foundry-reset dndmashup" autocomplete="off"></form>`);
+			this.form = result[0];
+			this.root = createRoot(this.form);
+		}
+		this.root.render(ActorSheetJsxDemo({ data }));
+		return $(this.form);
 	}
 
 	override activateListeners(html: JQuery<HTMLElement>): void {
