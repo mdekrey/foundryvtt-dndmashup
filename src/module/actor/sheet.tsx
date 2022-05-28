@@ -1,28 +1,75 @@
-export function ActorSheetJsxDemo({ data }: { data: ActorSheet.Data<ActorSheet.Options> }) {
+import { Header } from './components/Header';
+import { MashupActorSheet } from './mashup-actor-sheet';
+
+export function ActorSheetJsxDemo({ sheet }: { sheet: MashupActorSheet }) {
 	return (
 		<>
 			<article className="flex flex-col h-full">
 				<header className="flex flex-row gap-1">
-					<img
-						src={data.actor.img ?? ''}
-						data-edit="img"
-						title={data.actor.name ?? ''}
-						className="w-24 h-24 border-2 border-black p-px"
-					/>
-					<div className="grid grid-cols-12 grid-rows-2 gap-x-1">
-						<label className="col-span-5">
-							<input
-								name="name"
-								type="text"
-								defaultValue={data.actor.name ?? ''}
-								className="w-full input-text text-lg"
-							/>
-							<span className="text-sm">Character Name</span>
-						</label>
-					</div>
+					<Header actor={sheet.actor} />
 				</header>
+
+				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
+					<section className="flex flex-col items-center">{/* <HitPoints /> */}</section>
+					<div className="border-r-2 border-black"></div>
+
+					<section className="flex flex-col items-center">{/* <Defenses /> */}</section>
+					<div className="border-r-2 border-black"></div>
+
+					<section className="flex flex-col items-center">{/* <HealingSurges /> */}</section>
+					<div className="border-r-2 border-black"></div>
+
+					<section className="flex flex-col items-center">{/* <ActionPoints /> */}</section>
+				</div>
+
+				<div className="flex-grow flex flex-row gap-1">
+					<div>{/* <Abilities /> */}</div>
+					<div className="border-r-2 border-black"></div>
+					<div className="flex-grow flex flex-col">
+						<nav data-group="primary" className="flex justify-around border-b border-black">
+							<label data-tab="details" className="link uppecase">
+								Details
+							</label>
+							<label data-tab="inventory" className="link uppecase">
+								Inventory
+							</label>
+							<label data-tab="powers" className="link uppecase">
+								Powers
+							</label>
+							<label data-tab="features" className="link uppecase">
+								Features
+							</label>
+							<label data-tab="feats" className="link uppecase">
+								Feats
+							</label>
+							<label data-tab="effects" className="link uppecase">
+								Effects
+							</label>
+						</nav>
+
+						<section className="flex-grow" data-tab-section>
+							<div className="tab w-full h-full" data-group="primary" data-tab="details">
+								{/* <Details /> */}
+							</div>
+							<div className="tab w-full h-full" data-group="primary" data-tab="inventory">
+								{/* <Inventory /> */}
+							</div>
+							<div className="tab w-full h-full" data-group="primary" data-tab="powers">
+								{/* <Powers /> */}
+							</div>
+							<div className="tab w-full h-full" data-group="primary" data-tab="features">
+								{/* <Features /> */}
+							</div>
+							<div className="tab w-full h-full" data-group="primary" data-tab="feats">
+								{/* <Feats /> */}
+							</div>
+							<div className="tab w-full h-full" data-group="primary" data-tab="effects">
+								{/* <Effects /> */}
+							</div>
+						</section>
+					</div>
+				</div>
 			</article>
-			Yep, got the html <input defaultValue="here" />
 		</>
 	);
 }
