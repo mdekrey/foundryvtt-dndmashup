@@ -12,6 +12,7 @@ export const classConfig: SubItemFunctions<'class'> = {
 			amount: data.data.healingSurgesBase,
 			type: 'class',
 		},
+		...data.data.grantedBonuses,
 	],
 	prepare: () => {
 		// nothing to prepare

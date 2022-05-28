@@ -11,7 +11,7 @@ export class MashupItem extends Item {
 	}
 
 	allGrantedBonuses() {
-		return [...this.data.data.grantedBonuses, ...this.subItemFunctions.bonuses(this.data)];
+		return this.subItemFunctions.bonuses(this.data);
 	}
 
 	prepareDerivedData() {

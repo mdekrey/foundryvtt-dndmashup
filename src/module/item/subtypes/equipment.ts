@@ -42,7 +42,10 @@ const weaponGroups: Record<WeaponGroup, string> = {
 };
 
 export const equipmentConfig: SubItemFunctions<'equipment'> = {
-	bonuses: () => [],
+	bonuses: (data) => [
+		// TODO: only if equipped and it requires an item slot
+		...data.data.grantedBonuses,
+	],
 	prepare: () => {
 		// nothing to prepare
 	},

@@ -7,6 +7,7 @@ export const raceConfig: SubItemFunctions<'race'> = {
 			amount: data.data.baseSpeed,
 			type: 'racial',
 		},
+		...data.data.grantedBonuses,
 	],
 	prepare: () => {
 		// nothing to prepare
