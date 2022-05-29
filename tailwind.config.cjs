@@ -66,7 +66,7 @@ const colors = {
 
 /** @type {import('tailwindcss/tailwind-config').TailwindConfig} */
 module.exports = {
-	content: ['./src/**/*.ts', './src/**/*.html'],
+	content: ['./src/**/*.ts', './src/**/*.tsx', './src/**/*.html'],
 	theme: {
 		colors,
 		extend: {

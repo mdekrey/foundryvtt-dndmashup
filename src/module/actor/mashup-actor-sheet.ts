@@ -1,5 +1,4 @@
-import { templatePathActorSheet } from './templates/template-paths';
-import { ActorSheetJsxDemo } from './sheet';
+import { ActorSheetJsxDemo } from './templates/sheet';
 import { renderReact, Root } from 'src/components/sheet';
 
 export class MashupActorSheet extends ActorSheet {
@@ -18,10 +17,6 @@ export class MashupActorSheet extends ActorSheet {
 				},
 			],
 		});
-	}
-
-	override get template() {
-		return templatePathActorSheet(this.actor.data._source.type);
 	}
 
 	protected override async _renderInner(context: ActorSheet.Data<ActorSheet.Options>): Promise<JQuery<HTMLElement>> {

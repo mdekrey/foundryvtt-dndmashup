@@ -8,7 +8,7 @@ export function renderReact(
 	root: Root | null,
 	cssClass: string,
 	sheet: DocumentSheet,
-	SheetComponent: () => JSX.Element
+	SheetComponent: () => JSX.Element | null
 ) {
 	let finalForm = form;
 	let finalRoot = root;

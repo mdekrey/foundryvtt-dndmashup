@@ -1,15 +1,12 @@
-import { useSheetContext } from 'src/components/sheet/framework';
-import { Header } from './components/Header';
-import { MashupActorSheet } from './mashup-actor-sheet';
+import { SpecificActor } from '../mashup-actor';
+import { Header } from '../components/Header';
 
-export function ActorSheetJsxDemo() {
-	const sheet = useSheetContext<MashupActorSheet>();
-
+export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	return (
 		<>
 			<article className="flex flex-col h-full">
 				<header className="flex flex-row gap-1">
-					<Header actor={sheet.actor} />
+					<Header actor={actor} />
 				</header>
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">

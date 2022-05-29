@@ -17,23 +17,16 @@ html {
 		@apply text-theme;
 	}
 
-	.input-text {
-		@apply border-solid border-b-2 border-black;
-		@apply focus:ring-blue-bright-600 focus:ring-1;
-	}
-
 	.focusable {
 		@apply focus:ring-blue-bright-600 focus:ring-1;
 	}
 
-	.link,
-	[data-show-item]:not([data-show-item='']) {
-		@apply ring-transparent hover:ring-blue-bright-600 cursor-pointer;
+	.ring-text-shadow {
 		text-shadow: 0px 0px 5px var(--tw-ring-color);
+	}
 
-		&.active {
-			@apply font-bold;
-		}
+	.active {
+		@apply font-bold;
 	}
 
 	.editor,
