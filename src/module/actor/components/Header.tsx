@@ -1,3 +1,4 @@
+import { ImageEditor } from 'src/components/image-editor';
 import { SpecificItem } from 'src/module/item/mashup-item';
 import { MashupActor } from '../mashup-actor';
 
@@ -8,15 +9,15 @@ export function Header({ actor }: { actor: MashupActor }) {
 
 	return (
 		<>
-			<img
-				src={actor.data.img ?? ''}
-				data-edit="img"
-				title={actor.data.name ?? ''}
-				className="w-24 h-24 border-2 border-black p-px"
-			/>
+			<ImageEditor src={actor.data.img} title={actor.data.name} />
 			<div className="grid grid-cols-12 grid-rows-2 gap-x-1">
 				<label className="col-span-5">
-					<input name="name" type="text" defaultValue={actor.data.name ?? ''} className="w-full input-text text-lg" />
+					<input
+						type="text"
+						defaultValue={actor.data.name ?? ''}
+						onChange={(ev) => actor.update({ name: ev.target.value })}
+						className="w-full input-text text-lg"
+					/>
 					<span className="text-sm">Character Name</span>
 				</label>
 				<label className="col-span-3">

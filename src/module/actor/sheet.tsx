@@ -1,7 +1,10 @@
+import { useSheetContext } from 'src/components/sheet/framework';
 import { Header } from './components/Header';
 import { MashupActorSheet } from './mashup-actor-sheet';
 
-export function ActorSheetJsxDemo({ sheet }: { sheet: MashupActorSheet }) {
+export function ActorSheetJsxDemo() {
+	const sheet = useSheetContext<MashupActorSheet>();
+
 	return (
 		<>
 			<article className="flex flex-col h-full">

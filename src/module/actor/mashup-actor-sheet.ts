@@ -1,6 +1,6 @@
 import { templatePathActorSheet } from './templates/template-paths';
 import { ActorSheetJsxDemo } from './sheet';
-import { createRoot, Root } from 'react-dom/client';
+import { renderReact, Root } from 'src/components/sheet';
 
 export class MashupActorSheet extends ActorSheet {
 	private root: Root | null = null;
@@ -25,12 +25,16 @@ export class MashupActorSheet extends ActorSheet {
 	}
 
 	protected override async _renderInner(context: ActorSheet.Data<ActorSheet.Options>): Promise<JQuery<HTMLElement>> {
-		if (!this.root || !this.form) {
-			const result = $(`<form class="${context.cssClass} foundry-reset dndmashup" autocomplete="off"></form>`);
-			this.form = result[0];
-			this.root = createRoot(this.form);
+		let returnValue: JQuery<HTMLElement>;
+		[this.form, this.root, returnValue] = renderReact(this.form, this.root, context.cssClass, this, ActorSheetJsxDemo);
+		return returnValue;
+	}
+
+	protected override _replaceHTML(element: JQuery<HTMLElement>): void {
+		if (!element.length) return;
+
+		if (this.popOut) {
+			element.find('.window-title').text(this.title);
 		}
-		this.root.render(ActorSheetJsxDemo({ sheet: this }));
-		return $(this.form);
 	}
 }
