@@ -1,5 +1,6 @@
 import { SpecificActor } from '../mashup-actor';
 import { Header } from '../components/Header';
+import { HitPoints } from '../components/HitPoints';
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	return (
@@ -10,7 +11,9 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 				</header>
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
-					<section className="flex flex-col items-center">{/* <HitPoints /> */}</section>
+					<section className="flex flex-col items-center">
+						<HitPoints actor={actor} />
+					</section>
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">{/* <Defenses /> */}</section>
