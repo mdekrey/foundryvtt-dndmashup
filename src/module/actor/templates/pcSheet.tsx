@@ -4,6 +4,7 @@ import { HitPoints } from '../components/HitPoints';
 import { Defenses } from '../components/Defenses';
 import { HealingSurges } from '../components/HealingSurges';
 import { ActionPoints } from '../components/ActionPoints';
+import { Abilities } from '../components/Abilities';
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	return (
@@ -35,7 +36,9 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 				</div>
 
 				<div className="flex-grow flex flex-row gap-1">
-					<div>{/* <Abilities /> */}</div>
+					<div>
+						<Abilities actor={actor} />
+					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
 						<nav data-group="primary" className="flex justify-around border-b border-black">
