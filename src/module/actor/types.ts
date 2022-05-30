@@ -6,6 +6,7 @@ export type BaseActorTemplateDataSourceData = {
 	bonuses: FeatureBonus[];
 	details: {
 		level: number;
+		biography: string;
 	};
 	abilities: {
 		[ability in Ability]: { base: number };

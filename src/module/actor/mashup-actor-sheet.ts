@@ -32,4 +32,10 @@ export class MashupActorSheet extends ActorSheet {
 			element.find('.window-title').text(this.title);
 		}
 	}
+
+	override async close(options?: FormApplication.CloseOptions): Promise<void> {
+		await super.close(options);
+		this.form = null;
+		this.root = null;
+	}
 }

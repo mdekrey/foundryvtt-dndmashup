@@ -6,6 +6,13 @@ import { HealingSurges } from '../components/HealingSurges';
 import { ActionPoints } from '../components/ActionPoints';
 import { Abilities } from '../components/Abilities';
 
+import { Details } from '../components/Details';
+import { Inventory } from '../components/Inventory';
+import { Powers } from '../components/Powers';
+import { Features } from '../components/Features';
+import { Feats } from '../components/Feats';
+import { Effects } from '../components/Effects';
+
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	return (
 		<>
@@ -42,44 +49,56 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
 						<nav data-group="primary" className="flex justify-around border-b border-black">
-							<label data-tab="details" className="link uppecase">
+							<label
+								data-tab="details"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Details
 							</label>
-							<label data-tab="inventory" className="link uppecase">
+							<label
+								data-tab="inventory"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Inventory
 							</label>
-							<label data-tab="powers" className="link uppecase">
+							<label
+								data-tab="powers"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Powers
 							</label>
-							<label data-tab="features" className="link uppecase">
+							<label
+								data-tab="features"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Features
 							</label>
-							<label data-tab="feats" className="link uppecase">
+							<label
+								data-tab="feats"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Feats
 							</label>
-							<label data-tab="effects" className="link uppecase">
+							<label
+								data-tab="effects"
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
 								Effects
 							</label>
 						</nav>
 
 						<section className="flex-grow" data-tab-section>
 							<div className="tab w-full h-full" data-group="primary" data-tab="details">
-								{/* <Details /> */}
+								<Details actor={actor} />
 							</div>
 							<div className="tab w-full h-full" data-group="primary" data-tab="inventory">
-								{/* <Inventory /> */}
+								<Inventory actor={actor} />
 							</div>
 							<div className="tab w-full h-full" data-group="primary" data-tab="powers">
-								{/* <Powers /> */}
+								<Powers actor={actor} />
 							</div>
 							<div className="tab w-full h-full" data-group="primary" data-tab="features">
-								{/* <Features /> */}
+								<Features actor={actor} />
 							</div>
 							<div className="tab w-full h-full" data-group="primary" data-tab="feats">
-								{/* <Feats /> */}
+								<Feats actor={actor} />
 							</div>
 							<div className="tab w-full h-full" data-group="primary" data-tab="effects">
-								{/* <Effects /> */}
+								<Effects actor={actor} />
 							</div>
 						</section>
 					</div>

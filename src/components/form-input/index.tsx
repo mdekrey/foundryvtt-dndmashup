@@ -5,6 +5,7 @@ import { Field } from './field';
 import { FieldButton } from './field-button';
 import { Label } from './label';
 import { Checkbox } from './checkbox';
+import { RichText } from './rich-text';
 
 export const FormInput = Object.assign(Container, {
 	AutoTextField,
@@ -13,4 +14,5 @@ export const FormInput = Object.assign(Container, {
 	FieldButton,
 	Label,
 	Checkbox,
+	RichText,
 });
