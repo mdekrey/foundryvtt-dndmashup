@@ -11,7 +11,7 @@ export function Field({ className, children }: { className?: string; children?: 
 			mergeStyles(
 				<i
 					className={classNames(
-						'w-full h-8 block',
+						'w-full block',
 						'border-solid border-b-2 border-black',
 						'focus:ring-blue-bright-600 focus:ring-1',
 						className
