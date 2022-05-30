@@ -1,24 +1,41 @@
+import { useCallback, useRef } from 'react';
 import { AnyDocument } from 'src/core/foundry';
 import { PathName } from 'src/core/path-typings';
-import { useDocument } from '../../sheet/framework';
 import { Field } from '../field';
 
 type SafeDocumentData<TDocument extends AnyDocument> = Pick<TDocument['data'], 'name' | 'data'>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function AutoTextField<TDocument extends AnyDocument>({
+	document,
 	className,
 	field,
 }: {
+	document: TDocument;
 	className?: string;
 	field: PathName<SafeDocumentData<TDocument>, string>;
 }) {
-	const document = useDocument<TDocument>();
+	const actualValue = useRef(['', '']);
+	const dataValue: string = field.split('.').reduce((prev, f) => prev[f], document.data);
+	if (actualValue.current[0] !== dataValue) {
+		actualValue.current = [dataValue, dataValue];
+	}
+	const value = actualValue.current[1];
 
-	const defaultValue: string = field.split('.').reduce((prev, f) => prev[f], document.data);
+	const handleChange = useCallback(
+		(target: HTMLInputElement) => {
+			actualValue.current[1] = target.value;
+			const resultObject = field
+				.split('.')
+				.reverse()
+				.reduce<unknown>((value, segment) => ({ [segment]: value }), target.value);
+			document.update(resultObject as DeepPartial<SafeDocumentData<TDocument>>);
+		},
+		[document, field]
+	);
+
 	return (
 		<Field>
-			<input type="text" name={field} defaultValue={defaultValue ?? ''} className={className} />
+			<input type="text" value={value} onChange={(ev) => handleChange(ev.target)} className={className} />
 		</Field>
 	);
 }

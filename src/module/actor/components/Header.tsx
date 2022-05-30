@@ -13,7 +13,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 			<ImageEditor src={actor.data.img} title={actor.data.name} />
 			<div className="grid grid-cols-12 grid-rows-2 gap-x-1 text-lg">
 				<FormInput className="col-span-5">
-					<FormInput.AutoTextField<SpecificActor<'pc'>> field="name" />
+					<FormInput.AutoTextField document={actor} field="name" />
 					<FormInput.Label>Character Name</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-3">
