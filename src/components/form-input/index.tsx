@@ -1,5 +1,6 @@
 import { AutoTextField } from './auto-text-field';
 import { AutoNumberField } from './auto-number-field';
+import { AutoSelect } from './auto-select';
 import { Container } from './container';
 import { Field } from './field';
 import { FieldButton } from './field-button';
@@ -10,6 +11,7 @@ import { RichText } from './rich-text';
 export const FormInput = Object.assign(Container, {
 	AutoTextField,
 	AutoNumberField,
+	AutoSelect,
 	Field,
 	FieldButton,
 	Label,

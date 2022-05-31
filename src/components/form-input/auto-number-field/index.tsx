@@ -1,4 +1,4 @@
-import { getFieldValue, PathName } from 'src/core/path-typings';
+import { getFieldValue, PathNameNoArrays } from 'src/core/path-typings';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { Field } from '../field';
 
@@ -6,15 +6,17 @@ export function AutoNumberField<TDocument extends AnyDocument>({
 	document,
 	className,
 	field,
+	plain,
 }: {
 	document: TDocument;
 	className?: string;
-	field: PathName<SourceDataOf<TDocument>, number>;
+	field: PathNameNoArrays<SourceDataOf<TDocument>, number>;
+	plain?: boolean;
 }) {
 	const defaultValue = getFieldValue(document.data._source, field);
-	return (
-		<Field>
-			<input type="number" name={field} defaultValue={defaultValue ?? ''} className={className} data-dtype="Number" />
-		</Field>
+
+	const input = (
+		<input type="number" name={field} defaultValue={defaultValue ?? ''} className={className} data-dtype="Number" />
 	);
+	return plain ? input : <Field>{input}</Field>;
 }

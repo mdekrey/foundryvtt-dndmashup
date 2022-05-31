@@ -10,7 +10,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 
 	return (
 		<>
-			<ImageEditor src={actor.data.img} title={actor.data.name} />
+			<ImageEditor document={actor} field="img" title={actor.data.name} />
 			<div className="grid grid-cols-12 grid-rows-2 gap-x-1 text-lg">
 				<FormInput className="col-span-5">
 					<FormInput.AutoTextField document={actor} field="name" />

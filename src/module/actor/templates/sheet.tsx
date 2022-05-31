@@ -7,7 +7,7 @@ function isActorType<T extends PossibleActorData['type']>(actor: SpecificActor, 
 	return actor.data.type === type;
 }
 
-export function ActorSheetJsxDemo({ sheet }: { sheet: MashupActorSheet }) {
+export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
 	const actor = sheet.actor as SpecificActor;
 
 	return isActorType(actor, 'pc') ? <PcSheet actor={actor} /> : null;

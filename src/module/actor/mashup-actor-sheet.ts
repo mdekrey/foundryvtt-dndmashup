@@ -1,4 +1,4 @@
-import { ActorSheetJsxDemo } from './templates/sheet';
+import { ActorSheetJsx } from './templates/sheet';
 import { renderReact, Root } from 'src/components/sheet';
 
 export class MashupActorSheet extends ActorSheet {
@@ -21,7 +21,7 @@ export class MashupActorSheet extends ActorSheet {
 
 	protected override async _renderInner(): Promise<JQuery<HTMLElement>> {
 		let returnValue: JQuery<HTMLElement>;
-		[this.form, this.root, returnValue] = renderReact(this, ActorSheetJsxDemo);
+		[this.form, this.root, returnValue] = renderReact(this, ActorSheetJsx);
 		return returnValue;
 	}
 

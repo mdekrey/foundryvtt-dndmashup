@@ -9,10 +9,12 @@ export function AutoTextField<TDocument extends AnyDocument>({
 	document,
 	className,
 	field,
+	plain,
 }: {
 	document: TDocument;
 	className?: string;
 	field: PathName<SourceDataOf<TDocument>, string>;
+	plain?: boolean;
 }) {
 	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
 	const setField = useSetField(document, field);
@@ -25,9 +27,9 @@ export function AutoTextField<TDocument extends AnyDocument>({
 		[document, field, setField]
 	);
 
-	return (
-		<Field>
-			<input type="text" value={value} onChange={(ev) => handleChange(ev.target)} className={className} />
-		</Field>
+	const input = (
+		<input type="text" value={value ?? ''} onChange={(ev) => handleChange(ev.target)} className={className} />
 	);
+
+	return plain ? input : <Field>{input}</Field>;
 }

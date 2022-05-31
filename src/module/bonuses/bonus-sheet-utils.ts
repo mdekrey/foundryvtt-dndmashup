@@ -3,7 +3,7 @@ import { FeatureBonus } from './types';
 
 type BonusSheetListConfiguration = () => FeatureBonus[];
 
-const targets: Record<BonusTarget, string> = {
+export const targets: Record<BonusTarget, string> = {
 	'ability-str': 'STR',
 	'ability-con': 'CON',
 	'ability-dex': 'DEX',
@@ -20,7 +20,7 @@ const targets: Record<BonusTarget, string> = {
 	speed: 'Speed',
 };
 
-const conditions: Record<ConditionRule, string> = {
+export const conditions: Record<ConditionRule, string> = {
 	proficientIn: 'When you are proficient with the item',
 	bloodied: 'When you are bloodied',
 };
