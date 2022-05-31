@@ -2,11 +2,11 @@ import { ActorSheetJsxDemo } from './templates/sheet';
 import { renderReact, Root } from 'src/components/sheet';
 
 export class MashupActorSheet extends ActorSheet {
-	private root: Root | null = null;
+	root: Root | null = null;
 	static override get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			// CSS classes added to parent element of template
-			classes: [],
+			classes: ['foobar'],
 			width: 844,
 			height: 915,
 			tabs: [
@@ -19,9 +19,9 @@ export class MashupActorSheet extends ActorSheet {
 		});
 	}
 
-	protected override async _renderInner(context: ActorSheet.Data<ActorSheet.Options>): Promise<JQuery<HTMLElement>> {
+	protected override async _renderInner(): Promise<JQuery<HTMLElement>> {
 		let returnValue: JQuery<HTMLElement>;
-		[this.form, this.root, returnValue] = renderReact(this.form, this.root, context.cssClass, this, ActorSheetJsxDemo);
+		[this.form, this.root, returnValue] = renderReact(this, ActorSheetJsxDemo);
 		return returnValue;
 	}
 

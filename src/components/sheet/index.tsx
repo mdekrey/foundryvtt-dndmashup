@@ -1,28 +1,27 @@
 import { createRoot, Root } from 'react-dom/client';
-import { Provider } from './framework';
 
 export { Root };
 
-export function renderReact(
-	form: HTMLElement | null,
-	root: Root | null,
-	cssClass: string,
-	sheet: DocumentSheet,
-	SheetComponent: () => JSX.Element | null
+export type ReactSheet = {
+	form: HTMLElement | null;
+	root: Root | null;
+};
+
+export function renderReact<T extends DocumentSheet>(
+	sheet: T & ReactSheet,
+	SheetComponent: (props: { sheet: T }) => JSX.Element | null
 ) {
-	let finalForm = form;
-	let finalRoot = root;
+	let finalForm = sheet.form;
+	let finalRoot = sheet.root;
+
+	const cssClass = sheet.isEditable ? 'editable' : 'locked';
 
 	if (!finalRoot || !finalForm) {
 		const result = $(`<form class="${cssClass} foundry-reset dndmashup" autocomplete="off"></form>`);
 		finalForm = result[0];
 		finalRoot = createRoot(result[0]);
 	}
-	finalRoot.render(
-		<Provider value={sheet}>
-			<SheetComponent />
-		</Provider>
-	);
+	finalRoot.render(<SheetComponent sheet={sheet} />);
 
 	return [finalForm, finalRoot, $(finalForm)] as const;
 }

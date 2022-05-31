@@ -1,12 +1,14 @@
-import { useSheetContext } from 'src/components/sheet/framework';
 import { SpecificActor } from '../mashup-actor';
 import { MashupActorSheet } from '../mashup-actor-sheet';
+import { PossibleActorData } from '../types';
 import { PcSheet } from './pcSheet';
 
-export function ActorSheetJsxDemo() {
-	const sheet = useSheetContext<MashupActorSheet>();
+function isActorType<T extends PossibleActorData['type']>(actor: SpecificActor, type: T): actor is SpecificActor<T> {
+	return actor.data.type === type;
+}
 
+export function ActorSheetJsxDemo({ sheet }: { sheet: MashupActorSheet }) {
 	const actor = sheet.actor as SpecificActor;
 
-	return actor.data.type === 'pc' ? <PcSheet actor={actor as SpecificActor<'pc'>} /> : null;
+	return isActorType(actor, 'pc') ? <PcSheet actor={actor} /> : null;
 }
