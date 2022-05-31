@@ -51,32 +51,32 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 						<nav data-group="primary" className="flex justify-around border-b border-black">
 							<label
 								data-tab="details"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Details
 							</label>
 							<label
 								data-tab="inventory"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Inventory
 							</label>
 							<label
 								data-tab="powers"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Powers
 							</label>
 							<label
 								data-tab="features"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Features
 							</label>
 							<label
 								data-tab="feats"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Feats
 							</label>
 							<label
 								data-tab="effects"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppecase">
+								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
 								Effects
 							</label>
 						</nav>

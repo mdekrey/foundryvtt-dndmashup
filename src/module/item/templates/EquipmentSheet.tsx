@@ -1,4 +1,6 @@
+import classNames from 'classnames';
 import produce from 'immer';
+import { useState } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { SourceDataOf } from 'src/core/foundry';
@@ -10,6 +12,7 @@ import { SpecificEquipmentItem } from '../mashup-item';
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { label }]) => ({ value: key, key, label }));
 
 export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
+	const [activeTab, setActiveTab] = useState('description');
 	const equipmentProperties =
 		item.data.data.equipmentProperties ??
 		({
@@ -33,6 +36,11 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 				});
 		})(item.data._source);
 		item.update({ ...result }, { overwrite: true, diff: false, recursive: false });
+		setActiveTab('details');
+	}
+
+	function activateTab(tab: string) {
+		return () => setActiveTab(tab);
 	}
 
 	return (
@@ -58,28 +66,34 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 				</div>
 			</div>
 			<div className="border-b border-black"></div>
-			<nav data-group="primary" className="flex justify-around border-b border-black">
-				<label data-tab="details" className="link uppecase">
+			<nav className="flex justify-around border-b border-black">
+				<button
+					onClick={activateTab('details')}
+					className={classNames('link uppercase', { 'font-bold': activeTab === 'details' })}>
 					Details
-				</label>
-				<label data-tab="description" className="link uppecase">
+				</button>
+				<button
+					onClick={activateTab('description')}
+					className={classNames('link uppercase', { 'font-bold': activeTab === 'description' })}>
 					Description
-				</label>
-				<label data-tab="bonuses" className="link uppecase">
+				</button>
+				<button
+					onClick={activateTab('bonuses')}
+					className={classNames('link uppercase', { 'font-bold': activeTab === 'bonuses' })}>
 					Bonuses
-				</label>
+				</button>
 			</nav>
 
-			<section className="flex-grow" data-tab-section>
-				<div className="tab w-full h-full" data-group="primary" data-tab="details">
+			<section className="flex-grow">
+				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'details' })}>
 					<div className="grid grid-cols-12 gap-x-1 items-end">
 						<Details item={item} />
 					</div>
 				</div>
-				<div className="tab w-full h-full" data-group="primary" data-tab="description">
+				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'description' })}>
 					<Description item={item} />
 				</div>
-				<div className="tab w-full h-full" data-group="primary" data-tab="bonuses">
+				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'bonuses' })}>
 					<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
 				</div>
 			</section>
