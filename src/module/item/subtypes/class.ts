@@ -17,6 +17,4 @@ export const classConfig: SubItemFunctions<'class'> = {
 	prepare: () => {
 		// nothing to prepare
 	},
-	sheetData: () => ({}),
-	getSubmitSheetData: (d) => d,
 };
