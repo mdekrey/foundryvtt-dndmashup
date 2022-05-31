@@ -28,6 +28,6 @@ export type PathNameNoArrays<TTarget, TValue> = PathNameWithOmit<TTarget, TValue
 
 export function getFieldValue<TTarget, TValue>(data: TTarget, field: PathName<TTarget, TValue>) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const dataValue: TValue = field.split('.').reduce((prev, f) => prev[f], data as any);
+	const dataValue: TValue = field.split('.').reduce((prev, f) => prev && prev[f], data as any);
 	return dataValue;
 }

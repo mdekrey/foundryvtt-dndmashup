@@ -1,63 +1,6 @@
-import {
-	ArmorCategory,
-	ArmorType,
-	itemSlots,
-	ItemSlotTemplates,
-	WeaponCategory,
-	WeaponGroup,
-	WeaponProperties,
-} from '../item-slots';
+import { itemSlots, ItemSlotTemplates, WeaponProperties } from '../item-slots';
 import { templatePathEquipmentParts } from '../templates/template-paths';
 import { SubItemFunctions } from './sub-item-functions';
-
-const itemSlotsDropdown = Object.fromEntries(Object.entries(itemSlots).map(([k, v]) => [k, v.label]));
-const armorCategories: Record<ArmorCategory, string> = {
-	cloth: 'Cloth',
-	leather: 'Leather',
-	hide: 'Hide',
-	chainmail: 'Chainmail',
-	scale: 'Scale',
-	plate: 'Plate',
-};
-const armorTypes: Record<ArmorType, string> = {
-	light: 'Light',
-	heavy: 'Heavy',
-};
-const weaponCategories: Record<WeaponCategory, string> = {
-	simple: 'Simple',
-	military: 'Military',
-	superior: 'Superior',
-};
-const weaponHands: Record<ItemSlotTemplates['weapon']['hands'], string> = {
-	1: 'One-handed',
-	2: 'Two-handed',
-};
-const weaponGroups: Record<WeaponGroup, string> = {
-	axe: 'Axe',
-	bow: 'Bow',
-	crossbow: 'Crossbow',
-	flail: 'Flail',
-	hammer: 'Hammer',
-	'heavy-blade': 'Heavy Blade',
-	'light-blade': 'Light Blade',
-	mace: 'Mace',
-	pick: 'Pick',
-	polearm: 'Polearm',
-	sling: 'Sling',
-	spear: 'Spear',
-	staff: 'Staff',
-	unarmed: 'Unarmed',
-};
-const weaponProperties: Record<WeaponProperties, string> = {
-	'heavy-thrown': 'Heavy Thrown',
-	'high-crit': 'High Crit',
-	'light-thrown': 'Light Thrown',
-	load: 'Load',
-	'off-hand': 'Off Hand',
-	reach: 'Reach',
-	small: 'Small',
-	versatile: 'Versatile',
-};
 
 function weaponExtraData(equipmentProperties: ItemSlotTemplates['weapon']) {
 	return {
@@ -102,13 +45,6 @@ export const equipmentConfig: SubItemFunctions<'equipment'> = {
 		return {
 			itemData: { equipmentProperties },
 			totalWeight: data.data.weight * data.data.quantity,
-			itemSlots: itemSlotsDropdown,
-			armorCategories,
-			armorTypes,
-			weaponCategories,
-			weaponHands,
-			weaponGroups,
-			weaponProperties,
 
 			...extraProperties,
 

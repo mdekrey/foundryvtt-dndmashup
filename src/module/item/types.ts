@@ -39,19 +39,22 @@ export type RaceDataSourceData = Merge<
 		baseSpeed: number;
 	}
 >;
-export type EquipmentDataSourceData = Merge<
+export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Merge<
 	BaseItemTemplateDataSourceData,
 	ItemDescriptionItemTemplateDataSourceData &
 		CarriedItemItemTemplateDataSourceData & {
-			itemSlot: ItemSlot;
+			itemSlot: TItemSlot;
 			equipped: '' | EquippedItemSlot;
-			equipmentProperties?: ItemSlotTemplates[keyof ItemSlotTemplates] | null;
+			equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
 		}
 >;
 
 export type ClassDataSource = DataSource<'class', ClassDataSourceData>;
 export type RaceDataSource = DataSource<'race', RaceDataSourceData>;
-export type EquipmentDataSource = DataSource<'equipment', EquipmentDataSourceData>;
+export type EquipmentDataSource<TItemSlot extends ItemSlot = ItemSlot> = DataSource<
+	'equipment',
+	EquipmentDataSourceData<TItemSlot>
+>;
 
 // TODO - any calculated properties? See actor/types.ts
 
@@ -82,3 +85,5 @@ export type PossibleItemData =
 	| ItemData<EquipmentData, EquipmentDataSource>;
 
 export type SpecificItemData<T extends PossibleItemData['type']> = PossibleItemData & { type: T };
+export type SpecificItemEquipmentData<TItemSlot extends ItemSlot = ItemSlot> = SpecificItemData<'equipment'> &
+	ItemData<EquipmentData, EquipmentDataSource<TItemSlot>>;

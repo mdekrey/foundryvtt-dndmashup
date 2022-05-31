@@ -23,7 +23,6 @@ export function useSetField<TDocument extends AnyDocument, TValue>(
 						delete draft[k];
 					});
 			})(document.data._source);
-			console.log(result);
 			document.update({ ...result }, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 		},
 		[document, field]
