@@ -7,8 +7,9 @@ import type {
 	ActorDataConstructorData,
 	ActorDataSchema,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
+import { DataSource } from 'src/types/types';
 
-export type ActorData<TData, TSource> = DocumentData<
+export type ActorData<TData, TSource extends DataSource<string, unknown>> = DocumentData<
 	ActorDataSchema,
 	ActorDataBaseProperties & TData,
 	PropertiesToSource<ActorDataBaseProperties> & TSource,
@@ -17,7 +18,9 @@ export type ActorData<TData, TSource> = DocumentData<
 > &
 	ActorDataBaseProperties &
 	TData & {
-		_initializeSource(data: ActorDataConstructorData): ActorDataBaseSource & TSource;
+		_initializeSource(
+			data: Omit<ActorDataConstructorData, 'type' | 'data'> & { type: TSource['type']; data?: DeepPartial<TSource> }
+		): ActorDataBaseSource & TSource;
 
 		_initialize(): void;
 	};

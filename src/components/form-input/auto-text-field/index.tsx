@@ -1,9 +1,9 @@
-import { useCallback, useRef } from 'react';
-import { AnyDocument } from 'src/core/foundry';
-import { PathName } from 'src/core/path-typings';
+import { useCallback } from 'react';
+import { AnyDocument, SourceDataOf } from 'src/core/foundry';
+import { PathName, getFieldValue } from 'src/core/path-typings';
 import { Field } from '../field';
-
-type SafeDocumentData<TDocument extends AnyDocument> = Pick<TDocument['data'], 'name' | 'data'>;
+import { useControlledField } from '../hooks/useControlledField';
+import { useSetField } from '../hooks/useSetField';
 
 export function AutoTextField<TDocument extends AnyDocument>({
 	document,
@@ -12,25 +12,17 @@ export function AutoTextField<TDocument extends AnyDocument>({
 }: {
 	document: TDocument;
 	className?: string;
-	field: PathName<SafeDocumentData<TDocument>, string>;
+	field: PathName<SourceDataOf<TDocument>, string>;
 }) {
-	const actualValue = useRef(['', '']);
-	const dataValue: string = field.split('.').reduce((prev, f) => prev[f], document.data);
-	if (actualValue.current[0] !== dataValue) {
-		actualValue.current = [dataValue, dataValue];
-	}
-	const value = actualValue.current[1];
+	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
+	const setField = useSetField<TDocument, string>(document, field);
 
 	const handleChange = useCallback(
 		(target: HTMLInputElement) => {
-			actualValue.current[1] = target.value;
-			const resultObject = field
-				.split('.')
-				.reverse()
-				.reduce<unknown>((value, segment) => ({ [segment]: value }), target.value);
-			document.update(resultObject as DeepPartial<SafeDocumentData<TDocument>>);
+			setValue(target.value);
+			setField(target.value);
 		},
-		[document, field]
+		[document, field, setField]
 	);
 
 	return (

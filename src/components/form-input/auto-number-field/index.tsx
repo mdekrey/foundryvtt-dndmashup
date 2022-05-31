@@ -1,9 +1,7 @@
-import { PathName } from 'src/core/path-typings';
-import { AnyDocument } from 'src/core/foundry';
+import { getFieldValue, PathName } from 'src/core/path-typings';
+import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { useDocument } from '../../sheet/framework';
 import { Field } from '../field';
-
-type SafeDocumentData<TDocument extends AnyDocument> = Pick<TDocument['data'], 'name' | 'data'>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function AutoNumberField<TDocument extends AnyDocument>({
@@ -11,11 +9,11 @@ export function AutoNumberField<TDocument extends AnyDocument>({
 	field,
 }: {
 	className?: string;
-	field: PathName<SafeDocumentData<TDocument>, number>;
+	field: PathName<SourceDataOf<TDocument>, number>;
 }) {
 	const document = useDocument<TDocument>();
 
-	const defaultValue: string = field.split('.').reduce((prev, f) => prev[f], document.data);
+	const defaultValue = getFieldValue(document.data._source, field);
 	return (
 		<Field>
 			<input type="number" name={field} defaultValue={defaultValue ?? ''} className={className} data-dtype="Number" />

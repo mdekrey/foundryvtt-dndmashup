@@ -1,15 +1,13 @@
-import { AnyDocument } from 'src/core/foundry';
-import { PathName } from 'src/core/path-typings';
+import { AnyDocument, SourceDataOf } from 'src/core/foundry';
+import { getFieldValue, PathName } from 'src/core/path-typings';
 import { useDocument } from '../../sheet/framework';
-
-type SafeDocumentData<TDocument extends AnyDocument> = Pick<TDocument['data'], 'name' | 'data'>;
 
 export function RichText<TDocument extends AnyDocument>({
 	field,
-}: JSX.IntrinsicElements['input'] & { field: PathName<SafeDocumentData<TDocument>, string> }) {
+}: JSX.IntrinsicElements['input'] & { field: PathName<SourceDataOf<TDocument>, string> }) {
 	const document = useDocument<TDocument>();
 
-	const html: string = field.split('.').reduce((prev, f) => prev[f], document.data);
+	const html = getFieldValue(document.data._source, field);
 
 	const enriched = TextEditor.enrichHTML(html ?? '', {
 		/* TODO - parameters: secrets: owner, documents, rollData */

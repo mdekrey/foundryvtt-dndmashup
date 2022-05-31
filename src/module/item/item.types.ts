@@ -7,8 +7,9 @@ import type {
 	ItemDataConstructorData,
 	ItemDataSchema,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
+import { DataSource } from 'src/types/types';
 
-export type ItemData<TData, TSource> = DocumentData<
+export type ItemData<TData, TSource extends DataSource<string, unknown>> = DocumentData<
 	ItemDataSchema,
 	ItemDataBaseProperties & TData,
 	PropertiesToSource<ItemDataBaseProperties> & TSource,
@@ -17,7 +18,9 @@ export type ItemData<TData, TSource> = DocumentData<
 > &
 	ItemDataBaseProperties &
 	TData & {
-		_initializeSource(data: ItemDataConstructorData): ItemDataBaseSource & TSource;
+		_initializeSource(
+			data: Omit<ItemDataConstructorData, 'type' | 'data'> & { type: TSource['type']; data?: DeepPartial<TSource> }
+		): ItemDataBaseSource & TSource;
 
 		_initialize(): void;
 	};
