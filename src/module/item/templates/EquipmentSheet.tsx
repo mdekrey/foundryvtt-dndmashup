@@ -1,13 +1,12 @@
 import classNames from 'classnames';
-import produce from 'immer';
 import { useState } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { SourceDataOf } from 'src/core/foundry';
 import { Bonuses } from '../components/bonuses';
 import { Description } from '../components/Description';
 import { ItemSlot, itemSlots, ItemSlotTemplates } from '../item-slots';
 import { SpecificEquipmentItem } from '../mashup-item';
+import { deepUpdate } from 'src/core/foundry';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { label }]) => ({ value: key, key, label }));
 
@@ -24,18 +23,12 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 	const Details = itemSlotInfo.details;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {
-		const result = produce<SourceDataOf<SpecificEquipmentItem>>((draft) => {
+		deepUpdate(item, (draft) => {
 			draft.data.itemSlot = itemSlot;
 			draft.data.equipmentProperties = {
 				...itemSlots[itemSlot].defaultEquipmentInfo,
 			} as ItemSlotTemplates[keyof ItemSlotTemplates];
-			Object.keys(draft)
-				.filter((k) => k !== 'data')
-				.forEach((k) => {
-					delete (draft as never)[k];
-				});
-		})(item.data._source);
-		item.update({ ...result }, { overwrite: true, diff: false, recursive: false });
+		});
 		setActiveTab('details');
 	}
 

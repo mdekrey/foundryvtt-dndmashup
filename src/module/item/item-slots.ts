@@ -46,7 +46,7 @@ export type WeaponGroup =
 	| 'spear'
 	| 'staff'
 	| 'unarmed';
-export type WeaponProperties =
+export type WeaponProperty =
 	| 'heavy-thrown'
 	| 'high-crit'
 	| 'light-thrown'
@@ -65,7 +65,7 @@ export type ItemSlotTemplates = {
 		proficiencyBonus: number;
 		range: string;
 		group: WeaponGroup;
-		properties: WeaponProperties[];
+		properties: WeaponProperty[];
 		category: WeaponCategory;
 		hands: 1 | 2;
 	};

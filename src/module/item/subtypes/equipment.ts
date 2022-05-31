@@ -1,4 +1,4 @@
-import { itemSlots, ItemSlotTemplates, WeaponProperties } from '../item-slots';
+import { itemSlots, ItemSlotTemplates, WeaponProperty } from '../item-slots';
 import { templatePathEquipmentParts } from '../templates/template-paths';
 import { SubItemFunctions } from './sub-item-functions';
 
@@ -17,7 +17,7 @@ function weaponFromExtraData(equipmentProperties: ItemSlotTemplates['weapon'], s
 	) {
 		equipmentProperties.properties = Object.entries(submittedData.properties)
 			.filter(([, v]) => v)
-			.map(([p]) => p as WeaponProperties);
+			.map(([p]) => p as WeaponProperty);
 	}
 }
 

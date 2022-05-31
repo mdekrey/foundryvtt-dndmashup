@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
-import { SelectItem } from 'src/components/form-input/auto-select';
-import { ItemSlotTemplates, WeaponCategory, WeaponGroup, WeaponProperties } from '../../item-slots';
+import { deepUpdate } from 'src/core/foundry';
+import { ItemSlotTemplates, WeaponCategory, WeaponGroup, WeaponProperty } from '../../item-slots';
 import { SpecificEquipmentItem } from '../../mashup-item';
 import { OtherDetails } from './OtherDetails';
 import { toSelectItems } from './toSelectItems';
@@ -30,7 +30,7 @@ const weaponGroups: Record<WeaponGroup, string> = {
 	staff: 'Staff',
 	unarmed: 'Unarmed',
 };
-const weaponProperties: Record<WeaponProperties, string> = {
+const weaponProperties: Record<WeaponProperty, string> = {
 	'heavy-thrown': 'Heavy Thrown',
 	'high-crit': 'High Crit',
 	'light-thrown': 'Light Thrown',
@@ -46,6 +46,24 @@ const allWeaponGroups = toSelectItems(weaponGroups);
 const allWeaponProperties = toSelectItems(weaponProperties);
 
 export function WeaponDetails({ item }: { item: SpecificEquipmentItem<'weapon'> }) {
+	const checkedProperties = item.data._source.data.equipmentProperties?.properties ?? [];
+	function setChecked(value: WeaponProperty, isChecked: boolean) {
+		if (isChecked) {
+			if (checkedProperties.includes(value)) return;
+			deepUpdate(item, (draft) => {
+				draft.data.equipmentProperties?.properties.push(value);
+			});
+		} else {
+			if (!checkedProperties.includes(value)) return;
+			deepUpdate(item, (draft) => {
+				if (draft.data.equipmentProperties) {
+					draft.data.equipmentProperties.properties = draft.data.equipmentProperties.properties.filter(
+						(p) => p !== value
+					);
+				}
+			});
+		}
+	}
 	return (
 		<>
 			<FormInput className="col-span-6">
@@ -105,10 +123,15 @@ export function WeaponDetails({ item }: { item: SpecificEquipmentItem<'weapon'> 
 
 			<div className="col-span-12 text-sm grid grid-cols-4">
 				{allWeaponProperties.map(({ value, key, label }) => (
-					<FormInput key={key} className="whitespace-normal">
+					<label key={key} className="whitespace-normal">
 						{/* TODO */}
-						{/* <input type="checkbox" name="properties.{{type}}" {{checked (lookup ../properties type)}}/> {{ name }} */}
-					</FormInput>
+						<input
+							type="checkbox"
+							checked={checkedProperties.includes(value)}
+							onChange={(ev) => setChecked(value, ev.currentTarget.checked)}
+						/>{' '}
+						{label}
+					</label>
 				))}
 			</div>
 		</>
