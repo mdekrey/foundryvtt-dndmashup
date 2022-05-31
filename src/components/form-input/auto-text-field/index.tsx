@@ -15,7 +15,7 @@ export function AutoTextField<TDocument extends AnyDocument>({
 	field: PathName<SourceDataOf<TDocument>, string>;
 }) {
 	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
-	const setField = useSetField<TDocument, string>(document, field);
+	const setField = useSetField(document, field);
 
 	const handleChange = useCallback(
 		(target: HTMLInputElement) => {

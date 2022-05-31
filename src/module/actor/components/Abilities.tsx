@@ -10,7 +10,8 @@ export function Abilities({ actor }: { actor: SpecificActor }) {
 				<h2 className="text-lg col-span-3">Abilities</h2>
 				{abilities.map((ability) => (
 					<Fragment key={ability}>
-						<FormInput.AutoNumberField<SpecificActor>
+						<FormInput.AutoNumberField
+							document={actor}
 							className="w-8 text-lg text-center"
 							field={`data.abilities.${ability}.base`}
 						/>

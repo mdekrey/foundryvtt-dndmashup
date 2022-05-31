@@ -1,5 +1,4 @@
 import { createContext, useContext } from 'react';
-import { AnyDocument } from 'src/core/foundry';
 
 export type SheetContext<T extends DocumentSheet = DocumentSheet> = T;
 
@@ -13,11 +12,4 @@ export function useSheetContext<T extends DocumentSheet>() {
 	if (ctx === null) throw new Error('Not within a sheet context');
 
 	return ctx as SheetContext<T>;
-}
-
-export function useDocument<T extends AnyDocument>() {
-	const ctx = useContext(sheetFrameworkContext);
-	if (ctx === null) throw new Error('Not within a sheet context');
-
-	return ctx.document as T;
 }

@@ -29,7 +29,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 					<FormInput.Label>Class</FormInput.Label>
 				</FormInput>
 				<FormInput>
-					<FormInput.AutoNumberField<SpecificActor<'pc'>> field="data.details.level" className="text-lg text-center" />
+					<FormInput.AutoNumberField document={actor} field="data.details.level" className="text-lg text-center" />
 					<FormInput.Label>Level</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-5">
@@ -45,7 +45,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 					<FormInput.Label>Epic Destiny</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">
-					<FormInput.AutoNumberField<SpecificActor<'pc'>> field="data.details.exp" className="text-lg text-center" />
+					<FormInput.AutoNumberField document={actor} field="data.details.exp" className="text-lg text-center" />
 					<FormInput.Label>EXP</FormInput.Label>
 				</FormInput>
 			</div>

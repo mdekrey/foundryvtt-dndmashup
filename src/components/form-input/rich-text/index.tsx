@@ -1,12 +1,13 @@
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { getFieldValue, PathName } from 'src/core/path-typings';
-import { useDocument } from '../../sheet/framework';
 
 export function RichText<TDocument extends AnyDocument>({
+	document,
 	field,
-}: JSX.IntrinsicElements['input'] & { field: PathName<SourceDataOf<TDocument>, string> }) {
-	const document = useDocument<TDocument>();
-
+}: {
+	document: TDocument;
+	field: PathName<SourceDataOf<TDocument>, string>;
+}) {
 	const html = getFieldValue(document.data._source, field);
 
 	const enriched = TextEditor.enrichHTML(html ?? '', {

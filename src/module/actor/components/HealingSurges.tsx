@@ -9,13 +9,14 @@ export function HealingSurges({ actor }: { actor: SpecificActor }) {
 				<span>Value: {actor.data.data.health.surges.value}</span>
 				{' / '}
 				<label>
-					<FormInput.Checkbox<SpecificActor> field="data.health.secondWindUsed" className="px-1" />
+					<FormInput.Checkbox document={actor} field="data.health.secondWindUsed" className="px-1" />
 					Second Wind Used
 				</label>
 			</div>
 			<div className="flex justify-start items-center gap-1 flex-grow">
 				<FormInput className="w-16 inline-block">
-					<FormInput.AutoNumberField<SpecificActor>
+					<FormInput.AutoNumberField
+						document={actor}
 						field="data.health.surges.remaining"
 						className="text-lg text-center"
 					/>
