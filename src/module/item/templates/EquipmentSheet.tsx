@@ -19,7 +19,7 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 		} as ItemSlotTemplates[keyof ItemSlotTemplates]);
 
 	const itemSlotInfo = item.itemSlotInfo;
-	const summary = itemSlotInfo.buildSummary(equipmentProperties);
+	const Summary = itemSlotInfo.buildSummary;
 	const Details = itemSlotInfo.details;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {
@@ -55,7 +55,9 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>
 
-					<p className="col-span-12">{summary}</p>
+					<p className="col-span-12">
+						<Summary item={item} equipmentProperties={equipmentProperties} />
+					</p>
 				</div>
 			</div>
 			<div className="border-b border-black"></div>
@@ -78,17 +80,21 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 			</nav>
 
 			<section className="flex-grow">
-				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'details' })}>
-					<div className="grid grid-cols-12 gap-x-1 items-end">
-						<Details item={item} />
+				{activeTab === 'details' ? (
+					<div className="w-full h-full">
+						<div className="grid grid-cols-12 gap-x-1 items-end">
+							<Details item={item} equipmentProperties={equipmentProperties} />
+						</div>
 					</div>
-				</div>
-				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'description' })}>
-					<Description item={item} />
-				</div>
-				<div className={classNames('tab w-full h-full', { hidden: activeTab !== 'bonuses' })}>
-					<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
-				</div>
+				) : activeTab === 'description' ? (
+					<div className="w-full h-full">
+						<Description item={item} />
+					</div>
+				) : activeTab === 'bonuses' ? (
+					<div className="w-full h-full">
+						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+					</div>
+				) : null}
 			</section>
 		</div>
 	);

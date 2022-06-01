@@ -83,7 +83,10 @@ export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = T extends keyof It
 	? ItemSlotTemplates[T]
 	: Record<string, never>;
 
-export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{ item: SpecificEquipmentItem<T> }>;
+export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
+	item: SpecificEquipmentItem<T>;
+	equipmentProperties: ItemSlotTemplate<T>;
+}>;
 
 export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	display: string;
@@ -91,6 +94,6 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	equippedSlots?: EquippedItemSlot[];
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
-	buildSummary: (inputData: ItemSlotTemplate<T>) => string;
+	buildSummary: ItemSlotComponent<T>;
 	details: ItemSlotComponent<T>;
 };

@@ -5,5 +5,5 @@ export const ItemSlotDefaults = {
 	defaultEquipmentInfo: {},
 	details: OtherDetails,
 	bonuses: () => [],
-	buildSummary: () => '',
+	buildSummary: () => <></>,
 };

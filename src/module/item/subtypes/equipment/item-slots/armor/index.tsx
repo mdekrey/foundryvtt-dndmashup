@@ -6,7 +6,8 @@ export const ArmorInfo: ItemSlotInfo<'armor'> = {
 	optionLabel: 'Armor',
 	bonuses: () => [],
 	defaultEquipmentInfo: { armorBonus: 0, type: 'light', category: 'cloth', checkPenalty: 0, speedPenalty: 0 },
-	buildSummary: (input) =>
-		`${input.type} ${input.category}, armor bonus +${input.armorBonus}, check penalty ${input.checkPenalty}, speed penalty ${input.speedPenalty}`,
+	buildSummary: ({ equipmentProperties: input }) => (
+		<>{`${input.type} ${input.category}, armor bonus +${input.armorBonus}, check penalty ${input.checkPenalty}, speed penalty ${input.speedPenalty}`}</>
+	),
 	details: ArmorDetails,
 };

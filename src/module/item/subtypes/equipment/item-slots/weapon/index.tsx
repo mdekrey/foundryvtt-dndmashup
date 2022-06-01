@@ -15,12 +15,16 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 		category: 'military',
 		hands: 1,
 	},
-	buildSummary: (input) =>
-		`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}, ${[
-			input.range,
-			...input.properties,
-		]
-			.filter(Boolean)
-			.join(', ')}`,
+	buildSummary: ({ equipmentProperties: input }) => (
+		<>
+			{[
+				`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}`,
+				input.range,
+				...input.properties,
+			]
+				.filter(Boolean)
+				.join(', ')}
+		</>
+	),
 	details: WeaponDetails,
 };

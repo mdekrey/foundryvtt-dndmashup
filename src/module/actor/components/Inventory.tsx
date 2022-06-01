@@ -45,7 +45,9 @@ export function Inventory({ actor }: { actor: SpecificActor }) {
 										'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 										'border-b-2 border-transparent'
 									)}>
-									<td>{item.name}</td>
+									<td>
+										{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block mr-1" /> : null} {item.name}
+									</td>
 									<td className="text-center">{item.data.data.weight}</td>
 									<td className="text-right">
 										<IconButton title="Equip" iconClassName="fas fa-shield-alt" />
