@@ -5,6 +5,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	display: 'Weapon',
 	optionLabel: 'Weapon',
 	equippedSlots: ['primary-hand', 'off-hand'],
+	slotsNeeded: (item, props) => props.hands,
 	bonuses: () => [],
 	defaultEquipmentInfo: {
 		damage: '1d8',
@@ -27,4 +28,18 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 		</>
 	),
 	details: WeaponDetails,
+	inventoryTableHeader: () => (
+		<>
+			<th>Group</th>
+			<th>Damage</th>
+			<th>Range</th>
+		</>
+	),
+	inventoryTableBody: ({ equipmentProperties }) => (
+		<>
+			<td className="text-center">{equipmentProperties.group}</td>
+			<td className="text-center">{equipmentProperties.damage}</td>
+			<td className="text-center">{equipmentProperties.range || <>&mdash;</>}</td>
+		</>
+	),
 };

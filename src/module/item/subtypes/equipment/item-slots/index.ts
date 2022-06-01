@@ -16,37 +16,43 @@ export const itemSlots: {
 	arms: {
 		display: 'Arms',
 		optionLabel: 'Arms',
+		equippedSlots: ['arms'],
 		...ItemSlotDefaults,
 	},
 	feet: {
 		display: 'Feet',
 		optionLabel: 'Feet',
+		equippedSlots: ['feet'],
 		...ItemSlotDefaults,
 	},
 	hands: {
 		display: 'Hands',
 		optionLabel: 'Hands',
+		equippedSlots: ['hands'],
 		...ItemSlotDefaults,
 	},
 	head: {
 		display: 'Head',
 		optionLabel: 'Head',
+		equippedSlots: ['head'],
 		...ItemSlotDefaults,
 	},
 	neck: {
 		display: 'Neck',
 		optionLabel: 'Neck',
+		equippedSlots: ['neck'],
 		...ItemSlotDefaults,
 	},
 	ring: {
 		display: 'Ring',
 		optionLabel: 'Ring',
-		...ItemSlotDefaults,
 		equippedSlots: ['primary-ring', 'secondary-ring'],
+		...ItemSlotDefaults,
 	},
 	waist: {
 		display: 'Waist',
 		optionLabel: 'Waist',
+		equippedSlots: ['waist'],
 		...ItemSlotDefaults,
 	},
 };

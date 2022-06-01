@@ -27,8 +27,8 @@ export class MashupItem extends Item {
 		this.subItemFunctions.prepare(this as SpecificItem);
 	}
 
-	get itemSlotInfo() {
-		return this.data.type === 'equipment' ? itemSlots[this.data.data.itemSlot] ?? null : null;
+	get itemSlotInfo(): null | ItemSlotInfo {
+		return this.data.type === 'equipment' ? (itemSlots[this.data.data.itemSlot] as ItemSlotInfo) ?? null : null;
 	}
 }
 

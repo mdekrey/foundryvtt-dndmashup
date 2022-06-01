@@ -79,9 +79,9 @@ export type ItemSlotTemplates = {
 	};
 };
 
-export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = T extends keyof ItemSlotTemplates
-	? ItemSlotTemplates[T]
-	: Record<string, never>;
+export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
+	[K in T]: T extends keyof ItemSlotTemplates ? ItemSlotTemplates[T] : Record<string, never>;
+}[T];
 
 export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
 	item: SpecificEquipmentItem<T>;
@@ -91,9 +91,12 @@ export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
 export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	display: string;
 	optionLabel: string;
-	equippedSlots?: EquippedItemSlot[];
+	equippedSlots: EquippedItemSlot[];
+	slotsNeeded: (item: SpecificEquipmentItem<T>, equipmentProperties: ItemSlotTemplate<T>) => number;
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;
 	details: ItemSlotComponent<T>;
+	inventoryTableHeader: React.FC;
+	inventoryTableBody: ItemSlotComponent<T>;
 };
