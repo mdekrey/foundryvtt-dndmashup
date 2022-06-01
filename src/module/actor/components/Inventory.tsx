@@ -51,6 +51,7 @@ function InventorySlotTable<T extends ItemSlot>({
 		inventoryTableBody: TableBody,
 		defaultEquipmentInfo,
 		equippedSlots,
+		slotsNeeded,
 	} = itemSlotInfo;
 
 	return (
@@ -86,9 +87,13 @@ function InventorySlotTable<T extends ItemSlot>({
 										<IconButton
 											key={equipSlot}
 											title="Equip"
-											className={classNames({ 'opacity-25': !item.data.data.equipped.includes(equipSlot) })}
+											className={classNames({
+												'opacity-25': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) === -1,
+												// fade out opposite hand
+												'opacity-50': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) >= 1,
+											})}
 											iconClassName="fas fa-shield-alt"
-											onClick={item.isOwner ? equip(item, equipSlot) : undefined}
+											onClick={item.isOwner ? equip(equipSlot) : undefined}
 										/>
 									))}
 								</td>
@@ -102,25 +107,31 @@ function InventorySlotTable<T extends ItemSlot>({
 							</td>
 						</tr>
 					);
+
+					function equip(equipSlot: EquippedItemSlot) {
+						return () => {
+							const wasEquipped = item.data.data.equipped && item.data.data.equipped[0] === equipSlot;
+							const next = wasEquipped ? [] : [equipSlot];
+							if (!wasEquipped && slotsNeeded(item, equipmentProperties) > 1) {
+								next.push(...equippedSlots.filter((e) => e !== equipSlot));
+							}
+							const unequip = actor.data.items.contents
+								.filter(isEquipment)
+								.filter(
+									(eq) =>
+										eq.id !== item.id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p))
+								);
+							console.log(wasEquipped, next, unequip);
+							actor.updateEmbeddedDocuments(item.documentName, [
+								{ _id: item.id, data: { equipped: next } },
+								...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
+							]);
+						};
+					}
 				})}
 			</tbody>
 		</table>
 	);
-
-	function equip(item: SpecificEquipmentItem, equipSlot: EquippedItemSlot) {
-		return () => {
-			const wasEquipped = item.data.data.equipped.includes(equipSlot);
-			const next = wasEquipped ? [] : [equipSlot];
-			const unequip = actor.data.items.contents
-				.filter(isEquipment)
-				.filter((eq) => eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p)));
-			// TODO: multiple hands
-			actor.updateEmbeddedDocuments(item.documentName, [
-				{ _id: item.id, data: { equipped: next } },
-				...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
-			]);
-		};
-	}
 
 	function edit(item: SpecificEquipmentItem) {
 		return () => {
