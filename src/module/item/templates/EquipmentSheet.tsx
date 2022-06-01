@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { useState } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
@@ -7,6 +6,7 @@ import { Description } from '../components/Description';
 import { ItemSlot, itemSlots, ItemSlotTemplates } from '../subtypes/equipment/item-slots';
 import { SpecificEquipmentItem } from '../mashup-item';
 import { deepUpdate } from 'src/core/foundry';
+import { Tabs } from 'src/components/tab-section';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
 
@@ -27,10 +27,6 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 			} as ItemSlotTemplates[keyof ItemSlotTemplates];
 		});
 		setActiveTab('details');
-	}
-
-	function activateTab(tab: string) {
-		return () => setActiveTab(tab);
 	}
 
 	return (
@@ -58,41 +54,27 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 				</div>
 			</div>
 			<div className="border-b border-black"></div>
-			<nav className="flex justify-around border-b border-black">
-				<button
-					onClick={activateTab('details')}
-					className={classNames('link uppercase', { 'font-bold': activeTab === 'details' })}>
-					Details
-				</button>
-				<button
-					onClick={activateTab('description')}
-					className={classNames('link uppercase', { 'font-bold': activeTab === 'description' })}>
-					Description
-				</button>
-				<button
-					onClick={activateTab('bonuses')}
-					className={classNames('link uppercase', { 'font-bold': activeTab === 'bonuses' })}>
-					Bonuses
-				</button>
-			</nav>
+			<Tabs.Controlled activeTab={activeTab} setActiveTab={setActiveTab}>
+				<Tabs.Nav>
+					<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
+					<Tabs.NavButton tabName="description">Description</Tabs.NavButton>
+					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
+				</Tabs.Nav>
 
-			<section className="flex-grow">
-				{activeTab === 'details' ? (
-					<div className="w-full h-full">
+				<section className="flex-grow">
+					<Tabs.Tab tabName="details">
 						<div className="grid grid-cols-12 gap-x-1 items-end">
 							<Details item={item} equipmentProperties={equipmentProperties} />
 						</div>
-					</div>
-				) : activeTab === 'description' ? (
-					<div className="w-full h-full">
+					</Tabs.Tab>
+					<Tabs.Tab tabName="description">
 						<Description item={item} />
-					</div>
-				) : activeTab === 'bonuses' ? (
-					<div className="w-full h-full">
+					</Tabs.Tab>
+					<Tabs.Tab tabName="bonuses">
 						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
-					</div>
-				) : null}
-			</section>
+					</Tabs.Tab>
+				</section>
+			</Tabs.Controlled>
 		</div>
 	);
 }

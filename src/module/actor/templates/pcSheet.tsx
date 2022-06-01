@@ -1,3 +1,4 @@
+import { Tabs } from 'src/components/tab-section';
 import { SpecificActor } from '../mashup-actor';
 import { Header } from '../components/Header';
 import { HitPoints } from '../components/HitPoints';
@@ -48,59 +49,36 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
-						<nav data-group="primary" className="flex justify-around border-b border-black">
-							<label
-								data-tab="details"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Details
-							</label>
-							<label
-								data-tab="inventory"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Inventory
-							</label>
-							<label
-								data-tab="powers"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Powers
-							</label>
-							<label
-								data-tab="features"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Features
-							</label>
-							<label
-								data-tab="feats"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Feats
-							</label>
-							<label
-								data-tab="effects"
-								className="ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow uppercase">
-								Effects
-							</label>
-						</nav>
-
-						<section className="flex-grow" data-tab-section>
-							<div className="tab w-full h-full" data-group="primary" data-tab="details">
-								<Details actor={actor} />
-							</div>
-							<div className="tab w-full h-full" data-group="primary" data-tab="inventory">
-								<Inventory actor={actor} />
-							</div>
-							<div className="tab w-full h-full" data-group="primary" data-tab="powers">
-								<Powers actor={actor} />
-							</div>
-							<div className="tab w-full h-full" data-group="primary" data-tab="features">
-								<Features actor={actor} />
-							</div>
-							<div className="tab w-full h-full" data-group="primary" data-tab="feats">
-								<Feats actor={actor} />
-							</div>
-							<div className="tab w-full h-full" data-group="primary" data-tab="effects">
-								<Effects actor={actor} />
-							</div>
-						</section>
+						<Tabs defaultActiveTab="details">
+							<Tabs.Nav>
+								<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
+								<Tabs.NavButton tabName="inventory">Inventory</Tabs.NavButton>
+								<Tabs.NavButton tabName="powers">Powers</Tabs.NavButton>
+								<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
+								<Tabs.NavButton tabName="feats">Feats</Tabs.NavButton>
+								<Tabs.NavButton tabName="effects">Effects</Tabs.NavButton>
+							</Tabs.Nav>
+							<section className="flex-grow">
+								<Tabs.Tab tabName="details">
+									<Details actor={actor} />
+								</Tabs.Tab>
+								<Tabs.Tab tabName="inventory">
+									<Inventory actor={actor} />
+								</Tabs.Tab>
+								<Tabs.Tab tabName="powers">
+									<Powers actor={actor} />
+								</Tabs.Tab>
+								<Tabs.Tab tabName="features">
+									<Features actor={actor} />
+								</Tabs.Tab>
+								<Tabs.Tab tabName="feats">
+									<Feats actor={actor} />
+								</Tabs.Tab>
+								<Tabs.Tab tabName="effects">
+									<Effects actor={actor} />
+								</Tabs.Tab>
+							</section>
+						</Tabs>
 					</div>
 				</div>
 			</article>
