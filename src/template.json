@@ -129,7 +129,8 @@
 		"equipment": {
 			"templates": ["base", "itemDescription", "carriedItem"],
 			"itemSlot": "",
-			"equippedItemSlot": ""
+			"equippedItemSlot": "",
+			"equipped": []
 		}
 	}
 }

@@ -28,13 +28,23 @@ export function Inventory({ actor }: { actor: SpecificActor }) {
 	return (
 		<>
 			{orderedItemSlots.map((slot) =>
-				inventoryBySlots[slot] ? <InventorySlotTable items={inventoryBySlots[slot]} key={slot} slot={slot} /> : null
+				inventoryBySlots[slot] ? (
+					<InventorySlotTable actor={actor} items={inventoryBySlots[slot]} key={slot} slot={slot} />
+				) : null
 			)}
 		</>
 	);
 }
 
-function InventorySlotTable<T extends ItemSlot>({ items, slot }: { items: SpecificEquipmentItem<T>[]; slot: T }) {
+function InventorySlotTable<T extends ItemSlot>({
+	actor,
+	items,
+	slot,
+}: {
+	actor: SpecificActor;
+	items: SpecificEquipmentItem<T>[];
+	slot: T;
+}) {
 	const itemSlotInfo = itemSlots[slot];
 	const {
 		inventoryTableHeader: TableHeader,
@@ -76,7 +86,7 @@ function InventorySlotTable<T extends ItemSlot>({ items, slot }: { items: Specif
 										<IconButton
 											key={equipSlot}
 											title="Equip"
-											className={classNames({ 'opacity-25': item.data.data.equipped !== equipSlot })}
+											className={classNames({ 'opacity-25': !item.data.data.equipped.includes(equipSlot) })}
 											iconClassName="fas fa-shield-alt"
 											onClick={item.isOwner ? equip(item, equipSlot) : undefined}
 										/>
@@ -99,9 +109,16 @@ function InventorySlotTable<T extends ItemSlot>({ items, slot }: { items: Specif
 
 	function equip(item: SpecificEquipmentItem, equipSlot: EquippedItemSlot) {
 		return () => {
-			const next = item.data.data.equipped === equipSlot ? '' : equipSlot;
+			const wasEquipped = item.data.data.equipped.includes(equipSlot);
+			const next = wasEquipped ? [] : [equipSlot];
+			const unequip = actor.data.items.contents
+				.filter(isEquipment)
+				.filter((eq) => eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p)));
 			// TODO: multiple hands
-			item.update({ data: { equipped: next } });
+			actor.updateEmbeddedDocuments(item.documentName, [
+				{ _id: item.id, data: { equipped: next } },
+				...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
+			]);
 		};
 	}
 

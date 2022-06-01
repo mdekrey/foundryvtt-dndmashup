@@ -44,7 +44,7 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Mer
 	ItemDescriptionItemTemplateDataSourceData &
 		CarriedItemItemTemplateDataSourceData & {
 			itemSlot: TItemSlot;
-			equipped: '' | EquippedItemSlot;
+			equipped: EquippedItemSlot[];
 			equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
 		}
 >;
