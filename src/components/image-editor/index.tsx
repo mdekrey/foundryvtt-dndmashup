@@ -25,15 +25,13 @@ export function ImageEditor<TDocument extends AnyDocument>({
 		/>
 	);
 
-	function showFilePicker(ev: React.MouseEvent<HTMLImageElement>) {
+	function showFilePicker() {
 		const fp = new FilePicker({
 			type: 'image',
 			current: src,
 			callback: (path) => {
 				setField(path);
 			},
-			top: ev.currentTarget.clientTop + 40,
-			left: ev.currentTarget.clientLeft + 10,
 		});
 		return fp.browse(src);
 	}
