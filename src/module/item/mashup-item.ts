@@ -1,4 +1,4 @@
-import { ItemSlot, ItemSlotInfo, ItemSlotInfoBase, itemSlots } from './item-slots';
+import { ItemSlot, ItemSlotInfo, itemSlots } from './subtypes/equipment/item-slots';
 import { itemSubtypeConfig, SubItemFunctions } from './subtypes';
 import { PossibleItemData, SpecificItemData, SpecificItemEquipmentData } from './types';
 
@@ -24,17 +24,17 @@ export class MashupItem extends Item {
 			console.error('Got two different item types:', allData._source.type, allData.type);
 			return;
 		}
-		this.subItemFunctions.prepare(allData, this);
+		this.subItemFunctions.prepare(this as SpecificItem);
 	}
 
 	get itemSlotInfo() {
-		return this.data.type === 'equipment' ? (itemSlots[this.data.data.itemSlot] as ItemSlotInfoBase) ?? null : null;
+		return this.data.type === 'equipment' ? itemSlots[this.data.data.itemSlot] ?? null : null;
 	}
 }
 
 export type SpecificItem<T extends PossibleItemData['type'] = PossibleItemData['type']> = MashupItem & {
 	data: SpecificItemData<T>;
-	readonly itemSlotInfo: T extends 'equipment' ? ItemSlotInfoBase : null;
+	readonly itemSlotInfo: T extends 'equipment' ? ItemSlotInfo : null;
 };
 
 export type SpecificEquipmentItem<TItemSlot extends ItemSlot = ItemSlot> = SpecificItem<'equipment'> & {

@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { SpecificEquipmentItem } from '../../mashup-item';
+import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
 
 export function OtherDetails({ item }: { item: SpecificEquipmentItem }) {
 	return (

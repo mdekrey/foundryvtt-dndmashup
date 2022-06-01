@@ -1,8 +1,8 @@
 import { FormInput } from 'src/components/form-input';
-import { ArmorType } from '../../item-slots';
-import { SpecificEquipmentItem } from '../../mashup-item';
-import { OtherDetails } from './OtherDetails';
-import { toSelectItems } from './toSelectItems';
+import { ArmorType } from '../types';
+import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { OtherDetails } from '../other/details';
+import { toSelectItems } from '../toSelectItems';
 
 const allArmorTypes: Record<ArmorType, string> = {
 	light: 'Light',

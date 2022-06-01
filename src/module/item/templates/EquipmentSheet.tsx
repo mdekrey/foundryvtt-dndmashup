@@ -4,11 +4,11 @@ import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from '../components/bonuses';
 import { Description } from '../components/Description';
-import { ItemSlot, itemSlots, ItemSlotTemplates } from '../item-slots';
+import { ItemSlot, itemSlots, ItemSlotTemplates } from '../subtypes/equipment/item-slots';
 import { SpecificEquipmentItem } from '../mashup-item';
 import { deepUpdate } from 'src/core/foundry';
 
-const itemSlotOptions = Object.entries(itemSlots).map(([key, { label }]) => ({ value: key, key, label }));
+const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
 
 export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 	const [activeTab, setActiveTab] = useState('description');
@@ -19,7 +19,7 @@ export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 		} as ItemSlotTemplates[keyof ItemSlotTemplates]);
 
 	const itemSlotInfo = item.itemSlotInfo;
-	const summary = itemSlotInfo.buildSummary ? itemSlotInfo.buildSummary(equipmentProperties) : `TODO: summary`;
+	const summary = itemSlotInfo.buildSummary(equipmentProperties);
 	const Details = itemSlotInfo.details;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {

@@ -1,8 +1,8 @@
 import { FormInput } from 'src/components/form-input';
-import { ArmorCategory, ArmorType } from '../../item-slots';
-import { SpecificEquipmentItem } from '../../mashup-item';
-import { OtherDetails } from './OtherDetails';
-import { toSelectItems } from './toSelectItems';
+import { ArmorCategory, ArmorType } from '../types';
+import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { OtherDetails } from '../other/details';
+import { toSelectItems } from '../toSelectItems';
 
 const allArmorCategories: Record<ArmorCategory, string> = {
 	cloth: 'Cloth',

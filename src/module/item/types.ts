@@ -1,7 +1,7 @@
 import { Ability, DataSource } from 'src/types/types';
 import { ItemData } from './item.types';
 import { FeatureBonus } from '../bonuses';
-import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './item-slots';
+import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];

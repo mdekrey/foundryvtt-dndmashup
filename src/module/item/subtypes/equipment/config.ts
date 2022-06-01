@@ -1,4 +1,4 @@
-import { SubItemFunctions } from './sub-item-functions';
+import { SubItemFunctions } from '../sub-item-functions';
 
 export const equipmentConfig: SubItemFunctions<'equipment'> = {
 	bonuses: (data) => [

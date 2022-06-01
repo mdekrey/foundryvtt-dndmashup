@@ -1,9 +1,9 @@
 import { FormInput } from 'src/components/form-input';
 import { deepUpdate } from 'src/core/foundry';
-import { ItemSlotTemplates, WeaponCategory, WeaponGroup, WeaponProperty } from '../../item-slots';
-import { SpecificEquipmentItem } from '../../mashup-item';
-import { OtherDetails } from './OtherDetails';
-import { toSelectItems } from './toSelectItems';
+import { ItemSlotTemplates, WeaponCategory, WeaponGroup, WeaponProperty } from '../types';
+import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { OtherDetails } from '../other/details';
+import { toSelectItems } from '../toSelectItems';
 
 const weaponCategories: Record<WeaponCategory, string> = {
 	simple: 'Simple',
