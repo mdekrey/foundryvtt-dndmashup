@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { IconButton } from 'src/components/icon-button';
 import { MashupItem, SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
-import { EquippedItemSlot, ItemSlot, itemSlots, ItemSlotTemplate } from 'src/module/item/subtypes/equipment/item-slots';
+import { EquippedItemSlot, ItemSlot, itemSlots } from 'src/module/item/subtypes/equipment/item-slots';
 
 function isEquipment(item: MashupItem): item is SpecificEquipmentItem {
 	return item.data.type === 'equipment';
@@ -46,13 +46,7 @@ function InventorySlotTable<T extends ItemSlot>({
 	slot: T;
 }) {
 	const itemSlotInfo = itemSlots[slot];
-	const {
-		inventoryTableHeader: TableHeader,
-		inventoryTableBody: TableBody,
-		defaultEquipmentInfo,
-		equippedSlots,
-		slotsNeeded,
-	} = itemSlotInfo;
+	const { inventoryTableHeader: TableHeader, inventoryTableBody: TableBody, equippedSlots, slotsNeeded } = itemSlotInfo;
 
 	return (
 		<table className="w-full border-collapse">
@@ -67,9 +61,7 @@ function InventorySlotTable<T extends ItemSlot>({
 			</thead>
 			<tbody>
 				{items.filter(isEquipment).map((item) => {
-					const equipmentProperties = (item.data.data.equipmentProperties as ItemSlotTemplate<T>) ?? {
-						...defaultEquipmentInfo,
-					};
+					const equipmentProperties = item.equipmentProperties;
 					return (
 						<tr
 							key={item.id}

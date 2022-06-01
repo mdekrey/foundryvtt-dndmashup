@@ -12,12 +12,8 @@ const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: labe
 
 export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
 	const [activeTab, setActiveTab] = useState('description');
-	const { defaultEquipmentInfo, buildSummary: Summary, details: Details } = item.itemSlotInfo;
-	const equipmentProperties =
-		item.data.data.equipmentProperties ??
-		({
-			...defaultEquipmentInfo,
-		} as ItemSlotTemplates[keyof ItemSlotTemplates]);
+	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
+	const equipmentProperties = item.equipmentProperties;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {
 		deepUpdate(item, (draft) => {
