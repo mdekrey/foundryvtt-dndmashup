@@ -1,6 +1,5 @@
-import { ItemSlot, ItemSlotInfo, ItemSlotTemplate } from './subtypes/equipment/item-slots';
 import { itemMappings } from './subtypes';
-import { PossibleItemData, SpecificItemData, SpecificItemEquipmentData } from './types';
+import { PossibleItemData } from './types';
 import { MashupItemBase, MashupItemBaseBase } from './mashup-item-base';
 
 export { MashupItemBase };
@@ -58,15 +57,3 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBaseBase>(MashupItemBa
 		}
 	},
 });
-
-export type SpecificItem<T extends PossibleItemData['type'] = PossibleItemData['type']> = MashupItemBase & {
-	data: SpecificItemData<T>;
-	readonly itemSlotInfo: T extends 'equipment' ? ItemSlotInfo : null;
-	readonly equipmentProperties: T extends 'equipment' ? ItemSlotTemplate : null;
-};
-
-export type SpecificEquipmentItem<TItemSlot extends ItemSlot = ItemSlot> = SpecificItem<'equipment'> & {
-	data: SpecificItemEquipmentData<TItemSlot>;
-	readonly itemSlotInfo: ItemSlotInfo<TItemSlot>;
-	readonly equipmentProperties: ItemSlotTemplate<TItemSlot>;
-};

@@ -1,18 +1,7 @@
 import { FeatureBonus } from 'src/module/bonuses';
 import { MashupItemBase } from '../../mashup-item-base';
 import { SpecificItemEquipmentData } from '../../types';
-import { SubItemFunctions } from '../sub-item-functions';
 import { ItemSlot, ItemSlotInfo, itemSlots, ItemSlotTemplate } from './item-slots';
-
-export const equipmentConfig: SubItemFunctions<'equipment'> = {
-	bonuses: (data) => [
-		// TODO: only if equipped and it requires an item slot
-		...data.data.grantedBonuses,
-	],
-	prepare: () => {
-		// nothing to prepare
-	},
-};
 
 export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends MashupItemBase<'equipment'> {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
