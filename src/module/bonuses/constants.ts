@@ -1,6 +1,6 @@
 import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
 import { MashupActor } from '../actor/mashup-actor';
-import { MashupItemBase } from '../item/mashup-item-base';
+import { MashupItem } from '../item/mashup-item';
 import * as ConditionRules from './conditionRules';
 
 export const bonusTargets = [
@@ -37,4 +37,4 @@ export const conditionRules = ConditionRules;
 export type AllConditionRules = typeof conditionRules;
 export type ConditionRule = keyof AllConditionRules;
 // export type ConditionRuleContext = { actor: MashupActor; item: MashupItemBase };
-export type ConditionRuleContext = { actor: MashupActor; item: MashupItemBase };
+export type ConditionRuleContext = { actor: MashupActor; item: MashupItem };

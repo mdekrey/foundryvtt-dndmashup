@@ -8,10 +8,10 @@ import {
 	ItemSlot,
 	itemSlots,
 } from 'src/module/item/subtypes/equipment/item-slots';
-import { MashupItemBaseBase } from 'src/module/item/mashup-item-base';
+import { MashupItemBase } from 'src/module/item/mashup-item';
 import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
 
-function isEquipment(item: MashupItemBaseBase): item is MashupItemEquipment {
+function isEquipment(item: MashupItemBase): item is MashupItemEquipment {
 	return item.data.type === 'equipment';
 }
 

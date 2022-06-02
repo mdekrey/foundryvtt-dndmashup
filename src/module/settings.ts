@@ -1,13 +1,13 @@
 import { MashupActor } from './actor/mashup-actor';
 import { MashupActorSheet } from './actor/mashup-actor-sheet';
-import { MashupItemProxy } from './item/mashup-item';
-import { MashupItemBaseBase } from './item/mashup-item-base';
+import { MashupItemProxy } from './item/mashup-item-proxy';
+import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';
 
 declare global {
 	interface DocumentClassConfig {
 		Actor: typeof MashupActor;
-		Item: typeof MashupItemBaseBase;
+		Item: typeof MashupItemBase;
 	}
 }
 

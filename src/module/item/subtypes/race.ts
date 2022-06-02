@@ -1,7 +1,7 @@
 import { FeatureBonus } from 'src/module/bonuses';
-import { MashupItemBase } from '../mashup-item-base';
+import { MashupItem } from '../mashup-item';
 
-export class MashupItemRace extends MashupItemBase<'race'> {
+export class MashupItemRace extends MashupItem<'race'> {
 	override allGrantedBonuses(): FeatureBonus[] {
 		return [
 			{

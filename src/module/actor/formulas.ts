@@ -2,7 +2,7 @@ import { ActorDataBaseProperties } from '@league-of-foundry-developers/foundry-v
 import { ClassData, RaceData } from '../item/types';
 import { MashupItemClass } from '../item/subtypes/class';
 import { MashupItemRace } from '../item/subtypes/race';
-import { MashupItemBaseBase } from '../item/mashup-item-base';
+import { MashupItemBase } from '../item/mashup-item';
 
 type Items = ActorDataBaseProperties['items'];
 
@@ -13,10 +13,10 @@ export function isRaceSource(item: SourceConfig['Item']): item is RaceData {
 	return item.type === 'race';
 }
 
-export function isClass(item: MashupItemBaseBase): item is MashupItemClass {
+export function isClass(item: MashupItemBase): item is MashupItemClass {
 	return item instanceof MashupItemClass;
 }
-export function isRace(item: MashupItemBaseBase): item is MashupItemRace {
+export function isRace(item: MashupItemBase): item is MashupItemRace {
 	return item instanceof MashupItemRace;
 }
 

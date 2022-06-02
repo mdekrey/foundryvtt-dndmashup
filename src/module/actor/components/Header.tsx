@@ -1,10 +1,10 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { MashupItemBaseBase } from 'src/module/item/mashup-item-base';
+import { MashupItemBase } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
 
 export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
-	function showItem(item: MashupItemBaseBase | undefined | null) {
+	function showItem(item: MashupItemBase | undefined | null) {
 		item?.sheet?.render(true);
 	}
 

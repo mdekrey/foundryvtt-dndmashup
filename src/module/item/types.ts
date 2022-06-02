@@ -69,6 +69,8 @@ export type PossibleItemData =
 	| ItemData<EquipmentData, EquipmentData>
 	| ItemData<FeatureData, FeatureData>;
 
-export type SpecificItemData<T extends PossibleItemData['type']> = PossibleItemData & { type: T };
+export type PossibleItemType = PossibleItemData['type'];
+
+export type SpecificItemData<T extends PossibleItemType> = PossibleItemData & { type: T };
 export type SpecificItemEquipmentData<TItemSlot extends ItemSlot = ItemSlot> = SpecificItemData<'equipment'> &
 	ItemData<EquipmentData<TItemSlot>, EquipmentData<TItemSlot>>;

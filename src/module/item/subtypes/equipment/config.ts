@@ -1,9 +1,9 @@
 import { FeatureBonus } from 'src/module/bonuses';
-import { MashupItemBase } from '../../mashup-item-base';
+import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
 import { ItemSlot, ItemSlotInfo, itemSlots, ItemSlotTemplate } from './item-slots';
 
-export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends MashupItemBase<'equipment'> {
+export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends MashupItem<'equipment'> {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data!: SpecificItemEquipmentData<TItemSlot>;
 	override allGrantedBonuses(): FeatureBonus[] {
