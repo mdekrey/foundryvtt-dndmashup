@@ -9,7 +9,8 @@ import {
 	filterBonuses,
 	sumFinalBonuses,
 } from '../bonuses';
-import { findAppliedClass, findAppliedRace, isClassSource, isRaceSource } from './formulas';
+import { isClass, isRace } from '../item/subtypes';
+import { isClassSource, isRaceSource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
 
@@ -75,10 +76,10 @@ export class MashupActor extends Actor {
 	}
 
 	get appliedClass() {
-		return findAppliedClass(this.items);
+		return this.items?.find(isClass);
 	}
 	get appliedRace() {
-		return findAppliedRace(this.items);
+		return this.items?.find(isRace);
 	}
 
 	get extraLevels() {

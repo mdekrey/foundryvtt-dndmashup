@@ -18,7 +18,7 @@ export function ItemTable<T extends MashupItem>({
 			<thead className="bg-theme text-white">
 				<tr>
 					<th className="w-8" />
-					<th className="text-left">{title} Name</th>
+					<th className="pl-2 text-left">{title} Name</th>
 					{TableHeader && <TableHeader />}
 					<th className="w-16" />
 				</tr>
@@ -35,7 +35,7 @@ export function ItemTable<T extends MashupItem>({
 							<td className="w-8">
 								{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block mr-1" /> : null}
 							</td>
-							<td>{item.name}</td>
+							<td className="pl-2">{item.name}</td>
 							{TableBody && <TableBody item={item} />}
 							<td className="text-right w-16">
 								{item.isOwner ? <IconButton title="Edit" onClick={edit(item)} iconClassName="fas fa-edit" /> : null}

@@ -4,6 +4,8 @@ import { MashupItemRace } from './race/config';
 import { MashupItemEquipment } from './equipment/config';
 import { MashupItemFeature } from './feature/config';
 
+export * from './filters';
+
 export const itemMappings = {
 	class: MashupItemClass,
 	race: MashupItemRace,
