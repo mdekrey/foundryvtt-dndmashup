@@ -8,7 +8,7 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 	slotsNeeded: () => 1,
 	bonuses: () => [],
 	defaultEquipmentInfo: { type: 'light', shieldBonus: 1, checkPenalty: 0 },
-	buildSummary: ({ equipmentProperties: input }) => (
+	buildSummary: ({ item: { equipmentProperties: input } }) => (
 		<>{`${input.type}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`}</>
 	),
 	details: ShieldDetails,
@@ -18,7 +18,7 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 			<th>Check</th>
 		</>
 	),
-	inventoryTableBody: ({ equipmentProperties }) => (
+	inventoryTableBody: ({ item: { equipmentProperties } }) => (
 		<>
 			<td className="text-center">{equipmentProperties.shieldBonus}</td>
 			<td className="text-center">{equipmentProperties.checkPenalty}</td>

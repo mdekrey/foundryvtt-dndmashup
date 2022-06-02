@@ -41,14 +41,13 @@ export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
 
 export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
 	item: MashupItemEquipment<T>;
-	equipmentProperties: ItemSlotTemplate<T>;
 }>;
 
 export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	display: string;
 	optionLabel: string;
 	equippedSlots: EquippedItemSlot[];
-	slotsNeeded: (item: MashupItemEquipment<T>, equipmentProperties: ItemSlotTemplate<T>) => number;
+	slotsNeeded: (item: MashupItemEquipment<T>) => number;
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;

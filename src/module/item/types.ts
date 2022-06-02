@@ -2,7 +2,7 @@ import { Ability, TypedData } from 'src/types/types';
 import { ItemData } from './item.types';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
-import { FeatureType } from './subtypes/feature';
+import { FeatureType } from './subtypes/feature/config';
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
@@ -44,6 +44,7 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Bas
 export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData & {
 		featureType: FeatureType;
+		summary: string;
 	};
 
 export type ClassData = TypedData<'class', ClassDataSourceData>;

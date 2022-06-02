@@ -1,11 +1,12 @@
 import { ItemSlotInfo } from '../types';
+import { weaponGroups } from './config';
 import { WeaponDetails } from './details';
 
 export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	display: 'Weapon',
 	optionLabel: 'Weapon',
 	equippedSlots: ['primary-hand', 'off-hand'],
-	slotsNeeded: (item, props) => props.hands,
+	slotsNeeded: (item) => item.equipmentProperties.hands,
 	bonuses: () => [],
 	defaultEquipmentInfo: {
 		damage: '1d8',
@@ -16,7 +17,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 		category: 'military',
 		hands: 1,
 	},
-	buildSummary: ({ equipmentProperties: input }) => (
+	buildSummary: ({ item: { equipmentProperties: input } }) => (
 		<>
 			{[
 				`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}`,
@@ -35,9 +36,9 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<th>Range</th>
 		</>
 	),
-	inventoryTableBody: ({ equipmentProperties }) => (
+	inventoryTableBody: ({ item: { equipmentProperties } }) => (
 		<>
-			<td className="text-center">{equipmentProperties.group}</td>
+			<td className="text-center">{weaponGroups[equipmentProperties.group]}</td>
 			<td className="text-center">{equipmentProperties.damage}</td>
 			<td className="text-center">{equipmentProperties.range || <>&mdash;</>}</td>
 		</>

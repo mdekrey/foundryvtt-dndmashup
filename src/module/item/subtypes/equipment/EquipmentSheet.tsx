@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { Bonuses } from '../components/bonuses';
-import { Description } from '../components/Description';
-import { ItemSlot, itemSlots, ItemSlotTemplates } from '../subtypes/equipment/item-slots';
+import { Bonuses } from '../../components/bonuses';
+import { Description } from '../../components/Description';
+import { ItemSlot, itemSlots, ItemSlotTemplates } from './item-slots';
 import { deepUpdate } from 'src/core/foundry';
 import { Tabs } from 'src/components/tab-section';
-import { MashupItemEquipment } from '../subtypes/equipment';
+import { MashupItemEquipment } from '.';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
 
 export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	const [activeTab, setActiveTab] = useState('description');
 	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
-	const equipmentProperties = item.equipmentProperties;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {
 		deepUpdate(item as unknown as MashupItemEquipment<ItemSlot>, (draft) => {
@@ -45,7 +44,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					</FormInput>
 
 					<p className="col-span-12">
-						<Summary item={item} equipmentProperties={equipmentProperties} />
+						<Summary item={item} />
 					</p>
 				</div>
 			</div>
@@ -60,7 +59,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="details">
 						<div className="grid grid-cols-12 gap-x-1 items-end">
-							<Details item={item} equipmentProperties={equipmentProperties} />
+							<Details item={item} />
 						</div>
 					</Tabs.Tab>
 					<Tabs.Tab tabName="description">

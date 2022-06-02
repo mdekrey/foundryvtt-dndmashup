@@ -2,8 +2,8 @@ import { FormInput } from 'src/components/form-input';
 import { SelectItem } from 'src/components/form-input/auto-select';
 import { ImageEditor } from 'src/components/image-editor';
 import { Abilities, Ability } from 'src/types/types';
-import { Bonuses } from '../components/bonuses';
-import { MashupItemClass } from '../subtypes/class';
+import { Bonuses } from '../../components/bonuses';
+import { MashupItemClass } from './config';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(

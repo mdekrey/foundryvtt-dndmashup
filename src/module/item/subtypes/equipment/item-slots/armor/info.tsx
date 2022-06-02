@@ -1,4 +1,5 @@
 import { ItemSlotInfo } from '../types';
+import { allArmorCategories } from './config';
 import { ArmorDetails } from './details';
 
 export const ArmorInfo: ItemSlotInfo<'armor'> = {
@@ -8,7 +9,7 @@ export const ArmorInfo: ItemSlotInfo<'armor'> = {
 	equippedSlots: ['body'],
 	slotsNeeded: () => 1,
 	defaultEquipmentInfo: { armorBonus: 0, type: 'light', category: 'cloth', checkPenalty: 0, speedPenalty: 0 },
-	buildSummary: ({ equipmentProperties: input }) => (
+	buildSummary: ({ item: { equipmentProperties: input } }) => (
 		<>{`${input.type} ${input.category}, armor bonus +${input.armorBonus}, check penalty ${input.checkPenalty}, speed penalty ${input.speedPenalty}`}</>
 	),
 	details: ArmorDetails,
@@ -20,9 +21,9 @@ export const ArmorInfo: ItemSlotInfo<'armor'> = {
 			<th>Speed</th>
 		</>
 	),
-	inventoryTableBody: ({ equipmentProperties }) => (
+	inventoryTableBody: ({ item: { equipmentProperties } }) => (
 		<>
-			<td className="text-center">{equipmentProperties.category}</td>
+			<td className="text-center">{allArmorCategories[equipmentProperties.category]}</td>
 			<td className="text-center">{equipmentProperties.armorBonus}</td>
 			<td className="text-center">{equipmentProperties.checkPenalty}</td>
 			<td className="text-center">{equipmentProperties.speedPenalty}</td>

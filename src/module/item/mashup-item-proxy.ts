@@ -13,7 +13,7 @@ const create = function (data: Record<string, unknown>, options) {
 
 	if (!itemMappings.hasOwnProperty(type)) throw new Error(`Unsupported Entity type for create(): ${type}`);
 
-	return itemMappings[type].create(data, options);
+	return itemMappings[type].create(data as never, options);
 } as FuncWithoutThis<typeof MashupItemBase['create']>;
 
 export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstructor>(MashupItemBase as never, {

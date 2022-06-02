@@ -134,7 +134,8 @@
 		},
 		"feature": {
 			"templates": ["base", "itemDescription"],
-			"featureType": "feat"
+			"featureType": "feat",
+			"summary": ""
 		}
 	}
 }

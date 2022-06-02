@@ -1,15 +1,25 @@
 import { renderReact, Root } from 'src/components/sheet';
-// import { attachBonusSheet, getBonusesContext } from '../bonuses';
-// import { MashupItem } from './mashup-item';
-import { ItemSheetJsx } from './templates/sheet';
-// import { templatePathItemSheet, templatePathItemParts } from './templates/template-paths';
+import { MashupItem } from './mashup-item';
+import { itemMappings } from './subtypes';
+import { PossibleItemType } from './types';
+import { ClassSheet } from './subtypes/class/ClassSheet';
+import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
+import { RaceSheet } from './subtypes/race/RaceSheet';
+import { FeatureSheet } from './subtypes/feature/FeatureSheet';
 
-// type ItemHandlebarsContext = Awaited<ReturnType<ItemSheet['getData']>> & {
-// 	rollData: object;
-// 	itemData: DataConfig['Item']['data'];
-// 	templates: Record<string, () => string>;
-// 	bonuses: ReturnType<typeof getBonusesContext>;
-// };
+const sheets: { [K in PossibleItemType]: React.FC<{ item: InstanceType<typeof itemMappings[K]> }> } = {
+	class: ClassSheet,
+	race: RaceSheet,
+	equipment: EquipmentSheet,
+	feature: FeatureSheet,
+};
+
+function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
+	const item = sheet.item;
+	const Sheet = sheets[item.type] as React.FC<{ item: MashupItem }>;
+
+	return <Sheet item={item} />;
+}
 
 export class MashupItemSheet extends ItemSheet {
 	root: Root | null = null;
