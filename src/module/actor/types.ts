@@ -1,4 +1,4 @@
-import { Ability, Currency, DataSource, Defense } from 'src/types/types';
+import { Ability, Currency, TypedData, Defense } from 'src/types/types';
 import { ActorData } from './actor.types';
 import { FeatureBonus } from '../bonuses';
 
@@ -65,8 +65,8 @@ export type MonsterActorTemplateDataSourceData = {
 export type PlayerCharacterDataSourceData = Merge<BaseActorTemplateDataSourceData, PcActorTemplateDataSourceData>;
 export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, MonsterActorTemplateDataSourceData>;
 
-export type PlayerCharacterDataSource = DataSource<'pc', PlayerCharacterDataSourceData>;
-export type MonsterDataSource = DataSource<'monster', MonsterDataSourceData>;
+export type PlayerCharacterDataSource = TypedData<'pc', PlayerCharacterDataSourceData>;
+export type MonsterDataSource = TypedData<'monster', MonsterDataSourceData>;
 
 export type CommonDataProperties = Merge<
 	BaseActorTemplateDataSourceData,

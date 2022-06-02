@@ -1,4 +1,4 @@
-import { Ability, DataSource } from 'src/types/types';
+import { Ability, TypedData } from 'src/types/types';
 import { ItemData } from './item.types';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
@@ -49,30 +49,16 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Mer
 		}
 >;
 
-export type ClassDataSource = DataSource<'class', ClassDataSourceData>;
-export type RaceDataSource = DataSource<'race', RaceDataSourceData>;
-export type EquipmentDataSource<TItemSlot extends ItemSlot = ItemSlot> = DataSource<
+export type ClassData = TypedData<'class', ClassDataSourceData>;
+export type RaceData = TypedData<'race', RaceDataSourceData>;
+export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
 	'equipment',
 	EquipmentDataSourceData<TItemSlot>
 >;
 
-// TODO - any calculated properties? See actor/types.ts
-
-export type CommonDataProperties = BaseItemTemplateDataSourceData;
-
-export type ClassDataProperties = ClassDataSourceData;
-export type RaceDataProperties = RaceDataSourceData;
-export type EquipmentDataProperties = EquipmentDataSourceData;
-export type ClassData = { type: 'class'; data: ClassDataProperties };
-export type RaceData = { type: 'race'; data: RaceDataProperties };
-export type EquipmentData = {
-	type: 'equipment';
-	data: EquipmentDataProperties;
-};
-
 declare global {
 	interface SourceConfig {
-		Item: ClassDataSource | RaceDataSource | EquipmentDataSource;
+		Item: ClassData | RaceData | EquipmentData;
 	}
 	interface DataConfig {
 		Item: ClassData | RaceData | EquipmentData;
@@ -80,10 +66,10 @@ declare global {
 }
 
 export type PossibleItemData =
-	| ItemData<ClassData, ClassDataSource>
-	| ItemData<RaceData, RaceDataSource>
-	| ItemData<EquipmentData, EquipmentDataSource>;
+	| ItemData<ClassData, ClassData>
+	| ItemData<RaceData, RaceData>
+	| ItemData<EquipmentData, EquipmentData>;
 
 export type SpecificItemData<T extends PossibleItemData['type']> = PossibleItemData & { type: T };
 export type SpecificItemEquipmentData<TItemSlot extends ItemSlot = ItemSlot> = SpecificItemData<'equipment'> &
-	ItemData<EquipmentData, EquipmentDataSource<TItemSlot>>;
+	ItemData<EquipmentData<TItemSlot>, EquipmentData<TItemSlot>>;

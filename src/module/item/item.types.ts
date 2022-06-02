@@ -7,9 +7,9 @@ import type {
 	ItemDataConstructorData,
 	ItemDataSchema,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
-import { DataSource } from 'src/types/types';
+import { TypedData } from 'src/types/types';
 
-export type ItemData<TData, TSource extends DataSource<string, unknown>> = DocumentData<
+export type ItemData<TData, TSource extends TypedData<string, unknown>> = DocumentData<
 	ItemDataSchema,
 	ItemDataBaseProperties & TData,
 	PropertiesToSource<ItemDataBaseProperties> & TSource,

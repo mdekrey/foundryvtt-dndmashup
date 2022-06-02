@@ -7,9 +7,9 @@ import type {
 	ActorDataConstructorData,
 	ActorDataSchema,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
-import { DataSource } from 'src/types/types';
+import { TypedData } from 'src/types/types';
 
-export type ActorData<TData, TSource extends DataSource<string, unknown>> = DocumentData<
+export type ActorData<TData, TSource extends TypedData<string, unknown>> = DocumentData<
 	ActorDataSchema,
 	ActorDataBaseProperties & TData,
 	PropertiesToSource<ActorDataBaseProperties> & TSource,
