@@ -3,6 +3,7 @@ import { classConfig } from './class';
 import { raceConfig } from './race';
 import { equipmentConfig } from './equipment/config';
 import { SubItemFunctions } from './sub-item-functions';
+import { featureConfig } from './feature';
 
 export { SubItemFunctions } from './sub-item-functions';
 
@@ -12,4 +13,5 @@ export const itemSubtypeConfig: {
 	class: classConfig,
 	race: raceConfig,
 	equipment: equipmentConfig,
+	feature: featureConfig,
 };

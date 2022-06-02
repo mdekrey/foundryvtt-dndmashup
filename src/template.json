@@ -97,7 +97,7 @@
 		}
 	},
 	"Item": {
-		"types": ["class", "race", "equipment"],
+		"types": ["class", "race", "equipment", "feature"],
 		"templates": {
 			"base": {
 				"grantedBonuses": []
@@ -131,6 +131,10 @@
 			"itemSlot": "",
 			"equippedItemSlot": "",
 			"equipped": []
+		},
+		"feature": {
+			"templates": ["base", "itemDescription"],
+			"featureType": "feat"
 		}
 	}
 }
