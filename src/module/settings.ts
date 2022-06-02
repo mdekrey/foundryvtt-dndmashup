@@ -3,11 +3,12 @@ import { MashupActorSheet } from './actor/mashup-actor-sheet';
 import { MashupItemProxy } from './item/mashup-item-proxy';
 import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';
+import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 
 declare global {
 	interface DocumentClassConfig {
 		Actor: typeof MashupActor;
-		Item: typeof MashupItemBase;
+		Item: typeof MashupItemBase & DocumentConstructor;
 	}
 }
 

@@ -1,6 +1,7 @@
 import { itemMappings } from './subtypes';
 import { PossibleItemType } from './types';
-import { MashupItem, MashupItemBase } from './mashup-item';
+import { MashupItemBase } from './mashup-item';
+import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FuncWithoutThis<T extends (...args: any) => any> = (...args: Parameters<T>) => ReturnType<T>;
@@ -13,11 +14,11 @@ const create = function (data: Record<string, unknown>, options) {
 	if (!itemMappings.hasOwnProperty(type)) throw new Error(`Unsupported Entity type for create(): ${type}`);
 
 	return itemMappings[type].create(data, options);
-} as FuncWithoutThis<typeof MashupItem['create']>;
+} as FuncWithoutThis<typeof MashupItemBase['create']>;
 
-export const MashupItemProxy = new Proxy<typeof MashupItemBase>(MashupItemBase, {
+export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstructor>(MashupItemBase as never, {
 	//Will intercept calls to the "new" operator
-	construct: function (target, args: ConstructorParameters<typeof MashupItem>) {
+	construct: function (target, args: ConstructorParameters<typeof MashupItemBase>) {
 		const [data] = args;
 
 		if (!data) throw new Error('No data for item');
@@ -41,7 +42,7 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase>(MashupItemBase, 
 						return data.map((i) => create(i, options));
 					}
 					return create(data, options);
-				} as typeof MashupItem['create'];
+				} as typeof MashupItemBase['create'];
 
 			case Symbol.hasInstance:
 				//Applying the "instanceof" operator on the instance object
