@@ -1,22 +1,19 @@
-import { SpecificEquipmentItem, SpecificItem } from '../mashup-item';
 import { MashupItemSheet } from '../mashup-item-sheet';
-import { PossibleItemData } from '../types';
+import { MashupItemClass } from '../subtypes/class';
+import { MashupItemEquipment } from '../subtypes/equipment';
+import { MashupItemRace } from '../subtypes/race';
 import { ClassSheet } from './ClassSheet';
 import { EquipmentSheet } from './EquipmentSheet';
 import { RaceSheet } from './RaceSheet';
 
-function isItemType<T extends PossibleItemData['type']>(item: SpecificItem, type: T): item is SpecificItem<T> {
-	return item.data.type === type;
-}
-
 export function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
-	const item = sheet.item as SpecificItem;
+	const item = sheet.item;
 
-	return isItemType(item, 'class') ? (
+	return item instanceof MashupItemClass ? (
 		<ClassSheet item={item} />
-	) : isItemType(item, 'race') ? (
+	) : item instanceof MashupItemRace ? (
 		<RaceSheet item={item} />
-	) : isItemType(item, 'equipment') ? (
-		<EquipmentSheet item={item as SpecificEquipmentItem} />
+	) : item instanceof MashupItemEquipment ? (
+		<EquipmentSheet item={item as MashupItemEquipment} />
 	) : null;
 }

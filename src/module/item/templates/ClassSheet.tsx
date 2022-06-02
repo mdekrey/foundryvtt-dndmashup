@@ -3,7 +3,7 @@ import { SelectItem } from 'src/components/form-input/auto-select';
 import { ImageEditor } from 'src/components/image-editor';
 import { Abilities, Ability } from 'src/types/types';
 import { Bonuses } from '../components/bonuses';
-import { SpecificItem } from '../mashup-item';
+import { MashupItemClass } from '../subtypes/class';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
@@ -11,7 +11,7 @@ const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
 );
 const abilities = Abilities.map((v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase() }));
 
-export function ClassSheet({ item }: { item: SpecificItem<'class'> }) {
+export function ClassSheet({ item }: { item: MashupItemClass }) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">

@@ -1,7 +1,9 @@
 import { FormInput } from 'src/components/form-input';
-import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { MashupItemEquipment } from '../../config';
+import { ItemSlot } from '../types';
 
-export function OtherDetails({ item }: { item: SpecificEquipmentItem }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function OtherDetails<T extends ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	return (
 		<>
 			<FormInput className="col-span-2">

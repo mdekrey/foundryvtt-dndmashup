@@ -1,9 +1,9 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from '../components/bonuses';
-import { SpecificItem } from '../mashup-item';
+import { MashupItemRace } from '../subtypes/race';
 
-export function RaceSheet({ item }: { item: SpecificItem<'race'> }) {
+export function RaceSheet({ item }: { item: MashupItemRace }) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">

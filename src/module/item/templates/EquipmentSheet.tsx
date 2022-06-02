@@ -4,19 +4,19 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from '../components/bonuses';
 import { Description } from '../components/Description';
 import { ItemSlot, itemSlots, ItemSlotTemplates } from '../subtypes/equipment/item-slots';
-import { SpecificEquipmentItem } from '../mashup-item';
 import { deepUpdate } from 'src/core/foundry';
 import { Tabs } from 'src/components/tab-section';
+import { MashupItemEquipment } from '../subtypes/equipment';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
 
-export function EquipmentSheet({ item }: { item: SpecificEquipmentItem }) {
+export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	const [activeTab, setActiveTab] = useState('description');
 	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
 	const equipmentProperties = item.equipmentProperties;
 
 	function onChangeItemSlot(itemSlot: ItemSlot) {
-		deepUpdate(item, (draft) => {
+		deepUpdate(item as unknown as MashupItemEquipment<ItemSlot>, (draft) => {
 			draft.data.itemSlot = itemSlot;
 			draft.data.equipmentProperties = {
 				...itemSlots[itemSlot].defaultEquipmentInfo,

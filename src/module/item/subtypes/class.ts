@@ -1,3 +1,5 @@
+import { FeatureBonus } from 'src/module/bonuses';
+import { MashupItemBase } from '../mashup-item-base';
 import { SubItemFunctions } from './sub-item-functions';
 
 export const classConfig: SubItemFunctions<'class'> = {
@@ -18,3 +20,21 @@ export const classConfig: SubItemFunctions<'class'> = {
 		// nothing to prepare
 	},
 };
+
+export class MashupItemClass extends MashupItemBase<'class'> {
+	override allGrantedBonuses(): FeatureBonus[] {
+		return [
+			{
+				target: 'maxHp',
+				amount: `${this.data.data.hpBase} + ${this.data.data.hpPerLevel} * @actor.extraLevels`,
+				type: 'class',
+			},
+			{
+				target: 'surges-max',
+				amount: this.data.data.healingSurgesBase,
+				type: 'class',
+			},
+			...this.data.data.grantedBonuses,
+		];
+	}
+}

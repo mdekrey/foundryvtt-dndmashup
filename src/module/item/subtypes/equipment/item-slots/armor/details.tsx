@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { MashupItemEquipment } from '../../config';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
 import { allArmorCategories, allArmorTypes } from './config';
@@ -7,7 +7,7 @@ import { allArmorCategories, allArmorTypes } from './config';
 const armorCategories = toSelectItems(allArmorCategories);
 const armorTypes = toSelectItems(allArmorTypes);
 
-export function ArmorDetails({ item }: { item: SpecificEquipmentItem<'armor'> }) {
+export function ArmorDetails({ item }: { item: MashupItemEquipment<'armor'> }) {
 	return (
 		<>
 			<FormInput className="col-span-6">

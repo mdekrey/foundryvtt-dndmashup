@@ -1,12 +1,13 @@
 import { MashupActor } from './actor/mashup-actor';
 import { MashupActorSheet } from './actor/mashup-actor-sheet';
-import { MashupItem } from './item/mashup-item';
+import { MashupItemProxy } from './item/mashup-item';
+import { MashupItemBaseBase } from './item/mashup-item-base';
 import { MashupItemSheet } from './item/mashup-item-sheet';
 
 declare global {
 	interface DocumentClassConfig {
 		Actor: typeof MashupActor;
-		Item: typeof MashupItem;
+		Item: typeof MashupItemBaseBase;
 	}
 }
 
@@ -19,7 +20,7 @@ export function registerSettings(): void {
 	// };
 
 	CONFIG.Actor.documentClass = MashupActor;
-	CONFIG.Item.documentClass = MashupItem;
+	CONFIG.Item.documentClass = MashupItemProxy;
 
 	Actors.unregisterSheet('core', ActorSheet);
 	Actors.registerSheet('actor', MashupActorSheet, { makeDefault: true });

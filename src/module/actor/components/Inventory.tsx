@@ -1,7 +1,6 @@
 import { groupBy } from 'lodash/fp';
 import classNames from 'classnames';
 import { IconButton } from 'src/components/icon-button';
-import { MashupItem, SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
 import {
 	EquippedItemSlot,
@@ -9,8 +8,10 @@ import {
 	ItemSlot,
 	itemSlots,
 } from 'src/module/item/subtypes/equipment/item-slots';
+import { MashupItemBaseBase } from 'src/module/item/mashup-item-base';
+import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
 
-function isEquipment(item: MashupItem): item is SpecificEquipmentItem {
+function isEquipment(item: MashupItemBaseBase): item is MashupItemEquipment {
 	return item.data.type === 'equipment';
 }
 
@@ -47,7 +48,7 @@ function InventorySlotTable<T extends ItemSlot>({
 	slot,
 }: {
 	actor: SpecificActor;
-	items: SpecificEquipmentItem<T>[];
+	items: MashupItemEquipment<T>[];
 	slot: T;
 }) {
 	const itemSlotInfo = itemSlots[slot];
@@ -130,12 +131,12 @@ function InventorySlotTable<T extends ItemSlot>({
 		</table>
 	);
 
-	function edit(item: SpecificEquipmentItem) {
+	function edit(item: MashupItemEquipment<T>) {
 		return () => {
 			item.sheet?.render(true, { focus: true });
 		};
 	}
-	function remove(item: SpecificEquipmentItem) {
+	function remove(item: MashupItemEquipment<T>) {
 		return () => {
 			item.delete();
 		};

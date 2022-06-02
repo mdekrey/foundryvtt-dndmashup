@@ -1,12 +1,12 @@
 import { FormInput } from 'src/components/form-input';
-import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { MashupItemEquipment } from '../../config';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
 import { allShieldTypes } from './config';
 
 const shieldTypes = toSelectItems(allShieldTypes);
 
-export function ShieldDetails({ item }: { item: SpecificEquipmentItem<'shield'> }) {
+export function ShieldDetails({ item }: { item: MashupItemEquipment<'shield'> }) {
 	return (
 		<>
 			<FormInput className="col-span-6">

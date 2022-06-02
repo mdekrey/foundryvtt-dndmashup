@@ -23,38 +23,28 @@ export type CarriedItemItemTemplateDataSourceData = {
 	price: number;
 };
 
-export type ClassDataSourceData = Merge<
-	BaseItemTemplateDataSourceData,
-	{
-		role: string;
-		powerSource: string;
-		keyAbilities: Ability[];
-		hpBase: number;
-		hpPerLevel: number;
-		healingSurgesBase: number;
-	}
->;
-export type RaceDataSourceData = Merge<
-	BaseItemTemplateDataSourceData,
-	{
-		baseSpeed: number;
-	}
->;
-export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Merge<
-	BaseItemTemplateDataSourceData,
+export type ClassDataSourceData = BaseItemTemplateDataSourceData & {
+	role: string;
+	powerSource: string;
+	keyAbilities: Ability[];
+	hpBase: number;
+	hpPerLevel: number;
+	healingSurgesBase: number;
+};
+export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
+	baseSpeed: number;
+};
+export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData &
-		CarriedItemItemTemplateDataSourceData & {
-			itemSlot: TItemSlot;
-			equipped: EquippedItemSlot[];
-			equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
-		}
->;
-export type FeatureDataSourceData = Merge<
-	BaseItemTemplateDataSourceData,
+	CarriedItemItemTemplateDataSourceData & {
+		itemSlot: TItemSlot;
+		equipped: EquippedItemSlot[];
+		equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
+	};
+export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData & {
 		featureType: FeatureType;
-	}
->;
+	};
 
 export type ClassData = TypedData<'class', ClassDataSourceData>;
 export type RaceData = TypedData<'race', RaceDataSourceData>;

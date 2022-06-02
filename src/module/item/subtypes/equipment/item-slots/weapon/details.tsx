@@ -1,17 +1,17 @@
 import { FormInput } from 'src/components/form-input';
 import { deepUpdate } from 'src/core/foundry';
 import { WeaponProperty } from './types';
-import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
+import { MashupItemEquipment } from '../../config';
 
 const allWeaponCategories = toSelectItems(weaponCategories);
 const allWeaponHands = toSelectItems(weaponHands);
 const allWeaponGroups = toSelectItems(weaponGroups);
 const allWeaponProperties = toSelectItems(weaponProperties);
 
-export function WeaponDetails({ item }: { item: SpecificEquipmentItem<'weapon'> }) {
+export function WeaponDetails({ item }: { item: MashupItemEquipment<'weapon'> }) {
 	const checkedProperties = item.data._source.data.equipmentProperties?.properties ?? [];
 	function setChecked(value: WeaponProperty, isChecked: boolean) {
 		if (isChecked) {
