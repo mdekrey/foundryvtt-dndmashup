@@ -3,7 +3,12 @@ import classNames from 'classnames';
 import { IconButton } from 'src/components/icon-button';
 import { MashupItem, SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
-import { EquippedItemSlot, ItemSlot, itemSlots } from 'src/module/item/subtypes/equipment/item-slots';
+import {
+	EquippedItemSlot,
+	equippedItemSlots,
+	ItemSlot,
+	itemSlots,
+} from 'src/module/item/subtypes/equipment/item-slots';
 
 function isEquipment(item: MashupItem): item is SpecificEquipmentItem {
 	return item.data.type === 'equipment';
@@ -78,7 +83,7 @@ function InventorySlotTable<T extends ItemSlot>({
 									{equippedSlots.map((equipSlot) => (
 										<IconButton
 											key={equipSlot}
-											title="Equip"
+											title={`Equip ${equippedItemSlots[equipSlot].label}`}
 											className={classNames({
 												'opacity-25': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) === -1,
 												// fade out opposite hand

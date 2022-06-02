@@ -1,15 +1,10 @@
 import { FormInput } from 'src/components/form-input';
-import { ArmorType } from '../types';
 import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
+import { allShieldTypes } from './config';
 
-const allArmorTypes: Record<ArmorType, string> = {
-	light: 'Light',
-	heavy: 'Heavy',
-};
-
-const armorTypes = toSelectItems(allArmorTypes);
+const shieldTypes = toSelectItems(allShieldTypes);
 
 export function ShieldDetails({ item }: { item: SpecificEquipmentItem<'shield'> }) {
 	return (
@@ -17,7 +12,7 @@ export function ShieldDetails({ item }: { item: SpecificEquipmentItem<'shield'> 
 			<FormInput className="col-span-6">
 				<FormInput.AutoSelect
 					document={item}
-					options={armorTypes}
+					options={shieldTypes}
 					field="data.equipmentProperties.type"
 					className="w-full text-lg text-center"
 				/>

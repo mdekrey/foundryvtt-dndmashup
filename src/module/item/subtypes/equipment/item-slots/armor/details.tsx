@@ -1,21 +1,8 @@
 import { FormInput } from 'src/components/form-input';
-import { ArmorCategory, ArmorType } from '../types';
 import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
-
-const allArmorCategories: Record<ArmorCategory, string> = {
-	cloth: 'Cloth',
-	leather: 'Leather',
-	hide: 'Hide',
-	chainmail: 'Chainmail',
-	scale: 'Scale',
-	plate: 'Plate',
-};
-const allArmorTypes: Record<ArmorType, string> = {
-	light: 'Light',
-	heavy: 'Heavy',
-};
+import { allArmorCategories, allArmorTypes } from './config';
 
 const armorCategories = toSelectItems(allArmorCategories);
 const armorTypes = toSelectItems(allArmorTypes);

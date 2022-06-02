@@ -1,45 +1,11 @@
 import { FormInput } from 'src/components/form-input';
 import { deepUpdate } from 'src/core/foundry';
-import { ItemSlotTemplates, WeaponCategory, WeaponGroup, WeaponProperty } from '../types';
+import { WeaponProperty } from './types';
 import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
+import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
 
-const weaponCategories: Record<WeaponCategory, string> = {
-	simple: 'Simple',
-	military: 'Military',
-	superior: 'Superior',
-};
-const weaponHands: Record<ItemSlotTemplates['weapon']['hands'], string> = {
-	1: 'One-handed',
-	2: 'Two-handed',
-};
-const weaponGroups: Record<WeaponGroup, string> = {
-	axe: 'Axe',
-	bow: 'Bow',
-	crossbow: 'Crossbow',
-	flail: 'Flail',
-	hammer: 'Hammer',
-	'heavy-blade': 'Heavy Blade',
-	'light-blade': 'Light Blade',
-	mace: 'Mace',
-	pick: 'Pick',
-	polearm: 'Polearm',
-	sling: 'Sling',
-	spear: 'Spear',
-	staff: 'Staff',
-	unarmed: 'Unarmed',
-};
-const weaponProperties: Record<WeaponProperty, string> = {
-	'heavy-thrown': 'Heavy Thrown',
-	'high-crit': 'High Crit',
-	'light-thrown': 'Light Thrown',
-	load: 'Load',
-	'off-hand': 'Off Hand',
-	reach: 'Reach',
-	small: 'Small',
-	versatile: 'Versatile',
-};
 const allWeaponCategories = toSelectItems(weaponCategories);
 const allWeaponHands = toSelectItems(weaponHands);
 const allWeaponGroups = toSelectItems(weaponGroups);

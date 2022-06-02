@@ -1,5 +1,8 @@
 import { FeatureBonus } from 'src/module/bonuses';
 import { SpecificEquipmentItem } from 'src/module/item/mashup-item';
+import { ArmorItemSlotTemplate } from './armor/types';
+import { ShieldItemSlotTemplate } from './shield/types';
+import { WeaponItemSlotTemplate } from './weapon/types';
 
 export type ItemSlot =
 	| ''
@@ -26,57 +29,10 @@ export type EquippedItemSlot =
 	| 'secondary-ring'
 	| 'waist';
 
-export type WeaponCategory = 'simple' | 'military' | 'superior';
-export type WeaponGroup =
-	| 'axe'
-	| 'bow'
-	| 'crossbow'
-	| 'flail'
-	| 'hammer'
-	| 'heavy-blade'
-	| 'light-blade'
-	| 'mace'
-	| 'pick'
-	| 'polearm'
-	| 'sling'
-	| 'spear'
-	| 'staff'
-	| 'unarmed';
-export type WeaponProperty =
-	| 'heavy-thrown'
-	| 'high-crit'
-	| 'light-thrown'
-	| 'load'
-	| 'off-hand'
-	| 'reach'
-	| 'small'
-	| 'versatile';
-export type ArmorCategory = 'cloth' | 'leather' | 'hide' | 'chainmail' | 'scale' | 'plate';
-export type ArmorType = 'light' | 'heavy';
-export type ShieldType = 'light' | 'heavy';
-
 export type ItemSlotTemplates = {
-	weapon: {
-		damage: string;
-		proficiencyBonus: number;
-		range: string;
-		group: WeaponGroup;
-		properties: WeaponProperty[];
-		category: WeaponCategory;
-		hands: 1 | 2;
-	};
-	armor: {
-		armorBonus: number;
-		category: ArmorCategory;
-		type: ArmorType;
-		checkPenalty: number;
-		speedPenalty: number;
-	};
-	shield: {
-		type: ShieldType;
-		shieldBonus: number;
-		checkPenalty: number;
-	};
+	weapon: WeaponItemSlotTemplate;
+	armor: ArmorItemSlotTemplate;
+	shield: ShieldItemSlotTemplate;
 };
 
 export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
