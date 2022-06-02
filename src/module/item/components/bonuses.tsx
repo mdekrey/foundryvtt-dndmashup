@@ -78,7 +78,7 @@ export function Bonuses<TDocument extends AnyDocument>({
 	}
 
 	return (
-		<div className={classNames('w-full h-full', className)}>
+		<div className={className}>
 			<table className="w-full border-collapse">
 				<thead className="bg-theme text-white">
 					<tr>
@@ -150,6 +150,17 @@ export function Bonuses<TDocument extends AnyDocument>({
 							</td>
 						</tr>
 					))}
+					{bonusList.length === 0 ? (
+						<tr
+							className={classNames(
+								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
+								'border-b-2 border-transparent'
+							)}>
+							<td className="text-center" colSpan={6}>
+								No bonuses
+							</td>
+						</tr>
+					) : null}
 				</tbody>
 			</table>
 		</div>

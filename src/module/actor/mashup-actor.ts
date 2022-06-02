@@ -89,6 +89,12 @@ export class MashupActor extends Actor {
 		return Math.floor(this.data.data.details.level / 10);
 	}
 
+	get specialBonuses() {
+		return this.data.items.contents.flatMap((item) =>
+			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
+		);
+	}
+
 	/**
 	 * @override
 	 * Augment the basic actor data with additional dynamic data. Typically,
@@ -106,9 +112,7 @@ export class MashupActor extends Actor {
 		const allBonuses: FeatureBonusWithContext[] = [
 			...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
 			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-			...this.data.items.contents.flatMap((item) =>
-				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
-			),
+			...this.specialBonuses,
 		];
 
 		const groupedByTarget = byTarget(allBonuses);
