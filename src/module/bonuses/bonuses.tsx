@@ -1,34 +1,19 @@
 import classNames from 'classnames';
 import produce from 'immer';
 import { FormInput } from 'src/components/form-input';
-import { SelectItem } from 'src/components/form-input/auto-select';
 import { useSetField } from 'src/components/form-input/hooks/useSetField';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { PathName, getFieldValue } from 'src/core/path-typings';
-import { BonusTarget, ConditionRule, FeatureBonus } from 'src/module/bonuses';
+import { FeatureBonus } from './types';
+import { BonusTarget, ConditionRule } from './constants';
+import { targets, conditions } from './bonus-sheet-utils';
 
-export const targets: SelectItem<BonusTarget>[] = [
-	{ value: 'ability-str', key: 'ability-str', label: 'STR' },
-	{ value: 'ability-con', key: 'ability-con', label: 'CON' },
-	{ value: 'ability-dex', key: 'ability-dex', label: 'DEX' },
-	{ value: 'ability-int', key: 'ability-int', label: 'INT' },
-	{ value: 'ability-wis', key: 'ability-wis', label: 'WIS' },
-	{ value: 'ability-cha', key: 'ability-cha', label: 'CHA' },
-	{ value: 'defense-ac', key: 'defense-ac', label: 'AC' },
-	{ value: 'defense-fort', key: 'defense-fort', label: 'FORT' },
-	{ value: 'defense-refl', key: 'defense-refl', label: 'REFL' },
-	{ value: 'defense-will', key: 'defense-will', label: 'WILL' },
-	{ value: 'surges-max', key: 'surges-max', label: 'Surges per Day' },
-	{ value: 'surges-value', key: 'surges-value', label: 'HP per Surge' },
-	{ value: 'maxHp', key: 'maxHp', label: 'Maximum HP' },
-	{ value: 'speed', key: 'speed', label: 'Speed' },
-];
-
-export const conditions: SelectItem<ConditionRule | ''>[] = [
-	{ value: '', key: '', label: '(always)' },
-	{ value: 'proficientIn', key: 'proficientIn', label: 'When you are proficient with the item' },
-	{ value: 'bloodied', key: 'bloodied', label: 'When you are bloodied' },
-];
+const selectTargets = Object.entries(targets).map(([key, { label }]) => ({ key, value: key as BonusTarget, label }));
+const selectConditions = Object.entries(conditions).map(([key, { label }]) => ({
+	key,
+	value: key === '' ? undefined : (key as ConditionRule),
+	label,
+}));
 
 export function Bonuses<TDocument extends AnyDocument>({
 	document,
@@ -122,7 +107,7 @@ export function Bonuses<TDocument extends AnyDocument>({
 								<FormInput.AutoSelect
 									document={document}
 									field={`${field}.${idx}.target` as never}
-									options={targets}
+									options={selectTargets}
 									className="text-sm text-center"
 								/>
 							</td>
@@ -130,7 +115,7 @@ export function Bonuses<TDocument extends AnyDocument>({
 								<FormInput.AutoSelect
 									document={document}
 									field={`${field}.${idx}.condition` as never}
-									options={conditions}
+									options={selectConditions}
 									className="text-sm text-center"
 								/>
 							</td>

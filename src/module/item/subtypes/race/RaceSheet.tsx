@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { Bonuses } from '../../components/bonuses';
+import { Bonuses } from 'src/module/bonuses';
 import { MashupItemRace } from './config';
 
 export function RaceSheet({ item }: { item: MashupItemRace }) {

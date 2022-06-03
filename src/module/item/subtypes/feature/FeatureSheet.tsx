@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { Bonuses } from '../../components/bonuses';
+import { Bonuses } from 'src/module/bonuses';
 import { featureTypes, MashupItemFeature } from './config';
 
 const options = Object.entries(featureTypes).map(([key, { label: label }]) => ({ value: key, key, label }));
