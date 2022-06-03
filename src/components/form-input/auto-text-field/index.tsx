@@ -27,8 +27,18 @@ export function AutoTextField<TDocument extends AnyDocument>({
 		[document, field, setField]
 	);
 
+	if (field === 'name') {
+		console.log(field, value);
+	}
 	const input = (
-		<input type="text" value={value ?? ''} onChange={(ev) => handleChange(ev.target)} className={className} />
+		<input
+			key={field}
+			type="text"
+			readOnly={!document.isOwner}
+			value={value ?? ''}
+			onChange={(ev) => handleChange(ev.target)}
+			className={className}
+		/>
 	);
 
 	return plain ? input : <Field>{input}</Field>;

@@ -38,7 +38,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 							className="text-lg text-center"
 							options={itemSlotOptions}
 							value={item.data.data.itemSlot}
-							onChange={(ev) => onChangeItemSlot(ev.target.value as ItemSlot)}
+							onChange={item.isOwner ? (ev) => onChangeItemSlot(ev.target.value as ItemSlot) : undefined}
 						/>
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>

@@ -16,7 +16,14 @@ export function AutoNumberField<TDocument extends AnyDocument>({
 	const defaultValue = getFieldValue(document.data._source, field);
 
 	const input = (
-		<input type="number" name={field} defaultValue={defaultValue ?? ''} className={className} data-dtype="Number" />
+		<input
+			type="number"
+			readOnly={!document.isOwner}
+			name={field}
+			defaultValue={defaultValue ?? ''}
+			className={className}
+			data-dtype="Number"
+		/>
 	);
 	return plain ? input : <Field>{input}</Field>;
 }

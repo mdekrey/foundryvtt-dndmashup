@@ -38,7 +38,10 @@ export function AutoSelect<TDocument extends AnyDocument, TValue>({
 	);
 
 	const input = (
-		<select value={value} className={className} onChange={(ev) => handleChange(ev.target)}>
+		<select
+			value={value}
+			className={className}
+			onChange={document.isOwner ? (ev) => handleChange(ev.target) : undefined}>
 			{options.map(({ key, label }) => (
 				<option key={key} value={key}>
 					{label}

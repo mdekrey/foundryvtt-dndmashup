@@ -1,4 +1,3 @@
-import { renderReact, Root } from 'src/components/sheet';
 import { MashupItem } from './mashup-item';
 import { itemMappings } from './subtypes';
 import { PossibleItemType } from './types';
@@ -6,6 +5,7 @@ import { ClassSheet } from './subtypes/class/ClassSheet';
 import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
 import { RaceSheet } from './subtypes/race/RaceSheet';
 import { FeatureSheet } from './subtypes/feature/FeatureSheet';
+import { ReactSheetMixin } from 'src/components/sheet/react-sheet-mixin';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: InstanceType<typeof itemMappings[K]> }> } = {
 	class: ClassSheet,
@@ -21,8 +21,7 @@ function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
 	return <Sheet item={item} />;
 }
 
-export class MashupItemSheet extends ItemSheet {
-	root: Root | null = null;
+export class MashupItemSheet extends ReactSheetMixin<typeof ItemSheet>(ItemSheet) {
 	static override get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: [],
@@ -38,17 +37,7 @@ export class MashupItemSheet extends ItemSheet {
 		});
 	}
 
-	protected override async _renderInner(): Promise<JQuery<HTMLElement>> {
-		let returnValue: JQuery<HTMLElement>;
-		[this.form, this.root, returnValue] = renderReact(this, ItemSheetJsx);
-		return returnValue;
-	}
-
-	protected override _replaceHTML(element: JQuery<HTMLElement>): void {
-		if (!element.length) return;
-
-		if (this.popOut) {
-			element.find('.window-title').text(this.title);
-		}
+	protected override _getJsx(): JSX.Element {
+		return <ItemSheetJsx sheet={this} />;
 	}
 }

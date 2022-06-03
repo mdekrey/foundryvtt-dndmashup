@@ -1,5 +1,8 @@
+import { useCallback } from 'react';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { PathNameNoArrays, getFieldValue } from 'src/core/path-typings';
+import { PathName, getFieldValue } from 'src/core/path-typings';
+import { useControlledField } from '../hooks/useControlledField';
+import { useSetField } from '../hooks/useSetField';
 
 export function Checkbox<TDocument extends AnyDocument>({
 	document,
@@ -7,9 +10,26 @@ export function Checkbox<TDocument extends AnyDocument>({
 	...checkboxProps
 }: JSX.IntrinsicElements['input'] & {
 	document: TDocument;
-	field: PathNameNoArrays<SourceDataOf<TDocument>, boolean>;
+	field: PathName<SourceDataOf<TDocument>, boolean>;
 }) {
-	const defaultValue: boolean = getFieldValue(document.data._source, field);
+	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
+	const setField = useSetField(document, field);
 
-	return <input type="checkbox" {...checkboxProps} value={undefined} name={field} defaultChecked={defaultValue} />;
+	const handleChange = useCallback(
+		(target: HTMLInputElement) => {
+			setValue(target.checked);
+			setField(target.checked);
+		},
+		[document, field, setField]
+	);
+
+	return (
+		<input
+			type="checkbox"
+			{...checkboxProps}
+			value={undefined}
+			onChange={document.isOwner ? (ev) => handleChange(ev.currentTarget) : undefined}
+			checked={value}
+		/>
+	);
 }

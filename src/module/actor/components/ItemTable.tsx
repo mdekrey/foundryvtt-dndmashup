@@ -38,7 +38,7 @@ export function ItemTable<T extends MashupItem>({
 							<td className="pl-2">{item.name}</td>
 							{TableBody && <TableBody item={item} />}
 							<td className="text-right w-16">
-								{item.isOwner ? <IconButton title="Edit" onClick={edit(item)} iconClassName="fas fa-edit" /> : null}
+								<IconButton title="Edit" onClick={edit(item)} iconClassName="fas fa-edit" />
 								{item.isOwner ? (
 									<IconButton title="Delete" onClick={remove(item)} iconClassName="fas fa-trash" />
 								) : null}
