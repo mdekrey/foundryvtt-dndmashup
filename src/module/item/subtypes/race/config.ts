@@ -10,7 +10,7 @@ export class MashupItemRace extends MashupItem<'race'> {
 				type: 'racial',
 				condition: '',
 			},
-			...Object.values(this.data.data.grantedBonuses),
+			...this.data.data.grantedBonuses,
 		];
 	}
 }

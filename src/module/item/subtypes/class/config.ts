@@ -16,7 +16,7 @@ export class MashupItemClass extends MashupItem<'class'> {
 				type: 'class',
 				condition: '',
 			},
-			...Object.values(this.data.data.grantedBonuses),
+			...this.data.data.grantedBonuses,
 		];
 	}
 }

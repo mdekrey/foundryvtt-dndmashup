@@ -23,6 +23,6 @@ export const featureTypes: Record<FeatureType, { label: string }> = {
 
 export class MashupItemFeature extends MashupItem<'feature'> {
 	override allGrantedBonuses(): FeatureBonus[] {
-		return Object.values(this.data.data.grantedBonuses);
+		return this.data.data.grantedBonuses;
 	}
 }

@@ -2,6 +2,7 @@ import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-v
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from '../bonuses';
 import { PossibleItemType, SpecificItemData } from './types';
+import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 
 export abstract class MashupItemBase extends Item {
 	abstract allGrantedBonuses(): FeatureBonus[];
@@ -9,11 +10,11 @@ export abstract class MashupItemBase extends Item {
 		return super.type as PossibleItemType;
 	}
 
-	override async update(
+	override update(
 		data?: DeepPartial<ItemDataConstructorData | (ItemDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
-		return await super.update(data, context);
+		return super.update(expandObjectsAndArrays(data as Record<string, unknown>) as never, context);
 	}
 }
 

@@ -1,4 +1,7 @@
 import { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
+import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
+import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
+import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 import {
 	BonusTarget,
 	bonusTargets,
@@ -112,7 +115,7 @@ export class MashupActor extends Actor {
 		// all active effects and other linked objects should be loaded here
 		const allBonuses: FeatureBonusWithContext[] = [
 			...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-			...Object.values(this.data._source.data.bonuses).map((bonus) => ({ ...bonus, context: { actor: this } })),
+			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
 			...this.specialBonuses,
 		];
 
@@ -158,6 +161,15 @@ export class MashupActor extends Actor {
 			console.log('Removing', item.name, item);
 			item.delete();
 		});
+	}
+
+	override update(
+		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
+		context?: DocumentModificationContext & MergeObjectOptions
+	): Promise<this | undefined> {
+		const result = expandObjectsAndArrays(data as Record<string, unknown>);
+		console.log(data, result, context);
+		return super.update(result as never, context);
 	}
 }
 
