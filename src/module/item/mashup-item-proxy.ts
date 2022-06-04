@@ -11,7 +11,10 @@ const create = function (data: Record<string, unknown>, options) {
 
 	const type = data.type as PossibleItemType;
 
-	if (!itemMappings.hasOwnProperty(type)) throw new Error(`Unsupported Entity type for create(): ${type}`);
+	if (!itemMappings.hasOwnProperty(type)) {
+		console.error('Unsupported Entity type for create():', data);
+		throw new Error(`Unsupported Entity type for create(): ${type}`);
+	}
 
 	return itemMappings[type].create(data as never, options);
 } as FuncWithoutThis<typeof MashupItemBase['create']>;
@@ -52,7 +55,7 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstru
 
 			default:
 				//Just forward any requested properties to the base Actor class
-				return (Item as never)[prop];
+				return (MashupItemBase as never)[prop];
 		}
 	},
 });

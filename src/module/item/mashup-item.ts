@@ -1,10 +1,17 @@
-import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
+import type { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from '../bonuses';
-import { PossibleItemType, SpecificItemData } from './types';
+import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 
 export abstract class MashupItemBase extends Item {
+	data!: PossibleItemData;
+
+	// TODO: collections
+	// get items() {
+	// 	return this.data.items;
+	// }
+
 	abstract allGrantedBonuses(): FeatureBonus[];
 	get type(): PossibleItemType {
 		return super.type as PossibleItemType;
@@ -15,6 +22,18 @@ export abstract class MashupItemBase extends Item {
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
 		return super.update(expandObjectsAndArrays(data as Record<string, unknown>) as never, context);
+	}
+
+	override createEmbeddedDocuments(embeddedName: any, data: any, context?: any) {
+		console.log({
+			embeddedName,
+			data,
+			context,
+			this: this,
+			items: getProperty(this, 'items'),
+			items2: getProperty(this, 'data.items'),
+		});
+		return super.createEmbeddedDocuments(embeddedName, data, context);
 	}
 }
 

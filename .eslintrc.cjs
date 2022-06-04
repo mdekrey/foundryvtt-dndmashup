@@ -25,6 +25,8 @@ module.exports = {
 		'global-require': 0,
 		'@typescript-eslint/no-use-before-define': 0,
 		'comma-dangle': ['error', 'always-multiline'],
+		// Foundry has too many weird types
+		'@typescript-eslint/no-explicit-any': 0,
 	},
 
 	overrides: [

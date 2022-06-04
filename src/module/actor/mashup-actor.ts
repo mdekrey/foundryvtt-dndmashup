@@ -167,9 +167,7 @@ export class MashupActor extends Actor {
 		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
-		const result = expandObjectsAndArrays(data as Record<string, unknown>);
-		console.log(data, result, context);
-		return super.update(result as never, context);
+		return super.update(expandObjectsAndArrays(data as Record<string, unknown>) as never, context);
 	}
 }
 

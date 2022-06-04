@@ -14,6 +14,7 @@
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { systemName } from './constants';
+import { AnyDocument } from 'src/core/foundry';
 
 // Initialize system
 Hooks.once('init', async () => {
@@ -34,6 +35,11 @@ Hooks.once('init', async () => {
 Hooks.once('setup', async () => {
 	// Do anything after initialization but before
 	// ready
+
+	Hooks.on('preCreateItem', (candidate: AnyDocument, data: any, options: any, user: any) => {
+		if (!(candidate instanceof Item)) return true;
+		console.log({ candidate, data, options, user });
+	});
 });
 
 // When ready

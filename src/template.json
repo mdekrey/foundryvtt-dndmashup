@@ -100,7 +100,8 @@
 		"types": ["class", "race", "equipment", "feature"],
 		"templates": {
 			"base": {
-				"grantedBonuses": []
+				"grantedBonuses": [],
+				"items": []
 			},
 			"itemDescription": {
 				"description": {
