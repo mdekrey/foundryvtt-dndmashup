@@ -16,7 +16,6 @@ export function useKeyValueWhenBlur<T>(value: T, convert?: (value: T) => React.K
 
 	if (!isFocused.current && key.current !== converted) {
 		key.current = converted;
-		console.log(key.current);
 	}
 
 	return {
