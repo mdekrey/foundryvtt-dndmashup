@@ -8,8 +8,9 @@ export class MashupItemRace extends MashupItem<'race'> {
 				target: 'speed',
 				amount: this.data.data.baseSpeed,
 				type: 'racial',
+				condition: '',
 			},
-			...this.data.data.grantedBonuses,
+			...Object.values(this.data.data.grantedBonuses),
 		];
 	}
 }

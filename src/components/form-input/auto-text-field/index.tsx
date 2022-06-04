@@ -1,9 +1,7 @@
-import { useCallback } from 'react';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { PathName, getFieldValue } from 'src/core/path-typings';
 import { Field } from '../field';
-import { useControlledField } from '../hooks/useControlledField';
-import { useSetField } from '../hooks/useSetField';
+import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export function AutoTextField<TDocument extends AnyDocument>({
 	document,
@@ -16,27 +14,14 @@ export function AutoTextField<TDocument extends AnyDocument>({
 	field: PathName<SourceDataOf<TDocument>, string>;
 	plain?: boolean;
 }) {
-	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
-	const setField = useSetField(document, field);
+	const value = getFieldValue(document.data._source, field);
 
-	const handleChange = useCallback(
-		(target: HTMLInputElement) => {
-			setValue(target.value);
-			setField(target.value);
-		},
-		[document, field, setField]
-	);
-
-	if (field === 'name') {
-		console.log(field, value);
-	}
 	const input = (
 		<input
-			key={field}
 			type="text"
 			readOnly={!document.isOwner}
-			value={value ?? ''}
-			onChange={(ev) => handleChange(ev.target)}
+			name={field}
+			{...useKeyValueWhenBlur(value)}
 			className={className}
 		/>
 	);

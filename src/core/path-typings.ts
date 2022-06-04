@@ -1,33 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type Primitive = null | undefined | string | number | boolean | symbol | bigint;
-type PathImpl<K extends string | number, V, Type, Omit = never> = V extends Type
+type PathImpl<K extends string | number, V, Type> = V extends Type
 	? `${K}`
-	: V extends Primitive | Omit
+	: V extends Primitive
 	? never
-	: `${K}.${PathNameWithOmit<V, Type, Omit>}`;
+	: `${K}.${PathNameWithOmit<V, Type>}`;
 
 type IsTuple<T extends ReadonlyArray<any>> = number extends T['length'] ? false : true;
 type TupleKey<T extends ReadonlyArray<any>> = Exclude<keyof T, keyof any[]>;
 type ArrayKey = number;
 
-type PathNameWithOmit<TDocument, TValue, TOmit = never> = TDocument extends TOmit
-	? never
-	: TDocument extends ReadonlyArray<infer V>
+type PathNameWithOmit<TDocument, TValue> = TDocument extends ReadonlyArray<infer V>
 	? IsTuple<TDocument> extends true
 		? {
-				[K in TupleKey<TDocument>]-?: PathImpl<K & string, TDocument[K], TValue, TOmit>;
+				[K in TupleKey<TDocument>]-?: PathImpl<K & string, TDocument[K], TValue>;
 		  }[TupleKey<TDocument>]
-		: PathImpl<ArrayKey, V, TValue, TOmit>
+		: PathImpl<ArrayKey, V, TValue>
 	: {
-			[K in keyof TDocument]-?: PathImpl<K & string, TDocument[K], TValue, TOmit>;
+			[K in keyof TDocument]-?: PathImpl<K & string, TDocument[K], TValue>;
 	  }[keyof TDocument];
 
 export type PathName<TTarget, TValue> = PathNameWithOmit<TTarget, TValue>;
-export type PathNameNoArrays<TTarget, TValue> = PathNameWithOmit<TTarget, TValue, TValue | ReadonlyArray<any>>;
 
 export function getFieldValue<TTarget, TValue>(data: TTarget, field: PathName<TTarget, TValue>) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const dataValue: TValue = field.split('.').reduce((prev, f) => prev && prev[f], data as any);
 	return dataValue;
+}
+
+export function combinePath<TStart, TMiddle, TEnd>(
+	path1: PathName<TStart, TMiddle>,
+	path2: PathName<TMiddle, TEnd>
+): PathName<TStart, TEnd> {
+	return `${path1}.${path2}` as never;
 }

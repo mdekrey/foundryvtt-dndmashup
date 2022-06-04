@@ -16,26 +16,27 @@ import { PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [isClassSource, isRaceSource];
 
+const base = { condition: '' } as const;
 const standardBonuses: FeatureBonus[] = [
-	{ target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
-	{ target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
-	{ target: 'ability-dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
-	{ target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
-	{ target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
-	{ target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
-	{ target: 'maxHp', amount: `10 + 2 * @actor.data.data.abilities.con.final`, type: 'base' },
-	{ target: 'surges-max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
-	{ target: 'defense-ac', amount: 10 },
-	{ target: 'defense-ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
-	{ target: 'defense-fort', amount: 10 },
-	{ target: 'defense-fort', amount: '@actor.data.data.abilities.str.final', type: 'ability' },
-	{ target: 'defense-fort', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
-	{ target: 'defense-refl', amount: 10 },
-	{ target: 'defense-refl', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
-	{ target: 'defense-refl', amount: '@actor.data.data.abilities.int.final', type: 'ability' },
-	{ target: 'defense-will', amount: 10 },
-	{ target: 'defense-will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
-	{ target: 'defense-will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
+	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
+	{ ...base, target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
+	{ ...base, target: 'ability-dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
+	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
+	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
+	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
+	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.data.data.abilities.con.final`, type: 'base' },
+	{ ...base, target: 'surges-max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ ...base, target: 'defense-ac', amount: 10 },
+	{ ...base, target: 'defense-ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: 10 },
+	{ ...base, target: 'defense-fort', amount: '@actor.data.data.abilities.str.final', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: 10 },
+	{ ...base, target: 'defense-refl', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: '@actor.data.data.abilities.int.final', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: 10 },
+	{ ...base, target: 'defense-will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
 ];
 
 const setters: Record<BonusTarget, (data: PossibleActorData, value: number) => void> = {
@@ -111,7 +112,7 @@ export class MashupActor extends Actor {
 		// all active effects and other linked objects should be loaded here
 		const allBonuses: FeatureBonusWithContext[] = [
 			...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
+			...Object.values(this.data._source.data.bonuses).map((bonus) => ({ ...bonus, context: { actor: this } })),
 			...this.specialBonuses,
 		];
 

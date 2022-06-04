@@ -1,9 +1,8 @@
-import { ReactNode, Key, useCallback } from 'react';
+import { ReactNode, Key } from 'react';
 import { getFieldValue, PathName } from 'src/core/path-typings';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { Field } from '../field';
-import { useControlledField } from '../hooks/useControlledField';
-import { useSetField } from '../hooks/useSetField';
+import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export type SelectItem<TValue> = {
 	value: TValue;
@@ -11,7 +10,7 @@ export type SelectItem<TValue> = {
 	label: ReactNode;
 };
 
-export function AutoSelect<TDocument extends AnyDocument, TValue>({
+export function AutoSelect<TDocument extends AnyDocument, TValue extends string | number>({
 	document,
 	className,
 	field,
@@ -24,24 +23,13 @@ export function AutoSelect<TDocument extends AnyDocument, TValue>({
 	plain?: boolean;
 	options: SelectItem<TValue>[];
 }) {
-	const fieldValue = getFieldValue(document.data._source, field);
-	const [value, setValue] = useControlledField(options.find((v) => v.value === fieldValue)?.key);
-	const setField = useSetField(document, field);
-
-	const handleChange = useCallback(
-		(target: HTMLSelectElement) => {
-			setValue(target.value);
-			const found = options.find((v) => v.key === `${target.value}`);
-			if (found) setField(found.value);
-		},
-		[document, field, setField]
-	);
+	const value = getFieldValue<SourceDataOf<TDocument>, TValue>(document.data._source, field as never);
 
 	const input = (
 		<select
-			value={value}
 			className={className}
-			onChange={document.isOwner ? (ev) => handleChange(ev.target) : undefined}>
+			{...useKeyValueWhenBlur(value, (value) => options.find((e) => e.value === value)?.key ?? '')}
+			name={field}>
 			{options.map(({ key, label }) => (
 				<option key={key} value={key}>
 					{label}

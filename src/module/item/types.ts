@@ -3,9 +3,10 @@ import { ItemData } from './item.types';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
 import { FeatureType } from './subtypes/feature/config';
+import { ArrayRecord } from 'src/core/foundry';
 
 export type BaseItemTemplateDataSourceData = {
-	grantedBonuses: FeatureBonus[];
+	grantedBonuses: ArrayRecord<FeatureBonus>;
 };
 
 export type ItemDescriptionItemTemplateDataSourceData = {

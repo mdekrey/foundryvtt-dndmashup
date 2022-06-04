@@ -3,7 +3,7 @@ import produce from 'immer';
 import { FormInput } from 'src/components/form-input';
 import { useSetField } from 'src/components/form-input/hooks/useSetField';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { PathName, getFieldValue } from 'src/core/path-typings';
+import { PathName, getFieldValue, combinePath } from 'src/core/path-typings';
 import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets, conditions } from './bonus-sheet-utils';
@@ -11,7 +11,7 @@ import { targets, conditions } from './bonus-sheet-utils';
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({ key, value: key as BonusTarget, label }));
 const selectConditions = Object.entries(conditions).map(([key, { label }]) => ({
 	key,
-	value: key === '' ? undefined : (key as ConditionRule),
+	value: key === '' ? '' : (key as ConditionRule),
 	label,
 }));
 
@@ -21,19 +21,19 @@ export function Bonuses<TDocument extends AnyDocument>({
 	className,
 }: {
 	document: TDocument;
-	field: PathName<SourceDataOf<TDocument>, FeatureBonus[]>;
+	field: PathName<SourceDataOf<TDocument>, Array<FeatureBonus>>;
 	className?: string;
 }) {
-	const bonusList = getFieldValue(document.data._source, field);
+	const bonusList = Object.values(getFieldValue(document.data._source, field) ?? []);
 	const setter = useSetField(document, field);
 
 	function onAdd() {
 		setter([
 			...bonusList,
 			{
+				...bonusList[bonusList.length - 1],
 				amount: '0',
 				target: 'defense-ac',
-				...(bonusList[bonusList.length - 1] as Partial<FeatureBonus>),
 			},
 		]);
 	}
@@ -91,14 +91,14 @@ export function Bonuses<TDocument extends AnyDocument>({
 							<td className="px-1">
 								<FormInput.AutoTextField
 									document={document}
-									field={`${field}.${idx}.amount` as never}
+									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], string>(field, `${idx}.amount`)}
 									className="text-sm text-center"
 								/>
 							</td>
 							<td className="px-1">
 								<FormInput.AutoTextField
 									document={document}
-									field={`${field}.${idx}.type` as never}
+									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], string>(field, `${idx}.type`)}
 									className="text-sm text-center"
 								/>
 							</td>
@@ -106,7 +106,7 @@ export function Bonuses<TDocument extends AnyDocument>({
 							<td className="px-1">
 								<FormInput.AutoSelect
 									document={document}
-									field={`${field}.${idx}.target` as never}
+									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], BonusTarget>(field, `${idx}.target`)}
 									options={selectTargets}
 									className="text-sm text-center"
 								/>
@@ -114,7 +114,10 @@ export function Bonuses<TDocument extends AnyDocument>({
 							<td className="px-1">
 								<FormInput.AutoSelect
 									document={document}
-									field={`${field}.${idx}.condition` as never}
+									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], ConditionRule | ''>(
+										field,
+										`${idx}.condition`
+									)}
 									options={selectConditions}
 									className="text-sm text-center"
 								/>

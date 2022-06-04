@@ -4,7 +4,7 @@ export type FeatureBonus = {
 	target: BonusTarget;
 	amount: number | string;
 	type?: string;
-	condition?: ConditionRule;
+	condition: ConditionRule;
 	disabled?: boolean;
 };
 

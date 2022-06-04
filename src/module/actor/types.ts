@@ -1,9 +1,10 @@
 import { Ability, Currency, TypedData, Defense } from 'src/types/types';
 import { ActorData } from './actor.types';
 import { FeatureBonus } from '../bonuses';
+import { ArrayRecord } from 'src/core/foundry';
 
 export type BaseActorTemplateDataSourceData = {
-	bonuses: FeatureBonus[];
+	bonuses: ArrayRecord<FeatureBonus>;
 	details: {
 		level: number;
 		biography: string;

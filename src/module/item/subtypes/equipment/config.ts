@@ -9,7 +9,7 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends 
 	override allGrantedBonuses(): FeatureBonus[] {
 		return [
 			// TODO: only if equipped and it requires an item slot
-			...this.data.data.grantedBonuses,
+			...Object.values(this.data.data.grantedBonuses),
 		];
 	}
 

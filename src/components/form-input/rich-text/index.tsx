@@ -1,12 +1,12 @@
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { getFieldValue, PathNameNoArrays } from 'src/core/path-typings';
+import { getFieldValue, PathName } from 'src/core/path-typings';
 
 export function RichText<TDocument extends AnyDocument>({
 	document,
 	field,
 }: {
 	document: TDocument;
-	field: PathNameNoArrays<SourceDataOf<TDocument>, string>;
+	field: PathName<SourceDataOf<TDocument>, string>;
 }) {
 	const html = getFieldValue(document.data._source, field);
 

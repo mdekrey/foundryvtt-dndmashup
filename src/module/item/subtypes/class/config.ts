@@ -8,13 +8,15 @@ export class MashupItemClass extends MashupItem<'class'> {
 				target: 'maxHp',
 				amount: `${this.data.data.hpBase} + ${this.data.data.hpPerLevel} * @actor.extraLevels`,
 				type: 'class',
+				condition: '',
 			},
 			{
 				target: 'surges-max',
 				amount: this.data.data.healingSurgesBase,
 				type: 'class',
+				condition: '',
 			},
-			...this.data.data.grantedBonuses,
+			...Object.values(this.data.data.grantedBonuses),
 		];
 	}
 }

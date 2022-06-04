@@ -1,8 +1,6 @@
-import { useCallback } from 'react';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { PathName, getFieldValue } from 'src/core/path-typings';
-import { useControlledField } from '../hooks/useControlledField';
-import { useSetField } from '../hooks/useSetField';
+import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export function Checkbox<TDocument extends AnyDocument>({
 	document,
@@ -12,24 +10,17 @@ export function Checkbox<TDocument extends AnyDocument>({
 	document: TDocument;
 	field: PathName<SourceDataOf<TDocument>, boolean>;
 }) {
-	const [value, setValue] = useControlledField(getFieldValue(document.data._source, field));
-	const setField = useSetField(document, field);
-
-	const handleChange = useCallback(
-		(target: HTMLInputElement) => {
-			setValue(target.checked);
-			setField(target.checked);
-		},
-		[document, field, setField]
-	);
+	const value = getFieldValue(document.data._source, field);
+	const { defaultValue: defaultChecked, ...props } = useKeyValueWhenBlur(value, (v) => (v ? 'true' : 'false'));
 
 	return (
 		<input
 			type="checkbox"
+			name={field}
 			{...checkboxProps}
 			value={undefined}
-			onChange={document.isOwner ? (ev) => handleChange(ev.currentTarget) : undefined}
-			checked={value}
+			defaultChecked={defaultChecked}
+			{...props}
 		/>
 	);
 }

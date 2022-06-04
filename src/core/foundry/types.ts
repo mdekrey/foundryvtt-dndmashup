@@ -18,3 +18,5 @@ export type SourceDataOf<T extends AnyDocument> = DataOfDocument<T> extends Docu
 >
 	? TData
 	: never;
+
+export type ArrayRecord<T> = Array<T> | Record<number, T>;
