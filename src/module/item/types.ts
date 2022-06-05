@@ -1,5 +1,5 @@
 import { Ability, TypedData } from 'src/types/types';
-import { ItemData } from './item.types';
+import { ItemData } from './mashup-item-data';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
 import { FeatureType } from './subtypes/feature/config';

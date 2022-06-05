@@ -3,7 +3,7 @@ import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-ty
 import { FeatureBonus } from '../bonuses';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
-import { MashupItemData } from './item.types';
+import { MashupItemData } from './mashup-item-data';
 
 export abstract class MashupItemBase extends Item {
 	static override get schema() {
