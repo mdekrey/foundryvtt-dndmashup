@@ -1,10 +1,16 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from '../bonuses';
-import { PossibleItemType, SpecificItemData } from './types';
+import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
+import { MashupItemData } from './item.types';
 
 export abstract class MashupItemBase extends Item {
+	static override get schema() {
+		return MashupItemData as never;
+	}
+
+	data!: PossibleItemData;
 	abstract allGrantedBonuses(): FeatureBonus[];
 	get type(): PossibleItemType {
 		return super.type as PossibleItemType;

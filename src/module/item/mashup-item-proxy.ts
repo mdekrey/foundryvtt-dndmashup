@@ -52,7 +52,7 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstru
 
 			default:
 				//Just forward any requested properties to the base Actor class
-				return (Item as never)[prop];
+				return (MashupItemBase as never)[prop];
 		}
 	},
 });
