@@ -3,7 +3,6 @@ import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-ty
 import { FeatureBonus } from '../bonuses';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
-import { MashupItemData } from './mashup-item-data';
 import Document, {
 	Context,
 	Metadata,
@@ -18,9 +17,10 @@ export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 const itemCollectionPath = 'data.items';
 
 export class MashupItemBase extends Item {
-	static override get schema() {
-		return MashupItemData as never;
-	}
+	// TODO: schema support doesn't seem to be working in v9
+	// static override get schema() {
+	// 	return MashupItemData as any;
+	// }
 
 	constructor(data?: ItemDataConstructorData | undefined, context?: Context<AnyDocument>) {
 		super(data, context as any);

@@ -1,9 +1,25 @@
 import { Ability, TypedData } from 'src/types/types';
-import { ItemData } from './mashup-item-data';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
 import { FeatureType } from './subtypes/feature/config';
 import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
+import {
+	ItemDataBaseProperties,
+	ItemDataConstructorData,
+	ItemDataSchema,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
+import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
+import { BaseItem } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
+
+type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstract.DocumentData<
+	ItemDataSchema,
+	ItemDataBaseProperties & TData,
+	PropertiesToSource<ItemDataBaseProperties> & TSource,
+	ItemDataConstructorData,
+	BaseItem
+> &
+	ItemDataBaseProperties &
+	TData;
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
