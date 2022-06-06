@@ -5,23 +5,21 @@ type PathImpl<K extends string | number, V, Type> = V extends Type
 	? `${K}`
 	: V extends Primitive
 	? never
-	: `${K}.${PathNameWithOmit<V, Type>}`;
+	: `${K}.${PathName<V, Type>}`;
 
 type IsTuple<T extends ReadonlyArray<any>> = number extends T['length'] ? false : true;
 type TupleKey<T extends ReadonlyArray<any>> = Exclude<keyof T, keyof any[]>;
 type ArrayKey = number;
 
-type PathNameWithOmit<TDocument, TValue> = TDocument extends ReadonlyArray<infer V>
-	? IsTuple<TDocument> extends true
+export type PathName<TTarget, TValue> = TTarget extends ReadonlyArray<infer V>
+	? IsTuple<TTarget> extends true
 		? {
-				[K in TupleKey<TDocument>]-?: PathImpl<K & string, TDocument[K], TValue>;
-		  }[TupleKey<TDocument>]
+				[K in TupleKey<TTarget>]-?: PathImpl<K & string, TTarget[K], TValue>;
+		  }[TupleKey<TTarget>]
 		: PathImpl<ArrayKey, V, TValue>
 	: {
-			[K in keyof TDocument]-?: PathImpl<K & string, TDocument[K], TValue>;
-	  }[keyof TDocument];
-
-export type PathName<TTarget, TValue> = PathNameWithOmit<TTarget, TValue>;
+			[K in keyof TTarget]-?: PathImpl<K & string, TTarget[K], TValue>;
+	  }[keyof TTarget];
 
 export function getFieldValue<TTarget, TValue>(data: TTarget, field: PathName<TTarget, TValue>) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

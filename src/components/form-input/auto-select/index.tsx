@@ -23,7 +23,7 @@ export function AutoSelect<TDocument extends AnyDocument, TValue extends string 
 	plain?: boolean;
 	options: SelectItem<TValue>[];
 }) {
-	const value = getFieldValue<SourceDataOf<TDocument>, TValue>(document.data._source, field as never);
+	const value = getFieldValue<SourceDataOf<TDocument>, TValue>(document.data._source, field);
 
 	const input = (
 		<select
