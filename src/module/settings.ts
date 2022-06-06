@@ -3,12 +3,11 @@ import { MashupActorSheet } from './actor/mashup-actor-sheet';
 import { MashupItemProxy } from './item/mashup-item-proxy';
 import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';
-import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 
 declare global {
 	interface DocumentClassConfig {
 		Actor: typeof MashupActor;
-		Item: typeof MashupItemBase & DocumentConstructor;
+		Item: typeof MashupItemBase;
 	}
 }
 
@@ -21,7 +20,7 @@ export function registerSettings(): void {
 	// };
 
 	CONFIG.Actor.documentClass = MashupActor;
-	CONFIG.Item.documentClass = MashupItemProxy;
+	CONFIG.Item.documentClass = MashupItemProxy as any;
 
 	Actors.unregisterSheet('core', ActorSheet);
 	Actors.registerSheet('actor', MashupActorSheet, { makeDefault: true });

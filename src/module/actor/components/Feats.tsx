@@ -1,7 +1,7 @@
 import { isFeature } from 'src/module/item/subtypes';
 import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
 import { SpecificActor } from '../mashup-actor';
-import { ItemTable } from './ItemTable';
+import { ItemTable } from 'src/components/ItemTable';
 
 export function Feats({ actor }: { actor: SpecificActor }) {
 	return (

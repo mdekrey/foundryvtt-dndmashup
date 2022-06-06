@@ -15,6 +15,8 @@ import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { systemName } from './constants';
 
+import './fixup';
+
 // Initialize system
 Hooks.once('init', async () => {
 	console.log(`${systemName} | Initializing ${systemName}`);

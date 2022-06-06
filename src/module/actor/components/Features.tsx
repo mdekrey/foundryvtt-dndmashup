@@ -1,7 +1,7 @@
 import { isFeature } from 'src/module/item/subtypes';
 import { FeatureType, MashupItemFeature } from 'src/module/item/subtypes/feature/config';
 import { SpecificActor } from '../mashup-actor';
-import { ItemTable } from './ItemTable';
+import { ItemTable } from 'src/components/ItemTable';
 
 const features: Record<Exclude<FeatureType, 'feat'>, { label: string }> = {
 	'race-feature': {

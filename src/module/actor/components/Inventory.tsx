@@ -10,7 +10,7 @@ import {
 } from 'src/module/item/subtypes/equipment/item-slots';
 import { MashupItemBase } from 'src/module/item/mashup-item';
 import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
-import { ItemTable } from './ItemTable';
+import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
 
 function isEquipment(item: MashupItemBase): item is MashupItemEquipment {

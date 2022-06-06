@@ -30,7 +30,7 @@ const staticFiles = [
 	'system.json',
 	'template.json',
 ];
-const sourceFiles = [`**/*.ts`, `**/*.tsx`];
+const sourceFiles = [`**/*.js`, `**/*.ts`, `**/*.tsx`];
 
 /********************/
 /*      BUILD       */

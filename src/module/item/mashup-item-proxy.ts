@@ -1,20 +1,7 @@
 import { itemMappings } from './subtypes';
-import { PossibleItemType } from './types';
 import { MashupItemBase } from './mashup-item';
 import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FuncWithoutThis<T extends (...args: any) => any> = (...args: Parameters<T>) => ReturnType<T>;
-
-const create = function (data: Record<string, unknown>, options) {
-	if (!data) throw new Error('No data for item');
-
-	const type = data.type as PossibleItemType;
-
-	if (!itemMappings.hasOwnProperty(type)) throw new Error(`Unsupported Entity type for create(): ${type}`);
-
-	return itemMappings[type].create(data as never, options);
-} as FuncWithoutThis<typeof MashupItemBase['create']>;
+import { createMashupItem } from './create-mashup-item';
 
 export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstructor>(MashupItemBase as never, {
 	//Will intercept calls to the "new" operator
@@ -39,9 +26,9 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstru
 				return function (data: Record<string, unknown> | Array<Record<string, unknown>>, options) {
 					if (Array.isArray(data)) {
 						//Array of data, this happens when creating Actors imported from a compendium
-						return data.map((i) => create(i, options));
+						return data.map((i) => createMashupItem(i, options));
 					}
-					return create(data, options);
+					return createMashupItem(data, options);
 				} as typeof MashupItemBase['create'];
 
 			case Symbol.hasInstance:

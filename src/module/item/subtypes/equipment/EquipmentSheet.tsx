@@ -7,6 +7,7 @@ import { ItemSlot, itemSlots, ItemSlotTemplates } from './item-slots';
 import { deepUpdate } from 'src/core/foundry';
 import { Tabs } from 'src/components/tab-section';
 import { MashupItemEquipment } from '.';
+import { Contents } from '../../components/Contents';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
 
@@ -54,6 +55,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
 					<Tabs.NavButton tabName="description">Description</Tabs.NavButton>
 					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
+					<Tabs.NavButton tabName="contents">Contents</Tabs.NavButton>
 				</Tabs.Nav>
 
 				<section className="flex-grow">
@@ -67,6 +69,9 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					</Tabs.Tab>
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+					</Tabs.Tab>
+					<Tabs.Tab tabName="contents">
+						<Contents item={item} />
 					</Tabs.Tab>
 				</section>
 			</Tabs.Controlled>

@@ -7,9 +7,12 @@
 		"moduleResolution": "node",
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
+		"allowJs": true,
 		"strict": true,
 		"baseUrl": "./",
-		"jsx": "react-jsx"
+		"jsx": "react-jsx",
+		"noEmit": true,
+		"outDir": "./dist/module/"
 	},
 	"include": ["src"]
 }

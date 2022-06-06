@@ -3,9 +3,11 @@ import { ItemData } from './mashup-item-data';
 import { FeatureBonus } from '../bonuses';
 import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
 import { FeatureType } from './subtypes/feature/config';
+import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
+	items: (AnyDocumentData & { _id: string })[];
 };
 
 export type ItemDescriptionItemTemplateDataSourceData = {
