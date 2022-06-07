@@ -12,6 +12,7 @@ export const bonusTargets = [
 	`speed` as const,
 	// TODO: add support for attacks, damage, saving throws
 	// TODO: add conditional bonuses
+	// TODO: add resistance/vulnerability
 ];
 
 export type AbilityBonus = `ability-${Ability}`;
