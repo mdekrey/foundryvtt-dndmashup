@@ -5,7 +5,7 @@ import { ItemSlot } from '../subtypes/equipment/item-slots';
 export function Description<T extends ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	return (
 		<>
-			<FormInput.RichText document={item} field="data.description.text" />
+			<FormInput.RichText document={item} field="data.description.text" rollData={item.getRollData()} />
 		</>
 	);
 }

@@ -4,17 +4,22 @@ import { getFieldValue, PathName } from 'src/core/path-typings';
 export function RichText<TDocument extends AnyDocument>({
 	document,
 	field,
+	rollData,
 }: {
 	document: TDocument;
 	field: PathName<SourceDataOf<TDocument>, string>;
+	rollData?: object | (() => object);
 }) {
 	const html = getFieldValue(document.data._source, field);
 
 	const enriched = TextEditor.enrichHTML(html ?? '', {
-		/* TODO - parameters: secrets: owner, documents, rollData */
+		rollData,
+		/* TODO - parameters: secrets: owner, documents */
 	});
 
-	const isEditor = true; // TODO - editable?
+	const isEditor = document.isOwner;
+
+	// TODO - use TextEditor as in foundry.js to activateEditor
 
 	return (
 		<>
