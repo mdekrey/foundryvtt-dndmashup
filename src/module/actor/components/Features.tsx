@@ -1,36 +1,63 @@
 import { isFeature } from 'src/module/item/subtypes';
-import { FeatureType, MashupItemFeature } from 'src/module/item/subtypes/feature/config';
+import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
 import { SpecificActor } from '../mashup-actor';
 import { ItemTable } from 'src/components/ItemTable';
+import { MashupItemBase } from 'src/module/item/mashup-item';
 
-const features: Record<Exclude<FeatureType, 'feat'>, { label: string }> = {
-	'race-feature': {
+const features: {
+	key: React.Key;
+	label: string;
+	filter: (item: MashupItemBase) => boolean;
+	header?: React.FC;
+	body?: React.FC<{ item: MashupItemBase }>;
+}[] = [
+	{
+		key: 'character-details',
+		label: '',
+		filter: (item) =>
+			item.type === 'class' || item.type === 'race' || item.type === 'paragonPath' || item.type === 'epicDestiny',
+	},
+	{
+		key: 'race-feature',
 		label: 'Racial Feature',
+		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
+		header: FeatureHeader,
+		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
 	},
-	'class-feature': {
+	{
+		key: 'class-feature',
 		label: 'Class Feature',
+		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
+		header: FeatureHeader,
+		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
 	},
-	'paragon-feature': {
+	{
+		key: 'paragon-feature',
 		label: 'Paragon Path Feature',
+		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
+		header: FeatureHeader,
+		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
 	},
-	'epic-feature': {
+	{
+		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
+		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
+		header: FeatureHeader,
+		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
 	},
-};
+];
 
 export function Features({ actor }: { actor: SpecificActor }) {
-	const groups = Object.entries(features)
-		.map(([featureType, { label }]) => ({ featureType: featureType as FeatureType, label }))
-		.map(({ featureType, label }) => ({
-			featureType,
-			label,
-			items: actor.items.filter(isFeature).filter((item) => item.data.data.featureType === featureType),
+	const groups = features
+		.map(({ filter, ...others }) => ({
+			...others,
+			items: actor.items.filter(filter),
 		}))
 		.filter(({ items }) => items.length > 0);
 	return (
 		<>
-			{groups.map(({ featureType, label, items }) => (
-				<ItemTable key={featureType} items={items} title={label} header={FeatureHeader} body={FeatureBody} />
+			{groups.map(({ key, label, items, header, body }) => (
+				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
 		</>
 	);

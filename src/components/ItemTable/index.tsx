@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { IconButton } from 'src/components/icon-button';
-import { MashupItem } from 'src/module/item/mashup-item';
+import { MashupItemBase } from 'src/module/item/mashup-item';
 
-export function ItemTable<T extends MashupItem>({
+export function ItemTable<T extends MashupItemBase>({
 	title,
 	items,
 	header: TableHeader,

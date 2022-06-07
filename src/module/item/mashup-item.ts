@@ -192,6 +192,8 @@ export class MashupItemBase extends Item {
 		data?: DeepPartial<ItemDataConstructorData | (ItemDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
+		// TODO: For Foundry v9, this is necessary. This appears to be fixed in v10
+		data = expandObjectsAndArrays(data as Record<string, unknown>) as ItemDataConstructorData;
 		if (!(this.parent instanceof Item)) return super.update(data, context);
 		const resultData = {
 			...(expandObjectsAndArrays(data as Record<string, unknown>) as Record<string, unknown>),
