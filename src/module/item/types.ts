@@ -59,6 +59,7 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Bas
 		itemSlot: TItemSlot;
 		equipped: EquippedItemSlot[];
 		equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
+		container: boolean;
 	};
 export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData & {

@@ -1,6 +1,8 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
+import { Tabs } from 'src/components/tab-section';
+import { FeaturesList } from '../../components/FeaturesList';
 import { MashupParagonPath } from './config';
 
 export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
@@ -16,7 +18,23 @@ export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
 				</div>
 			</div>
 			<div className="border-b border-black"></div>
-			<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+			<Tabs defaultActiveTab="bonuses">
+				<Tabs.Nav>
+					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
+					{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
+						<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
+					) : null}
+				</Tabs.Nav>
+
+				<section className="flex-grow">
+					<Tabs.Tab tabName="bonuses">
+						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+					</Tabs.Tab>
+					<Tabs.Tab tabName="features">
+						<FeaturesList item={item} />
+					</Tabs.Tab>
+				</section>
+			</Tabs>
 		</div>
 	);
 }

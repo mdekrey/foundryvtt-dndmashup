@@ -130,7 +130,8 @@
 			"templates": ["base", "itemDescription", "carriedItem"],
 			"itemSlot": "",
 			"equippedItemSlot": "",
-			"equipped": []
+			"equipped": [],
+			"container": false
 		},
 		"feature": {
 			"templates": ["base", "itemDescription"],

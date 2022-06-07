@@ -20,6 +20,7 @@ export function Checkbox<TDocument extends AnyDocument>({
 			{...checkboxProps}
 			value={undefined}
 			defaultChecked={defaultChecked}
+			className="mr-1"
 			{...props}
 		/>
 	);

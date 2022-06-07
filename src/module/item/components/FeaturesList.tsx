@@ -1,8 +1,7 @@
-import { isFeature } from 'src/module/item/subtypes';
-import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
-import { SpecificActor } from '../mashup-actor';
 import { ItemTable } from 'src/components/ItemTable';
-import { MashupItemBase } from 'src/module/item/mashup-item';
+import { MashupItemBase } from '../mashup-item';
+import { isFeature } from '../subtypes';
+import { MashupItemFeature } from '../subtypes/feature/config';
 
 const features: {
 	key: React.Key;
@@ -47,12 +46,12 @@ const features: {
 	},
 ];
 
-export function Features({ actor }: { actor: SpecificActor }) {
-	const nonEquipment = actor.items.contents.filter((i) => i.type !== 'equipment');
+export function FeaturesList({ item }: { item: MashupItemBase }) {
+	const nonEquipment = item.items.contents.filter((i) => i.type !== 'equipment');
 	const groups = features
 		.map(({ filter, ...others }) => ({
 			...others,
-			items: actor.items.filter(filter),
+			items: item.items.filter(filter),
 		}))
 		.filter(({ items }) => items.length > 0);
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));
