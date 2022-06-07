@@ -31,5 +31,5 @@ export function combinePath<TStart, TMiddle, TEnd>(
 	path1: PathName<TStart, TMiddle>,
 	path2: PathName<TMiddle, TEnd>
 ): PathName<TStart, TEnd> {
-	return `${path1}.${path2}` as never;
+	return `${path1}.${path2}` as PathName<TStart, TEnd>;
 }

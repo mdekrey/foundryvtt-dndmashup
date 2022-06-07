@@ -23,6 +23,7 @@ type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstr
 
 export type BaseItemTemplateDataSourceData = {
 	grantedBonuses: FeatureBonus[];
+	// This is an array of ItemDataConstructorData, or maybe PossibleItemData, but that causes typing problems
 	items: (AnyDocumentData & { _id: string })[];
 };
 

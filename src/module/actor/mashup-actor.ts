@@ -167,9 +167,9 @@ export class MashupActor extends Actor {
 		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
-		const result = expandObjectsAndArrays(data as Record<string, unknown>);
-		console.log(data, result, context);
-		return super.update(result as never, context);
+		// TODO: For Foundry v9, this is necessary. This appears to be fixed in v10
+		const result = expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData;
+		return super.update(result, context);
 	}
 }
 

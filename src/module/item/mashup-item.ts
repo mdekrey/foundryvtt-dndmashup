@@ -39,11 +39,7 @@ export class MashupItemBase extends Item {
 		return this._items ?? (this._items = this.createEmbeddedItemsCollection());
 	}
 	private createEmbeddedItemsCollection(): EmbeddedCollection<MashupItemBaseType, AnyDocumentData> {
-		return new foundry.fixup.EmbeddedCollection(
-			this.data,
-			(this.data.data.items ?? []) as never,
-			CONFIG.Item.documentClass
-		);
+		return new foundry.fixup.EmbeddedCollection(this.data, this.data.data.items ?? [], CONFIG.Item.documentClass);
 	}
 
 	override async createEmbeddedDocuments(embeddedName: any, data: any, context?: any): Promise<any> {
@@ -172,14 +168,14 @@ export class MashupItemBase extends Item {
 			.filter((id) => !containedItems.some((item) => item._id === id));
 		oldIds.forEach((id) => items.delete(id, {}));
 		for (const idata of containedItems) {
-			if (!items.has(idata._id)) {
-				const theItem = new CONFIG.Item.documentClass(idata as never, {
+			const currentItem = items.get(idata._id);
+			if (!currentItem) {
+				const theItem = new CONFIG.Item.documentClass(idata as never as ItemDataConstructorData, {
 					parent: this,
 				});
 				if (theItem) items.set(idata._id, theItem, {});
 			} else {
 				// TODO see how to avoid this - here to make sure the contained items is correctly setup
-				const currentItem = items.get(idata._id) as never as MashupItemBase;
 				currentItem.data.update(idata, { diff: false });
 				currentItem.prepareData();
 				this.items.set(idata._id, currentItem, {});

@@ -3,7 +3,7 @@ import { MashupItemBase } from './mashup-item';
 import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { createMashupItem } from './create-mashup-item';
 
-export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstructor>(MashupItemBase as never, {
+export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstructor>(MashupItemBase, {
 	//Will intercept calls to the "new" operator
 	construct: function (target, args: ConstructorParameters<typeof MashupItemBase>) {
 		const [data] = args;
@@ -18,7 +18,7 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstru
 	},
 
 	//Property access on this weird, dirty proxy object
-	get: function (target, prop) {
+	get: function (target, prop: keyof typeof MashupItemBase | typeof Symbol.hasInstance) {
 		switch (prop) {
 			case 'create':
 			case 'createDocuments':
@@ -39,7 +39,7 @@ export const MashupItemProxy = new Proxy<typeof MashupItemBase & DocumentConstru
 
 			default:
 				//Just forward any requested properties to the base Actor class
-				return (MashupItemBase as never)[prop];
+				return MashupItemBase[prop];
 		}
 	},
 });
