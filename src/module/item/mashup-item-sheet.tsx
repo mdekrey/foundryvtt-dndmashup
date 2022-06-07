@@ -7,12 +7,18 @@ import { RaceSheet } from './subtypes/race/RaceSheet';
 import { FeatureSheet } from './subtypes/feature/FeatureSheet';
 import { ReactSheetMixin } from 'src/components/sheet/react-sheet-mixin';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
+import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
+import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';
+import { PowerSheet } from './subtypes/power/PowerSheet';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: InstanceType<typeof itemMappings[K]> }> } = {
 	class: ClassSheet,
 	race: RaceSheet,
 	equipment: EquipmentSheet,
 	feature: FeatureSheet,
+	epicDestiny: EpicDestinySheet,
+	paragonPath: ParagonPathSheet,
+	power: PowerSheet,
 };
 
 function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
@@ -61,6 +67,7 @@ export class MashupItemSheet extends ReactSheetMixin<typeof ItemSheet>(ItemSheet
 		return this._onDropItemCreate(itemData);
 	}
 	protected _onDropItemCreate(itemData: PossibleItemData) {
+		if (!this.item.canEmbedItem(itemData.type)) return;
 		// TODO: filter for sub item type
 		return this.item.createEmbeddedDocuments('Item', itemData instanceof Array ? itemData : [itemData]);
 	}

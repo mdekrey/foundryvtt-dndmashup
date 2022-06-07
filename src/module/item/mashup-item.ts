@@ -33,6 +33,10 @@ export class MashupItemBase extends Item {
 	get type(): PossibleItemType {
 		return super.type as PossibleItemType;
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	canEmbedItem(type: PossibleItemType) {
+		return false;
+	}
 
 	private _items: EmbeddedCollection<MashupItemBaseType, AnyDocumentData> | undefined = undefined;
 	get items(): EmbeddedCollection<MashupItemBaseType, AnyDocumentData> {
@@ -212,4 +216,5 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType> 
 	}
 
 	abstract allGrantedBonuses(): FeatureBonus[];
+	abstract canEmbedItem(type: PossibleItemType): boolean;
 }

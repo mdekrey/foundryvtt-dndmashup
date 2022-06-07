@@ -65,6 +65,9 @@ export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 		featureType: FeatureType;
 		summary: string;
 	};
+export type ParagonPathDataSourceData = BaseItemTemplateDataSourceData; // TODO
+export type EpicDestinyDataSourceData = BaseItemTemplateDataSourceData; // TODO
+export type PowerDataSourceData = BaseItemTemplateDataSourceData; // TODO
 
 export type ClassData = TypedData<'class', ClassDataSourceData>;
 export type RaceData = TypedData<'race', RaceDataSourceData>;
@@ -73,13 +76,16 @@ export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
 	EquipmentDataSourceData<TItemSlot>
 >;
 export type FeatureData = TypedData<'feature', FeatureDataSourceData>;
+export type ParagonPathData = TypedData<'paragonPath', ParagonPathDataSourceData>;
+export type EpicDestinyData = TypedData<'epicDestiny', EpicDestinyDataSourceData>;
+export type PowerData = TypedData<'power', PowerDataSourceData>;
 
 declare global {
 	interface SourceConfig {
-		Item: ClassData | RaceData | EquipmentData | FeatureData;
+		Item: ClassData | RaceData | EquipmentData | FeatureData | ParagonPathData | EpicDestinyData | PowerData;
 	}
 	interface DataConfig {
-		Item: ClassData | RaceData | EquipmentData | FeatureData;
+		Item: ClassData | RaceData | EquipmentData | FeatureData | ParagonPathData | EpicDestinyData | PowerData;
 	}
 }
 
@@ -87,7 +93,10 @@ export type PossibleItemData =
 	| ItemData<ClassData, ClassData>
 	| ItemData<RaceData, RaceData>
 	| ItemData<EquipmentData, EquipmentData>
-	| ItemData<FeatureData, FeatureData>;
+	| ItemData<FeatureData, FeatureData>
+	| ItemData<ParagonPathData, ParagonPathData>
+	| ItemData<EpicDestinyData, EpicDestinyData>
+	| ItemData<PowerData, PowerData>;
 
 export type PossibleItemType = PossibleItemData['type'];
 

@@ -1,6 +1,6 @@
 import { FeatureBonus } from 'src/module/bonuses';
 import { MashupItem } from '../../mashup-item';
-import { SpecificItemEquipmentData } from '../../types';
+import { SpecificItemEquipmentData, PossibleItemType } from '../../types';
 import { ItemSlot, ItemSlotInfo, itemSlots, ItemSlotTemplate } from './item-slots';
 
 export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends MashupItem<'equipment'> {
@@ -20,5 +20,10 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends 
 		return (this.data.data.equipmentProperties ?? {
 			...this.itemSlotInfo.defaultEquipmentInfo,
 		}) as ItemSlotTemplate<TItemSlot>;
+	}
+
+	override canEmbedItem(type: PossibleItemType): boolean {
+		// TODO - conly contain other equipment if it is a "container"
+		return type === 'equipment' || type === 'power';
 	}
 }

@@ -25,4 +25,8 @@ export class MashupItemFeature extends MashupItem<'feature'> {
 	override allGrantedBonuses(): FeatureBonus[] {
 		return this.data.data.grantedBonuses;
 	}
+
+	override canEmbedItem(): boolean {
+		return false;
+	}
 }

@@ -97,7 +97,7 @@
 		}
 	},
 	"Item": {
-		"types": ["class", "race", "equipment", "feature"],
+		"types": ["class", "race", "equipment", "feature", "paragonPath", "epicDestiny"],
 		"templates": {
 			"base": {
 				"grantedBonuses": []
@@ -136,6 +136,12 @@
 			"templates": ["base", "itemDescription"],
 			"featureType": "feat",
 			"summary": ""
+		},
+		"paragonPath": {
+			"templates": ["base"]
+		},
+		"epicDestiny": {
+			"templates": ["base"]
 		}
 	}
 }

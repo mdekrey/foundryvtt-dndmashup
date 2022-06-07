@@ -1,7 +1,11 @@
 import { FeatureBonus } from 'src/module/bonuses';
 import { MashupItem } from '../../mashup-item';
+import { PossibleItemType } from '../../types';
 
 export class MashupItemClass extends MashupItem<'class'> {
+	override canEmbedItem(type: PossibleItemType): boolean {
+		return type === 'feature' || type === 'power';
+	}
 	override allGrantedBonuses(): FeatureBonus[] {
 		return [
 			{

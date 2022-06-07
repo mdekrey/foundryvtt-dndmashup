@@ -33,14 +33,14 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 					<FormInput.Label>Level</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-5">
-					<FormInput.FieldButton onClick={() => showItem(null) /* data.appliedParagonPath.id */}>
-						{/* TODO: data.appliedParagonPath?.name */}
+					<FormInput.FieldButton onClick={() => showItem(actor.appliedParagonPath)}>
+						{actor.appliedParagonPath?.name}
 					</FormInput.FieldButton>
 					<FormInput.Label>Paragon Path</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-5">
-					<FormInput.FieldButton onClick={() => showItem(null) /* data.appliedEpicDestiny.id */}>
-						{/* TODO: data.appliedEpicDestiny?.name */}
+					<FormInput.FieldButton onClick={() => showItem(actor.appliedEpicDestiny)}>
+						{actor.appliedEpicDestiny?.name}
 					</FormInput.FieldButton>
 					<FormInput.Label>Epic Destiny</FormInput.Label>
 				</FormInput>

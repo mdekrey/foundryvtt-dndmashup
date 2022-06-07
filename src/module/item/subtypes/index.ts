@@ -3,6 +3,9 @@ import { MashupItemClass } from './class/config';
 import { MashupItemRace } from './race/config';
 import { MashupItemEquipment } from './equipment/config';
 import { MashupItemFeature } from './feature/config';
+import { MashupParagonPath } from './paragonPath/config';
+import { MashupEpicDestiny } from './epicDestiny/config';
+import { MashupPower } from './power/config';
 
 export * from './filters';
 
@@ -11,6 +14,9 @@ export const itemMappings = {
 	race: MashupItemRace,
 	equipment: MashupItemEquipment,
 	feature: MashupItemFeature,
+	paragonPath: MashupParagonPath,
+	epicDestiny: MashupEpicDestiny,
+	power: MashupPower,
 };
 
 // If there is an error on the following line, not all types are mapped above

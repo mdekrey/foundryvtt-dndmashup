@@ -12,12 +12,17 @@ import {
 	filterBonuses,
 	sumFinalBonuses,
 } from '../bonuses';
-import { isClass, isRace } from '../item/subtypes';
-import { isClassSource, isRaceSource } from './formulas';
+import { isClass, isEpicDestiny, isParagonPath, isRace } from '../item/subtypes';
+import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
 
-const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [isClassSource, isRaceSource];
+const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
+	isClassSource,
+	isRaceSource,
+	isParagonPathSource,
+	isEpicDestinySource,
+];
 
 const base = { condition: '' } as const;
 const standardBonuses: FeatureBonus[] = [
@@ -84,6 +89,12 @@ export class MashupActor extends Actor {
 	}
 	get appliedRace() {
 		return this.items?.find(isRace);
+	}
+	get appliedParagonPath() {
+		return this.items?.find(isParagonPath);
+	}
+	get appliedEpicDestiny() {
+		return this.items?.find(isEpicDestiny);
 	}
 
 	get extraLevels() {
