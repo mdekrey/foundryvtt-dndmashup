@@ -1,8 +1,5 @@
-import { Ability, TypedData } from 'src/types/types';
-import { FeatureBonus } from '../bonuses';
-import { EquippedItemSlot, ItemSlot, ItemSlotTemplates } from './subtypes/equipment/item-slots';
-import { FeatureType } from './subtypes/feature/config';
-import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
+import { TypedData } from 'src/types/types';
+import { ItemSlot } from './subtypes/equipment/item-slots';
 import {
 	ItemDataBaseProperties,
 	ItemDataConstructorData,
@@ -10,6 +7,13 @@ import {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { BaseItem } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
+import { ClassData } from './subtypes/class/dataSourceData';
+import { RaceData } from './subtypes/race/dataSourceData';
+import { EquipmentData } from './subtypes/equipment/dataSourceData';
+import { FeatureData } from './subtypes/feature/dataSourceData';
+import { ParagonPathData } from './subtypes/paragonPath/dataSourceData';
+import { EpicDestinyData } from './subtypes/epicDestiny/dataSourceData';
+import { PowerData } from './subtypes/power/dataSourceData';
 
 type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstract.DocumentData<
 	ItemDataSchema,
@@ -20,66 +24,6 @@ type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstr
 > &
 	ItemDataBaseProperties &
 	TData;
-
-export type BaseItemTemplateDataSourceData = {
-	grantedBonuses: FeatureBonus[];
-	// This is an array of ItemDataConstructorData, or maybe PossibleItemData, but that causes typing problems
-	items: (AnyDocumentData & { _id: string })[];
-};
-
-export type ItemDescriptionItemTemplateDataSourceData = {
-	description: {
-		text: string;
-		// TODO: how would unidentified work?
-		// unidentifiedText: string;
-		// isIdentified: boolean;
-	};
-};
-
-export type CarriedItemItemTemplateDataSourceData = {
-	quantity: number;
-	weight: number;
-	price: number;
-};
-
-export type ClassDataSourceData = BaseItemTemplateDataSourceData & {
-	role: string;
-	powerSource: string;
-	keyAbilities: Ability[];
-	hpBase: number;
-	hpPerLevel: number;
-	healingSurgesBase: number;
-};
-export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
-	baseSpeed: number;
-};
-export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
-	ItemDescriptionItemTemplateDataSourceData &
-	CarriedItemItemTemplateDataSourceData & {
-		itemSlot: TItemSlot;
-		equipped: EquippedItemSlot[];
-		equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
-		container: boolean;
-	};
-export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
-	ItemDescriptionItemTemplateDataSourceData & {
-		featureType: FeatureType;
-		summary: string;
-	};
-export type ParagonPathDataSourceData = BaseItemTemplateDataSourceData; // TODO
-export type EpicDestinyDataSourceData = BaseItemTemplateDataSourceData; // TODO
-export type PowerDataSourceData = BaseItemTemplateDataSourceData; // TODO
-
-export type ClassData = TypedData<'class', ClassDataSourceData>;
-export type RaceData = TypedData<'race', RaceDataSourceData>;
-export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
-	'equipment',
-	EquipmentDataSourceData<TItemSlot>
->;
-export type FeatureData = TypedData<'feature', FeatureDataSourceData>;
-export type ParagonPathData = TypedData<'paragonPath', ParagonPathDataSourceData>;
-export type EpicDestinyData = TypedData<'epicDestiny', EpicDestinyDataSourceData>;
-export type PowerData = TypedData<'power', PowerDataSourceData>;
 
 declare global {
 	interface SourceConfig {
