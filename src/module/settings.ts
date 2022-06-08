@@ -21,7 +21,10 @@ export function registerSettings(): void {
 
 	CONFIG.Actor.documentClass = MashupActor;
 	CONFIG.Item.documentClass = MashupItemProxy as any;
+}
 
+export function registerCustomSheets() {
+	// Register custom sheets (if any)
 	Actors.unregisterSheet('core', ActorSheet);
 	Actors.registerSheet('actor', MashupActorSheet, { makeDefault: true });
 

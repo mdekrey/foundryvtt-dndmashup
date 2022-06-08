@@ -1,1 +1,11 @@
-{}
+{
+	"ACTOR.TypePc": "Player Character",
+	"ACTOR.TypeMonster": "Monster Stat Block",
+	"actor.MashupActorSheet": "Standard Mashup Sheet",
+	"ITEM.TypeClass": "Class",
+	"ITEM.TypeEpicdestiny": "Epic Destiny",
+	"ITEM.TypeEquipment": "Equipment",
+	"ITEM.TypeFeature": "Feature",
+	"ITEM.TypeParagonpath": "Paragon Path",
+	"ITEM.TypeRace": "Race"
+}

@@ -11,8 +11,7 @@
  */
 
 // Import TypeScript modules
-import { registerSettings } from './settings';
-import { preloadTemplates } from './preloadTemplates';
+import { registerSettings, registerCustomSheets } from './settings';
 import { systemName } from './constants';
 
 import './fixup';
@@ -21,15 +20,11 @@ import './fixup';
 Hooks.once('init', async () => {
 	console.log(`${systemName} | Initializing ${systemName}`);
 
-	// Assign custom classes and constants here
-
 	// Register custom system settings
 	registerSettings();
 
-	// Preload Handlebars templates
-	await preloadTemplates();
-
 	// Register custom sheets (if any)
+	registerCustomSheets();
 });
 
 // Setup system
