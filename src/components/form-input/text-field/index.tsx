@@ -4,6 +4,7 @@ import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 export function TextField({
 	value,
 	plain,
+	onChange,
 	...props
 }: {
 	value: string | number;
@@ -11,7 +12,7 @@ export function TextField({
 	defaultValue?: never;
 	type?: never;
 } & JSX.IntrinsicElements['input']) {
-	const input = <input type="text" {...useKeyValueWhenBlur(value)} {...props} />;
+	const input = <input type="text" {...useKeyValueWhenBlur(value, { onChange })} {...props} />;
 
 	return plain ? input : <Field>{input}</Field>;
 }

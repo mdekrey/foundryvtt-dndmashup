@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
-type Result<T> = {
+type Result<T extends React.Key, TElem extends HTMLElement> = {
 	defaultValue: T;
 	key: React.Key;
-	onBlur: () => void;
-	onFocus: () => void;
+	onBlur: (ev: React.FocusEvent<TElem>) => void;
+	onFocus: (ev: React.FocusEvent<TElem>) => void;
 };
 
 /*
@@ -18,7 +18,10 @@ Use cases:
 
 */
 
-export function useKeyValueWhenBlur<T extends React.Key>(value: T): Result<T> {
+export function useKeyValueWhenBlur<T extends React.Key, TElem extends HTMLElement>(
+	value: T,
+	{ onChange }: { onChange?: React.ChangeEventHandler<TElem> } = {}
+): Result<T, TElem> {
 	const converted = value;
 	const key = useRef(`${converted}`);
 	const isFocused = useRef(false);
@@ -31,10 +34,11 @@ export function useKeyValueWhenBlur<T extends React.Key>(value: T): Result<T> {
 	return {
 		defaultValue: value,
 		key: key.current,
-		onBlur: () => {
+		onBlur: (ev: React.FocusEvent<TElem>) => {
 			isFocused.current = false;
 			key.current = uuid();
 			forceRerender(key.current);
+			onChange && onChange(ev);
 		},
 		onFocus: () => void (isFocused.current = true),
 	};
