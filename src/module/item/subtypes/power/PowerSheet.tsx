@@ -67,7 +67,7 @@ const typeAndRangeLens = Lens.from<SourceDataOf<MashupPower>, EffectTypeAndRange
 	(power) => power.data.effect?.typeAndRange,
 	(mutator) => (power) => {
 		power.data.effect ??= {} as PowerEffect;
-		power.data.effect.typeAndRange = mutator(power.data.effect.typeAndRange) ?? power.data.effect.typeAndRange;
+		power.data.effect.typeAndRange = mutator(power.data.effect.typeAndRange);
 	}
 );
 
@@ -109,7 +109,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 					</FormInput>
 					<FormInput className="col-span-6">
 						<TypeAndRange state={applyLens(documentState, typeAndRangeLens)} />
-						<FormInput.Label>Action Type</FormInput.Label>
+						<FormInput.Label>Effect Type</FormInput.Label>
 					</FormInput>
 				</div>
 			</div>

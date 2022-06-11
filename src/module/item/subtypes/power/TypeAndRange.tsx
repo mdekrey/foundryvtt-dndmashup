@@ -88,7 +88,7 @@ const areaShapeOptions: SelectItem<AreaShape>[] = [
 const closeLens = Lens.from<EffectTypeAndRange, CloseEffectTypeAndRange>(
 	(effect) => (effect.type === 'close' ? effect : { type: 'close', shape: 'burst', size: 1 }),
 	(mutator) => (effect) => {
-		if (effect.type === 'close') effect = mutator(effect) ?? effect;
+		if (effect.type === 'close') effect = mutator(effect);
 	}
 );
 
@@ -98,7 +98,7 @@ const closeSizeLens = closeLens.combine(Lens.fromProp('size'));
 const areaLens = Lens.from<EffectTypeAndRange, AreaEffectTypeAndRange>(
 	(effect) => (effect.type === 'area' ? effect : { type: 'area', shape: 'burst', size: 1, within: 10 }),
 	(mutator) => (effect) => {
-		if (effect.type === 'area') effect = mutator(effect) ?? effect;
+		if (effect.type === 'area') effect = mutator(effect);
 	}
 );
 

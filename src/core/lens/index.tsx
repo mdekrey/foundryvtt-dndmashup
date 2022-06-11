@@ -3,6 +3,10 @@ import { Draft } from 'immer';
 export type ImmerMutator<T> = (draft: Draft<T>) => T | undefined | void;
 export type Mutator<T> = (draft: Draft<T>) => T | Draft<T>;
 
+function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
+	return (draft) => m(draft) ?? draft;
+}
+
 export class Lens<TSource, TValue> {
 	constructor(
 		public readonly getValue: (source: TSource) => TValue,
@@ -31,17 +35,17 @@ export class Lens<TSource, TValue> {
 
 	static from<TSource, TValue>(
 		getValue: Lens<TSource, TValue>['getValue'],
-		setValue: (mutator: ImmerMutator<TValue>) => ImmerMutator<TSource>
+		setValue: (mutator: Mutator<TValue>) => ImmerMutator<TSource>
 	): Lens<TSource, TValue> {
 		function produce(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
 		function produce(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
 		function produce(...params: [Draft<TSource>, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
 			if (params.length === 1) {
 				const [mutator] = params;
-				return setValue(mutator);
+				return setValue(immerMutatorToMutator(mutator));
 			} else {
 				const [source, mutator] = params;
-				return setValue(mutator)(source);
+				return setValue(immerMutatorToMutator(mutator))(source);
 			}
 		}
 
