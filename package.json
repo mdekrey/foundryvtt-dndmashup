@@ -39,6 +39,7 @@
 		"@rollup/plugin-typescript": "^8.3.2",
 		"@rollup/stream": "^2.0.0",
 		"@types/jest": "^27.5.1",
+		"@types/uuid": "^8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.24.0",
 		"@typescript-eslint/parser": "^5.24.0",
 		"autoprefixer": "^10.4.7",
@@ -63,6 +64,7 @@
 		"ts-jest": "^28.0.2",
 		"tslib": "^2.4.0",
 		"typescript": "^4.6.4",
+		"uuid": "^8.3.2",
 		"vinyl-buffer": "^1.0.1",
 		"vinyl-source-stream": "^2.0.0",
 		"yargs": "^17.5.1"
