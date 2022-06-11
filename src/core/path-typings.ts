@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type Primitive = null | undefined | string | number | boolean | symbol | bigint;
-type PathImpl<K extends string | number, V, Type> = V extends Type
+type PathImpl<K extends string | number, V, Type> = V extends NoStringPath
+	? never
+	: V extends Type
 	? `${K}`
 	: V extends Primitive
 	? never
@@ -11,7 +13,9 @@ type IsTuple<T extends ReadonlyArray<any>> = number extends T['length'] ? false 
 type TupleKey<T extends ReadonlyArray<any>> = Exclude<keyof T, keyof any[]>;
 type ArrayKey = number;
 
-export type PathName<TTarget, TValue> = TTarget extends ReadonlyArray<infer V>
+export type PathName<TTarget, TValue> = TTarget extends NoStringPath
+	? never
+	: TTarget extends ReadonlyArray<infer V>
 	? IsTuple<TTarget> extends true
 		? {
 				[K in TupleKey<TTarget>]-?: PathImpl<K & string, TTarget[K], TValue>;
@@ -33,3 +37,5 @@ export function combinePath<TStart, TMiddle, TEnd>(
 ): PathName<TStart, TEnd> {
 	return `${path1}.${path2}` as PathName<TStart, TEnd>;
 }
+
+export type NoStringPath = { noStringPath?: never };

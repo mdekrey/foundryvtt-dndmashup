@@ -97,7 +97,7 @@
 		}
 	},
 	"Item": {
-		"types": ["class", "race", "equipment", "feature", "paragonPath", "epicDestiny"],
+		"types": ["class", "race", "equipment", "feature", "paragonPath", "epicDestiny", "power"],
 		"templates": {
 			"base": {
 				"grantedBonuses": []
@@ -143,6 +143,17 @@
 		},
 		"epicDestiny": {
 			"templates": ["base"]
+		},
+		"power": {
+			"templates": ["base"],
+			"flavorText": "",
+			"type": "Human Racial Power",
+			"usage": "At-Will",
+			"keywords": [],
+			"actionType": "standard",
+			"effects": [],
+			"special": "",
+			"displayOverride": ""
 		}
 	}
 }
