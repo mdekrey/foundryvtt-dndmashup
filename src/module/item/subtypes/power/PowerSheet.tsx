@@ -74,6 +74,15 @@ const typeAndRangeLens = Lens.from<SourceDataOf<MashupPower>, EffectTypeAndRange
 export function PowerSheet({ item }: { item: MashupPower }) {
 	const documentState = useDocumentAsState(item);
 	console.log(documentState[0]);
+
+	const keywords = documentState[0].data.keywords.map((k) => k.capitalize()).join(', ');
+
+	function setKeywords(keywords: string) {
+		documentState[1]((draft) => {
+			draft.data.keywords = keywords.split(',').map((k) => k.toLowerCase().trim());
+		});
+	}
+
 	return (
 		<>
 			<div className="h-full flex flex-col gap-1">
@@ -100,7 +109,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						<FormInput.Label>Usage</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6">
-						{/* TODO */}
+						<FormInput.TextField value={keywords} onChange={(ev) => setKeywords(ev.currentTarget.value)} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6">
