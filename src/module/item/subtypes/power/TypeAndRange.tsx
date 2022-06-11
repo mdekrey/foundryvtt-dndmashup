@@ -1,7 +1,13 @@
 import { FormInput, SelectItem } from 'src/components/form-input';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator, setWith } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from 'src/core/lens';
 import { neverEver } from 'src/core/neverEver';
-import { EffectTypeAndRange, MeleeEffectTypeAndRange } from './dataSourceData';
+import {
+	AreaEffectTypeAndRange,
+	CloseEffectTypeAndRange,
+	EffectTypeAndRange,
+	MeleeEffectTypeAndRange,
+} from './dataSourceData';
 
 const effectTypeOptions: SelectItem<EffectTypeAndRange['type']>[] = [
 	{
@@ -49,6 +55,57 @@ const meleeWeaponRangeOptions: SelectItem<MeleeEffectTypeAndRange['range']>[] = 
 	},
 ];
 
+type CloseShape = CloseEffectTypeAndRange['shape'];
+
+const closeShapeOptions: SelectItem<CloseShape>[] = [
+	{
+		value: 'burst',
+		key: 'burst',
+		label: 'burst',
+	},
+	{
+		value: 'blast',
+		key: 'blast',
+		label: 'blast',
+	},
+];
+
+type AreaShape = AreaEffectTypeAndRange['shape'];
+
+const areaShapeOptions: SelectItem<AreaShape>[] = [
+	{
+		value: 'burst',
+		key: 'burst',
+		label: 'burst',
+	},
+	{
+		value: 'wall',
+		key: 'wall',
+		label: 'wall',
+	},
+];
+
+const closeLens = Lens.from<EffectTypeAndRange, CloseEffectTypeAndRange>(
+	(effect) => (effect.type === 'close' ? effect : { type: 'close', shape: 'burst', size: 1 }),
+	(mutator) => (effect) => {
+		if (effect.type === 'close') effect = mutator(effect) ?? effect;
+	}
+);
+
+const closeShapeLens = closeLens.combine(Lens.fromProp('shape'));
+const closeSizeLens = closeLens.combine(Lens.fromProp('size'));
+
+const areaLens = Lens.from<EffectTypeAndRange, AreaEffectTypeAndRange>(
+	(effect) => (effect.type === 'area' ? effect : { type: 'area', shape: 'burst', size: 1, within: 10 }),
+	(mutator) => (effect) => {
+		if (effect.type === 'area') effect = mutator(effect) ?? effect;
+	}
+);
+
+const areaShapeLens = areaLens.combine(Lens.fromProp('shape'));
+const areaSizeLens = areaLens.combine(Lens.fromProp('size'));
+const areaWithinLens = areaLens.combine(Lens.fromProp('within'));
+
 export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableStateMutator<EffectTypeAndRange> }) {
 	return (
 		<div className="flex flex-row gap-1">
@@ -72,11 +129,15 @@ export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableSta
 				</>
 			) : value?.type === 'close' ? (
 				<>
-					{value.shape} {value.size}
+					<FormInput.Select value={value.shape} onChange={changeText(closeShapeLens)} options={closeShapeOptions} />
+					<FormInput.TextField value={value.size} onChange={changeNumber(closeSizeLens)} />
 				</>
 			) : value?.type === 'area' ? (
 				<>
-					{value.shape} {value.size} within {value.within}
+					<FormInput.Select value={value.shape} onChange={changeText(areaShapeLens)} options={areaShapeOptions} />
+					<FormInput.TextField value={value.size} onChange={changeNumber(areaSizeLens)} />
+					within
+					<FormInput.TextField value={value.within} onChange={changeNumber(areaWithinLens)} />
 				</>
 			) : (
 				<></>
@@ -124,5 +185,16 @@ export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableSta
 				target.range = range;
 			}
 		});
+	}
+
+	function changeText<T extends string>(lens: Lens<EffectTypeAndRange, T>) {
+		return (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+			setWith(setValue, lens, ev.currentTarget.value as T);
+	}
+	function changeNumber(lens: Lens<EffectTypeAndRange, number>) {
+		return (ev: React.ChangeEvent<HTMLInputElement>) => {
+			const result = Number(ev.currentTarget.value);
+			if (!isNaN(result)) setWith(setValue, lens, result);
+		};
 	}
 }

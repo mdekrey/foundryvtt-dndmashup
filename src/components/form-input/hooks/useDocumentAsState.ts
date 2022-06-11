@@ -35,3 +35,13 @@ export function applyLens<TInput, TOutput>(
 		},
 	];
 }
+
+export function setWith<TInput, TOutput>(
+	setter: ImmutableMutator<TInput>,
+	lens: Lens<TInput, TOutput>,
+	value: TOutput,
+	config?: Partial<ImmutableMutatorOptions>
+) {
+	const actualMutator = lens.produce(() => value);
+	setter(actualMutator, config);
+}
