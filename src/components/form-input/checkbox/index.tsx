@@ -11,7 +11,9 @@ export function Checkbox<TDocument extends AnyDocument>({
 	field: PathName<SourceDataOf<TDocument>, boolean>;
 }) {
 	const value = getFieldValue(document.data._source, field);
-	const { defaultValue: defaultChecked, ...props } = useKeyValueWhenBlur(value, (v) => (v ? 'true' : 'false'));
+	// Intentionally ignoring defaultValue
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { defaultValue, ...props } = useKeyValueWhenBlur(value ? 'true' : 'false');
 
 	return (
 		<input
@@ -19,7 +21,7 @@ export function Checkbox<TDocument extends AnyDocument>({
 			name={field}
 			{...checkboxProps}
 			value={undefined}
-			defaultChecked={defaultChecked}
+			defaultChecked={value}
 			className="mr-1"
 			{...props}
 		/>

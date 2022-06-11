@@ -79,7 +79,10 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 
 	function setKeywords(keywords: string) {
 		documentState[1]((draft) => {
-			draft.data.keywords = keywords.split(',').map((k) => k.toLowerCase().trim());
+			draft.data.keywords = keywords
+				.split(',')
+				.map((k) => k.toLowerCase().trim())
+				.filter((v) => v.length > 0);
 		});
 	}
 

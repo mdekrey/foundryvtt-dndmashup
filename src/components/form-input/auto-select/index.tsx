@@ -24,12 +24,11 @@ export function AutoSelect<TDocument extends AnyDocument, TValue extends string 
 	options: SelectItem<TValue>[];
 }) {
 	const value = getFieldValue<SourceDataOf<TDocument>, TValue>(document.data._source, field);
+	// TODO: this isn't great - the value equality may not match.
+	const keyedValue = options.find((e) => e.value === value)?.key ?? '';
 
 	const input = (
-		<select
-			className={className}
-			{...useKeyValueWhenBlur(value, (value) => options.find((e) => e.value === value)?.key ?? '')}
-			name={field}>
+		<select className={className} {...useKeyValueWhenBlur(keyedValue)} name={field}>
 			{options.map(({ key, label }) => (
 				<option key={key} value={key}>
 					{label}
