@@ -163,7 +163,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						<FormInput.AutoSelect document={item} field="data.usage" options={usageOptions} />
 						<FormInput.Label>Usage</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-6">
+					<FormInput className="col-span-6 self-end">
 						<FormInput.TextField {...keywordsState} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>

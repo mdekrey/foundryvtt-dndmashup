@@ -59,7 +59,7 @@ export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>
 				<></>
 			) : (
 				<>
-					<FormInput className="col-span-3">
+					<FormInput className="col-span-3 self-end">
 						<FormInput.NumberField {...applyLens(props, modifierLens)} />
 						<FormInput.Label>Mod</FormInput.Label>
 					</FormInput>

@@ -137,7 +137,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 				</>
 			) : value?.type === 'ranged' ? (
 				<>
-					<FormInput>
+					<FormInput className="self-end">
 						<FormInput.TextField
 							value={`${value.range}`}
 							onChange={(ev) => changeRangedRange(ev.currentTarget.value)}
@@ -151,7 +151,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 						<FormInput.Select value={value.shape} onChange={changeText(closeShapeLens)} options={closeShapeOptions} />
 						<FormInput.Label>Shape</FormInput.Label>
 					</FormInput>
-					<FormInput>
+					<FormInput className="self-end">
 						<FormInput.TextField value={`${value.size}`} onChange={changeNumber(closeSizeLens)} />
 						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>
@@ -162,12 +162,12 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 						<FormInput.Select value={value.shape} onChange={changeText(areaShapeLens)} options={areaShapeOptions} />
 						<FormInput.Label>Shape</FormInput.Label>
 					</FormInput>
-					<FormInput>
+					<FormInput className="self-end">
 						<FormInput.TextField value={`${value.size}`} onChange={changeNumber(areaSizeLens)} />
 						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>
 					<div>within</div>
-					<FormInput>
+					<FormInput className="self-end">
 						<FormInput.TextField value={`${value.within}`} onChange={changeNumber(areaWithinLens)} />
 						<FormInput.Label>Range</FormInput.Label>
 					</FormInput>

@@ -49,7 +49,7 @@ export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
 	const damageTypeState = applyLens(props, damageTypeLens);
 	return (
 		<div className="grid grid-cols-12 gap-x-1">
-			<FormInput className="col-span-5">
+			<FormInput className="col-span-5 self-end">
 				<FormInput.TextField {...damageState} />
 				<FormInput.Label>Damage Dice</FormInput.Label>
 			</FormInput>
