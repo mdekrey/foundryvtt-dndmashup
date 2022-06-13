@@ -115,13 +115,17 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						<FormInput.TextField value={keywords} onChange={(ev) => setKeywords(ev.currentTarget.value)} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-6">
+					<FormInput className="col-span-4">
 						<FormInput.AutoSelect document={item} field="data.actionType" options={actionTypeOptions} />
 						<FormInput.Label>Action Type</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-6">
+					<div className="col-span-8">
 						<TypeAndRange state={applyLens(documentState, typeAndRangeLens)} />
-						<FormInput.Label>Effect Type</FormInput.Label>
+					</div>
+
+					<FormInput className="col-span-12">
+						<FormInput.AutoTextField document={item} field="data.effect.target" />
+						<FormInput.Label>Target</FormInput.Label>
 					</FormInput>
 				</div>
 			</div>

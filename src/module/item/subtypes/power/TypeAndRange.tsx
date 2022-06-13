@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { FormInput, SelectItem } from 'src/components/form-input';
 import { ImmutableStateMutator, setWith } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
@@ -108,36 +109,65 @@ const areaWithinLens = areaLens.combine(Lens.fromProp('within'));
 
 export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableStateMutator<EffectTypeAndRange> }) {
 	return (
-		<div className="flex flex-row gap-1">
-			<FormInput.Select
-				className="flex-grow"
-				value={value?.type ?? 'personal'}
-				onChange={(ev) => changeType(ev.currentTarget.value as EffectTypeAndRange['type'])}
-				options={effectTypeOptions}
-			/>
+		<div
+			className={classNames('grid gap-1', {
+				'grid-cols-2': value?.type === 'melee' || value?.type === 'ranged',
+				'grid-cols-3': value?.type === 'close',
+				'grid-cols-5': value?.type === 'area',
+				'grid-cols-1': value?.type === undefined || value?.type === 'personal',
+			})}>
+			<FormInput>
+				<FormInput.Select
+					value={value?.type ?? 'personal'}
+					onChange={(ev) => changeType(ev.currentTarget.value as EffectTypeAndRange['type'])}
+					options={effectTypeOptions}
+				/>
+				<FormInput.Label>Effect Type</FormInput.Label>
+			</FormInput>
 			{value?.type === 'melee' ? (
 				<>
-					<FormInput.Select
-						value={value.range}
-						onChange={(ev) => changeMeleeRange(ev.currentTarget.value)}
-						options={meleeWeaponRangeOptions}
-					/>
+					<FormInput>
+						<FormInput.Select
+							value={value.range}
+							onChange={(ev) => changeMeleeRange(ev.currentTarget.value)}
+							options={meleeWeaponRangeOptions}
+						/>
+						<FormInput.Label>Range</FormInput.Label>
+					</FormInput>
 				</>
 			) : value?.type === 'ranged' ? (
 				<>
-					<FormInput.TextField value={value.range} onChange={(ev) => changeRangedRange(ev.currentTarget.value)} />
+					<FormInput>
+						<FormInput.TextField value={value.range} onChange={(ev) => changeRangedRange(ev.currentTarget.value)} />
+						<FormInput.Label>Range</FormInput.Label>
+					</FormInput>
 				</>
 			) : value?.type === 'close' ? (
 				<>
-					<FormInput.Select value={value.shape} onChange={changeText(closeShapeLens)} options={closeShapeOptions} />
-					<FormInput.TextField value={value.size} onChange={changeNumber(closeSizeLens)} />
+					<FormInput>
+						<FormInput.Select value={value.shape} onChange={changeText(closeShapeLens)} options={closeShapeOptions} />
+						<FormInput.Label>Shape</FormInput.Label>
+					</FormInput>
+					<FormInput>
+						<FormInput.TextField value={value.size} onChange={changeNumber(closeSizeLens)} />
+						<FormInput.Label>Size</FormInput.Label>
+					</FormInput>
 				</>
 			) : value?.type === 'area' ? (
 				<>
-					<FormInput.Select value={value.shape} onChange={changeText(areaShapeLens)} options={areaShapeOptions} />
-					<FormInput.TextField value={value.size} onChange={changeNumber(areaSizeLens)} />
-					within
-					<FormInput.TextField value={value.within} onChange={changeNumber(areaWithinLens)} />
+					<FormInput>
+						<FormInput.Select value={value.shape} onChange={changeText(areaShapeLens)} options={areaShapeOptions} />
+						<FormInput.Label>Shape</FormInput.Label>
+					</FormInput>
+					<FormInput>
+						<FormInput.TextField value={value.size} onChange={changeNumber(areaSizeLens)} />
+						<FormInput.Label>Size</FormInput.Label>
+					</FormInput>
+					<div>within</div>
+					<FormInput>
+						<FormInput.TextField value={value.within} onChange={changeNumber(areaWithinLens)} />
+						<FormInput.Label>Range</FormInput.Label>
+					</FormInput>
 				</>
 			) : (
 				<></>
