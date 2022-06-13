@@ -5,6 +5,7 @@ import { applyLens, documentAsState } from 'src/components/form-input/hooks/useD
 import { ImageEditor } from 'src/components/image-editor';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
+import { AttackEffectFields } from './AttackEffectFields';
 import { AttackRollFields } from './AttackRollFields';
 import { MashupPower } from './config';
 import { ActionType, EffectTypeAndRange, PowerUsage, PowerEffect, AttackEffect, AttackRoll } from './dataSourceData';
@@ -74,24 +75,59 @@ const typeAndRangeLens = Lens.from<SourceDataOf<MashupPower>, EffectTypeAndRange
 	}
 );
 
-const attackRollLens = Lens.from<SourceDataOf<MashupPower>, AttackRoll | undefined>(
-	(power) => power.data.effect.effects?.find((e): e is AttackEffect => e.type === 'attack')?.attackRoll,
+const attackEffectLens = Lens.from<SourceDataOf<MashupPower>, AttackEffect | null>(
+	(power) => power.data.effect.effects?.find((e): e is AttackEffect => e.type === 'attack') ?? null,
 	(mutator) => (draft) => {
 		draft.data.effect.effects ??= [];
-		const oldAttackRoll = draft.data.effect.effects.find(
-			(e): e is WritableDraft<AttackEffect> => e.type !== 'attack'
-		)?.attackRoll;
-		const newAttackRoll = mutator(oldAttackRoll);
-		if (!newAttackRoll) {
+		const attackIndex = draft.data.effect.effects.findIndex((e): e is Draft<AttackEffect> => e.type === 'attack');
+		const oldAttackEffect = (draft.data.effect.effects[attackIndex] as WritableDraft<AttackEffect> | undefined) ?? null;
+		const attackEffect = mutator(oldAttackEffect);
+		if (!attackEffect) {
 			draft.data.effect.effects = draft.data.effect.effects.filter((e) => e.type !== 'attack');
 			return;
 		}
-		const attackDraft = draft.data.effect.effects?.find((e): e is Draft<AttackEffect> => e.type === 'attack');
-		if (attackDraft === undefined) {
-			draft.data.effect.effects.unshift({ type: 'attack', attackRoll: newAttackRoll, hit: [], miss: [] });
+		if (attackIndex === -1) {
+			draft.data.effect.effects.unshift(attackEffect);
 		} else {
-			attackDraft.attackRoll = newAttackRoll;
+			draft.data.effect.effects[attackIndex] = attackEffect;
 		}
+	}
+);
+
+const attackRollLens = Lens.from<AttackEffect | null, AttackRoll | null>(
+	(attackEffect) => attackEffect?.attackRoll ?? null,
+	(mutator) => (draft) => {
+		const oldAttackRoll = draft?.attackRoll ?? null;
+		const newAttackRoll = mutator(oldAttackRoll);
+		if (!newAttackRoll) {
+			return null;
+		}
+		const attackEffect = draft;
+		if (attackEffect === null) {
+			return { type: 'attack', attackRoll: newAttackRoll, hit: [], miss: [] };
+		} else {
+			attackEffect.attackRoll = newAttackRoll;
+		}
+	}
+);
+
+const keywordsLens = Lens.from<SourceDataOf<MashupPower>, string>(
+	(power) => power.data.keywords.map((k) => k.capitalize()).join(', '),
+	(mutator) => (draft) => {
+		const keywords = mutator(draft.data.keywords.map((k) => k.capitalize()).join(', '));
+		draft.data.keywords = keywords
+			.split(',')
+			.map((k) => k.toLowerCase().trim())
+			.filter((v) => v.length > 0);
+	}
+);
+
+const attackEffectRequiredLens = Lens.from<AttackEffect | null, AttackEffect>(
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	(attackEffect) => attackEffect!,
+	(mutator) => (draft) => {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		return mutator(draft!);
 	}
 );
 
@@ -99,16 +135,8 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 	const documentState = documentAsState(item);
 	console.log(documentState.value);
 
-	const keywords = documentState.value.data.keywords.map((k) => k.capitalize()).join(', ');
-
-	function setKeywords(keywords: string) {
-		documentState.onChangeValue((draft) => {
-			draft.data.keywords = keywords
-				.split(',')
-				.map((k) => k.toLowerCase().trim())
-				.filter((v) => v.length > 0);
-		});
-	}
+	const keywordsState = applyLens(documentState, keywordsLens);
+	const attackEffectState = applyLens(documentState, attackEffectLens);
 
 	return (
 		<>
@@ -130,13 +158,13 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						</FormInput>
 					</div>
 				</div>
-				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end">
+				<div className="grid grid-cols-12 gap-x-1 items-end">
 					<FormInput className="col-span-6">
 						<FormInput.AutoSelect document={item} field="data.usage" options={usageOptions} />
 						<FormInput.Label>Usage</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6">
-						<FormInput.TextField value={keywords} onChange={(ev) => setKeywords(ev.currentTarget.value)} />
+						<FormInput.TextField {...keywordsState} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-4">
@@ -153,9 +181,22 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 					</FormInput>
 
 					<div className="col-span-12">
-						<AttackRollFields {...applyLens(documentState, attackRollLens)} />
+						<AttackRollFields {...applyLens(attackEffectState, attackRollLens)} />
 					</div>
+
+					<FormInput className="col-span-12">
+						<FormInput.AutoTextField document={item} field="data.requirement" />
+						<FormInput.Label>Requirement</FormInput.Label>
+					</FormInput>
+
+					<FormInput className="col-span-12">
+						<FormInput.AutoTextField document={item} field="data.prerequisite" />
+						<FormInput.Label>Prerequisite</FormInput.Label>
+					</FormInput>
 				</div>
+				{attackEffectState.value ? (
+					<AttackEffectFields {...applyLens(attackEffectState, attackEffectRequiredLens)} />
+				) : null}
 			</div>
 		</>
 	);

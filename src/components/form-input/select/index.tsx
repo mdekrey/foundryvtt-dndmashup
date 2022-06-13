@@ -9,23 +9,29 @@ export type SelectItem<TValue> = {
 };
 
 export function Select<TValue>({
+	value,
 	plain,
 	options,
 	onChangeValue,
 	...selectProps
 }: {
+	value: TValue;
 	plain?: boolean;
 	options: SelectItem<TValue>[];
 	onChangeValue?: ImmutableMutator<TValue>;
-} & JSX.IntrinsicElements['select']) {
+} & Omit<JSX.IntrinsicElements['select'], 'value'>) {
+	const currentEntry = options.find((k) => k.value === value) ?? options[0];
 	const onChangeProps = onChangeValue
 		? {
-				onChange: (ev: React.ChangeEvent<HTMLSelectElement>) =>
-					onChangeValue(() => options.find((k) => k.key === ev.currentTarget.value)?.value ?? options[0].value),
+				onChange(ev: React.ChangeEvent<HTMLSelectElement>) {
+					const newEntry = options.find((k) => k.key === ev.currentTarget.value);
+					const newValue = newEntry ? newEntry.value : options[0].value;
+					if (newEntry !== currentEntry) onChangeValue(() => newValue);
+				},
 		  }
 		: {};
 	const input = (
-		<select {...selectProps} {...onChangeProps}>
+		<select value={currentEntry.key} {...selectProps} {...onChangeProps}>
 			{options.map(({ key, label }) => (
 				<option key={key} value={key}>
 					{label}

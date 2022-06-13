@@ -1,5 +1,5 @@
 import { NoStringPath } from 'src/core/path-typings';
-import { Ability, Defense, TypedData } from 'src/types/types';
+import { Ability, DamageType, Defense, TypedData } from 'src/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
@@ -50,10 +50,23 @@ export type AttackEffect = {
 	miss: ApplicableEffect[];
 };
 
-export type AutoEffect = {
-	type: 'always';
+export type TextEffect = {
+	type: 'text';
 	text: string;
+};
+
+export type DamageEffect = {
+	type: 'damage';
 	damage: string;
+	damageType: DamageType;
+};
+
+export type HalfDamageEffect = {
+	type: 'half-damage';
+};
+
+export type HealingEffect = {
+	type: 'healing';
 	healing: string;
 	healingSurge: boolean;
 };
@@ -62,4 +75,5 @@ export type TargetEffect = {
 	type: 'target';
 } & PowerEffect;
 
-export type ApplicableEffect = NoStringPath & (AttackEffect | AutoEffect | TargetEffect);
+export type ApplicableEffect = NoStringPath &
+	(AttackEffect | DamageEffect | HalfDamageEffect | HealingEffect | TextEffect | TargetEffect);

@@ -17,11 +17,13 @@ export function NumberField({
 } & JSX.IntrinsicElements['input']) {
 	const onChangeProps = onChangeValue
 		? {
-				onChange: (ev: React.ChangeEvent<HTMLInputElement>) => onChangeValue(() => Number(ev.currentTarget.value)),
+				onChange(ev: React.ChangeEvent<HTMLInputElement>) {
+					if (Number(ev.currentTarget.value) !== value) onChangeValue(() => Number(ev.currentTarget.value));
+				},
 		  }
 		: {};
 
-	const input = <input type="number" {...useKeyValueWhenBlur(value, { onChange })} {...onChangeProps} {...props} />;
+	const input = <input type="number" {...useKeyValueWhenBlur(value, { onChange, ...onChangeProps })} {...props} />;
 
 	return plain ? input : <Field>{input}</Field>;
 }

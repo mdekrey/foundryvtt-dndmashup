@@ -4,7 +4,7 @@ import { Lens } from 'src/core/lens';
 import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
 import { AttackRoll } from './dataSourceData';
 
-const abilityLens = Lens.from<AttackRoll | undefined, Ability | ''>(
+const abilityLens = Lens.from<AttackRoll | null, Ability | ''>(
 	(attackRoll) => attackRoll?.attackAbility ?? '',
 	(mutator) => (draft) => {
 		const ability = mutator(draft?.attackAbility || '');
@@ -17,14 +17,14 @@ const abilityLens = Lens.from<AttackRoll | undefined, Ability | ''>(
 	}
 );
 
-const modifierLens = Lens.from<AttackRoll | undefined, number>(
+const modifierLens = Lens.from<AttackRoll | null, number>(
 	(attackRoll) => attackRoll?.attackModifier ?? 0,
 	(mutator) => (draft) => {
 		if (draft) draft.attackModifier = mutator(draft.attackModifier);
 	}
 );
 
-const defenseLens = Lens.from<AttackRoll | undefined, Defense>(
+const defenseLens = Lens.from<AttackRoll | null, Defense>(
 	(attackRoll) => attackRoll?.defense ?? 'ac',
 	(mutator) => (draft) => {
 		if (draft) draft.defense = mutator(draft.defense);
@@ -45,7 +45,7 @@ const defenseOptions = Defenses.map(
 	(ability): SelectItem<Defense> => ({ key: ability, value: ability, label: ability.toUpperCase() })
 );
 
-export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | undefined>) {
+export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>) {
 	const abilityState = applyLens(props, abilityLens);
 	// const { value: modifier, onChangeValue: setModifier } = applyLens({ value, onChangeValue: onChange }, modifierLens);
 
