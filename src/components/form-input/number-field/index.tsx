@@ -2,26 +2,26 @@ import { Field } from '../field';
 import { ImmutableMutator } from '../hooks/useDocumentAsState';
 import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
-export function TextField({
+export function NumberField({
 	value,
 	plain,
 	onChange,
 	onChangeValue,
 	...props
 }: {
-	value: string;
+	value: number;
 	plain?: boolean;
 	defaultValue?: never;
 	type?: never;
-	onChangeValue?: ImmutableMutator<string>;
+	onChangeValue?: ImmutableMutator<number>;
 } & JSX.IntrinsicElements['input']) {
 	const onChangeProps = onChangeValue
 		? {
-				onChange: (ev: React.ChangeEvent<HTMLInputElement>) => onChangeValue(() => ev.currentTarget.value),
+				onChange: (ev: React.ChangeEvent<HTMLInputElement>) => onChangeValue(() => Number(ev.currentTarget.value)),
 		  }
 		: {};
 
-	const input = <input type="text" {...useKeyValueWhenBlur(value, { onChange })} {...onChangeProps} {...props} />;
+	const input = <input type="number" {...useKeyValueWhenBlur(value, { onChange })} {...onChangeProps} {...props} />;
 
 	return plain ? input : <Field>{input}</Field>;
 }

@@ -22,7 +22,7 @@ export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' 
 export type PowerEffect = {
 	typeAndRange: EffectTypeAndRange;
 	target: string;
-	effect: ApplicableEffect[];
+	effects: ApplicableEffect[];
 };
 
 export type EffectTypeAndRange =

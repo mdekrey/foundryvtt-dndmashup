@@ -107,7 +107,7 @@ const areaShapeLens = areaLens.combine(Lens.fromProp('shape'));
 const areaSizeLens = areaLens.combine(Lens.fromProp('size'));
 const areaWithinLens = areaLens.combine(Lens.fromProp('within'));
 
-export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableStateMutator<EffectTypeAndRange> }) {
+export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateMutator<EffectTypeAndRange>) {
 	return (
 		<div
 			className={classNames('grid gap-1', {
@@ -138,7 +138,10 @@ export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableSta
 			) : value?.type === 'ranged' ? (
 				<>
 					<FormInput>
-						<FormInput.TextField value={value.range} onChange={(ev) => changeRangedRange(ev.currentTarget.value)} />
+						<FormInput.TextField
+							value={`${value.range}`}
+							onChange={(ev) => changeRangedRange(ev.currentTarget.value)}
+						/>
 						<FormInput.Label>Range</FormInput.Label>
 					</FormInput>
 				</>
@@ -149,7 +152,7 @@ export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableSta
 						<FormInput.Label>Shape</FormInput.Label>
 					</FormInput>
 					<FormInput>
-						<FormInput.TextField value={value.size} onChange={changeNumber(closeSizeLens)} />
+						<FormInput.TextField value={`${value.size}`} onChange={changeNumber(closeSizeLens)} />
 						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>
 				</>
@@ -160,12 +163,12 @@ export function TypeAndRange({ state: [value, setValue] }: { state: ImmutableSta
 						<FormInput.Label>Shape</FormInput.Label>
 					</FormInput>
 					<FormInput>
-						<FormInput.TextField value={value.size} onChange={changeNumber(areaSizeLens)} />
+						<FormInput.TextField value={`${value.size}`} onChange={changeNumber(areaSizeLens)} />
 						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>
 					<div>within</div>
 					<FormInput>
-						<FormInput.TextField value={value.within} onChange={changeNumber(areaWithinLens)} />
+						<FormInput.TextField value={`${value.within}`} onChange={changeNumber(areaWithinLens)} />
 						<FormInput.Label>Range</FormInput.Label>
 					</FormInput>
 				</>

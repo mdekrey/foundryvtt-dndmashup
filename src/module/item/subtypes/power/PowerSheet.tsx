@@ -1,10 +1,13 @@
+import { Draft } from 'immer';
+import { WritableDraft } from 'immer/dist/types/types-external';
 import { FormInput, SelectItem } from 'src/components/form-input';
-import { applyLens, useDocumentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { applyLens, documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 import { ImageEditor } from 'src/components/image-editor';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
+import { AttackRollFields } from './AttackRollFields';
 import { MashupPower } from './config';
-import { ActionType, EffectTypeAndRange, PowerUsage, PowerEffect } from './dataSourceData';
+import { ActionType, EffectTypeAndRange, PowerUsage, PowerEffect, AttackEffect, AttackRoll } from './dataSourceData';
 import { TypeAndRange } from './TypeAndRange';
 
 const usageOptions: SelectItem<PowerUsage>[] = [
@@ -71,14 +74,35 @@ const typeAndRangeLens = Lens.from<SourceDataOf<MashupPower>, EffectTypeAndRange
 	}
 );
 
-export function PowerSheet({ item }: { item: MashupPower }) {
-	const documentState = useDocumentAsState(item);
-	console.log(documentState[0]);
+const attackRollLens = Lens.from<SourceDataOf<MashupPower>, AttackRoll | undefined>(
+	(power) => power.data.effect.effects?.find((e): e is AttackEffect => e.type === 'attack')?.attackRoll,
+	(mutator) => (draft) => {
+		draft.data.effect.effects ??= [];
+		const oldAttackRoll = draft.data.effect.effects.find(
+			(e): e is WritableDraft<AttackEffect> => e.type !== 'attack'
+		)?.attackRoll;
+		const newAttackRoll = mutator(oldAttackRoll);
+		if (!newAttackRoll) {
+			draft.data.effect.effects = draft.data.effect.effects.filter((e) => e.type !== 'attack');
+			return;
+		}
+		const attackDraft = draft.data.effect.effects?.find((e): e is Draft<AttackEffect> => e.type === 'attack');
+		if (attackDraft === undefined) {
+			draft.data.effect.effects.unshift({ type: 'attack', attackRoll: newAttackRoll, hit: [], miss: [] });
+		} else {
+			attackDraft.attackRoll = newAttackRoll;
+		}
+	}
+);
 
-	const keywords = documentState[0].data.keywords.map((k) => k.capitalize()).join(', ');
+export function PowerSheet({ item }: { item: MashupPower }) {
+	const documentState = documentAsState(item);
+	console.log(documentState.value);
+
+	const keywords = documentState.value.data.keywords.map((k) => k.capitalize()).join(', ');
 
 	function setKeywords(keywords: string) {
-		documentState[1]((draft) => {
+		documentState.onChangeValue((draft) => {
 			draft.data.keywords = keywords
 				.split(',')
 				.map((k) => k.toLowerCase().trim())
@@ -120,13 +144,17 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						<FormInput.Label>Action Type</FormInput.Label>
 					</FormInput>
 					<div className="col-span-8">
-						<TypeAndRange state={applyLens(documentState, typeAndRangeLens)} />
+						<TypeAndRange {...applyLens(documentState, typeAndRangeLens)} />
 					</div>
 
 					<FormInput className="col-span-12">
 						<FormInput.AutoTextField document={item} field="data.effect.target" />
 						<FormInput.Label>Target</FormInput.Label>
 					</FormInput>
+
+					<div className="col-span-12">
+						<AttackRollFields {...applyLens(documentState, attackRollLens)} />
+					</div>
 				</div>
 			</div>
 		</>
