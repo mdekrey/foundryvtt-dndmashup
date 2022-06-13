@@ -8,7 +8,7 @@ import {
 	CloseEffectTypeAndRange,
 	EffectTypeAndRange,
 	MeleeEffectTypeAndRange,
-} from './dataSourceData';
+} from '../dataSourceData';
 
 const effectTypeOptions: SelectItem<EffectTypeAndRange['type']>[] = [
 	{

@@ -5,11 +5,11 @@ import { applyLens, documentAsState } from 'src/components/form-input/hooks/useD
 import { ImageEditor } from 'src/components/image-editor';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
-import { AttackEffectFields } from './AttackEffectFields';
-import { AttackRollFields } from './AttackRollFields';
+import { AttackEffectFields } from './components/AttackEffectFields';
+import { AttackRollFields } from './components/AttackRollFields';
 import { MashupPower } from './config';
 import { ActionType, EffectTypeAndRange, PowerUsage, PowerEffect, AttackEffect, AttackRoll } from './dataSourceData';
-import { TypeAndRange } from './TypeAndRange';
+import { TypeAndRange } from './components/TypeAndRange';
 
 const usageOptions: SelectItem<PowerUsage>[] = [
 	{
@@ -132,7 +132,7 @@ const attackEffectRequiredLens = Lens.from<AttackEffect | null, AttackEffect>(
 );
 
 export function PowerSheet({ item }: { item: MashupPower }) {
-	const documentState = documentAsState(item);
+	const documentState = documentAsState(item, { deleteData: true });
 	console.log(documentState.value);
 
 	const keywordsState = applyLens(documentState, keywordsLens);

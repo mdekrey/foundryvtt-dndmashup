@@ -46,7 +46,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					</FormInput>
 					<p className="col-span-12">
 						<label>
-							<FormInput.Checkbox field="data.container" document={item} />
+							<FormInput.AutoCheckbox field="data.container" document={item} />
 							Is Container?
 						</label>
 					</p>

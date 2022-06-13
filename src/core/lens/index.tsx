@@ -4,7 +4,10 @@ export type ImmerMutator<T> = (draft: Draft<T>) => T | undefined | void;
 export type Mutator<T> = (draft: Draft<T>) => T | Draft<T>;
 
 function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
-	return (draft) => m(draft) ?? draft;
+	return (draft) => {
+		const result = m(draft);
+		return result === undefined ? draft : result;
+	};
 }
 
 export class Lens<TSource, TValue> {

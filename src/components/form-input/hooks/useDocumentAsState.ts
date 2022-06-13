@@ -1,4 +1,4 @@
-import produce from 'immer';
+import produce, { Draft } from 'immer';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { ImmerMutator, Lens } from 'src/core/lens';
 
@@ -8,12 +8,18 @@ export type ImmutableMutator<T> = (mutator: ImmerMutator<T>, config?: Partial<Im
 export type ImmutableStateMutator<T> = { value: T; onChangeValue: ImmutableMutator<T> };
 
 export function documentAsState<TDocument extends AnyDocument>(
-	document: TDocument
+	document: TDocument,
+	options: Partial<ImmutableMutatorOptions> = {}
 ): ImmutableStateMutator<SourceDataOf<TDocument>> {
 	return {
 		value: document.data._source,
-		onChangeValue: (mutator, { deleteData = true } = {}) => {
-			const result = produce(document.data._source, mutator);
+		onChangeValue: (mutator, options2 = {}) => {
+			const { deleteData = true } = { ...options, ...options2 };
+			const result = produce(document.data._source, (draft: Draft<SourceDataOf<TDocument>>) => {
+				delete (draft as any)._id;
+				return mutator(draft);
+			});
+			console.log(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 			document.update(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 		},
 	};

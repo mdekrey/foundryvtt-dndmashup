@@ -2,7 +2,7 @@ import { FormInput, SelectItem } from 'src/components/form-input';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
 import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
-import { AttackRoll } from './dataSourceData';
+import { AttackRoll } from '../dataSourceData';
 
 const abilityLens = Lens.from<AttackRoll | null, Ability | ''>(
 	(attackRoll) => attackRoll?.attackAbility ?? '',

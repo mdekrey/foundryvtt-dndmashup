@@ -2,7 +2,7 @@ import { AnyDocument, SourceDataOf } from 'src/core/foundry';
 import { PathName, getFieldValue } from 'src/core/path-typings';
 import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
-export function Checkbox<TDocument extends AnyDocument>({
+export function AutoCheckbox<TDocument extends AnyDocument>({
 	document,
 	field,
 	...checkboxProps

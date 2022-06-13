@@ -10,7 +10,7 @@ export function ActionPoints({ actor }: { actor: SpecificActor }) {
 				<FormInput.Label>Current</FormInput.Label>
 			</FormInput>
 			<FormInput className="mt-2">
-				<FormInput.Checkbox document={actor} field="data.actionPoints.usedThisEncounter" />
+				<FormInput.AutoCheckbox document={actor} field="data.actionPoints.usedThisEncounter" />
 				Used
 			</FormInput>
 		</>
