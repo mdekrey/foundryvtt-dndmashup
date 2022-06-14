@@ -54,27 +54,43 @@ const hitTextLens = Lens.from<AttackEffect, string>(
 	}
 );
 
+const missTextLens = Lens.from<AttackEffect, string>(
+	(e) => e.miss.find((h): h is TextEffect => h.type === 'text')?.text ?? '',
+	(mutator) => (draft) => {
+		const textDraft = draft.miss.find((h): h is TextEffect => h.type === 'text');
+		const text = mutator(textDraft?.text ?? '');
+		if (textDraft && text) textDraft.text = text;
+		else if (!text) draft.miss = draft.miss.filter((h) => h.type !== 'text');
+		else draft.miss.push({ type: 'text', text });
+	}
+);
+
 export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
 	const hitTextState = applyLens(props, hitTextLens);
 	const hitDamageEffectState = applyLens(props, hitDamageEffectLens);
+	const missTextState = applyLens(props, missTextLens);
 	return (
 		<>
 			<DamageFields {...hitDamageEffectState} />
-			<div className="grid grid-cols-12 gap-x-1">
-				<FormInput className="col-span-12">
-					<FormInput.TextField {...hitTextState} />
-					<FormInput.Label>Hit</FormInput.Label>
-				</FormInput>
-			</div>
+			<FormInput>
+				<FormInput.TextField {...hitTextState} />
+				<FormInput.Label>Hit</FormInput.Label>
+			</FormInput>
 			{hitDamageEffectState.value ? (
 				<>
 					<FormInput>
-						{/* <FormInput.Checkbox {...applyLens(props, missHalfDamageEffectLens)} />  */} Half Damage on Miss?
+						<FormInput.Checkbox {...applyLens(props, missHalfDamageEffectLens)} /> Half Damage on Miss?
 					</FormInput>
 				</>
 			) : (
 				<DamageFields prefix="Miss" {...applyLens(props, missDamageEffectLens)} />
 			)}
+			{hitTextState.value ? (
+				<FormInput>
+					<FormInput.TextField {...missTextState} />
+					<FormInput.Label>Miss</FormInput.Label>
+				</FormInput>
+			) : null}
 		</>
 	);
 }

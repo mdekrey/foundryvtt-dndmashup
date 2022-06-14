@@ -10,6 +10,7 @@ import { RichText } from './rich-text';
 import { Select } from './select';
 import { TextField } from './text-field';
 import { NumberField } from './number-field';
+import { Checkbox } from './checkbox';
 
 export const FormInput = Object.assign(Container, {
 	AutoTextField,
@@ -23,5 +24,6 @@ export const FormInput = Object.assign(Container, {
 	Select,
 	TextField,
 	NumberField,
+	Checkbox,
 });
 export { SelectItem } from './auto-select';

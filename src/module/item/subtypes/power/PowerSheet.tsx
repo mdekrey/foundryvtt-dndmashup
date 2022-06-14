@@ -8,7 +8,16 @@ import { Lens } from 'src/core/lens';
 import { AttackEffectFields } from './components/AttackEffectFields';
 import { AttackRollFields } from './components/AttackRollFields';
 import { MashupPower } from './config';
-import { ActionType, EffectTypeAndRange, PowerUsage, PowerEffect, AttackEffect, AttackRoll } from './dataSourceData';
+import {
+	ActionType,
+	EffectTypeAndRange,
+	PowerUsage,
+	PowerEffect,
+	AttackEffect,
+	AttackRoll,
+	PowerDataSourceData,
+	TextEffect,
+} from './dataSourceData';
 import { TypeAndRange } from './components/TypeAndRange';
 
 const usageOptions: SelectItem<PowerUsage>[] = [
@@ -67,29 +76,44 @@ const actionTypeOptions: SelectItem<ActionType>[] = [
 	},
 ];
 
-const typeAndRangeLens = Lens.from<SourceDataOf<MashupPower>, EffectTypeAndRange>(
-	(power) => power.data.effect?.typeAndRange,
+const powerSourceDataLens = Lens.from<SourceDataOf<MashupPower>, PowerDataSourceData>(
+	(power) => power.data,
 	(mutator) => (power) => {
-		power.data.effect ??= {} as PowerEffect;
-		power.data.effect.typeAndRange = mutator(power.data.effect.typeAndRange);
+		power.data = mutator(power.data);
 	}
 );
 
-const attackEffectLens = Lens.from<SourceDataOf<MashupPower>, AttackEffect | null>(
-	(power) => power.data.effect.effects?.find((e): e is AttackEffect => e.type === 'attack') ?? null,
+const powerEffectLens = powerSourceDataLens.to<PowerEffect>(
+	(data) => data.effect,
+	(mutator) => (data) => {
+		data.effect = mutator(
+			data.effect ?? { typeAndRange: { type: 'melee', range: 'weapon' }, target: 'One creature', effects: [] }
+		);
+	}
+);
+
+const typeAndRangeLens = powerEffectLens.to<EffectTypeAndRange>(
+	(power) => power.typeAndRange,
+	(mutator) => (power) => {
+		power.typeAndRange = mutator(power.typeAndRange);
+	}
+);
+
+const attackEffectLens = powerEffectLens.to<AttackEffect | null>(
+	(power) => power.effects?.find((e): e is AttackEffect => e.type === 'attack') ?? null,
 	(mutator) => (draft) => {
-		draft.data.effect.effects ??= [];
-		const attackIndex = draft.data.effect.effects.findIndex((e): e is Draft<AttackEffect> => e.type === 'attack');
-		const oldAttackEffect = (draft.data.effect.effects[attackIndex] as WritableDraft<AttackEffect> | undefined) ?? null;
+		draft.effects ??= [];
+		const attackIndex = draft.effects.findIndex((e): e is Draft<AttackEffect> => e.type === 'attack');
+		const oldAttackEffect = (draft.effects[attackIndex] as WritableDraft<AttackEffect> | undefined) ?? null;
 		const attackEffect = mutator(oldAttackEffect);
 		if (!attackEffect) {
-			draft.data.effect.effects = draft.data.effect.effects.filter((e) => e.type !== 'attack');
+			draft.effects = draft.effects.filter((e) => e.type !== 'attack');
 			return;
 		}
 		if (attackIndex === -1) {
-			draft.data.effect.effects.unshift(attackEffect);
+			draft.effects.unshift(attackEffect);
 		} else {
-			draft.data.effect.effects[attackIndex] = attackEffect;
+			draft.effects[attackIndex] = attackEffect;
 		}
 	}
 );
@@ -131,12 +155,24 @@ const attackEffectRequiredLens = Lens.from<AttackEffect | null, AttackEffect>(
 	}
 );
 
+const effectTextLens = powerEffectLens.to<string>(
+	(e) => e.effects.find((h): h is TextEffect => h.type === 'text')?.text ?? '',
+	(mutator) => (draft) => {
+		const textDraft = draft.effects.find((h): h is TextEffect => h.type === 'text');
+		const text = mutator(textDraft?.text ?? '');
+		if (textDraft && text) textDraft.text = text;
+		else if (!text) draft.effects = draft.effects.filter((h) => h.type !== 'text');
+		else draft.effects.push({ type: 'text', text });
+	}
+);
+
 export function PowerSheet({ item }: { item: MashupPower }) {
 	const documentState = documentAsState(item, { deleteData: true });
 	console.log(documentState.value);
 
 	const keywordsState = applyLens(documentState, keywordsLens);
 	const attackEffectState = applyLens(documentState, attackEffectLens);
+	const effectTextState = applyLens(documentState, effectTextLens);
 
 	return (
 		<>
@@ -197,6 +233,10 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 				{attackEffectState.value ? (
 					<AttackEffectFields {...applyLens(attackEffectState, attackEffectRequiredLens)} />
 				) : null}
+				<FormInput>
+					<FormInput.TextField {...effectTextState} />
+					<FormInput.Label>Effect</FormInput.Label>
+				</FormInput>
 			</div>
 		</>
 	);

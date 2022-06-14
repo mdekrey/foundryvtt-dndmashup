@@ -36,6 +36,13 @@ export class Lens<TSource, TValue> {
 		return new Lens<TSource, TFinalValue>((source) => second.getValue(this.getValue(source)), produce);
 	}
 
+	to<TFinalValue>(
+		getValue: Lens<TValue, TFinalValue>['getValue'],
+		setValue: (mutator: Mutator<TFinalValue>) => ImmerMutator<TValue>
+	): Lens<TSource, TFinalValue> {
+		return this.combine(Lens.from<TValue, TFinalValue>(getValue, setValue));
+	}
+
 	static from<TSource, TValue>(
 		getValue: Lens<TSource, TValue>['getValue'],
 		setValue: (mutator: Mutator<TValue>) => ImmerMutator<TSource>
