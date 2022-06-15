@@ -16,7 +16,9 @@ import {
 	keywordsLens,
 	powerEffectLens,
 	secondaryAttackLens,
+	secondaryTargetLens,
 	typeAndRangeLens,
+	targetTextLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 
@@ -27,6 +29,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 	const keywordsState = applyLens(documentState, keywordsLens);
 	const attackEffectState = applyLens(documentState, attackEffectLens);
 	const effectTextState = applyLens(documentState, effectTextLens);
+	const secondaryTargetState = applyLens(documentState, powerEffectLens.combine(secondaryTargetLens));
 	const secondaryAttackState = applyLens(documentState, powerEffectLens.combine(secondaryAttackLens));
 
 	return (
@@ -94,13 +97,18 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 				) : null}
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': effectTextState.value,
+						'opacity-50 focus-within:opacity-100': !effectTextState.value,
 					})}>
 					<FormInput.TextField {...effectTextState} />
 					<FormInput.Label>Effect</FormInput.Label>
 				</FormInput>
 				{canHaveSecondaryAttack(item.data.data.effect) ? (
 					<>
+						<FormInput>
+							<FormInput.TextField {...applyLens(secondaryTargetState, targetTextLens)} />
+							<FormInput.Label>Secondary Target</FormInput.Label>
+						</FormInput>
+
 						<AttackRollFields {...applyLens(secondaryAttackState, attackRollLens)} />
 						{secondaryAttackState.value ? (
 							<AttackEffectFields {...applyLens(secondaryAttackState, attackEffectRequiredLens)} />

@@ -226,17 +226,34 @@ export const secondaryTargetLens = Lens.from<PowerEffect, TargetEffect | null>(
 		if (!info) return;
 		const oldTarget = info.targetIndex === null ? null : (info.targetContainer[info.targetIndex] as TargetEffect);
 		const newTarget = mutator(oldTarget);
+		console.log({ info, oldTarget, newTarget });
 		if (newTarget && info.targetIndex !== null) {
 			info.targetContainer[info.targetIndex] = newTarget;
 		} else if (newTarget && !oldTarget && info.attackIndex !== null) {
 			const attack = info.attackContainer[info.attackIndex] as AttackEffect;
 			info.attackContainer.splice(info.attackIndex, 1);
 			newTarget.effects.push(attack);
+			info.targetContainer.push(newTarget);
 		} else if (!newTarget && info.targetIndex !== null && info.attackIndex !== null) {
 			const attack = info.attackContainer[info.attackIndex] as AttackEffect;
 			info.targetContainer[info.targetIndex] = attack;
 		} else if (!newTarget && info.targetIndex !== null) {
 			info.targetContainer.splice(info.targetIndex, 1);
+		}
+	}
+);
+
+export const targetTextLens = Lens.from<TargetEffect | null, string>(
+	(targetEffect) => {
+		return targetEffect?.target ?? '';
+	},
+	(mutator) => (targetEffect) => {
+		const target = mutator(targetEffect?.target ?? '');
+		if (!target) return null;
+		if (targetEffect) {
+			targetEffect.target = target;
+		} else {
+			return { effects: [], target, type: 'target', typeAndRange: { type: 'same-as-primary' } };
 		}
 	}
 );

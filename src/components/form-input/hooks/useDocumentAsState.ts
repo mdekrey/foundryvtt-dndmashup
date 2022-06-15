@@ -19,7 +19,6 @@ export function documentAsState<TDocument extends AnyDocument>(
 				delete (draft as any)._id;
 				return mutator(draft);
 			});
-			console.log(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 			document.update(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 		},
 	};

@@ -195,6 +195,9 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 			case 'personal':
 				setValue(() => ({ type }), { deleteData: true });
 				return;
+			case 'same-as-primary':
+				setValue(() => ({ type }), { deleteData: true });
+				return;
 			default:
 				setValue(neverEver(type));
 		}

@@ -30,12 +30,14 @@ export type EffectTypeAndRange =
 	| RangedEffectTypeAndRange
 	| CloseEffectTypeAndRange
 	| AreaEffectTypeAndRange
-	| PersonalEffectTypeAndRange;
+	| PersonalEffectTypeAndRange
+	| PrimaryEffectTypeAndRange;
 export type MeleeEffectTypeAndRange = { type: 'melee'; range: 'weapon' | 1 | 'touch' };
 export type RangedEffectTypeAndRange = { type: 'ranged'; range: 'weapon' | number | 'sight' };
 export type CloseEffectTypeAndRange = { type: 'close'; shape: 'burst' | 'blast'; size: number };
 export type AreaEffectTypeAndRange = { type: 'area'; shape: 'burst' | 'wall'; size: number; within: number };
 export type PersonalEffectTypeAndRange = { type: 'personal' };
+export type PrimaryEffectTypeAndRange = { type: 'same-as-primary' };
 
 export type AttackRoll = {
 	attackAbility: Ability;
