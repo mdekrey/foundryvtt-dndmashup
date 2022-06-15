@@ -3,6 +3,7 @@ import { Lens } from 'src/core/lens';
 import { DamageTypes, DamageType } from 'src/types/types';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { DamageEffect } from '../dataSourceData';
+import classNames from 'classnames';
 
 const damageTypeOptions = DamageTypes.map(
 	(dt): SelectItem<DamageType> => ({
@@ -25,6 +26,9 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 export const damageTypeLens = Lens.from<DamageEffect | null, DamageType>(
 	(e) => e?.damageType ?? 'normal',
 	(mutator) => (damageDraft) => {
+		if (!damageDraft || damageDraft.damage === '') {
+			return;
+		}
 		const damageType = mutator(damageDraft?.damageType ?? 'normal');
 		if (damageDraft) damageDraft.damageType = damageType;
 		else return { type: 'damage', damage: '1[W]', damageType };
@@ -40,17 +44,11 @@ export function DamageFields({ prefix, ...props }: { prefix?: string } & Immutab
 				<FormInput.TextField {...damageState} />
 				<FormInput.Label>{prefix} Damage Dice</FormInput.Label>
 			</FormInput>
-			{damageState.value ? (
-				<>
-					<FormInput className="col-span-5">
-						<FormInput.Select {...damageTypeState} options={damageTypeOptions} />
-						<FormInput.Label>Damage Type</FormInput.Label>
-					</FormInput>
-					<div className="col-span-2">damage</div>
-				</>
-			) : (
-				<></>
-			)}
+			<FormInput className={classNames('col-span-5', { 'opacity-50': !damageState.value })}>
+				<FormInput.Select {...damageTypeState} options={damageTypeOptions} />
+				<FormInput.Label>Damage Type</FormInput.Label>
+			</FormInput>
+			<div className={classNames('col-span-2', { 'opacity-50': !damageState.value })}>damage</div>
 		</div>
 	);
 }

@@ -19,6 +19,10 @@ export class Lens<TSource, TValue> {
 		}
 	) {}
 
+	getDraft(source: Draft<TSource>): Draft<TValue> {
+		return this.getValue(source as never) as Draft<TValue>;
+	}
+
 	combine<TFinalValue>(second: Lens<TValue, TFinalValue>): Lens<TSource, TFinalValue> {
 		const thisProduce = this.produce;
 		function produce(source: Draft<TSource>, mutator: ImmerMutator<TFinalValue>): void;

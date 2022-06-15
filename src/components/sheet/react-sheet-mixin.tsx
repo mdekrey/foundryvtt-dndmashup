@@ -34,6 +34,7 @@ export const ReactSheetMixin = <T extends ConstructorOf<DocumentSheet<any, any, 
 		override async close(options?: FormApplication.CloseOptions): Promise<void> {
 			await super.close(options);
 			this.form = null;
+			this.root?.unmount();
 			this.root = null;
 		}
 	} as never;

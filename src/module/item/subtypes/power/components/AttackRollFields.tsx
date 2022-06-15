@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import { FormInput, SelectItem } from 'src/components/form-input';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
@@ -59,7 +60,10 @@ export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>
 				<></>
 			) : (
 				<>
-					<FormInput className="col-span-3 self-end">
+					<FormInput
+						className={classnames('col-span-3 self-end', {
+							'opacity-50 focus-within:opacity-100': props.value.attackModifier === 0,
+						})}>
 						<FormInput.NumberField {...applyLens(props, modifierLens)} />
 						<FormInput.Label>Mod</FormInput.Label>
 					</FormInput>

@@ -11,10 +11,14 @@ import {
 	attackEffectLens,
 	attackEffectRequiredLens,
 	attackRollLens,
+	canHaveSecondaryAttack,
 	effectTextLens,
 	keywordsLens,
+	powerEffectLens,
+	secondaryAttackLens,
 	typeAndRangeLens,
 } from './sheetLenses';
+import classNames from 'classnames';
 
 export function PowerSheet({ item }: { item: MashupPower }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -23,6 +27,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 	const keywordsState = applyLens(documentState, keywordsLens);
 	const attackEffectState = applyLens(documentState, attackEffectLens);
 	const effectTextState = applyLens(documentState, effectTextLens);
+	const secondaryAttackState = applyLens(documentState, powerEffectLens.combine(secondaryAttackLens));
 
 	return (
 		<>
@@ -60,33 +65,48 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 					<div className="col-span-8">
 						<TypeAndRange {...applyLens(documentState, typeAndRangeLens)} />
 					</div>
-
-					<FormInput className="col-span-12">
-						<FormInput.AutoTextField document={item} field="data.effect.target" />
-						<FormInput.Label>Target</FormInput.Label>
-					</FormInput>
-
-					<div className="col-span-12">
-						<AttackRollFields {...applyLens(attackEffectState, attackRollLens)} />
-					</div>
-
-					<FormInput className="col-span-12">
-						<FormInput.AutoTextField document={item} field="data.requirement" />
-						<FormInput.Label>Requirement</FormInput.Label>
-					</FormInput>
-
-					<FormInput className="col-span-12">
-						<FormInput.AutoTextField document={item} field="data.prerequisite" />
-						<FormInput.Label>Prerequisite</FormInput.Label>
-					</FormInput>
 				</div>
+
+				<FormInput>
+					<FormInput.AutoTextField document={item} field="data.effect.target" />
+					<FormInput.Label>Target</FormInput.Label>
+				</FormInput>
+
+				<AttackRollFields {...applyLens(attackEffectState, attackRollLens)} />
+
+				<FormInput
+					className={classNames({
+						'opacity-50 focus-within:opacity-100': item.data.data.requirement,
+					})}>
+					<FormInput.AutoTextField document={item} field="data.requirement" />
+					<FormInput.Label>Requirement</FormInput.Label>
+				</FormInput>
+
+				<FormInput
+					className={classNames({
+						'opacity-50 focus-within:opacity-100': item.data.data.prerequisite,
+					})}>
+					<FormInput.AutoTextField document={item} field="data.prerequisite" />
+					<FormInput.Label>Prerequisite</FormInput.Label>
+				</FormInput>
 				{attackEffectState.value ? (
 					<AttackEffectFields {...applyLens(attackEffectState, attackEffectRequiredLens)} />
 				) : null}
-				<FormInput>
+				<FormInput
+					className={classNames({
+						'opacity-50 focus-within:opacity-100': effectTextState.value,
+					})}>
 					<FormInput.TextField {...effectTextState} />
 					<FormInput.Label>Effect</FormInput.Label>
 				</FormInput>
+				{canHaveSecondaryAttack(item.data.data.effect) ? (
+					<>
+						<AttackRollFields {...applyLens(secondaryAttackState, attackRollLens)} />
+						{secondaryAttackState.value ? (
+							<AttackEffectFields {...applyLens(secondaryAttackState, attackEffectRequiredLens)} />
+						) : null}
+					</>
+				) : null}
 			</div>
 		</>
 	);
