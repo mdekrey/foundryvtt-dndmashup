@@ -243,6 +243,27 @@ export const secondaryTargetLens = Lens.from<PowerEffect, TargetEffect | null>(
 	}
 );
 
+export const secondaryAttackLens = Lens.from<PowerEffect, AttackEffect | null>(
+	(power) => {
+		const additionalAttackInfo = findAdditionalAttack(power, 1);
+		if (!additionalAttackInfo || additionalAttackInfo.attackIndex === null) return null;
+		return additionalAttackInfo.attackContainer[additionalAttackInfo.attackIndex] as AttackEffect;
+	},
+	(mutator) => (power) => {
+		const info = findAdditionalAttack(power, 1);
+		if (!info) return;
+		const oldAttack = info.attackIndex === null ? null : (info.attackContainer[info.attackIndex] as AttackEffect);
+		const newAttack = mutator(oldAttack);
+		if (newAttack && info.attackIndex !== null) {
+			info.attackContainer[info.attackIndex] = newAttack;
+		} else if (newAttack && info.attackIndex === null) {
+			info.attackContainer.push(newAttack);
+		} else if (!newAttack && info.attackIndex !== null) {
+			info.attackContainer.splice(info.attackIndex, 1);
+		}
+	}
+);
+
 export const targetTextLens = Lens.from<TargetEffect | null, string>(
 	(targetEffect) => {
 		return targetEffect?.target ?? '';
@@ -258,14 +279,46 @@ export const targetTextLens = Lens.from<TargetEffect | null, string>(
 	}
 );
 
-export const secondaryAttackLens = Lens.from<PowerEffect, AttackEffect | null>(
+export function canHaveTertiaryAttack(power: PowerEffect) {
+	return findAdditionalAttack(power, 2) !== null;
+}
+
+export const tertiaryTargetLens = Lens.from<PowerEffect, TargetEffect | null>(
 	(power) => {
-		const additionalAttackInfo = findAdditionalAttack(power, 1);
+		const info = findAdditionalAttack(power, 2);
+		if (!info || info.targetIndex === null) return null;
+		return info.targetContainer[info.targetIndex] as TargetEffect;
+	},
+	(mutator) => (power) => {
+		const info = findAdditionalAttack(power, 2);
+		if (!info) return;
+		const oldTarget = info.targetIndex === null ? null : (info.targetContainer[info.targetIndex] as TargetEffect);
+		const newTarget = mutator(oldTarget);
+		console.log({ info, oldTarget, newTarget });
+		if (newTarget && info.targetIndex !== null) {
+			info.targetContainer[info.targetIndex] = newTarget;
+		} else if (newTarget && !oldTarget && info.attackIndex !== null) {
+			const attack = info.attackContainer[info.attackIndex] as AttackEffect;
+			info.attackContainer.splice(info.attackIndex, 1);
+			newTarget.effects.push(attack);
+			info.targetContainer.push(newTarget);
+		} else if (!newTarget && info.targetIndex !== null && info.attackIndex !== null) {
+			const attack = info.attackContainer[info.attackIndex] as AttackEffect;
+			info.targetContainer[info.targetIndex] = attack;
+		} else if (!newTarget && info.targetIndex !== null) {
+			info.targetContainer.splice(info.targetIndex, 1);
+		}
+	}
+);
+
+export const tertiaryAttackLens = Lens.from<PowerEffect, AttackEffect | null>(
+	(power) => {
+		const additionalAttackInfo = findAdditionalAttack(power, 2);
 		if (!additionalAttackInfo || additionalAttackInfo.attackIndex === null) return null;
 		return additionalAttackInfo.attackContainer[additionalAttackInfo.attackIndex] as AttackEffect;
 	},
 	(mutator) => (power) => {
-		const info = findAdditionalAttack(power, 1);
+		const info = findAdditionalAttack(power, 2);
 		if (!info) return;
 		const oldAttack = info.attackIndex === null ? null : (info.attackContainer[info.attackIndex] as AttackEffect);
 		const newAttack = mutator(oldAttack);

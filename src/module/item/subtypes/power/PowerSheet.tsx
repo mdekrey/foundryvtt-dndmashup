@@ -19,6 +19,9 @@ import {
 	secondaryTargetLens,
 	typeAndRangeLens,
 	targetTextLens,
+	canHaveTertiaryAttack,
+	tertiaryTargetLens,
+	tertiaryAttackLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 
@@ -31,6 +34,8 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 	const effectTextState = applyLens(documentState, effectTextLens);
 	const secondaryTargetState = applyLens(documentState, powerEffectLens.combine(secondaryTargetLens));
 	const secondaryAttackState = applyLens(documentState, powerEffectLens.combine(secondaryAttackLens));
+	const tertiaryTargetState = applyLens(documentState, powerEffectLens.combine(tertiaryTargetLens));
+	const tertiaryAttackState = applyLens(documentState, powerEffectLens.combine(tertiaryAttackLens));
 
 	return (
 		<>
@@ -79,7 +84,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': item.data.data.requirement,
+						'opacity-50 focus-within:opacity-100': !item.data.data.requirement,
 					})}>
 					<FormInput.AutoTextField document={item} field="data.requirement" />
 					<FormInput.Label>Requirement</FormInput.Label>
@@ -87,7 +92,7 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': item.data.data.prerequisite,
+						'opacity-50 focus-within:opacity-100': !item.data.data.prerequisite,
 					})}>
 					<FormInput.AutoTextField document={item} field="data.prerequisite" />
 					<FormInput.Label>Prerequisite</FormInput.Label>
@@ -112,6 +117,19 @@ export function PowerSheet({ item }: { item: MashupPower }) {
 						<AttackRollFields {...applyLens(secondaryAttackState, attackRollLens)} />
 						{secondaryAttackState.value ? (
 							<AttackEffectFields {...applyLens(secondaryAttackState, attackEffectRequiredLens)} />
+						) : null}
+					</>
+				) : null}
+				{canHaveTertiaryAttack(item.data.data.effect) ? (
+					<>
+						<FormInput>
+							<FormInput.TextField {...applyLens(tertiaryTargetState, targetTextLens)} />
+							<FormInput.Label>Tertiary Target</FormInput.Label>
+						</FormInput>
+
+						<AttackRollFields {...applyLens(tertiaryAttackState, attackRollLens)} />
+						{tertiaryAttackState.value ? (
+							<AttackEffectFields {...applyLens(tertiaryAttackState, attackEffectRequiredLens)} />
 						) : null}
 					</>
 				) : null}
