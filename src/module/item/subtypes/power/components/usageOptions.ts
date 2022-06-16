@@ -1,5 +1,5 @@
 import { SelectItem } from 'src/components/form-input';
-import { PowerUsage } from './dataSourceData';
+import { PowerUsage } from '../dataSourceData';
 
 export const usageOptions: SelectItem<PowerUsage>[] = [
 	{

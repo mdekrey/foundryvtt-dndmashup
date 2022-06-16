@@ -1,5 +1,5 @@
 import { SelectItem } from 'src/components/form-input';
-import { ActionType } from './dataSourceData';
+import { ActionType } from '../dataSourceData';
 
 export const actionTypeOptions: SelectItem<ActionType>[] = [
 	{

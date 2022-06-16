@@ -2,7 +2,7 @@ import { Draft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
-import { MashupPower } from './config';
+import { MashupPower } from '../config';
 import {
 	EffectTypeAndRange,
 	PowerEffect,
@@ -12,7 +12,7 @@ import {
 	TextEffect,
 	ApplicableEffect,
 	TargetEffect,
-} from './dataSourceData';
+} from '../dataSourceData';
 
 const not =
 	<T extends U, U>(f: (e: U) => e is T) =>
