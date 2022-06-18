@@ -19,7 +19,7 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 
 export type PowerData = TypedData<'power', PowerDataSourceData>;
 
-export type PowerUsage = 'at-will' | 'encounter' | 'daily' | 'item' | 'other';
+export type PowerUsage = 'at-will' | 'encounter' | 'daily' | 'item' | 'other' | `recharge-${2 | 3 | 4 | 5 | 6}`;
 export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate';
 export type PowerEffect = {
 	/* TODO - multiple EffectTypeAndRange? */

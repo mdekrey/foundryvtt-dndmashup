@@ -30,7 +30,6 @@ const defenseOptions = Defenses.map(
 
 export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>) {
 	const abilityState = applyLens(props, abilityLens);
-	// const { value: modifier, onChangeValue: setModifier } = applyLens({ value, onChangeValue: onChange }, modifierLens);
 
 	return (
 		<div className="grid gap-1 grid-cols-12">

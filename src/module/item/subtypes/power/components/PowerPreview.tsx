@@ -7,6 +7,19 @@ import { ActionType, ApplicableEffect, AttackRoll, EffectTypeAndRange, PowerUsag
 import { neverEver } from 'src/core/neverEver';
 import { isAttackEffect, isTargetEffect, or } from './sheetLenses';
 import { Defense } from 'src/types/types';
+import {
+	MeleeIcon,
+	RangedIcon,
+	AreaIcon,
+	CloseIcon,
+	BasicMeleeIcon,
+	BasicRangedIcon,
+	D6_2Icon,
+	D6_3Icon,
+	D6_4Icon,
+	D6_5Icon,
+	D6_6Icon,
+} from './icons';
 
 export function PowerPreview({ item }: { item: MashupPower }) {
 	const { name, data: itemData } = item.data;
@@ -43,7 +56,7 @@ export function PowerPreview({ item }: { item: MashupPower }) {
 					<div>
 						<p className="font-bold">
 							{powerUsage(itemData.usage)}
-							{itemData.keywords.length ? <> ✦ {itemData.keywords.join(', ')}</> : null}
+							{itemData.keywords.length ? <> ✦ {itemData.keywords.map((k) => k.capitalize()).join(', ')}</> : null}
 						</p>
 						<div className="flex">
 							<p className="font-bold w-40">{actionType(itemData.actionType)}</p>
@@ -51,7 +64,7 @@ export function PowerPreview({ item }: { item: MashupPower }) {
 								<AttackTypeIcon
 									attackType={itemData.effect.typeAndRange.type}
 									isBasic={itemData.isBasic}
-									className="mt-1 h-4 align-top inline-block"
+									className="h-4 align-top inline-block"
 								/>{' '}
 								<span className="font-bold">{attackType(itemData.effect.typeAndRange.type)}</span>
 							</p>
@@ -147,6 +160,18 @@ export function FlavorText({ children, className, ...props }: JSX.IntrinsicEleme
 	);
 }
 
+const iconMapping: Record<string, typeof MeleeIcon | undefined> = {
+	melee: MeleeIcon,
+	ranged: RangedIcon,
+	close: CloseIcon,
+	area: AreaIcon,
+};
+
+const basicIconMapping: Record<string, typeof MeleeIcon | undefined> = {
+	melee: BasicMeleeIcon,
+	ranged: BasicRangedIcon,
+};
+
 function AttackTypeIcon({
 	attackType,
 	isBasic,
@@ -155,7 +180,9 @@ function AttackTypeIcon({
 	attackType: EffectTypeAndRange['type'];
 	isBasic?: boolean;
 } & JSX.IntrinsicElements['svg']) {
-	return null;
+	const Icon = (isBasic ? basicIconMapping[attackType || ''] : null) ?? iconMapping[attackType || ''];
+	if (!Icon) return null;
+	return <Icon {...props} />;
 }
 
 export function RulesText({
@@ -196,11 +223,56 @@ function powerUsage(usage: PowerUsage) {
 		case 'encounter':
 			return 'Encounter';
 		case 'daily':
-			return 'daily';
+			return 'Daily';
 		case 'item':
 			return '';
 		case 'other':
 			return '';
+		case 'recharge-2':
+			return (
+				<>
+					Recharge
+					<D6_2Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+				</>
+			);
+		case 'recharge-3':
+			return (
+				<>
+					Recharge
+					<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+				</>
+			);
+		case 'recharge-4':
+			return (
+				<>
+					Recharge
+					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+				</>
+			);
+		case 'recharge-5':
+			return (
+				<>
+					Recharge
+					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+				</>
+			);
+		case 'recharge-6':
+			return (
+				<>
+					Recharge
+					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+				</>
+			);
 		default:
 			return neverEver(usage);
 	}
