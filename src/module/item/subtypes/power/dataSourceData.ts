@@ -1,5 +1,5 @@
 import { NoStringPath } from 'src/core/path-typings';
-import { Ability, DamageType, Defense, TypedData } from 'src/types/types';
+import { DamageType, Defense, TypedData } from 'src/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
@@ -11,8 +11,10 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	effect: PowerEffect;
 	special: string;
 	displayOverride: string;
+	trigger?: string;
 	prerequisite?: string;
 	requirement?: string; // TODO: should this be a condition?
+	isBasic: boolean;
 };
 
 export type PowerData = TypedData<'power', PowerDataSourceData>;
@@ -20,6 +22,7 @@ export type PowerData = TypedData<'power', PowerDataSourceData>;
 export type PowerUsage = 'at-will' | 'encounter' | 'daily' | 'item' | 'other';
 export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate';
 export type PowerEffect = {
+	/* TODO - multiple EffectTypeAndRange? */
 	typeAndRange: EffectTypeAndRange;
 	target: string;
 	effects: ApplicableEffect[];
@@ -40,8 +43,7 @@ export type PersonalEffectTypeAndRange = { type: 'personal' };
 export type PrimaryEffectTypeAndRange = { type: 'same-as-primary' };
 
 export type AttackRoll = {
-	attackAbility: Ability;
-	attackModifier: number;
+	attack: string;
 	defense: Defense;
 };
 

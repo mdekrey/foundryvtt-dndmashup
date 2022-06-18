@@ -38,4 +38,5 @@ export function combinePath<TStart, TMiddle, TEnd>(
 	return `${path1}.${path2}` as PathName<TStart, TEnd>;
 }
 
-export type NoStringPath = { noStringPath?: never };
+const NoStringPathSymbol: unique symbol = Symbol();
+export type NoStringPath = { [NoStringPathSymbol]?: never };

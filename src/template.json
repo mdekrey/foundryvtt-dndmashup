@@ -157,7 +157,8 @@
 				"effects": []
 			},
 			"special": "",
-			"displayOverride": ""
+			"displayOverride": "",
+			"isBasic": false
 		}
 	}
 }

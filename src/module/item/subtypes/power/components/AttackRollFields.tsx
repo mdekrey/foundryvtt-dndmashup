@@ -1,27 +1,19 @@
-import classnames from 'classnames';
 import { FormInput, SelectItem } from 'src/components/form-input';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
-import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
+import { Defense, Defenses } from 'src/types/types';
 import { AttackRoll } from '../dataSourceData';
 
-const abilityLens = Lens.from<AttackRoll | null, Ability | ''>(
-	(attackRoll) => attackRoll?.attackAbility ?? '',
+const abilityLens = Lens.from<AttackRoll | null, string>(
+	(attackRoll) => attackRoll?.attack ?? '',
 	(mutator) => (draft) => {
-		const ability = mutator(draft?.attackAbility || '');
+		const attackRoll = mutator(draft?.attack || '');
 
-		if (ability !== '' && draft) {
-			draft.attackAbility = ability;
+		if (attackRoll !== '' && draft) {
+			draft.attack = attackRoll;
 		} else {
-			return ability === '' ? undefined : { attackAbility: ability, attackModifier: 0, defense: 'ac' };
+			return attackRoll === '' ? undefined : { attack: attackRoll, defense: 'ac' };
 		}
-	}
-);
-
-const modifierLens = Lens.from<AttackRoll | null, number>(
-	(attackRoll) => attackRoll?.attackModifier ?? 0,
-	(mutator) => (draft) => {
-		if (draft) draft.attackModifier = mutator(draft.attackModifier);
 	}
 );
 
@@ -30,16 +22,6 @@ const defenseLens = Lens.from<AttackRoll | null, Defense>(
 	(mutator) => (draft) => {
 		if (draft) draft.defense = mutator(draft.defense);
 	}
-);
-
-const abilityOptions = [
-	{
-		key: '',
-		value: '',
-		label: 'No Attack',
-	} as SelectItem<Ability | ''>,
-].concat(
-	Abilities.map((ability): SelectItem<Ability | ''> => ({ key: ability, value: ability, label: ability.toUpperCase() }))
 );
 
 const defenseOptions = Defenses.map(
@@ -53,21 +35,14 @@ export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>
 	return (
 		<div className="grid gap-1 grid-cols-12">
 			<FormInput className="col-span-3">
-				<FormInput.Select {...abilityState} options={abilityOptions} />
+				<FormInput.TextField {...abilityState} />
 				<FormInput.Label>Attack Ability</FormInput.Label>
 			</FormInput>
 			{!props.value ? (
 				<></>
 			) : (
 				<>
-					<FormInput
-						className={classnames('col-span-3 self-end', {
-							'opacity-50 focus-within:opacity-100': props.value.attackModifier === 0,
-						})}>
-						<FormInput.NumberField {...applyLens(props, modifierLens)} />
-						<FormInput.Label>Mod</FormInput.Label>
-					</FormInput>
-					<div>vs.</div>
+					<div className="justify-self-center">vs.</div>
 					<FormInput className="col-span-3">
 						<FormInput.Select {...applyLens(props, defenseLens)} options={defenseOptions} />
 						<FormInput.Label>Defense</FormInput.Label>

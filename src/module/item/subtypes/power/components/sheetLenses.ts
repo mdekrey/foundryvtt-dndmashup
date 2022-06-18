@@ -14,17 +14,18 @@ import {
 	TargetEffect,
 } from '../dataSourceData';
 
-const not =
+export const not =
 	<T extends U, U>(f: (e: U) => e is T) =>
 	(e: U): e is Exclude<T, U> =>
 		!f(e);
-const or =
+export const or =
 	<U, T extends U, S extends U>(f1: (e: U) => e is T, f2: (e: U) => e is S) =>
 	(e: U): e is T | S =>
 		f1(e) || f2(e);
-const isAttackEffect = (e: ApplicableEffect): e is AttackEffect => e.type === 'attack';
-const isTargetEffect = (e: ApplicableEffect): e is TargetEffect => e.type === 'target';
-const isTextEffect = (e: ApplicableEffect): e is TextEffect => e.type === 'text';
+export const isAttackEffect = (e: ApplicableEffect): e is AttackEffect => e.type === 'attack';
+export const isTargetEffect = (e: ApplicableEffect): e is TargetEffect => e.type === 'target';
+export const isTextEffect = (e: ApplicableEffect): e is TextEffect => e.type === 'text';
+export const isNull = (e: any): e is null => e === null;
 
 export const powerSourceDataLens = Lens.from<SourceDataOf<MashupPower>, PowerDataSourceData>(
 	(power) => power.data,
