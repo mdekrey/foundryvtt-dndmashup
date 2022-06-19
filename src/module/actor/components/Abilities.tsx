@@ -6,7 +6,7 @@ import { SpecificActor } from '../mashup-actor';
 export function Abilities({ actor }: { actor: SpecificActor }) {
 	return (
 		<>
-			<div className="grid grid-cols-3 gap-1 items-center justify-items-center">
+			<div className="grid grid-cols-3 gap-1 items-center justify-items-center w-32">
 				<h2 className="text-lg col-span-3">Abilities</h2>
 				{abilities.map((ability) => (
 					<Fragment key={ability}>
