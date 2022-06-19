@@ -25,6 +25,9 @@ Hooks.once('init', async () => {
 
 	// Register custom sheets (if any)
 	registerCustomSheets();
+
+	// Set an id so styles work better
+	document.body.setAttribute('id', 'foundry-tailwind-hack');
 });
 
 // Setup system

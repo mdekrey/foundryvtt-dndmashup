@@ -7,20 +7,22 @@ export function ItemTable<T extends MashupItemBase>({
 	items,
 	header: TableHeader,
 	body: TableBody,
+	className,
 }: {
 	title: string;
 	items: T[];
 	header?: React.FC;
 	body?: React.FC<{ item: T }>;
+	className?: string;
 }) {
 	return (
-		<table className="w-full border-collapse">
+		<table className={classNames('w-full border-collapse', className)}>
 			<thead className="bg-theme text-white">
 				<tr>
-					<th className="w-8" />
-					<th className="pl-2 text-left">{title} Name</th>
+					<th className="py-1 w-10" />
+					<th className="py-1 pl-1 text-left">{title} Name</th>
 					{TableHeader && <TableHeader />}
-					<th className="w-16" />
+					<th className="py-1 w-16" />
 				</tr>
 			</thead>
 			<tbody>
@@ -32,10 +34,10 @@ export function ItemTable<T extends MashupItemBase>({
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 								'border-b-2 border-transparent'
 							)}>
-							<td className="w-8">
-								{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block mr-1" /> : null}
+							<td className="w-10 h-10 p-1">
+								{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
 							</td>
-							<td className="pl-2">{item.name}</td>
+							<td className="pl-1">{item.name}</td>
 							{TableBody && <TableBody item={item} />}
 							<td className="text-right w-16">
 								<IconButton title="Edit" onClick={edit(item)} iconClassName="fas fa-edit" />

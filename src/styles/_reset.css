@@ -106,6 +106,12 @@
 		background: initial;
 	}
 
+	table td,
+	table th,
+	table td:first-child {
+		padding: 0;
+	}
+
 	/*
   1. Change the font styles in all browsers.
   2. Remove the margin in Firefox and Safari.

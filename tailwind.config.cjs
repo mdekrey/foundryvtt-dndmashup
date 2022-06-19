@@ -109,7 +109,7 @@ module.exports = {
 	corePlugins: {
 		preflight: false,
 	},
-	important: '.foundry-reset.dndmashup',
+	important: '#foundry-tailwind-hack .foundry-reset.dndmashup',
 };
 
 const generateColors = (e, themeColors, prefix, styleGenerator) =>

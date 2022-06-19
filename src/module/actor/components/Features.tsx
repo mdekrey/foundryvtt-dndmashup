@@ -48,7 +48,9 @@ const features: {
 ];
 
 export function Features({ actor }: { actor: SpecificActor }) {
-	const nonEquipment = actor.items.contents.filter((i) => i.type !== 'equipment');
+	const nonEquipment = actor.items.contents.filter(
+		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.data.data.featureType !== 'feat')
+	);
 	const groups = features
 		.map(({ filter, ...others }) => ({
 			...others,
