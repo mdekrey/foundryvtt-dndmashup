@@ -25,22 +25,13 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 );
 export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 	(e) => {
-		const damageType = (e as any)?.damageType as DamageType | 'normal' | undefined;
-		if (damageType && damageType !== 'normal') return [damageType];
 		return e?.damageTypes ?? [];
 	},
 	(mutator) => (damageDraft) => {
 		if (!damageDraft || damageDraft.damage === '') {
 			return;
 		}
-		const original = damageDraft?.damageTypes ?? [];
-		// TODO: this is temporary
-		const damageType = (damageDraft as any)?.damageType as DamageType | 'normal' | undefined;
-		if (damageType) {
-			if (damageType !== 'normal') original.push(damageType);
-			delete (damageDraft as any)['damageType'];
-		}
-		const damageTypes = mutator(original);
+		const damageTypes = mutator(damageDraft?.damageTypes ?? []);
 		if (damageDraft) damageDraft.damageTypes = damageTypes;
 		else return { type: 'damage', damage: '1[W]', damageTypes };
 	}
