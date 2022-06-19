@@ -62,7 +62,7 @@ export type TextEffect = {
 export type DamageEffect = {
 	type: 'damage';
 	damage: string;
-	damageType: DamageType;
+	damageTypes: DamageType[];
 };
 
 export type HalfDamageEffect = {

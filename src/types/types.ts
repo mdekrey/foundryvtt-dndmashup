@@ -10,7 +10,6 @@ export type Currency = typeof Currencies[number];
 export type TypedData<T extends string, TData> = { type: T; data: TData };
 
 export const DamageTypes = [
-	'normal',
 	'acid',
 	'cold',
 	'fire',

@@ -11,6 +11,7 @@ import { Select } from './select';
 import { TextField } from './text-field';
 import { NumberField } from './number-field';
 import { Checkbox } from './checkbox';
+import { MultiSelect } from './multi-select';
 
 export const FormInput = Object.assign(Container, {
 	AutoTextField,
@@ -25,5 +26,6 @@ export const FormInput = Object.assign(Container, {
 	TextField,
 	NumberField,
 	Checkbox,
+	MultiSelect,
 });
 export { SelectItem } from './auto-select';

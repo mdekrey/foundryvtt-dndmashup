@@ -13,7 +13,7 @@ export function Field({ className, children }: { className?: string; children?: 
 					className={classNames(
 						'w-full block',
 						'border-solid border-b-2 border-black',
-						'focus:ring-blue-bright-600 focus:ring-1',
+						'focus-within:ring-blue-bright-600 focus-within:ring-1',
 						className
 					)}
 				/>

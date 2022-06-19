@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type Primitive = null | undefined | string | number | boolean | symbol | bigint;
+export type Primitive = null | undefined | string | number | boolean | symbol | bigint;
 type PathImpl<K extends string | number, V, Type> = V extends NoStringPath
 	? never
 	: V extends Type

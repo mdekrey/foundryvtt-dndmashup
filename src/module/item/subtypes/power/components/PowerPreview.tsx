@@ -124,9 +124,7 @@ function toNestedEffects(effects: ApplicableEffect[], attackIndex?: number): [st
 	const results = effects.map((effect) => {
 		switch (effect.type) {
 			case 'damage':
-				return [effect.damage, effect.damageType === 'normal' ? '' : effect.damageType, 'damage.']
-					.filter(Boolean)
-					.join(' ');
+				return [effect.damage, oxfordComma(effect.damageTypes ?? []), 'damage.'].filter(Boolean).join(' ');
 			case 'half-damage':
 				return 'Half damage.';
 			case 'healing':
@@ -142,6 +140,11 @@ function toNestedEffects(effects: ApplicableEffect[], attackIndex?: number): [st
 		results.filter((e): e is string => typeof e === 'string').join(' '),
 		results.flatMap((e) => (typeof e === 'string' ? [] : e)),
 	];
+}
+
+function oxfordComma(parts: string[]) {
+	if (parts.length <= 2) return parts.join(' and ');
+	return `${parts.slice(parts.length - 1).join(', ')}, and ${parts[parts.length - 1]}`;
 }
 
 function toIndexName(index: number) {

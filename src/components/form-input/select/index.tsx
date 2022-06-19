@@ -1,14 +1,15 @@
 import { ReactNode, Key } from 'react';
+import { Primitive } from 'src/core/path-typings';
 import { Field } from '../field';
 import { ImmutableMutator } from '../hooks/useDocumentAsState';
 
-export type SelectItem<TValue> = {
+export type SelectItem<TValue extends Primitive> = {
 	value: TValue;
 	key: Key;
 	label: ReactNode;
 };
 
-export function Select<TValue>({
+export function Select<TValue extends Primitive>({
 	value,
 	plain,
 	options,

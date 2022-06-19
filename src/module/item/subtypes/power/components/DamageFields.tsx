@@ -20,24 +20,35 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 		console.log('new damage', damage, damageDraft, mutator);
 		if (!damage) return null;
 		if (damageDraft) damageDraft.damage = damage;
-		else return { type: 'damage', damage: damage, damageType: 'normal' };
+		else return { type: 'damage', damage: damage, damageTypes: [] };
 	}
 );
-export const damageTypeLens = Lens.from<DamageEffect | null, DamageType>(
-	(e) => e?.damageType ?? 'normal',
+export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
+	(e) => {
+		const damageType = (e as any)?.damageType as DamageType | 'normal' | undefined;
+		if (damageType && damageType !== 'normal') return [damageType];
+		return e?.damageTypes ?? [];
+	},
 	(mutator) => (damageDraft) => {
 		if (!damageDraft || damageDraft.damage === '') {
 			return;
 		}
-		const damageType = mutator(damageDraft?.damageType ?? 'normal');
-		if (damageDraft) damageDraft.damageType = damageType;
-		else return { type: 'damage', damage: '1[W]', damageType };
+		const original = damageDraft?.damageTypes ?? [];
+		// TODO: this is temporary
+		const damageType = (damageDraft as any)?.damageType as DamageType | 'normal' | undefined;
+		if (damageType) {
+			if (damageType !== 'normal') original.push(damageType);
+			delete (damageDraft as any)['damageType'];
+		}
+		const damageTypes = mutator(original);
+		if (damageDraft) damageDraft.damageTypes = damageTypes;
+		else return { type: 'damage', damage: '1[W]', damageTypes };
 	}
 );
 
 export function DamageFields({ prefix, ...props }: { prefix?: string } & ImmutableStateMutator<DamageEffect | null>) {
 	const damageState = applyLens(props, damageDiceLens);
-	const damageTypeState = applyLens(props, damageTypeLens);
+	const damageTypeState = applyLens(props, damageTypesLens);
 	return (
 		<div className="grid grid-cols-12 gap-x-1">
 			<FormInput className="col-span-5 self-end">
@@ -45,7 +56,7 @@ export function DamageFields({ prefix, ...props }: { prefix?: string } & Immutab
 				<FormInput.Label>{prefix} Damage Dice</FormInput.Label>
 			</FormInput>
 			<FormInput className={classNames('col-span-5', { 'opacity-50': !damageState.value })}>
-				<FormInput.Select {...damageTypeState} options={damageTypeOptions} />
+				<FormInput.MultiSelect {...damageTypeState} options={damageTypeOptions} />
 				<FormInput.Label>Damage Type</FormInput.Label>
 			</FormInput>
 			<div className={classNames('col-span-2', { 'opacity-50': !damageState.value })}>damage</div>

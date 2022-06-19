@@ -24,7 +24,6 @@ export function AutoSelect<TDocument extends AnyDocument, TValue extends string 
 	options: SelectItem<TValue>[];
 }) {
 	const value = getFieldValue<SourceDataOf<TDocument>, TValue>(document.data._source, field);
-	// TODO: this isn't great - the value equality may not match.
 	const keyedValue = options.find((e) => e.value === value)?.key ?? '';
 
 	const input = (
