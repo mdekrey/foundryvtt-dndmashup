@@ -1,5 +1,4 @@
 import { ItemTable } from 'src/components/ItemTable';
-import { isPower } from 'src/module/item/subtypes';
 import { MashupPower } from 'src/module/item/subtypes/power/config';
 import { SpecificActor } from '../mashup-actor';
 
@@ -30,7 +29,7 @@ const powerGroups: {
 ];
 
 export function Powers({ actor }: { actor: SpecificActor }) {
-	const powers = actor.items.contents.filter(isPower);
+	const powers = actor.allPowers();
 	const groups = powerGroups
 		.map(({ filter, ...others }) => ({
 			...others,

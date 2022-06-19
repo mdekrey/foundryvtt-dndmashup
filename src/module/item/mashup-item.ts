@@ -11,6 +11,7 @@ import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-t
 import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
 import { AnyDocument } from 'src/core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
+import type { MashupPower } from './subtypes/power/config';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
@@ -28,6 +29,9 @@ export class MashupItemBase extends Item {
 
 	data!: PossibleItemData;
 	allGrantedBonuses(): FeatureBonus[] {
+		return [];
+	}
+	allGrantedPowers(): MashupPower[] {
 		return [];
 	}
 	get type(): PossibleItemType {

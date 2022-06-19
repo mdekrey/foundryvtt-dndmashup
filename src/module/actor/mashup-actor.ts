@@ -12,7 +12,7 @@ import {
 	filterBonuses,
 	sumFinalBonuses,
 } from '../bonuses';
-import { isClass, isEpicDestiny, isParagonPath, isRace } from '../item/subtypes';
+import { isClass, isEpicDestiny, isParagonPath, isPower, isRace } from '../item/subtypes';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
@@ -150,6 +150,10 @@ export class MashupActor extends Actor {
 
 		allData.data.health.bloodied = Math.floor(allData.data.health.maxHp / 2);
 		allData.data.health.surges.value = Math.floor(allData.data.health.maxHp / 4);
+	}
+
+	allPowers() {
+		return this.items.contents.flatMap((item) => (isPower(item) ? item : item.allGrantedPowers()));
 	}
 
 	getRollData() {
