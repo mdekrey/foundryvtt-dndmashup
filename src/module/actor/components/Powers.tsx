@@ -1,3 +1,4 @@
+import { ImageButton } from 'src/components/image-button';
 import { ItemTable } from 'src/components/ItemTable';
 import { MashupPower } from 'src/module/item/subtypes/power/config';
 import { SpecificActor } from '../mashup-actor';
@@ -40,9 +41,21 @@ export function Powers({ actor }: { actor: SpecificActor }) {
 	return (
 		<>
 			{groups.map(({ key, label, items, className }) => (
-				<ItemTable key={key} items={items} title={label} className={className} />
+				<ItemTable key={key} items={items} title={label} className={className} header={PowerHeader} body={PowerBody} />
 			))}
-			{other.length ? <ItemTable items={other} title="Other Power" /> : null}
+			{other.length ? <ItemTable items={other} title="Other Power" header={PowerHeader} body={PowerBody} /> : null}
 		</>
+	);
+}
+
+function PowerHeader() {
+	return <th className="text-right"></th>;
+}
+
+function PowerBody({ item }: { item: MashupPower }) {
+	return (
+		<td className="text-right">
+			<ImageButton src="/icons/svg/d20-black.svg" />
+		</td>
 	);
 }

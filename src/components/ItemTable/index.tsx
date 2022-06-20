@@ -34,7 +34,7 @@ export function ItemTable<T extends MashupItemBase>({
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 								'border-b-2 border-transparent'
 							)}>
-							<td className="w-10 h-10 p-1">
+							<td className="w-10 h-10 px-1">
 								{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
 							</td>
 							<td className="pl-1">{item.name}</td>
