@@ -7,5 +7,6 @@ export const ItemSlotDefaults = {
 	buildSummary: () => <></>,
 	inventoryTableHeader: () => <></>,
 	inventoryTableBody: () => <></>,
+	inventoryTableAddedCellCount: 0,
 	slotsNeeded: () => 1,
 };

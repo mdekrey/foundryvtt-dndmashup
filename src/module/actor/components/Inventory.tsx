@@ -54,7 +54,12 @@ function InventorySlotTable<T extends ItemSlot>({
 	slot: T;
 }) {
 	const itemSlotInfo = itemSlots[slot];
-	const { inventoryTableHeader: TableHeader, inventoryTableBody: TableBody, equippedSlots } = itemSlotInfo;
+	const {
+		inventoryTableHeader: TableHeader,
+		inventoryTableBody: TableBody,
+		inventoryTableAddedCellCount,
+		equippedSlots,
+	} = itemSlotInfo;
 
 	const InventorySlotHeader = useCallback(
 		() => (
@@ -92,8 +97,16 @@ function InventorySlotTable<T extends ItemSlot>({
 		[actor, TableBody, equippedSlots]
 	);
 
+	const addedCellCount = inventoryTableAddedCellCount + equippedSlots.length ? 1 : 0;
+
 	return (
-		<ItemTable items={items} title={itemSlots[slot].display} header={InventorySlotHeader} body={InventorySlotBody} />
+		<ItemTable
+			items={items}
+			title={itemSlots[slot].display}
+			header={InventorySlotHeader}
+			body={InventorySlotBody}
+			addedCellCount={addedCellCount}
+		/>
 	);
 }
 

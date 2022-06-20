@@ -29,4 +29,5 @@ export const ArmorInfo: ItemSlotInfo<'armor'> = {
 			<td className="text-center">{equipmentProperties.speedPenalty}</td>
 		</>
 	),
+	inventoryTableAddedCellCount: 4,
 };

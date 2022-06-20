@@ -10,6 +10,7 @@ export function Feats({ actor }: { actor: SpecificActor }) {
 			title="Feat"
 			header={FeatureHeader}
 			body={FeatureBody}
+			addedCellCount={1}
 		/>
 	);
 }

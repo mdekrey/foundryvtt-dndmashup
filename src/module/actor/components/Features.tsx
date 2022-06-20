@@ -10,6 +10,7 @@ const features: {
 	filter: (item: MashupItemBase) => boolean;
 	header?: React.FC;
 	body?: React.FC<{ item: MashupItemBase }>;
+	addedCellCount?: number;
 }[] = [
 	{
 		key: 'character-details',
@@ -23,6 +24,7 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		addedCellCount: 1,
 	},
 	{
 		key: 'class-feature',
@@ -30,6 +32,7 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		addedCellCount: 1,
 	},
 	{
 		key: 'paragon-feature',
@@ -37,6 +40,7 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		addedCellCount: 1,
 	},
 	{
 		key: 'epic-feature',
@@ -44,6 +48,7 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		addedCellCount: 1,
 	},
 ];
 
@@ -60,8 +65,8 @@ export function Features({ actor }: { actor: SpecificActor }) {
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));
 	return (
 		<>
-			{groups.map(({ key, label, items, header, body }) => (
-				<ItemTable key={key} items={items} title={label} header={header} body={body} />
+			{groups.map(({ key, label, items, header, body, addedCellCount }) => (
+				<ItemTable key={key} items={items} title={label} header={header} body={body} addedCellCount={addedCellCount} />
 			))}
 			{other.length ? <ItemTable items={other} title="Other" /> : null}
 		</>

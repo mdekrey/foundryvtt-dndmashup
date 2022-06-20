@@ -54,4 +54,5 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	details: ItemSlotComponent<T>;
 	inventoryTableHeader: React.FC;
 	inventoryTableBody: ItemSlotComponent<T>;
+	inventoryTableAddedCellCount: number;
 };

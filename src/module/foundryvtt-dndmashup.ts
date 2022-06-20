@@ -15,6 +15,7 @@ import { registerSettings, registerCustomSheets } from './settings';
 import { systemName } from './constants';
 
 import './fixup';
+import { attachToChat } from './chat/attach';
 
 // Initialize system
 Hooks.once('init', async () => {
@@ -42,3 +43,6 @@ Hooks.once('ready', async () => {
 });
 
 // Add any additional hooks if necessary
+Hooks.on('renderChatMessage', (app: ChatLog, html: JQuery<HTMLElement>, data: ChatMessage.MessageData) => {
+	attachToChat(html, data);
+});

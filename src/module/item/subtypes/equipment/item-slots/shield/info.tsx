@@ -24,4 +24,5 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 			<td className="text-center">{equipmentProperties.checkPenalty}</td>
 		</>
 	),
+	inventoryTableAddedCellCount: 2,
 };

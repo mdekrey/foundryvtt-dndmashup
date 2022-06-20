@@ -43,4 +43,5 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<td className="text-center">{equipmentProperties.range || <>&mdash;</>}</td>
 		</>
 	),
+	inventoryTableAddedCellCount: 3,
 };
