@@ -68,15 +68,19 @@ function ItemTableRow<T extends MashupItemBase, ChildProps extends Record<string
 					{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
 				</td>
 				<td className="pl-1">
-					<button type="button" className="focus:ring-blue-bright-600 focus:ring-1" onClick={toggle}>
-						{item.name}
-					</button>
+					{TableRowDetail ? (
+						<button type="button" className="focus:ring-blue-bright-600 focus:ring-1" onClick={toggle}>
+							{item.name}
+						</button>
+					) : (
+						item.name
+					)}
 				</td>
 				{TableBody && <TableBody item={item} {...passedProps} />}
 				<td
 					className={classNames('text-right', {
-						'w-8': !item.isOwner,
-						'w-16': item.isOwner,
+						'w-6': !item.isOwner,
+						'w-12': item.isOwner,
 					})}>
 					<IconButton title="Edit" onClick={edit} iconClassName="fas fa-edit" />
 					{item.isOwner ? <IconButton title="Delete" onClick={remove} iconClassName="fas fa-trash" /> : null}

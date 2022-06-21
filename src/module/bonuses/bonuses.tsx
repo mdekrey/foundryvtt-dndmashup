@@ -7,6 +7,7 @@ import { PathName, getFieldValue, combinePath } from 'src/core/path-typings';
 import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets, conditions } from './bonus-sheet-utils';
+import { IconButton } from 'src/components/icon-button';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({ key, value: key as BonusTarget, label }));
 const selectConditions = Object.entries(conditions).map(([key, { label }]) => ({
@@ -73,9 +74,7 @@ export function Bonuses<TDocument extends AnyDocument>({
 						<th>Target</th>
 						<th>Condition</th>
 						<th>
-							<button type="button" onClick={onAdd}>
-								<i className="fa fa-plus"></i> Add
-							</button>
+							<IconButton iconClassName="fa fa-plus" text="Add" onClick={onAdd} />
 						</th>
 					</tr>
 				</thead>
@@ -124,17 +123,11 @@ export function Bonuses<TDocument extends AnyDocument>({
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
 								{bonus.disabled ? (
-									<button type="button" title="Click to Enable" className="focusable" onClick={onEnable(idx)}>
-										<i className="far fa-circle"></i>
-									</button>
+									<IconButton iconClassName="far fa-circle" title="Click to Enable" onClick={onEnable(idx)} />
 								) : (
-									<button type="button" title="Click to Disable" className="focusable" onClick={onDisable(idx)}>
-										<i className="far fa-check-circle"></i>
-									</button>
+									<IconButton iconClassName="far fa-check-circle" title="Click to Disable" onClick={onDisable(idx)} />
 								)}
-								<button type="button" title="Click to Delete" className="focusable" onClick={onDelete(idx)}>
-									<i className="fas fa-trash"></i>
-								</button>
+								<IconButton iconClassName="fas fa-trash" title="Click to Delete" onClick={onDelete(idx)} />
 							</td>
 						</tr>
 					))}

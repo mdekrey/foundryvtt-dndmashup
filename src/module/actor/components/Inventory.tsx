@@ -65,7 +65,7 @@ function InventorySlotTable<T extends ItemSlot>({
 		() => (
 			<>
 				<TableHeader />
-				{equippedSlots.length ? <th className="w-16">Equipped</th> : null}
+				{equippedSlots.length ? <th className="w-12">Equip</th> : null}
 			</>
 		),
 		[TableHeader, equippedSlots]
@@ -76,7 +76,7 @@ function InventorySlotTable<T extends ItemSlot>({
 			<>
 				<TableBody item={item} />
 				{equippedSlots.length ? (
-					<td className="w-16">
+					<td className="text-center w-12">
 						{equippedSlots.map((equipSlot) => (
 							<IconButton
 								key={equipSlot}
