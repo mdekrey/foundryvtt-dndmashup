@@ -8,14 +8,10 @@ import {
 	ItemSlot,
 	itemSlots,
 } from 'src/module/item/subtypes/equipment/item-slots';
-import { MashupItemBase } from 'src/module/item/mashup-item';
 import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
+import { isEquipment } from 'src/module/item/subtypes';
 import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
-
-function isEquipment(item: MashupItemBase): item is MashupItemEquipment {
-	return item.data.type === 'equipment';
-}
 
 export const orderedItemSlots: ItemSlot[] = [
 	'weapon',

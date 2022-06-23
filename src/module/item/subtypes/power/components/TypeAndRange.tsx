@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { FormInput, SelectItem } from 'src/components/form-input';
+import { FormInput } from 'src/components/form-input';
 import { ImmutableStateMutator, setWith } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SelectItem } from 'src/components/form-input/select';
 import { Lens } from 'src/core/lens';
 import { neverEver } from 'src/core/neverEver';
 import {
@@ -10,49 +11,33 @@ import {
 	MeleeEffectTypeAndRange,
 } from '../dataSourceData';
 
-const effectTypeOptions: SelectItem<EffectTypeAndRange['type']>[] = [
-	{
-		value: 'melee',
-		key: 'melee',
-		label: 'Melee',
-	},
-	{
-		value: 'ranged',
-		key: 'ranged',
-		label: 'Ranged',
-	},
-	{
-		value: 'close',
-		key: 'close',
-		label: 'Close',
-	},
-	{
-		value: 'area',
-		key: 'area',
-		label: 'Area',
-	},
-	{
-		value: 'personal',
-		key: 'personal',
-		label: 'Personal',
-	},
-];
+const effectTypeOptions = (['melee', 'ranged', 'close', 'area', 'personal'] as EffectTypeAndRange['type'][]).map(
+	(value): SelectItem<EffectTypeAndRange['type']> => ({
+		value,
+		key: value,
+		label: value.capitalize(),
+		typeaheadLabel: value.capitalize(),
+	})
+);
 
 const meleeWeaponRangeOptions: SelectItem<MeleeEffectTypeAndRange['range']>[] = [
 	{
 		value: 'weapon',
 		key: 'weapon',
-		label: 'Weapon',
+		label: 'weapon',
+		typeaheadLabel: 'weapon',
 	},
 	{
 		value: 1,
 		key: '1',
 		label: '1',
+		typeaheadLabel: '1',
 	},
 	{
 		value: 'touch',
 		key: 'touch',
-		label: 'Touch',
+		label: 'touch',
+		typeaheadLabel: 'touch',
 	},
 ];
 
@@ -63,11 +48,13 @@ const closeShapeOptions: SelectItem<CloseShape>[] = [
 		value: 'burst',
 		key: 'burst',
 		label: 'burst',
+		typeaheadLabel: 'burst',
 	},
 	{
 		value: 'blast',
 		key: 'blast',
 		label: 'blast',
+		typeaheadLabel: 'blast',
 	},
 ];
 
@@ -78,11 +65,13 @@ const areaShapeOptions: SelectItem<AreaShape>[] = [
 		value: 'burst',
 		key: 'burst',
 		label: 'burst',
+		typeaheadLabel: 'burst',
 	},
 	{
 		value: 'wall',
 		key: 'wall',
 		label: 'wall',
+		typeaheadLabel: 'wall',
 	},
 ];
 
@@ -119,7 +108,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 			<FormInput>
 				<FormInput.Select
 					value={value?.type ?? 'personal'}
-					onChange={(ev) => changeType(ev.currentTarget.value as EffectTypeAndRange['type'])}
+					onChange={(ev) => changeType(ev)}
 					options={effectTypeOptions}
 				/>
 				<FormInput.Label>Effect Type</FormInput.Label>
@@ -129,7 +118,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 					<FormInput>
 						<FormInput.Select
 							value={value.range}
-							onChange={(ev) => changeMeleeRange(ev.currentTarget.value)}
+							onChange={(ev) => changeMeleeRange(ev)}
 							options={meleeWeaponRangeOptions}
 						/>
 						<FormInput.Label>Range</FormInput.Label>
@@ -203,9 +192,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 		}
 	}
 
-	function changeMeleeRange(key: string) {
-		const range = meleeWeaponRangeOptions.find((o) => o.key === key)?.value;
-		if (range === undefined) throw new Error('unknown range for melee');
+	function changeMeleeRange(range: MeleeEffectTypeAndRange['range']) {
 		setValue((target) => {
 			if (target.type === 'melee') {
 				target.range = range;
@@ -224,8 +211,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateM
 	}
 
 	function changeText<T extends string>(lens: Lens<EffectTypeAndRange, T>) {
-		return (ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-			setWith(setValue, lens, ev.currentTarget.value as T);
+		return (ev: T) => setWith(setValue, lens, ev as T);
 	}
 	function changeNumber(lens: Lens<EffectTypeAndRange, number>) {
 		return (ev: React.ChangeEvent<HTMLInputElement>) => {

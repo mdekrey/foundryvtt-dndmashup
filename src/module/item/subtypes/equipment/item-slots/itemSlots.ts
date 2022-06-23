@@ -10,6 +10,12 @@ export const itemSlots: {
 	'': OtherInfo,
 	weapon: WeaponInfo,
 	shield: ShieldInfo,
+	implement: {
+		display: 'Implement',
+		optionLabel: 'Implement',
+		equippedSlots: ['primary-hand', 'off-hand'],
+		...ItemSlotDefaults,
+	},
 	armor: ArmorInfo,
 	arms: {
 		display: 'Arms',

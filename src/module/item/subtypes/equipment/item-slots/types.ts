@@ -15,7 +15,8 @@ export type ItemSlot =
 	| 'head'
 	| 'neck'
 	| 'ring'
-	| 'waist';
+	| 'waist'
+	| 'implement';
 export type EquippedItemSlot =
 	| 'primary-hand'
 	| 'off-hand'

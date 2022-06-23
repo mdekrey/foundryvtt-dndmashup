@@ -10,17 +10,22 @@ import { MashupItemEquipment } from '.';
 import { Contents } from '../../components/Contents';
 import { FeaturesList } from '../../components/FeaturesList';
 
-const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({ value: key, key, label }));
+const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
+	value: key as ItemSlot,
+	key,
+	label,
+	typeaheadLabel: label,
+}));
 
 export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	const [activeTab, setActiveTab] = useState('description');
 	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
 
-	function onChangeItemSlot(itemSlot: ItemSlot) {
+	function onChangeItemSlot(itemSlot: React.SetStateAction<ItemSlot>) {
 		deepUpdate(item as unknown as MashupItemEquipment<ItemSlot>, (draft) => {
-			draft.data.itemSlot = itemSlot;
+			draft.data.itemSlot = typeof itemSlot === 'function' ? itemSlot(draft.data.itemSlot) : itemSlot;
 			draft.data.equipmentProperties = {
-				...itemSlots[itemSlot].defaultEquipmentInfo,
+				...itemSlots[draft.data.itemSlot].defaultEquipmentInfo,
 			} as ItemSlotTemplates[keyof ItemSlotTemplates];
 		});
 		setActiveTab('details');
@@ -40,7 +45,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 							className="text-lg text-center"
 							options={itemSlotOptions}
 							value={item.data.data.itemSlot}
-							onChange={item.isOwner ? (ev) => onChangeItemSlot(ev.target.value as ItemSlot) : undefined}
+							onChange={item.isOwner ? onChangeItemSlot : undefined}
 						/>
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>

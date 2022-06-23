@@ -5,6 +5,7 @@ import { MashupParagonPath } from './paragonPath/config';
 import { MashupEpicDestiny } from './epicDestiny/config';
 import { MashupItemFeature } from './feature/config';
 import { MashupPower } from './power/config';
+import { MashupItemEquipment } from './equipment';
 
 export function isClass(item: MashupItemBase): item is MashupItemClass {
 	return item instanceof MashupItemClass;
@@ -23,4 +24,7 @@ export function isFeature(item: MashupItemBase): item is MashupItemFeature {
 }
 export function isPower(item: MashupItemBase): item is MashupPower {
 	return item instanceof MashupPower;
+}
+export function isEquipment(item: MashupItemBase): item is MashupItemEquipment {
+	return item instanceof MashupItemEquipment;
 }

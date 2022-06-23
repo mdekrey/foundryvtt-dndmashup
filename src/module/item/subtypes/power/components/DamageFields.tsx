@@ -1,15 +1,17 @@
-import { FormInput, SelectItem } from 'src/components/form-input';
+import { FormInput } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
 import { DamageTypes, DamageType } from 'src/types/types';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
+import { SelectItem } from 'src/components/form-input/select';
 
 const damageTypeOptions = DamageTypes.map(
 	(dt): SelectItem<DamageType> => ({
 		value: dt,
 		key: dt,
 		label: dt.capitalize(),
+		typeaheadLabel: dt.capitalize(),
 	})
 );
 

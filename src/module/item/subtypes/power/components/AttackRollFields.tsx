@@ -1,5 +1,6 @@
-import { FormInput, SelectItem } from 'src/components/form-input';
+import { FormInput } from 'src/components/form-input';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SelectItem } from 'src/components/form-input/select';
 import { Lens } from 'src/core/lens';
 import { Defense, Defenses } from 'src/types/types';
 import { AttackRoll } from '../dataSourceData';
@@ -25,7 +26,12 @@ const defenseLens = Lens.from<AttackRoll | null, Defense>(
 );
 
 const defenseOptions = Defenses.map(
-	(ability): SelectItem<Defense> => ({ key: ability, value: ability, label: ability.toUpperCase() })
+	(ability): SelectItem<Defense> => ({
+		key: ability,
+		value: ability,
+		label: ability.toUpperCase(),
+		typeaheadLabel: ability.toUpperCase(),
+	})
 );
 
 export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>) {
