@@ -1,2 +1,2 @@
-export * from './react-sheet-mixin';
+export * from './react-application-mixin';
 export * from './renderReactToHtml';

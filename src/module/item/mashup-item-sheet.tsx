@@ -5,7 +5,7 @@ import { ClassSheet } from './subtypes/class/ClassSheet';
 import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
 import { RaceSheet } from './subtypes/race/RaceSheet';
 import { FeatureSheet } from './subtypes/feature/FeatureSheet';
-import { ReactSheetMixin } from 'src/core/react/react-sheet-mixin';
+import { ReactApplicationMixin } from 'src/core/react';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
 import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
 import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';
@@ -28,7 +28,7 @@ function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
 	return <Sheet item={item} />;
 }
 
-export class MashupItemSheet extends ReactSheetMixin<typeof ItemSheet>(ItemSheet) {
+export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(ItemSheet) {
 	static override get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: [],

@@ -1,24 +1,34 @@
 import { createRoot, Root } from 'react-dom/client';
 
-export { Root };
+const elementRoot = Symbol('ElementRoot');
+const reactRoot = Symbol('ReactRoot');
 
 export type ReactSheet = {
-	form: HTMLElement | null;
-	root: Root | null;
+	[elementRoot]?: HTMLElement | null;
+	[reactRoot]?: Root | null;
 };
 
-export function renderReact<T extends DocumentSheet>(sheet: T & ReactSheet, sheetComponent: JSX.Element | null) {
-	let finalForm = sheet.form;
-	let finalRoot = sheet.root;
-
-	const cssClass = sheet.isEditable ? 'editable' : 'locked';
+export function renderReact<T extends Application>(sheet: T & ReactSheet, sheetComponent: JSX.Element | null) {
+	let finalForm = sheet[elementRoot];
+	let finalRoot = sheet[reactRoot];
 
 	if (!finalRoot || !finalForm) {
-		const result = $(`<form class="${cssClass} foundry-reset dndmashup" autocomplete="off"></form>`);
+		const result = $(sheet instanceof FormApplication ? `<form autocomplete="off"></form>` : `<div></div>`);
+		result.addClass('foundry-reset dndmashup');
 		finalForm = result[0];
 		finalRoot = createRoot(result[0]);
 	}
 	finalRoot.render(sheetComponent);
 
-	return [finalForm, finalRoot] as const;
+	if (sheet instanceof FormApplication) sheet.form = finalForm;
+	sheet[elementRoot] = finalForm;
+	sheet[reactRoot] = finalRoot;
+	return finalForm;
+}
+
+export function unmountReact<T extends Application>(sheet: T & ReactSheet) {
+	if (sheet instanceof FormApplication) sheet.form = null;
+	sheet[elementRoot] = null;
+	sheet[reactRoot]?.unmount();
+	sheet[reactRoot] = null;
 }

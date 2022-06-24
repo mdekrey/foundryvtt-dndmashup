@@ -1,7 +1,7 @@
 import { ActorSheetJsx } from './templates/sheet';
-import { ReactSheetMixin } from 'src/core/react';
+import { ReactApplicationMixin } from 'src/core/react';
 
-export class MashupActorSheet extends ReactSheetMixin(ActorSheet) {
+export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			// CSS classes added to parent element of template
