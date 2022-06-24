@@ -5,7 +5,7 @@ import { ClassSheet } from './subtypes/class/ClassSheet';
 import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
 import { RaceSheet } from './subtypes/race/RaceSheet';
 import { FeatureSheet } from './subtypes/feature/FeatureSheet';
-import { ReactSheetMixin } from 'src/components/sheet/react-sheet-mixin';
+import { ReactSheetMixin } from 'src/core/react/react-sheet-mixin';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
 import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
 import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';

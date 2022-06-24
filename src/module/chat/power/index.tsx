@@ -1,4 +1,4 @@
-import { renderReactToHtml } from 'src/components/sheet/renderReactToHtml';
+import { renderReactToHtml } from 'src/core/react';
 import { SpecificActor } from 'src/module/actor/mashup-actor';
 import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
 import { MashupPower } from 'src/module/item/subtypes/power/config';
