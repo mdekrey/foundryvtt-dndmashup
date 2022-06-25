@@ -8,6 +8,7 @@ import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
 import { EquippedItemSlot } from 'src/module/item/subtypes/equipment/item-slots';
 import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
 import { MashupPower } from 'src/module/item/subtypes/power/config';
+import { PowerDialog } from './PowerDialog';
 
 export function PowerChat({ item, actor }: { item: MashupPower; actor: SpecificActor }) {
 	return (
@@ -40,9 +41,17 @@ function PowerOptions({ power, actor }: { power: MashupPower; actor: SpecificAct
 	return (
 		<>
 			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
-			<button>Roll me</button>
+			<button onClick={onRoll}>Roll me</button>
 		</>
 	);
+
+	async function onRoll() {
+		try {
+			await PowerDialog.create(power, actor);
+		} catch (ex) {
+			console.error('dialog cancelled', ex);
+		}
+	}
 }
 
 function ItemSelector<T extends MashupItemBase>({
