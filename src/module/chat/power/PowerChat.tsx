@@ -45,12 +45,8 @@ function PowerOptions({ power, actor }: { power: MashupPower; actor: SpecificAct
 		</>
 	);
 
-	async function onRoll() {
-		try {
-			await PowerDialog.create(power, actor);
-		} catch (ex) {
-			console.error('dialog cancelled', ex);
-		}
+	function onRoll() {
+		PowerDialog.create(power, actor).catch();
 	}
 }
 
