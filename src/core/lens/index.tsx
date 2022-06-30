@@ -47,6 +47,19 @@ export class Lens<TSource, TValue> {
 		return this.combine(Lens.from<TValue, TFinalValue>(getValue, setValue));
 	}
 
+	toField<TProp extends keyof TValue>(field: TProp) {
+		return this.combine(makeFieldLens<TValue, TProp>(field));
+	}
+
+	static identity<T>(): Lens<T, T> {
+		return Lens.from<T, T>(
+			(p) => p,
+			(mutator) => (p) => {
+				mutator(p);
+			}
+		);
+	}
+
 	static from<TSource, TValue>(
 		getValue: Lens<TSource, TValue>['getValue'],
 		setValue: (mutator: Mutator<TValue>) => ImmerMutator<TSource>
@@ -87,4 +100,13 @@ export class Lens<TSource, TValue> {
 
 		return new Lens<TSource, TValue>((source) => source[prop], produce);
 	}
+}
+
+export function makeFieldLens<TTarget, TProp extends keyof TTarget>(field: TProp) {
+	return Lens.from<TTarget, TTarget[TProp]>(
+		(data) => data[field],
+		(mutator) => (data) => {
+			(data as any)[field] = mutator((data as any)[field]);
+		}
+	);
 }

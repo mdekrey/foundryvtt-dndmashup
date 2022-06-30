@@ -4,7 +4,7 @@ import { DamageTypes, DamageType } from 'src/types/types';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
-import { SelectItem } from 'src/components/form-input/select';
+import { SelectItem } from 'src/components/form-input';
 
 const damageTypeOptions = DamageTypes.map(
 	(dt): SelectItem<DamageType> => ({

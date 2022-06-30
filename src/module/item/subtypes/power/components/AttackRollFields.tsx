@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SelectItem } from 'src/components/form-input/select';
+import { SelectItem } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
 import { Defense, Defenses } from 'src/types/types';
 import { AttackRoll } from '../dataSourceData';

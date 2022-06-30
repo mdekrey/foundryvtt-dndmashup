@@ -3,16 +3,7 @@ import { WritableDraft } from 'immer/dist/types/types-external';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
 import { MashupPower } from '../config';
-import {
-	EffectTypeAndRange,
-	PowerEffect,
-	AttackEffect,
-	AttackRoll,
-	PowerDataSourceData,
-	TextEffect,
-	ApplicableEffect,
-	TargetEffect,
-} from '../dataSourceData';
+import { PowerEffect, AttackEffect, AttackRoll, TextEffect, ApplicableEffect, TargetEffect } from '../dataSourceData';
 
 export const not =
 	<T extends U, U>(f: (e: U) => e is T) =>
@@ -27,12 +18,22 @@ export const isTargetEffect = (e: ApplicableEffect): e is TargetEffect => e.type
 export const isTextEffect = (e: ApplicableEffect): e is TextEffect => e.type === 'text';
 export const isNull = (e: any): e is null => e === null;
 
-export const powerSourceDataLens = Lens.from<SourceDataOf<MashupPower>, PowerDataSourceData>(
-	(power) => power.data,
-	(mutator) => (power) => {
-		power.data = mutator(power.data);
-	}
+export const baseLens = Lens.identity<SourceDataOf<MashupPower>>();
+
+const undefinedString = Lens.from<string | undefined, string>(
+	(d) => d ?? '',
+	(mutator) => (d) => mutator(d ?? '') || undefined
 );
+
+export const nameLens = baseLens.toField('name');
+export const powerSourceDataLens = baseLens.toField('data');
+export const powerTypeLens = powerSourceDataLens.toField('type');
+export const powerFlavorTextLens = powerSourceDataLens.toField('flavorText');
+export const powerUsageLens = powerSourceDataLens.toField('usage');
+export const powerActionTypeLens = powerSourceDataLens.toField('actionType');
+export const powerEffectTargetLens = powerSourceDataLens.toField('effect').toField('target');
+export const powerRequirementLens = powerSourceDataLens.toField('requirement').combine(undefinedString);
+export const powerPrerequisiteLens = powerSourceDataLens.toField('prerequisite').combine(undefinedString);
 
 export const powerEffectLens = powerSourceDataLens.to<PowerEffect>(
 	(data) => data.effect,
@@ -43,12 +44,7 @@ export const powerEffectLens = powerSourceDataLens.to<PowerEffect>(
 	}
 );
 
-export const typeAndRangeLens = powerEffectLens.to<EffectTypeAndRange>(
-	(power) => power.typeAndRange,
-	(mutator) => (power) => {
-		power.typeAndRange = mutator(power.typeAndRange);
-	}
-);
+export const typeAndRangeLens = powerEffectLens.toField('typeAndRange');
 
 export const attackEffectLens = powerEffectLens.to<AttackEffect | null>(
 	(power) => power.effects?.find(isAttackEffect) ?? null,

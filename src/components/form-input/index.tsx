@@ -28,4 +28,4 @@ export const FormInput = Object.assign(Container, {
 	Checkbox,
 	MultiSelect,
 });
-export { SelectItem } from './auto-select';
+export { SelectItem } from './select';

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FormInput } from 'src/components/form-input';
 import { ImmutableStateMutator, setWith } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SelectItem } from 'src/components/form-input/select';
+import { SelectItem } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
 import { neverEver } from 'src/core/neverEver';
 import {
