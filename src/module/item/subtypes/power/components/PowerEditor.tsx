@@ -36,21 +36,9 @@ import classNames from 'classnames';
 export function PowerEditor({ item }: { item: MashupPower }) {
 	const documentState = documentAsState(item, { deleteData: true });
 
-	const nameState = nameLens.apply(documentState);
-	const powerTypeState = powerTypeLens.apply(documentState);
-	const powerFlavorTextState = powerFlavorTextLens.apply(documentState);
-	const powerUsageState = powerUsageLens.apply(documentState);
-	const powerActionTypeState = powerActionTypeLens.apply(documentState);
-	const powerEffectTargetState = powerEffectTargetLens.apply(documentState);
-	const powerRequirementState = powerRequirementLens.apply(documentState);
-	const powerPrerequisiteState = powerPrerequisiteLens.apply(documentState);
-
-	const keywordsState = keywordsLens.apply(documentState);
 	const attackEffectState = attackEffectLens.apply(documentState);
 	const effectTextState = effectTextLens.apply(documentState);
-	const secondaryTargetState = powerEffectLens.combine(secondaryTargetLens).apply(documentState);
 	const secondaryAttackState = powerEffectLens.combine(secondaryAttackLens).apply(documentState);
-	const tertiaryTargetState = powerEffectLens.combine(tertiaryTargetLens).apply(documentState);
 	const tertiaryAttackState = powerEffectLens.combine(tertiaryAttackLens).apply(documentState);
 
 	return (
@@ -60,30 +48,30 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 					<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
 					<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
 						<FormInput className="col-span-8">
-							<FormInput.TextField {...nameState} className="text-lg" />
+							<FormInput.TextField {...nameLens.apply(documentState)} className="text-lg" />
 							<FormInput.Label>Power Name</FormInput.Label>
 						</FormInput>
 						<FormInput className="col-span-4">
-							<FormInput.TextField {...powerTypeState} className="text-lg" />
+							<FormInput.TextField {...powerTypeLens.apply(documentState)} className="text-lg" />
 							<FormInput.Label>Power Type</FormInput.Label>
 						</FormInput>
 						<FormInput className="col-span-12">
-							<FormInput.TextField {...powerFlavorTextState} />
+							<FormInput.TextField {...powerFlavorTextLens.apply(documentState)} />
 							<FormInput.Label>Flavor Text</FormInput.Label>
 						</FormInput>
 					</div>
 				</div>
 				<div className="grid grid-cols-12 gap-x-1 items-end">
 					<FormInput className="col-span-6">
-						<FormInput.Select {...powerUsageState} options={usageOptions} />
+						<FormInput.Select {...powerUsageLens.apply(documentState)} options={usageOptions} />
 						<FormInput.Label>Usage</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6 self-end">
-						<FormInput.TextField {...keywordsState} />
+						<FormInput.TextField {...keywordsLens.apply(documentState)} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-4">
-						<FormInput.Select {...powerActionTypeState} options={actionTypeOptions} />
+						<FormInput.Select {...powerActionTypeLens.apply(documentState)} options={actionTypeOptions} />
 						<FormInput.Label>Action Type</FormInput.Label>
 					</FormInput>
 					<div className="col-span-8">
@@ -92,7 +80,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 				</div>
 
 				<FormInput>
-					<FormInput.TextField {...powerEffectTargetState} />
+					<FormInput.TextField {...powerEffectTargetLens.apply(documentState)} />
 					<FormInput.Label>Target</FormInput.Label>
 				</FormInput>
 
@@ -102,7 +90,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 					className={classNames({
 						'opacity-50 focus-within:opacity-100': !item.data.data.requirement,
 					})}>
-					<FormInput.TextField {...powerRequirementState} />
+					<FormInput.TextField {...powerRequirementLens.apply(documentState)} />
 					<FormInput.Label>Requirement</FormInput.Label>
 				</FormInput>
 
@@ -110,7 +98,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 					className={classNames({
 						'opacity-50 focus-within:opacity-100': !item.data.data.prerequisite,
 					})}>
-					<FormInput.TextField {...powerPrerequisiteState} />
+					<FormInput.TextField {...powerPrerequisiteLens.apply(documentState)} />
 					<FormInput.Label>Prerequisite</FormInput.Label>
 				</FormInput>
 				{attackEffectState.value ? <AttackEffectFields {...attackEffectRequiredLens.apply(attackEffectState)} /> : null}
@@ -124,7 +112,9 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 				{canHaveSecondaryAttack(item.data.data.effect) ? (
 					<>
 						<FormInput>
-							<FormInput.TextField {...targetTextLens.apply(secondaryTargetState)} />
+							<FormInput.TextField
+								{...targetTextLens.apply(powerEffectLens.combine(secondaryTargetLens).apply(documentState))}
+							/>
 							<FormInput.Label>Secondary Target</FormInput.Label>
 						</FormInput>
 
@@ -137,7 +127,9 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 				{canHaveTertiaryAttack(item.data.data.effect) ? (
 					<>
 						<FormInput>
-							<FormInput.TextField {...targetTextLens.apply(tertiaryTargetState)} />
+							<FormInput.TextField
+								{...powerEffectLens.combine(tertiaryTargetLens).combine(targetTextLens).apply(documentState)}
+							/>
 							<FormInput.Label>Tertiary Target</FormInput.Label>
 						</FormInput>
 
