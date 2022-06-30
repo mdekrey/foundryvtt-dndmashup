@@ -24,19 +24,6 @@ export function documentAsState<TDocument extends AnyDocument>(
 	};
 }
 
-export function applyLens<TInput, TOutput>(
-	{ value: state, onChangeValue: mutator }: ImmutableStateMutator<TInput>,
-	lens: Lens<TInput, TOutput>
-): ImmutableStateMutator<TOutput> {
-	return {
-		value: lens.getValue(state),
-		onChangeValue: (innerMutator, options) => {
-			const actualMutator = lens.produce(innerMutator);
-			mutator(actualMutator, options);
-		},
-	};
-}
-
 export function setWith<TInput, TOutput>(
 	setter: ImmutableMutator<TInput>,
 	lens: Lens<TInput, TOutput>,

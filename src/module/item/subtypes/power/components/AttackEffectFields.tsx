@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
 import { AttackEffect, DamageEffect, TextEffect } from '../dataSourceData';
 import { DamageFields } from './DamageFields';
@@ -66,9 +66,9 @@ const missTextLens = Lens.from<AttackEffect, string>(
 );
 
 export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
-	const hitTextState = applyLens(props, hitTextLens);
-	const hitDamageEffectState = applyLens(props, hitDamageEffectLens);
-	const missTextState = applyLens(props, missTextLens);
+	const hitTextState = hitTextLens.apply(props);
+	const hitDamageEffectState = hitDamageEffectLens.apply(props);
+	const missTextState = missTextLens.apply(props);
 	return (
 		<>
 			<DamageFields {...hitDamageEffectState} />
@@ -79,11 +79,11 @@ export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
 			{hitDamageEffectState.value ? (
 				<>
 					<FormInput>
-						<FormInput.Checkbox {...applyLens(props, missHalfDamageEffectLens)} /> Half Damage on Miss?
+						<FormInput.Checkbox {...missHalfDamageEffectLens.apply(props)} /> Half Damage on Miss?
 					</FormInput>
 				</>
 			) : (
-				<DamageFields prefix="Miss" {...applyLens(props, missDamageEffectLens)} />
+				<DamageFields prefix="Miss" {...missDamageEffectLens.apply(props)} />
 			)}
 			{hitTextState.value ? (
 				<FormInput>

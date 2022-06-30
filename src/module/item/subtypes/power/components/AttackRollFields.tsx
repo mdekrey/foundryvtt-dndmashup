@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SelectItem } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
 import { Defense, Defenses } from 'src/types/types';
@@ -35,7 +35,7 @@ const defenseOptions = Defenses.map(
 );
 
 export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>) {
-	const abilityState = applyLens(props, abilityLens);
+	const abilityState = abilityLens.apply(props);
 
 	return (
 		<div className="grid gap-1 grid-cols-12">
@@ -49,7 +49,7 @@ export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>
 				<>
 					<div className="justify-self-center">vs.</div>
 					<FormInput className="col-span-3">
-						<FormInput.Select {...applyLens(props, defenseLens)} options={defenseOptions} />
+						<FormInput.Select {...defenseLens.apply(props)} options={defenseOptions} />
 						<FormInput.Label>Defense</FormInput.Label>
 					</FormInput>
 				</>

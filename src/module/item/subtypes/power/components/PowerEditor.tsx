@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { applyLens, documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 import { ImageEditor } from 'src/components/image-editor';
 import { AttackEffectFields } from './AttackEffectFields';
 import { AttackRollFields } from './AttackRollFields';
@@ -36,22 +36,22 @@ import classNames from 'classnames';
 export function PowerEditor({ item }: { item: MashupPower }) {
 	const documentState = documentAsState(item, { deleteData: true });
 
-	const nameState = applyLens(documentState, nameLens);
-	const powerTypeState = applyLens(documentState, powerTypeLens);
-	const powerFlavorTextState = applyLens(documentState, powerFlavorTextLens);
-	const powerUsageState = applyLens(documentState, powerUsageLens);
-	const powerActionTypeState = applyLens(documentState, powerActionTypeLens);
-	const powerEffectTargetState = applyLens(documentState, powerEffectTargetLens);
-	const powerRequirementState = applyLens(documentState, powerRequirementLens);
-	const powerPrerequisiteState = applyLens(documentState, powerPrerequisiteLens);
+	const nameState = nameLens.apply(documentState);
+	const powerTypeState = powerTypeLens.apply(documentState);
+	const powerFlavorTextState = powerFlavorTextLens.apply(documentState);
+	const powerUsageState = powerUsageLens.apply(documentState);
+	const powerActionTypeState = powerActionTypeLens.apply(documentState);
+	const powerEffectTargetState = powerEffectTargetLens.apply(documentState);
+	const powerRequirementState = powerRequirementLens.apply(documentState);
+	const powerPrerequisiteState = powerPrerequisiteLens.apply(documentState);
 
-	const keywordsState = applyLens(documentState, keywordsLens);
-	const attackEffectState = applyLens(documentState, attackEffectLens);
-	const effectTextState = applyLens(documentState, effectTextLens);
-	const secondaryTargetState = applyLens(documentState, powerEffectLens.combine(secondaryTargetLens));
-	const secondaryAttackState = applyLens(documentState, powerEffectLens.combine(secondaryAttackLens));
-	const tertiaryTargetState = applyLens(documentState, powerEffectLens.combine(tertiaryTargetLens));
-	const tertiaryAttackState = applyLens(documentState, powerEffectLens.combine(tertiaryAttackLens));
+	const keywordsState = keywordsLens.apply(documentState);
+	const attackEffectState = attackEffectLens.apply(documentState);
+	const effectTextState = effectTextLens.apply(documentState);
+	const secondaryTargetState = powerEffectLens.combine(secondaryTargetLens).apply(documentState);
+	const secondaryAttackState = powerEffectLens.combine(secondaryAttackLens).apply(documentState);
+	const tertiaryTargetState = powerEffectLens.combine(tertiaryTargetLens).apply(documentState);
+	const tertiaryAttackState = powerEffectLens.combine(tertiaryAttackLens).apply(documentState);
 
 	return (
 		<>
@@ -87,7 +87,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 						<FormInput.Label>Action Type</FormInput.Label>
 					</FormInput>
 					<div className="col-span-8">
-						<TypeAndRange {...applyLens(documentState, typeAndRangeLens)} />
+						<TypeAndRange {...typeAndRangeLens.apply(documentState)} />
 					</div>
 				</div>
 
@@ -96,7 +96,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 					<FormInput.Label>Target</FormInput.Label>
 				</FormInput>
 
-				<AttackRollFields {...applyLens(attackEffectState, attackRollLens)} />
+				<AttackRollFields {...attackRollLens.apply(attackEffectState)} />
 
 				<FormInput
 					className={classNames({
@@ -113,9 +113,7 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 					<FormInput.TextField {...powerPrerequisiteState} />
 					<FormInput.Label>Prerequisite</FormInput.Label>
 				</FormInput>
-				{attackEffectState.value ? (
-					<AttackEffectFields {...applyLens(attackEffectState, attackEffectRequiredLens)} />
-				) : null}
+				{attackEffectState.value ? <AttackEffectFields {...attackEffectRequiredLens.apply(attackEffectState)} /> : null}
 				<FormInput
 					className={classNames({
 						'opacity-50 focus-within:opacity-100': !effectTextState.value,
@@ -126,26 +124,26 @@ export function PowerEditor({ item }: { item: MashupPower }) {
 				{canHaveSecondaryAttack(item.data.data.effect) ? (
 					<>
 						<FormInput>
-							<FormInput.TextField {...applyLens(secondaryTargetState, targetTextLens)} />
+							<FormInput.TextField {...targetTextLens.apply(secondaryTargetState)} />
 							<FormInput.Label>Secondary Target</FormInput.Label>
 						</FormInput>
 
-						<AttackRollFields {...applyLens(secondaryAttackState, attackRollLens)} />
+						<AttackRollFields {...attackRollLens.apply(secondaryAttackState)} />
 						{secondaryAttackState.value ? (
-							<AttackEffectFields {...applyLens(secondaryAttackState, attackEffectRequiredLens)} />
+							<AttackEffectFields {...attackEffectRequiredLens.apply(secondaryAttackState)} />
 						) : null}
 					</>
 				) : null}
 				{canHaveTertiaryAttack(item.data.data.effect) ? (
 					<>
 						<FormInput>
-							<FormInput.TextField {...applyLens(tertiaryTargetState, targetTextLens)} />
+							<FormInput.TextField {...targetTextLens.apply(tertiaryTargetState)} />
 							<FormInput.Label>Tertiary Target</FormInput.Label>
 						</FormInput>
 
-						<AttackRollFields {...applyLens(tertiaryAttackState, attackRollLens)} />
+						<AttackRollFields {...attackRollLens.apply(tertiaryAttackState)} />
 						{tertiaryAttackState.value ? (
-							<AttackEffectFields {...applyLens(tertiaryAttackState, attackEffectRequiredLens)} />
+							<AttackEffectFields {...attackEffectRequiredLens.apply(tertiaryAttackState)} />
 						) : null}
 					</>
 				) : null}

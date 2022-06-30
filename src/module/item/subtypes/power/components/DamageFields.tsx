@@ -1,7 +1,7 @@
 import { FormInput } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
 import { DamageTypes, DamageType } from 'src/types/types';
-import { applyLens, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
 import { SelectItem } from 'src/components/form-input';
@@ -40,8 +40,8 @@ export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 );
 
 export function DamageFields({ prefix, ...props }: { prefix?: string } & ImmutableStateMutator<DamageEffect | null>) {
-	const damageState = applyLens(props, damageDiceLens);
-	const damageTypeState = applyLens(props, damageTypesLens);
+	const damageState = damageDiceLens.apply(props);
+	const damageTypeState = damageTypesLens.apply(props);
 	return (
 		<div className="grid grid-cols-12 gap-x-1">
 			<FormInput className="col-span-5 self-end">

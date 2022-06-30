@@ -1,4 +1,5 @@
 import { Draft } from 'immer';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 
 export type ImmerMutator<T> = (draft: Draft<T>) => T | undefined | void;
 export type Mutator<T> = (draft: Draft<T>) => T | Draft<T>;
@@ -99,6 +100,16 @@ export class Lens<TSource, TValue> {
 		}
 
 		return new Lens<TSource, TValue>((source) => source[prop], produce);
+	}
+
+	apply(state: ImmutableStateMutator<TSource>): ImmutableStateMutator<TValue> {
+		return {
+			value: this.getValue(state.value),
+			onChangeValue: (innerMutator, options) => {
+				const actualMutator = this.produce(innerMutator);
+				state.onChangeValue(actualMutator, options);
+			},
+		};
 	}
 }
 
