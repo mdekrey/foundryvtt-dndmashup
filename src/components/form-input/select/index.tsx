@@ -87,17 +87,12 @@ export function Select<TValue extends Primitive | object>({
 
 	const inner = (
 		<div className={classNames('relative', className)}>
-			<div
-				className={classNames(
-					'group',
-					'relative w-full h-full text-left sm:text-sm',
-					'cursor-default overflow-hidden'
-				)}>
+			<div className={classNames('group', 'relative w-full h-full text-left', 'cursor-default overflow-hidden')}>
 				<span className="group-focus-within:hidden absolute inset-y-0 pl-1 flex items-center pointer-events-none">
 					{options.find((opt) => opt.value === value)?.label ?? null}
 				</span>
 				<Combobox.Input
-					className="w-full border-none pl-1 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 opacity-0 focus:opacity-100"
+					className="w-full border-none pl-1 pr-10 leading-5 text-gray-900 focus:ring-0 opacity-0 focus:opacity-100"
 					onChange={(event) => setQuery(event.target.value)}
 				/>
 

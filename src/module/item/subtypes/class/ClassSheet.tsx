@@ -1,5 +1,4 @@
-import { FormInput } from 'src/components/form-input';
-import { SelectItem } from 'src/components/form-input/auto-select';
+import { FormInput, SelectItem } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Abilities, Ability } from 'src/types/types';
 import { Bonuses } from 'src/module/bonuses';
@@ -9,26 +8,28 @@ import { FeaturesList } from '../../components/FeaturesList';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
-	(v): SelectItem<string> => ({ value: v, key: v, label: v })
+	(v): SelectItem<string> => ({ value: v, key: v, label: v, typeaheadLabel: v })
 );
-const abilities = Abilities.map((v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase() }));
+const abilities = Abilities.map(
+	(v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase(), typeaheadLabel: v.toUpperCase() })
+);
 
 export function ClassSheet({ item }: { item: MashupItemClass }) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
 				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
-				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
+				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
 					<FormInput className="col-span-6">
-						<FormInput.AutoTextField document={item} field="name" className="text-lg" />
+						<FormInput.AutoTextField document={item} field="name" />
 						<FormInput.Label>Class Name</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6">
-						<FormInput.AutoSelect document={item} field="data.role" className="text-lg" options={roles} />
+						<FormInput.AutoSelect document={item} field="data.role" options={roles} />
 						<FormInput.Label>Role</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-3">
-						<FormInput.AutoTextField document={item} field="data.powerSource" className="text-lg" />
+						<FormInput.AutoTextField document={item} field="data.powerSource" />
 						<FormInput.Label>Power Source</FormInput.Label>
 					</FormInput>
 					{keyAbilitiesIndex.map((a) => (

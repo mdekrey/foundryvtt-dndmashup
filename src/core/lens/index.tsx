@@ -52,6 +52,17 @@ export class Lens<TSource, TValue> {
 		return this.combine(makeFieldLens<TValue, TProp>(field));
 	}
 
+	default(value: NonNullable<TValue>) {
+		return this.combine(
+			Lens.from<TValue, NonNullable<TValue>>(
+				(source) => source ?? value,
+				(mutator) => (draft) => {
+					return mutator((draft ?? value) as any) as any;
+				}
+			)
+		);
+	}
+
 	static identity<T>(): Lens<T, T> {
 		return Lens.from<T, T>(
 			(p) => p,
@@ -78,6 +89,17 @@ export class Lens<TSource, TValue> {
 		}
 
 		return new Lens<TSource, TValue>(getValue, produce);
+	}
+
+	static cast<TSource, TValue extends TSource>(): Lens<TSource, TValue>;
+	static cast<TSource extends TValue, TValue>(): Lens<TSource, TValue>;
+	static cast<TSource, TValue>() {
+		return Lens.from<TSource, TValue>(
+			(attackEffect) => attackEffect as any,
+			(mutator) => (draft) => {
+				return mutator(draft as any) as any;
+			}
+		);
 	}
 
 	static fromProp<TSource, P extends keyof TSource>(prop: P): Lens<TSource, TSource[P]> {

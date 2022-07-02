@@ -65,14 +65,7 @@ export const attackEffectLens = powerEffectLens.to<AttackEffect | null>(
 	}
 );
 
-export const attackEffectRequiredLens = Lens.from<AttackEffect | null, AttackEffect>(
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	(attackEffect) => attackEffect!,
-	(mutator) => (draft) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		return mutator(draft!);
-	}
-);
+export const attackEffectRequiredLens = Lens.cast<AttackEffect | null, AttackEffect>();
 
 export const attackRollLens = Lens.from<AttackEffect | null, AttackRoll | null>(
 	(attackEffect) => attackEffect?.attackRoll ?? null,
