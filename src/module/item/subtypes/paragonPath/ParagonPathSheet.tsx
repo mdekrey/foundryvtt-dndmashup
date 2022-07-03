@@ -4,15 +4,21 @@ import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
 import { MashupParagonPath } from './config';
+import { SourceDataOf } from 'src/core/foundry';
+import { Lens } from 'src/core/lens';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+
+const baseLens = Lens.identity<SourceDataOf<MashupParagonPath>>();
 
 export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
+	const documentState = documentAsState(item);
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
 				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
-				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
+				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
 					<FormInput className="col-span-12">
-						<FormInput.AutoTextField document={item} field="name" className="text-lg" />
+						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
 						<FormInput.Label>Paragon Path Name</FormInput.Label>
 					</FormInput>
 				</div>
