@@ -5,6 +5,9 @@ import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { MashupItemClass } from './config';
 import { FeaturesList } from '../../components/FeaturesList';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SourceDataOf } from 'src/core/foundry';
+import { Lens } from 'src/core/lens';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
@@ -14,30 +17,39 @@ const abilities = Abilities.map(
 	(v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase(), typeaheadLabel: v.toUpperCase() })
 );
 
+export const baseLens = Lens.identity<SourceDataOf<MashupItemClass>>();
+export const nameLens = baseLens.toField('name');
+export const dataLens = baseLens.toField('data');
+export const roleLens = dataLens.toField('role');
+export const powerSourceLens = dataLens.toField('powerSource');
+export const hpBaseLens = dataLens.toField('hpBase');
+export const hpPerLevelLens = dataLens.toField('hpPerLevel');
+export const healingSurgesBaseLens = dataLens.toField('healingSurgesBase');
+
 export function ClassSheet({ item }: { item: MashupItemClass }) {
+	const documentState = documentAsState(item, { deleteData: true });
+
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
 				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
 				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
 					<FormInput className="col-span-6">
-						<FormInput.AutoTextField document={item} field="name" />
+						<FormInput.TextField {...nameLens.apply(documentState)} />
 						<FormInput.Label>Class Name</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-6">
-						<FormInput.AutoSelect document={item} field="data.role" options={roles} />
+						<FormInput.Select {...roleLens.apply(documentState)} options={roles} />
 						<FormInput.Label>Role</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-3">
-						<FormInput.AutoTextField document={item} field="data.powerSource" />
+						<FormInput.TextField {...powerSourceLens.apply(documentState)} />
 						<FormInput.Label>Power Source</FormInput.Label>
 					</FormInput>
 					{keyAbilitiesIndex.map((a) => (
 						<FormInput className="col-span-3" key={a}>
-							<FormInput.AutoSelect
-								document={item}
-								field={`data.keyAbilities.${a}`}
-								className="text-lg"
+							<FormInput.Select
+								{...dataLens.toField('keyAbilities').toField(a).apply(documentState)}
 								options={abilities}
 							/>
 							<FormInput.Label>Key Ability</FormInput.Label>
@@ -45,27 +57,24 @@ export function ClassSheet({ item }: { item: MashupItemClass }) {
 					))}
 				</div>
 			</div>
-			<div className="grid grid-cols-12 gap-x-1">
+			<div className="grid grid-cols-12 gap-x-1 text-lg text-center">
 				<FormInput className="col-span-2">
 					<FormInput.Field>
-						<div className="flex items-baseline">
-							<FormInput.AutoNumberField
-								document={item}
-								field="data.hpBase"
-								className="flex-auto text-lg text-center min-w-0"
-								plain
-							/>
+						<FormInput.Structured>
+							<FormInput.Structured.Main>
+								<FormInput.NumberField {...hpBaseLens.apply(documentState)} plain />
+							</FormInput.Structured.Main>
 							<span className="flex-shrink-0">+ CON</span>
-						</div>
+						</FormInput.Structured>
 					</FormInput.Field>
 					<FormInput.Label>Base HP</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">
-					<FormInput.AutoNumberField document={item} field="data.hpPerLevel" className="text-lg text-center" />
+					<FormInput.NumberField {...hpPerLevelLens.apply(documentState)} className="text-lg text-center" />
 					<FormInput.Label>HP per Level</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">
-					<FormInput.AutoNumberField document={item} field="data.healingSurgesBase" className="text-lg text-center" />
+					<FormInput.NumberField {...healingSurgesBaseLens.apply(documentState)} className="text-lg text-center" />
 					<FormInput.Label>Healing Surges</FormInput.Label>
 				</FormInput>
 			</div>
