@@ -1,5 +1,6 @@
 import { ItemSlotInfo } from '../types';
 import { ShieldDetails } from './details';
+import { defaultEquipmentInfo } from './sheildEquipmentInfo';
 
 export const ShieldInfo: ItemSlotInfo<'shield'> = {
 	display: 'Shield',
@@ -7,7 +8,7 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 	equippedSlots: ['off-hand'],
 	slotsNeeded: () => 1,
 	bonuses: () => [],
-	defaultEquipmentInfo: { type: 'light', shieldBonus: 1, checkPenalty: 0 },
+	defaultEquipmentInfo,
 	buildSummary: ({ item: { equipmentProperties: input } }) => (
 		<>{`${input.type}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`}</>
 	),

@@ -66,7 +66,6 @@ export function Select<TValue extends Primitive | object>({
 	const [query, setQuery] = useState('');
 	const comboboxOnChange = useCallback<React.Dispatch<React.SetStateAction<TValue>>>(
 		(param) => {
-			console.log(param);
 			if (onChangeValue)
 				onChangeValue((oldValue) => {
 					if (typeof param === 'function') return param(oldValue as TValue);
@@ -93,6 +92,7 @@ export function Select<TValue extends Primitive | object>({
 				</span>
 				<Combobox.Input
 					className="w-full border-none pl-1 pr-10 leading-5 text-gray-900 focus:ring-0 opacity-0 focus:opacity-100"
+					displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
 

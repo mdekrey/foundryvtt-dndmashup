@@ -1,6 +1,7 @@
 import { ItemSlotInfo } from '../types';
 import { weaponGroups } from './config';
 import { WeaponDetails } from './details';
+import { defaultEquipmentInfo } from './weaponEquipmentInfo';
 
 export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	display: 'Weapon',
@@ -8,15 +9,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	equippedSlots: ['primary-hand', 'off-hand'],
 	slotsNeeded: (item) => item.equipmentProperties.hands,
 	bonuses: () => [],
-	defaultEquipmentInfo: {
-		damage: '1d8',
-		proficiencyBonus: 3,
-		range: '',
-		properties: [],
-		group: 'heavy-blade',
-		category: 'military',
-		hands: 1,
-	},
+	defaultEquipmentInfo,
 	buildSummary: ({ item: { equipmentProperties: input } }) => (
 		<>
 			{[

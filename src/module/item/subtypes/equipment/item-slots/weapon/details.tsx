@@ -1,17 +1,24 @@
 import { FormInput } from 'src/components/form-input';
-import { deepUpdate } from 'src/core/foundry';
+import { deepUpdate, SourceDataOf } from 'src/core/foundry';
 import { WeaponProperty } from './types';
 import { OtherDetails } from '../other/details';
-import { toSelectItems } from '../toSelectItems';
+import { toNumericSelectItems, toSelectItems } from '../toSelectItems';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
 import { MashupItemEquipment } from '../../config';
+import { Lens } from 'src/core/lens';
+import { defaultEquipmentInfo } from './weaponEquipmentInfo';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
 const allWeaponCategories = toSelectItems(weaponCategories);
-const allWeaponHands = toSelectItems(weaponHands);
+const allWeaponHands = toNumericSelectItems(weaponHands);
 const allWeaponGroups = toSelectItems(weaponGroups);
 const allWeaponProperties = toSelectItems(weaponProperties);
 
+const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<'weapon'>>>();
+const equipmentPropertiesLens = baseLens.toField('data').toField('equipmentProperties').default(defaultEquipmentInfo);
+
 export function WeaponDetails({ item }: { item: MashupItemEquipment<'weapon'> }) {
+	const documentState = documentAsState(item);
 	const checkedProperties = item.data._source.data.equipmentProperties?.properties ?? [];
 	function setChecked(value: WeaponProperty, isChecked: boolean) {
 		if (isChecked) {
@@ -33,53 +40,47 @@ export function WeaponDetails({ item }: { item: MashupItemEquipment<'weapon'> })
 	return (
 		<>
 			<FormInput className="col-span-6">
-				<FormInput.AutoSelect
-					document={item}
+				<FormInput.Select
+					{...equipmentPropertiesLens.toField('category').apply(documentState)}
 					options={allWeaponCategories}
-					field="data.equipmentProperties.category"
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Category</FormInput.Label>
 			</FormInput>
 			<FormInput className="col-span-6">
-				<FormInput.AutoSelect
-					document={item}
+				<FormInput.Select
+					{...equipmentPropertiesLens.toField('hands').apply(documentState)}
 					options={allWeaponHands}
-					field="data.equipmentProperties.hands"
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Hands</FormInput.Label>
 			</FormInput>
 
 			<FormInput className="col-span-4">
-				<FormInput.AutoNumberField
-					document={item}
-					field="data.equipmentProperties.proficiencyBonus"
+				<FormInput.NumberField
+					{...equipmentPropertiesLens.toField('proficiencyBonus').apply(documentState)}
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Prof.</FormInput.Label>
 			</FormInput>
 			<FormInput className="col-span-4">
-				<FormInput.AutoTextField
-					document={item}
-					field="data.equipmentProperties.damage"
+				<FormInput.TextField
+					{...equipmentPropertiesLens.toField('damage').apply(documentState)}
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Damage</FormInput.Label>
 			</FormInput>
 			<FormInput className="col-span-4">
-				<FormInput.AutoTextField
-					document={item}
-					field="data.equipmentProperties.range"
+				<FormInput.TextField
+					{...equipmentPropertiesLens.toField('range').apply(documentState)}
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Range</FormInput.Label>
 			</FormInput>
 			<FormInput className="col-span-6">
-				<FormInput.AutoSelect
-					document={item}
+				<FormInput.Select
+					{...equipmentPropertiesLens.toField('group').apply(documentState)}
 					options={allWeaponGroups}
-					field="data.equipmentProperties.group"
 					className="w-full text-lg text-center"
 				/>
 				<FormInput.Label>Group</FormInput.Label>
