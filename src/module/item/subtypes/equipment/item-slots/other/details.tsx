@@ -1,28 +1,34 @@
 import { FormInput } from 'src/components/form-input';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SourceDataOf } from 'src/core/foundry';
+import { Lens } from 'src/core/lens';
 import { MashupItemEquipment } from '../../config';
 import { ItemSlot } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function OtherDetails<T extends ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
+	const documentState = documentAsState(item, { deleteData: true });
+
+	const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<T>>>();
+
 	return (
 		<>
 			<FormInput className="text-lg col-span-2">
 				<FormInput.Structured>
 					<FormInput.Structured.Main>
-						<FormInput.AutoNumberField field="data.weight" document={item} plain />
+						<FormInput.NumberField {...baseLens.toField('data').toField('weight').apply(documentState)} plain />
 					</FormInput.Structured.Main>
 					lbs.
 				</FormInput.Structured>
 				<FormInput.Label>Weight ea.</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-2">
-				<FormInput.AutoNumberField field="data.quantity" document={item} />
+				<FormInput.NumberField {...baseLens.toField('data').toField('quantity').apply(documentState)} />
 				<FormInput.Label>Quantity</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-2">
 				<FormInput.Structured>
 					<FormInput.Structured.Main>
-						<FormInput.AutoNumberField field="data.price" document={item} plain />
+						<FormInput.NumberField {...baseLens.toField('data').toField('price').apply(documentState)} plain />
 					</FormInput.Structured.Main>
 					gp
 				</FormInput.Structured>

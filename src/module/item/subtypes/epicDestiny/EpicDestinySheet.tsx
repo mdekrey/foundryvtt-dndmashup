@@ -4,15 +4,23 @@ import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
 import { MashupEpicDestiny } from './config';
+import { Lens } from 'src/core/lens';
+import { SourceDataOf } from 'src/core/foundry';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+
+export const baseLens = Lens.identity<SourceDataOf<MashupEpicDestiny>>();
+export const nameLens = baseLens.toField('name');
 
 export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
+	const documentState = documentAsState(item, { deleteData: true });
+
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
 				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
 				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
 					<FormInput className="col-span-12">
-						<FormInput.AutoTextField document={item} field="name" className="text-lg" />
+						<FormInput.TextField {...nameLens.apply(documentState)} className="text-lg" />
 						<FormInput.Label>Epic Destiny Name</FormInput.Label>
 					</FormInput>
 				</div>
