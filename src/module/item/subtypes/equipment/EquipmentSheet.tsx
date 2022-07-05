@@ -55,10 +55,10 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>
 					<p className="col-span-12">
-						<label>
+						<FormInput.Inline>
 							<FormInput.Checkbox {...baseLens.toField('data').toField('container').apply(documentState)} />
 							Is Container?
-						</label>
+						</FormInput.Inline>
 					</p>
 
 					<p className="col-span-12">

@@ -24,7 +24,7 @@ export function RaceSheet({ item }: { item: MashupItemRace }) {
 					<FormInput className="col-span-2">
 						<FormInput.Structured>
 							<FormInput.Structured.Main>
-								<FormInput.AutoNumberField plain document={item} field="data.baseSpeed" />
+								<FormInput.NumberField plain {...baseLens.toField('data').toField('baseSpeed').apply(documentState)} />
 								<span className="flex-shrink-0">sq.</span>
 							</FormInput.Structured.Main>
 						</FormInput.Structured>

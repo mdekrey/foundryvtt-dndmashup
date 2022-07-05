@@ -1,7 +1,7 @@
 import { AutoTextField } from './auto-text-field';
 import { AutoNumberField } from './auto-number-field';
 import { AutoSelect } from './auto-select';
-import { Container } from './container';
+import { Container, InlineContainer } from './container';
 import { Field } from './field';
 import { FieldButton } from './field-button';
 import { Label } from './label';
@@ -15,6 +15,7 @@ import { MultiSelect } from './multi-select';
 import { Structured } from './structured-field';
 
 export const FormInput = Object.assign(Container, {
+	Inline: InlineContainer,
 	AutoTextField,
 	AutoNumberField,
 	AutoSelect,

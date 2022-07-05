@@ -78,9 +78,9 @@ export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
 			</FormInput>
 			{hitDamageEffectState.value ? (
 				<>
-					<FormInput>
+					<FormInput.Inline>
 						<FormInput.Checkbox {...missHalfDamageEffectLens.apply(props)} /> Half Damage on Miss?
-					</FormInput>
+					</FormInput.Inline>
 				</>
 			) : (
 				<DamageFields prefix="Miss" {...missDamageEffectLens.apply(props)} />

@@ -2,8 +2,16 @@ import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { MashupItemBase } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
+import { SourceDataOf } from 'src/core/foundry';
+import { Lens } from 'src/core/lens';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+
+const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
+const detailsLens = baseLens.toField('data').toField('details');
 
 export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
+	const documentState = documentAsState(actor);
+
 	function showItem(item: MashupItemBase | undefined | null) {
 		item?.sheet?.render(true);
 	}
@@ -13,7 +21,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 			<ImageEditor document={actor} field="img" title={actor.data.name} />
 			<div className="grid grid-cols-12 grid-rows-2 gap-x-1 text-lg flex-grow">
 				<FormInput className="col-span-5">
-					<FormInput.AutoTextField document={actor} field="name" />
+					<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
 					<FormInput.Label>Character Name</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-3">
@@ -29,7 +37,10 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 					<FormInput.Label>Class</FormInput.Label>
 				</FormInput>
 				<FormInput>
-					<FormInput.AutoNumberField document={actor} field="data.details.level" className="text-lg text-center" />
+					<FormInput.NumberField
+						{...detailsLens.toField('level').apply(documentState)}
+						className="text-lg text-center"
+					/>
 					<FormInput.Label>Level</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-5">
@@ -45,7 +56,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 					<FormInput.Label>Epic Destiny</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">
-					<FormInput.AutoNumberField document={actor} field="data.details.exp" className="text-lg text-center" />
+					<FormInput.NumberField {...detailsLens.toField('exp').apply(documentState)} className="text-lg text-center" />
 					<FormInput.Label>EXP</FormInput.Label>
 				</FormInput>
 			</div>

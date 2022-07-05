@@ -13,5 +13,5 @@ export function Checkbox({
 		  }
 		: {};
 
-	return <input type="checkbox" className="mr-1" {...checkboxProps} checked={value} {...onChangeProps} />;
+	return <input type="checkbox" {...checkboxProps} checked={value} {...onChangeProps} />;
 }
