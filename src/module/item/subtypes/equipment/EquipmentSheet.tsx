@@ -3,10 +3,11 @@ import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Description } from '../../components/Description';
-import { ItemSlot, itemSlots, ItemSlotTemplates } from './item-slots';
+import { getItemSlotInfo, ItemSlot, itemSlots, ItemSlotTemplates } from './item-slots';
 import { deepUpdate, SourceDataOf } from 'src/core/foundry';
 import { Tabs } from 'src/components/tab-section';
-import { MashupItemEquipment } from '.';
+import { MashupItemEquipment } from './config';
+import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
@@ -22,7 +23,7 @@ const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: labe
 export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
 	const documentState = documentAsState(item, { deleteData: true });
 	const [activeTab, setActiveTab] = useState('description');
-	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
+	const { buildSummary: Summary, details: Details } = getItemSlotInfo<T>(item.data.data.itemSlot);
 
 	const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<T>>>();
 	const imageLens = baseLens.toField('img');
@@ -69,7 +70,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					</p>
 
 					<p className="col-span-12 text-xs">
-						<Summary equipmentProperties={item.equipmentProperties} />
+						<Summary equipmentProperties={getEquipmentProperties<T>(item.data)} />
 					</p>
 				</div>
 			</div>
