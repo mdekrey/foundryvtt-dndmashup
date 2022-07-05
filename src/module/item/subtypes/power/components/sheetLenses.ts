@@ -25,6 +25,7 @@ const undefinedString = Lens.from<string | undefined, string>(
 	(mutator) => (d) => mutator(d ?? '') || undefined
 );
 
+export const imageLens = baseLens.toField('img');
 export const nameLens = baseLens.toField('name');
 export const powerSourceDataLens = baseLens.toField('data');
 export const powerTypeLens = powerSourceDataLens.toField('type');

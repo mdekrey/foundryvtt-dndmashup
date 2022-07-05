@@ -1,24 +1,17 @@
-import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { PathName, getFieldValue } from 'src/core/path-typings';
-import { useSetField } from '../form-input/hooks/useSetField';
+import { ImmutableStateMutator } from '../form-input/hooks/useDocumentAsState';
 
-export function ImageEditor<TDocument extends AnyDocument>({
-	document,
-	field,
+export function ImageEditor({
 	title,
 	className,
+	value,
+	onChangeValue,
 }: {
-	document: TDocument;
-	field: PathName<SourceDataOf<TDocument>, string>;
 	title: string | null;
 	className?: string;
-}) {
-	const setField = useSetField(document, field);
-	const src = getFieldValue(document.data._source, field);
-
+} & ImmutableStateMutator<string | null>) {
 	return (
 		<img
-			src={src ?? ''}
+			src={value ?? ''}
 			onClick={showFilePicker}
 			title={title ?? ''}
 			className={className ?? 'w-24 h-24 border-2 border-black p-px'}
@@ -28,11 +21,11 @@ export function ImageEditor<TDocument extends AnyDocument>({
 	function showFilePicker() {
 		const fp = new FilePicker({
 			type: 'image',
-			current: src,
+			current: value ?? '',
 			callback: (path) => {
-				setField(path);
+				onChangeValue(() => path);
 			},
 		});
-		return fp.browse(src);
+		return fp.browse(value ?? '');
 	}
 }

@@ -10,6 +10,7 @@ import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsSt
 
 const baseLens = Lens.identity<SourceDataOf<MashupEpicDestiny>>();
 const nameLens = baseLens.toField('name');
+const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
@@ -19,7 +20,11 @@ export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
-				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
+				<ImageEditor
+					{...imageLens.apply(documentState)}
+					title={item.name}
+					className="w-24 h-24 border-2 border-black p-px"
+				/>
 				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
 					<FormInput className="col-span-12">
 						<FormInput.TextField {...nameLens.apply(documentState)} className="text-lg" />

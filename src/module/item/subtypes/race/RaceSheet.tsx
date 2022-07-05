@@ -9,6 +9,7 @@ import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
 const baseLens = Lens.identity<SourceDataOf<MashupItemRace>>();
+const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
@@ -17,7 +18,11 @@ export function RaceSheet({ item }: { item: MashupItemRace }) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
-				<ImageEditor document={item} field="img" title={item.name} className="w-24 h-24 border-2 border-black p-px" />
+				<ImageEditor
+					{...imageLens.apply(documentState)}
+					title={item.name}
+					className="w-24 h-24 border-2 border-black p-px"
+				/>
 				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
 					<FormInput className="col-span-12">
 						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />

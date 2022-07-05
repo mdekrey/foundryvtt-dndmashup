@@ -7,6 +7,7 @@ import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
 const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
+const imageLens = baseLens.toField('img');
 const detailsLens = baseLens.toField('data').toField('details');
 
 export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
@@ -18,7 +19,7 @@ export function Header({ actor }: { actor: SpecificActor<'pc'> }) {
 
 	return (
 		<>
-			<ImageEditor document={actor} field="img" title={actor.data.name} />
+			<ImageEditor {...imageLens.apply(documentState)} title={actor.data.name} />
 			<div className="grid grid-cols-12 grid-rows-2 gap-x-1 text-lg flex-grow">
 				<FormInput className="col-span-5">
 					<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
