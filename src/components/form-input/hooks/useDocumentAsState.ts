@@ -6,6 +6,7 @@ export type ImmutableMutatorOptions = { deleteData: boolean };
 export type ImmutableMutator<T> = (mutator: ImmerMutator<T>, config?: Partial<ImmutableMutatorOptions>) => void;
 
 export type ImmutableStateMutator<T> = { value: T; onChangeValue: ImmutableMutator<T> };
+export type Stateful<T> = ImmutableStateMutator<T>;
 
 export function documentAsState<TDocument extends AnyDocument>(
 	document: TDocument,

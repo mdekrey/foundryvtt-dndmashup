@@ -25,15 +25,26 @@ const healthLens = baseLens.toField('data').toField('health');
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	const documentState = documentAsState(actor);
 
+	const data = actor.data;
+	const defenses = data.data.defenses;
+
 	// TODO: derived data doesn't need to go to data
-	const maxHp = actor.data.data.health.maxHp;
-	const getFinalScore = (ability: Ability) => actor.data.data.abilities[ability].final;
+	const maxHp = data.data.health.maxHp;
+	const getFinalScore = (ability: Ability) => data.data.abilities[ability].final;
 
 	return (
 		<>
 			<article className="flex flex-col h-full">
 				<header className="flex flex-row gap-1">
-					<Header actor={actor} />
+					<Header
+						nameState={baseLens.toField('name').apply(documentState)}
+						imageState={baseLens.toField('img').apply(documentState)}
+						detailsState={baseLens.toField('data').toField('details').apply(documentState)}
+						appliedClass={actor.appliedClass}
+						appliedRace={actor.appliedRace}
+						appliedParagonPath={actor.appliedParagonPath}
+						appliedEpicDestiny={actor.appliedEpicDestiny}
+					/>
 				</header>
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
@@ -43,7 +54,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<Defenses actor={actor} />
+						<Defenses defenses={defenses} />
 					</section>
 					<div className="border-r-2 border-black"></div>
 

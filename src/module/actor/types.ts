@@ -49,17 +49,19 @@ export type BaseActorTemplateDataSourceData = {
 	};
 };
 
+export type PcDetails = ActorDetails & {
+	exp: number;
+	size: string;
+	age: string;
+	pronouns: string;
+	height: string;
+	width: string;
+	deity: string;
+	adventuringCompany: string;
+};
+
 export type PcActorTemplateDataSourceData = {
-	details: {
-		exp: number;
-		size: string;
-		age: string;
-		pronouns: string;
-		height: string;
-		width: string;
-		deity: string;
-		adventuringCompany: string;
-	};
+	details: PcDetails;
 };
 
 export type MonsterActorTemplateDataSourceData = {
