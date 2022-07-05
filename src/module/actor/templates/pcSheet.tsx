@@ -19,17 +19,20 @@ import { SourceDataOf } from 'src/core/foundry';
 import { Ability } from 'src/types/types';
 
 const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
-const abilitiesLens = baseLens.toField('data').toField('abilities');
-const healthLens = baseLens.toField('data').toField('health');
+const dataLens = baseLens.toField('data');
+const abilitiesLens = dataLens.toField('abilities');
+const healthLens = dataLens.toField('health');
+const actionPointsLens = dataLens.toField('actionPoints');
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	const documentState = documentAsState(actor);
 
+	// TODO: derived data doesn't need to go to actor.data
 	const data = actor.data;
 	const defenses = data.data.defenses;
-
-	// TODO: derived data doesn't need to go to data
 	const maxHp = data.data.health.maxHp;
+	const healingSurgeValue = data.data.health.surges.value;
+	const healingSurgesPerDay = data.data.health.surges.max;
 	const getFinalScore = (ability: Ability) => data.data.abilities[ability].final;
 
 	return (
@@ -59,12 +62,16 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<HealingSurges actor={actor} />
+						<HealingSurges
+							healingSurgeValue={healingSurgeValue}
+							healingSurgesPerDay={healingSurgesPerDay}
+							healthState={healthLens.apply(documentState)}
+						/>
 					</section>
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<ActionPoints actor={actor} />
+						<ActionPoints actionPointsState={actionPointsLens.apply(documentState)} />
 					</section>
 				</div>
 

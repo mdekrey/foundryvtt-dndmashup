@@ -1,26 +1,23 @@
 import { FormInput } from 'src/components/form-input';
-import { SpecificActor } from '../mashup-actor';
-import { SourceDataOf } from 'src/core/foundry';
+import { ActionPoints } from '../types';
 import { Lens } from 'src/core/lens';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 
-const baseLens = Lens.identity<SourceDataOf<SpecificActor>>();
-const abilitiesLens = baseLens.toField('data').toField('actionPoints');
+const actionPointsLens = Lens.identity<ActionPoints>();
 
-export function ActionPoints({ actor }: { actor: SpecificActor }) {
-	const documentState = documentAsState(actor);
+export function ActionPoints({ actionPointsState }: { actionPointsState: Stateful<ActionPoints> }) {
 	return (
 		<>
 			<h2 className="text-lg">Action Points</h2>
 			<FormInput className="w-16 flex flex-col items-center">
 				<FormInput.NumberField
-					{...abilitiesLens.toField('value').apply(documentState)}
+					{...actionPointsLens.toField('value').apply(actionPointsState)}
 					className="text-lg text-center"
 				/>
 				<FormInput.Label>Current</FormInput.Label>
 			</FormInput>
 			<FormInput.Inline className="mt-2">
-				<FormInput.Checkbox {...abilitiesLens.toField('usedThisEncounter').apply(documentState)} />
+				<FormInput.Checkbox {...actionPointsLens.toField('usedThisEncounter').apply(actionPointsState)} />
 				Used
 			</FormInput.Inline>
 		</>

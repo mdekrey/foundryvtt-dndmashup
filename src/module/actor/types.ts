@@ -22,15 +22,17 @@ export type Health = {
 	surgesRemaining: number;
 };
 
+export type ActionPoints = {
+	value: number;
+	usedThisEncounter: boolean;
+};
+
 export type BaseActorTemplateDataSourceData = {
 	bonuses: FeatureBonus[];
 	details: ActorDetails;
 	abilities: AbilityScores;
 	health: Health;
-	actionPoints: {
-		value: number;
-		usedThisEncounter: boolean;
-	};
+	actionPoints: ActionPoints;
 	magicItemUse: {
 		currentRemaining: number;
 		usedThisEncounter: boolean;
