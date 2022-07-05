@@ -178,13 +178,20 @@ export class MashupActor extends Actor {
 		});
 	}
 
-	override update(
+	override async update(
 		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions
 	): Promise<this | undefined> {
 		// TODO: For Foundry v9, this is necessary. This appears to be fixed in v10
-		const result = expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData;
-		return super.update(result, context);
+		const resultData = {
+			...(expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData),
+		};
+		if (resultData.items) delete resultData.items;
+		if (resultData.effects) delete resultData.effects;
+
+		if (!(this.parent instanceof Actor)) return super.update(resultData, context);
+		await (this.parent as MashupActor).updateEmbeddedDocuments('Actor', [{ ...resultData, _id: this.id }]);
+		this.render(false);
 	}
 }
 
