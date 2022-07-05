@@ -2,27 +2,31 @@ import { Ability, Currency, TypedData, Defense } from 'src/types/types';
 import { ActorData } from './actor.types';
 import { FeatureBonus } from '../bonuses';
 
+export type ActorDetails = {
+	level: number;
+	biography: string;
+};
+
 export type AbilityScores = {
 	[ability in Ability]: { base: number };
 };
 
+export type Health = {
+	currentHp: number;
+	temporaryHp: number;
+	secondWindUsed: boolean;
+	deathSavesRemaining: number;
+	surges: {
+		remaining: number;
+	};
+	surgesRemaining: number;
+};
+
 export type BaseActorTemplateDataSourceData = {
 	bonuses: FeatureBonus[];
-	details: {
-		level: number;
-		biography: string;
-	};
+	details: ActorDetails;
 	abilities: AbilityScores;
-	health: {
-		currentHp: number;
-		temporaryHp: number;
-		secondWindUsed: boolean;
-		deathSavesRemaining: number;
-		surges: {
-			remaining: number;
-		};
-		surgesRemaining: number;
-	};
+	health: Health;
 	actionPoints: {
 		value: number;
 		usedThisEncounter: boolean;

@@ -20,11 +20,13 @@ import { Ability } from 'src/types/types';
 
 const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
 const abilitiesLens = baseLens.toField('data').toField('abilities');
+const healthLens = baseLens.toField('data').toField('health');
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	const documentState = documentAsState(actor);
 
 	// TODO: derived data doesn't need to go to data
+	const maxHp = actor.data.data.health.maxHp;
 	const getFinalScore = (ability: Ability) => actor.data.data.abilities[ability].final;
 
 	return (
@@ -36,7 +38,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
 					<section className="flex flex-col items-center">
-						<HitPoints actor={actor} />
+						<HitPoints healthState={healthLens.apply(documentState)} maxHp={maxHp} />
 					</section>
 					<div className="border-r-2 border-black"></div>
 
