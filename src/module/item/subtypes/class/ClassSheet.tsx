@@ -17,14 +17,15 @@ const abilities = Abilities.map(
 	(v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase(), typeaheadLabel: v.toUpperCase() })
 );
 
-export const baseLens = Lens.identity<SourceDataOf<MashupItemClass>>();
-export const nameLens = baseLens.toField('name');
-export const dataLens = baseLens.toField('data');
-export const roleLens = dataLens.toField('role');
-export const powerSourceLens = dataLens.toField('powerSource');
-export const hpBaseLens = dataLens.toField('hpBase');
-export const hpPerLevelLens = dataLens.toField('hpPerLevel');
-export const healingSurgesBaseLens = dataLens.toField('healingSurgesBase');
+const baseLens = Lens.identity<SourceDataOf<MashupItemClass>>();
+const nameLens = baseLens.toField('name');
+const dataLens = baseLens.toField('data');
+const roleLens = dataLens.toField('role');
+const powerSourceLens = dataLens.toField('powerSource');
+const hpBaseLens = dataLens.toField('hpBase');
+const hpPerLevelLens = dataLens.toField('hpPerLevel');
+const healingSurgesBaseLens = dataLens.toField('healingSurgesBase');
+const bonusesLens = dataLens.toField('grantedBonuses');
 
 export function ClassSheet({ item }: { item: MashupItemClass }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -89,7 +90,7 @@ export function ClassSheet({ item }: { item: MashupItemClass }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

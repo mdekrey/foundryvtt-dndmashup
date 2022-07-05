@@ -9,6 +9,8 @@ import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
 const baseLens = Lens.identity<SourceDataOf<MashupParagonPath>>();
+const dataLens = baseLens.toField('data');
+const bonusesLens = dataLens.toField('grantedBonuses');
 
 export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
 	const documentState = documentAsState(item);
@@ -34,7 +36,7 @@ export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

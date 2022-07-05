@@ -25,6 +25,8 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 	const { buildSummary: Summary, details: Details } = item.itemSlotInfo;
 
 	const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<T>>>();
+	const dataLens = baseLens.toField('data');
+	const bonusesLens = dataLens.toField('grantedBonuses');
 
 	function onChangeItemSlot(itemSlot: React.SetStateAction<ItemSlot>) {
 		deepUpdate(item as unknown as MashupItemEquipment<ItemSlot>, (draft) => {
@@ -88,7 +90,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						<Description item={item} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

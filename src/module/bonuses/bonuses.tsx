@@ -1,65 +1,66 @@
 import classNames from 'classnames';
-import produce from 'immer';
-import { FormInput } from 'src/components/form-input';
-import { useSetField } from 'src/components/form-input/hooks/useSetField';
-import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { PathName, getFieldValue, combinePath } from 'src/core/path-typings';
+import { FormInput, SelectItem } from 'src/components/form-input';
 import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets, conditions } from './bonus-sheet-utils';
 import { IconButton } from 'src/components/icon-button';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from 'src/core/lens';
 
-const selectTargets = Object.entries(targets).map(([key, { label }]) => ({ key, value: key as BonusTarget, label }));
-const selectConditions = Object.entries(conditions).map(([key, { label }]) => ({
+const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
-	value: key === '' ? '' : (key as ConditionRule),
+	value: key as BonusTarget,
 	label,
+	typeaheadLabel: label,
 }));
+const selectConditions = Object.entries(conditions).map(
+	([key, { label }]): SelectItem<ConditionRule | ''> => ({
+		key,
+		value: key === '' ? '' : (key as ConditionRule),
+		label,
+		typeaheadLabel: label,
+	})
+);
 
-export function Bonuses<TDocument extends AnyDocument>({
-	document,
-	field,
+const baseLens = Lens.identity<FeatureBonus[]>();
+
+export function Bonuses({
+	bonuses,
 	className,
 }: {
-	document: TDocument;
-	field: PathName<SourceDataOf<TDocument>, Array<FeatureBonus>>;
+	bonuses: ImmutableStateMutator<FeatureBonus[]>;
 	className?: string;
 }) {
-	const bonusList = Object.values(getFieldValue(document.data._source, field) ?? []);
-	const setter = useSetField(document, field);
+	const bonusList = bonuses.value;
+	const setter = bonuses.onChangeValue;
 
 	function onAdd() {
-		setter([
-			...bonusList,
-			{
+		bonuses.onChangeValue((draft) => {
+			draft.push({
 				...bonusList[bonusList.length - 1],
 				amount: '0',
 				target: 'defense-ac',
-			},
-		]);
+			});
+		});
 	}
 
 	function onEnable(index: number) {
 		return () =>
-			setter(
-				produce<typeof bonusList>((draft) => {
-					draft[index].disabled = false;
-				})(bonusList)
-			);
+			bonuses.onChangeValue((draft) => {
+				draft[index].disabled = false;
+			});
 	}
 
 	function onDisable(index: number) {
 		return () =>
-			setter(
-				produce<typeof bonusList>((draft) => {
-					draft[index].disabled = true;
-				})(bonusList)
-			);
+			bonuses.onChangeValue((draft) => {
+				draft[index].disabled = true;
+			});
 	}
 
 	function onDelete(index: number) {
 		return () => {
-			return setter([...bonusList.slice(0, index), ...bonusList.slice(index + 1)], { deleteData: true });
+			return setter((draft) => draft.splice(index, 1));
 		};
 	}
 
@@ -85,40 +86,38 @@ export function Bonuses<TDocument extends AnyDocument>({
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 								'border-b-2 border-transparent',
+								'text-sm',
 								{ 'opacity-75': bonus.disabled }
 							)}>
 							<td className="px-1">
-								<FormInput.AutoTextField
-									document={document}
-									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], string>(field, `${idx}.amount`)}
-									className="text-sm text-center"
+								<FormInput.TextField
+									{...baseLens
+										.toField(idx)
+										.toField('amount')
+										.combine(Lens.cast<string | number, string>())
+										.apply(bonuses)}
+									className="text-center"
 								/>
 							</td>
 							<td className="px-1">
-								<FormInput.AutoTextField
-									document={document}
-									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], string>(field, `${idx}.type`)}
-									className="text-sm text-center"
+								<FormInput.TextField
+									{...baseLens.toField(idx).toField('type').default('').apply(bonuses)}
+									className="text-center"
 								/>
 							</td>
 							<td className="px-1 whitespace-nowrap">bonus to</td>
 							<td className="px-1">
-								<FormInput.AutoSelect
-									document={document}
-									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], BonusTarget>(field, `${idx}.target`)}
+								<FormInput.Select
+									{...baseLens.toField(idx).toField('target').apply(bonuses)}
 									options={selectTargets}
-									className="text-sm text-center"
+									className="text-center"
 								/>
 							</td>
 							<td className="px-1">
-								<FormInput.AutoSelect
-									document={document}
-									field={combinePath<SourceDataOf<TDocument>, FeatureBonus[], ConditionRule | ''>(
-										field,
-										`${idx}.condition`
-									)}
+								<FormInput.Select
+									{...baseLens.toField(idx).toField('condition').apply(bonuses)}
 									options={selectConditions}
-									className="text-sm text-center"
+									className="text-center"
 								/>
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">

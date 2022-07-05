@@ -18,6 +18,8 @@ const options = Object.entries(featureTypes).map(
 );
 
 const baseLens = Lens.identity<SourceDataOf<MashupItemFeature>>();
+const dataLens = baseLens.toField('data');
+const bonusesLens = dataLens.toField('grantedBonuses');
 
 export function FeatureSheet({ item }: { item: MashupItemFeature }) {
 	const documentState = documentAsState(item);
@@ -56,7 +58,7 @@ export function FeatureSheet({ item }: { item: MashupItemFeature }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

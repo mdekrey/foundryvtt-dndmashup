@@ -9,6 +9,8 @@ import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
 const baseLens = Lens.identity<SourceDataOf<MashupItemRace>>();
+const dataLens = baseLens.toField('data');
+const bonusesLens = dataLens.toField('grantedBonuses');
 
 export function RaceSheet({ item }: { item: MashupItemRace }) {
 	const documentState = documentAsState(item);
@@ -43,7 +45,7 @@ export function RaceSheet({ item }: { item: MashupItemRace }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

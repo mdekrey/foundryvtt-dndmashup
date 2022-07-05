@@ -8,8 +8,10 @@ import { Lens } from 'src/core/lens';
 import { SourceDataOf } from 'src/core/foundry';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
-export const baseLens = Lens.identity<SourceDataOf<MashupEpicDestiny>>();
-export const nameLens = baseLens.toField('name');
+const baseLens = Lens.identity<SourceDataOf<MashupEpicDestiny>>();
+const nameLens = baseLens.toField('name');
+const dataLens = baseLens.toField('data');
+const bonusesLens = dataLens.toField('grantedBonuses');
 
 export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -36,7 +38,7 @@ export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses document={item} field="data.grantedBonuses" className="flex-grow" />
+						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList item={item} />

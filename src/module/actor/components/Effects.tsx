@@ -1,13 +1,21 @@
 import classNames from 'classnames';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SourceDataOf } from 'src/core/foundry';
+import { Lens } from 'src/core/lens';
 import { Bonuses, targets, conditions } from 'src/module/bonuses';
 import { MashupItemBase } from 'src/module/item/mashup-item';
 import { SpecificActor } from '../mashup-actor';
 
+const baseLens = Lens.identity<SourceDataOf<SpecificActor>>();
+const dataLens = baseLens.toField('data');
+const bonusesLens = dataLens.toField('bonuses');
+
 export function Effects({ actor }: { actor: SpecificActor }) {
+	const documentState = documentAsState(actor);
 	const bonusList = actor.specialBonuses;
 	return (
 		<>
-			<Bonuses document={actor} field="data.bonuses" />
+			<Bonuses bonuses={bonusesLens.apply(documentState)} />
 			<table>
 				<thead className="bg-theme text-white">
 					<tr>
