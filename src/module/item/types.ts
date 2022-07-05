@@ -15,6 +15,15 @@ import { ParagonPathData } from './subtypes/paragonPath/dataSourceData';
 import { EpicDestinyData } from './subtypes/epicDestiny/dataSourceData';
 import { PowerData } from './subtypes/power/dataSourceData';
 
+export type PossibleItemSourceData =
+	| ClassData
+	| RaceData
+	| EquipmentData
+	| FeatureData
+	| ParagonPathData
+	| EpicDestinyData
+	| PowerData;
+
 type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstract.DocumentData<
 	ItemDataSchema,
 	ItemDataBaseProperties & TData,
@@ -27,10 +36,10 @@ type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstr
 
 declare global {
 	interface SourceConfig {
-		Item: ClassData | RaceData | EquipmentData | FeatureData | ParagonPathData | EpicDestinyData | PowerData;
+		Item: PossibleItemSourceData;
 	}
 	interface DataConfig {
-		Item: ClassData | RaceData | EquipmentData | FeatureData | ParagonPathData | EpicDestinyData | PowerData;
+		Item: PossibleItemSourceData;
 	}
 }
 

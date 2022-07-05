@@ -5,6 +5,7 @@ import { SpecificActor } from '../mashup-actor';
 import {
 	EquippedItemSlot,
 	equippedItemSlots,
+	getItemSlotInfo,
 	ItemSlot,
 	itemSlots,
 } from 'src/module/item/subtypes/equipment/item-slots';
@@ -12,6 +13,8 @@ import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
 import { isEquipment } from 'src/module/item/subtypes';
 import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
+import { getEquipmentProperties } from 'src/module/item/subtypes/equipment/getEquipmentProperties';
+import { SourceDataOf } from 'src/core/foundry';
 
 export const orderedItemSlots: ItemSlot[] = [
 	'weapon',
@@ -70,7 +73,7 @@ function InventorySlotTable<T extends ItemSlot>({
 	const InventorySlotBody = useCallback<React.FC<{ item: MashupItemEquipment<T> }>>(
 		({ item }) => (
 			<>
-				<TableBody equipmentProperties={item.equipmentProperties} />
+				<TableBody equipmentProperties={getEquipmentProperties<T>(item.data)} />
 				{equippedSlots.length ? (
 					<td className="text-center w-12">
 						{equippedSlots.map((equipSlot) => (
@@ -83,7 +86,11 @@ function InventorySlotTable<T extends ItemSlot>({
 									'opacity-50': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) >= 1,
 								})}
 								iconClassName="fas fa-shield-alt"
-								onClick={item.isOwner ? () => equip(actor, item, equipSlot) : undefined}
+								onClick={
+									item.isOwner
+										? () => equip(actor, item.data._source as SourceDataOf<MashupItemEquipment<T>>, equipSlot)
+										: undefined
+								}
 							/>
 						))}
 					</td>
@@ -106,20 +113,26 @@ function InventorySlotTable<T extends ItemSlot>({
 	);
 }
 
-function equip<T extends ItemSlot>(actor: SpecificActor, item: MashupItemEquipment<T>, equipSlot: EquippedItemSlot) {
-	const { equippedSlots, slotsNeeded } = item.itemSlotInfo;
+function equip<T extends ItemSlot>(
+	actor: SpecificActor,
+	itemData: SourceDataOf<MashupItemEquipment<T>>,
+	equipSlot: EquippedItemSlot
+) {
+	const { equippedSlots, slotsNeeded } = getItemSlotInfo(itemData.data.itemSlot);
 
-	const wasEquipped = item.data.data.equipped && item.data.data.equipped[0] === equipSlot;
+	const wasEquipped = itemData.data.equipped && itemData.data.equipped[0] === equipSlot;
 	const next = wasEquipped ? [] : [equipSlot];
-	if (!wasEquipped && slotsNeeded(item) > 1) {
+	if (!wasEquipped && slotsNeeded(getEquipmentProperties(itemData)) > 1) {
 		next.push(...equippedSlots.filter((e) => e !== equipSlot));
 	}
 	const unequip = actor.data.items.contents
 		.filter(isEquipment)
-		.filter((eq) => eq.id !== item.id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p)));
+		.filter(
+			(eq) => eq.id !== itemData._id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p))
+		);
 	console.log(wasEquipped, next, unequip);
-	actor.updateEmbeddedDocuments(item.documentName, [
-		{ _id: item.id, data: { equipped: next } },
+	actor.updateEmbeddedDocuments('Item', [
+		{ _id: itemData._id, data: { equipped: next } },
 		...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
 	]);
 }

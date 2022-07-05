@@ -7,7 +7,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	display: 'Weapon',
 	optionLabel: 'Weapon',
 	equippedSlots: ['primary-hand', 'off-hand'],
-	slotsNeeded: (item) => item.equipmentProperties.hands,
+	slotsNeeded: (inputData) => inputData.hands,
 	bonuses: () => [],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (

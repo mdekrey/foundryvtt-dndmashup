@@ -60,3 +60,7 @@ export const itemSlots: {
 		...ItemSlotDefaults,
 	},
 };
+
+export function getItemSlotInfo<T extends ItemSlot>(itemSlot: T): ItemSlotInfo<T> {
+	return itemSlots[itemSlot] as ItemSlotInfo<T>;
+}

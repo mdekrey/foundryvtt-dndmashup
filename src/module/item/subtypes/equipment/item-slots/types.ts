@@ -54,7 +54,7 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	display: string;
 	optionLabel: string;
 	equippedSlots: EquippedItemSlot[];
-	slotsNeeded: (item: MashupItemEquipment<T>) => number;
+	slotsNeeded: (inputData: ItemSlotTemplate<T>) => number;
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;
