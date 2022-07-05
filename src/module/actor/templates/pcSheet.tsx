@@ -13,8 +13,20 @@ import { Powers } from '../components/Powers';
 import { Features } from '../components/Features';
 import { Feats } from '../components/Feats';
 import { Effects } from '../components/Effects';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from 'src/core/lens';
+import { SourceDataOf } from 'src/core/foundry';
+import { Ability } from 'src/types/types';
+
+const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
+const abilitiesLens = baseLens.toField('data').toField('abilities');
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
+	const documentState = documentAsState(actor);
+
+	// TODO: derived data doesn't need to go to data
+	const getFinalScore = (ability: Ability) => actor.data.data.abilities[ability].final;
+
 	return (
 		<>
 			<article className="flex flex-col h-full">
@@ -45,7 +57,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 
 				<div className="flex-grow flex flex-row gap-1">
 					<div>
-						<Abilities actor={actor} />
+						<Abilities abilitiesState={abilitiesLens.apply(documentState)} getFinalScore={getFinalScore} />
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">

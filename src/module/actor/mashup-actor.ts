@@ -120,6 +120,8 @@ export class MashupActor extends Actor {
 	 * is queried and has a roll executed directly from it).
 	 */
 	prepareDerivedData() {
+		// TODO: derived data doesn't need to go to data
+
 		const allData = this.data;
 		allData.data.defenses ??= {} as typeof allData.data.defenses;
 

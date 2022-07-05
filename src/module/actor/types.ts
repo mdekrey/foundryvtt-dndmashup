@@ -2,15 +2,17 @@ import { Ability, Currency, TypedData, Defense } from 'src/types/types';
 import { ActorData } from './actor.types';
 import { FeatureBonus } from '../bonuses';
 
+export type AbilityScores = {
+	[ability in Ability]: { base: number };
+};
+
 export type BaseActorTemplateDataSourceData = {
 	bonuses: FeatureBonus[];
 	details: {
 		level: number;
 		biography: string;
 	};
-	abilities: {
-		[ability in Ability]: { base: number };
-	};
+	abilities: AbilityScores;
 	health: {
 		currentHp: number;
 		temporaryHp: number;

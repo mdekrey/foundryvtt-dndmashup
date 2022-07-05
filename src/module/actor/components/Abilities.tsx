@@ -1,16 +1,19 @@
 import { Fragment } from 'react';
 import { FormInput } from 'src/components/form-input';
-import { Abilities as abilities } from 'src/types/types';
-import { SpecificActor } from '../mashup-actor';
-import { SourceDataOf } from 'src/core/foundry';
+import { Abilities as abilities, Ability } from 'src/types/types';
 import { Lens } from 'src/core/lens';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { AbilityScores } from '../types';
 
-const baseLens = Lens.identity<SourceDataOf<SpecificActor>>();
-const abilitiesLens = baseLens.toField('data').toField('abilities');
+const baseLens = Lens.identity<AbilityScores>();
 
-export function Abilities({ actor }: { actor: SpecificActor }) {
-	const documentState = documentAsState(actor);
+export function Abilities({
+	abilitiesState,
+	getFinalScore,
+}: {
+	abilitiesState: ImmutableStateMutator<AbilityScores>;
+	getFinalScore(ability: Ability): number;
+}) {
 	return (
 		<>
 			<div className="grid grid-cols-3 gap-1 items-center justify-items-center w-32">
@@ -18,11 +21,11 @@ export function Abilities({ actor }: { actor: SpecificActor }) {
 				{abilities.map((ability) => (
 					<Fragment key={ability}>
 						<FormInput.NumberField
-							{...abilitiesLens.toField(ability).toField('base').apply(documentState)}
+							{...baseLens.toField(ability).toField('base').apply(abilitiesState)}
 							className="w-8 text-lg text-center"
 						/>
 						<FormInput.Label className="uppercase font-bold link">{ability}</FormInput.Label>
-						<span title="{{a}}">{ensureSign(actor.data.data.abilities[ability].final)}</span>
+						<span title="{{a}}">{ensureSign(getFinalScore(ability))}</span>
 					</Fragment>
 				))}
 			</div>
