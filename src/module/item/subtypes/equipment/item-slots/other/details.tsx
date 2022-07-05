@@ -1,13 +1,15 @@
 import { FormInput } from 'src/components/form-input';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
 import { MashupItemEquipment } from '../../config';
 import { ItemSlot } from '../types';
 
-export function OtherDetails<T extends ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
-	const documentState = documentAsState(item, { deleteData: true });
-
+export function OtherDetails<T extends ItemSlot>({
+	itemState: documentState,
+}: {
+	itemState: Stateful<SourceDataOf<MashupItemEquipment<T>>>;
+}) {
 	const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<T>>>();
 
 	return (

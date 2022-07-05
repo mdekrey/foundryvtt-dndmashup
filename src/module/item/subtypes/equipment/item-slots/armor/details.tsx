@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
 import { MashupItemEquipment } from '../../config';
@@ -22,32 +22,31 @@ const armorBonusLens = equipmentPropertiesLens.toField('armorBonus');
 const checkPenaltyLens = equipmentPropertiesLens.toField('checkPenalty');
 const speedPenaltyLens = equipmentPropertiesLens.toField('speedPenalty');
 
-export function ArmorDetails({ item }: { item: MashupItemEquipment<'armor'> }) {
-	const documentState = documentAsState(item, { deleteData: true });
+export function ArmorDetails({ itemState }: { itemState: Stateful<SourceDataOf<MashupItemEquipment<'armor'>>> }) {
 	return (
 		<>
 			<FormInput className="text-lg col-span-6">
-				<FormInput.Select {...categoryLens.apply(documentState)} options={armorCategories} />
+				<FormInput.Select {...categoryLens.apply(itemState)} options={armorCategories} />
 				<FormInput.Label>Category</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-6">
-				<FormInput.Select {...typeLens.apply(documentState)} options={armorTypes} />
+				<FormInput.Select {...typeLens.apply(itemState)} options={armorTypes} />
 				<FormInput.Label>Type</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-4">
-				<FormInput.NumberField {...armorBonusLens.apply(documentState)} />
+				<FormInput.NumberField {...armorBonusLens.apply(itemState)} />
 				<FormInput.Label>Armor Bonus</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-4">
-				<FormInput.NumberField {...checkPenaltyLens.apply(documentState)} />
+				<FormInput.NumberField {...checkPenaltyLens.apply(itemState)} />
 				<FormInput.Label>Check</FormInput.Label>
 			</FormInput>
 			<FormInput className="text-lg col-span-4">
-				<FormInput.NumberField {...speedPenaltyLens.apply(documentState)} />
+				<FormInput.NumberField {...speedPenaltyLens.apply(itemState)} />
 				<FormInput.Label>Speed</FormInput.Label>
 			</FormInput>
 
-			<OtherDetails item={item} />
+			<OtherDetails itemState={itemState} />
 		</>
 	);
 }

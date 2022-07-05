@@ -10,7 +10,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	slotsNeeded: (item) => item.equipmentProperties.hands,
 	bonuses: () => [],
 	defaultEquipmentInfo,
-	buildSummary: ({ item: { equipmentProperties: input } }) => (
+	buildSummary: ({ equipmentProperties: input }) => (
 		<>
 			{[
 				`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}`,
@@ -29,7 +29,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<th>Range</th>
 		</>
 	),
-	inventoryTableBody: ({ item: { equipmentProperties } }) => (
+	inventoryTableBody: ({ equipmentProperties }) => (
 		<>
 			<td className="text-center">{weaponGroups[equipmentProperties.group]}</td>
 			<td className="text-center">{equipmentProperties.damage}</td>

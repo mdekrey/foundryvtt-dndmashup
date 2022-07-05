@@ -70,7 +70,7 @@ function InventorySlotTable<T extends ItemSlot>({
 	const InventorySlotBody = useCallback<React.FC<{ item: MashupItemEquipment<T> }>>(
 		({ item }) => (
 			<>
-				<TableBody item={item} />
+				<TableBody equipmentProperties={item.equipmentProperties} />
 				{equippedSlots.length ? (
 					<td className="text-center w-12">
 						{equippedSlots.map((equipSlot) => (

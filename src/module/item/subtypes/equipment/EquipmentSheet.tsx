@@ -47,12 +47,12 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					title={item.name}
 					className="w-24 h-24 border-2 border-black p-px"
 				/>
-				<div className="grid grid-cols-12 gap-x-1 items-end flex-grow text-lg">
-					<FormInput className="col-span-9">
+				<div className="grid grid-cols-12 gap-x-1 items-end flex-grow">
+					<FormInput className="col-span-9 text-lg">
 						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
 						<FormInput.Label>Item Name</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-3">
+					<FormInput className="col-span-3 text-lg">
 						<FormInput.Select
 							className="text-center"
 							options={itemSlotOptions}
@@ -68,8 +68,8 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						</FormInput.Inline>
 					</p>
 
-					<p className="col-span-12">
-						<Summary item={item} />
+					<p className="col-span-12 text-xs">
+						<Summary equipmentProperties={item.equipmentProperties} />
 					</p>
 				</div>
 			</div>
@@ -88,7 +88,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="details">
 						<div className="grid grid-cols-12 gap-x-1 items-end">
-							<Details item={item} />
+							<Details itemState={documentState} />
 						</div>
 					</Tabs.Tab>
 					<Tabs.Tab tabName="description">

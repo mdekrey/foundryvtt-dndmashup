@@ -1,3 +1,5 @@
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
+import { SourceDataOf } from 'src/core/foundry';
 import { FeatureBonus } from 'src/module/bonuses';
 import { MashupItemEquipment } from '../config';
 import { ArmorItemSlotTemplate } from './armor/types';
@@ -40,8 +42,12 @@ export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
 	[K in T]: T extends keyof ItemSlotTemplates ? ItemSlotTemplates[T] : Record<string, never>;
 }[T];
 
+export type MutableItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
+	itemState: Stateful<SourceDataOf<MashupItemEquipment<T>>>;
+}>;
+
 export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
-	item: MashupItemEquipment<T>;
+	equipmentProperties: ItemSlotTemplate<T>;
 }>;
 
 export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
@@ -52,7 +58,7 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;
-	details: ItemSlotComponent<T>;
+	details: MutableItemSlotComponent<T>;
 	inventoryTableHeader: React.FC;
 	inventoryTableBody: ItemSlotComponent<T>;
 	inventoryTableAddedCellCount: number;
