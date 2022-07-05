@@ -31,13 +31,10 @@ export function Bonuses({
 	bonuses: ImmutableStateMutator<FeatureBonus[]>;
 	className?: string;
 }) {
-	const bonusList = bonuses.value;
-	const setter = bonuses.onChangeValue;
-
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({
-				...bonusList[bonusList.length - 1],
+				...bonuses.value[bonuses.value.length - 1],
 				amount: '0',
 				target: 'defense-ac',
 			});
@@ -60,7 +57,7 @@ export function Bonuses({
 
 	function onDelete(index: number) {
 		return () => {
-			return setter((draft) => draft.splice(index, 1));
+			return bonuses.onChangeValue((draft) => draft.splice(index, 1));
 		};
 	}
 
@@ -80,7 +77,7 @@ export function Bonuses({
 					</tr>
 				</thead>
 				<tbody>
-					{bonusList.map((bonus, idx) => (
+					{bonuses.value.map((bonus, idx) => (
 						<tr
 							key={idx}
 							className={classNames(
@@ -130,7 +127,7 @@ export function Bonuses({
 							</td>
 						</tr>
 					))}
-					{bonusList.length === 0 ? (
+					{bonuses.value.length === 0 ? (
 						<tr
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
