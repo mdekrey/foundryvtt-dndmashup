@@ -1,7 +1,7 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from '../bonuses';
-import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
+import { PossibleItemData, PossibleItemSourceData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 import Document, {
 	Context,
@@ -12,12 +12,13 @@ import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types
 import { AnyDocument } from 'src/core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { MashupPower } from './subtypes/power/config';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
 const itemCollectionPath = 'data.items';
 
-export class MashupItemBase extends Item {
+export class MashupItemBase extends Item implements SimpleDocument<PossibleItemSourceData> {
 	// TODO: schema support doesn't seem to be working in v9
 	// static override get schema() {
 	// 	return MashupItemData as any;
@@ -212,6 +213,10 @@ export class MashupItemBase extends Item {
 		if (this.id) await (this.parent as MashupItemBase).deleteEmbeddedDocuments('Item', [this.id]);
 		if (this.sheet) this.sheet.close({ submit: false });
 		return this;
+	}
+
+	showEditDialog() {
+		this.sheet?.render(true, { focus: true });
 	}
 }
 

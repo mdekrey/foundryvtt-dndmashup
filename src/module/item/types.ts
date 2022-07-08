@@ -15,14 +15,17 @@ import { ParagonPathData } from './subtypes/paragonPath/dataSourceData';
 import { EpicDestinyData } from './subtypes/epicDestiny/dataSourceData';
 import { PowerData } from './subtypes/power/dataSourceData';
 
-export type PossibleItemSourceData =
-	| ClassData
-	| RaceData
-	| EquipmentData
-	| FeatureData
-	| ParagonPathData
-	| EpicDestinyData
-	| PowerData;
+type ItemDataByType = {
+	class: ClassData;
+	race: RaceData;
+	equipment: { [K in ItemSlot]: EquipmentData<K> }[ItemSlot];
+	feature: FeatureData;
+	paragonPath: ParagonPathData;
+	epicDestiny: EpicDestinyData;
+	power: PowerData;
+};
+
+export type PossibleItemSourceData = ItemDataByType[keyof ItemDataByType];
 
 type ItemData<TData, TSource extends TypedData<string, unknown>> = foundry.abstract.DocumentData<
 	ItemDataSchema,
@@ -43,16 +46,14 @@ declare global {
 	}
 }
 
-export type PossibleItemData =
-	| ItemData<ClassData, ClassData>
-	| ItemData<RaceData, RaceData>
-	| ItemData<EquipmentData, EquipmentData>
-	| ItemData<FeatureData, FeatureData>
-	| ItemData<ParagonPathData, ParagonPathData>
-	| ItemData<EpicDestinyData, EpicDestinyData>
-	| ItemData<PowerData, PowerData>;
+export type PossibleItemType = keyof ItemDataByType;
 
-export type PossibleItemType = PossibleItemData['type'];
+// export type SpecificItemData<T extends PossibleItemType> = {
+// 	[K in T]: ItemData<ItemDataByType[K], ItemDataByType[K]>;
+// }[T];
+export type PossibleItemData = {
+	[K in PossibleItemType]: ItemData<ItemDataByType[K], ItemDataByType[K]>;
+}[PossibleItemType];
 
 export type SpecificItemData<T extends PossibleItemType> = PossibleItemData & { type: T };
 export type SpecificItemEquipmentData<TItemSlot extends ItemSlot = ItemSlot> = SpecificItemData<'equipment'> &

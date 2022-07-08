@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import { useRef } from 'react';
 import { IconButton } from 'src/components/icon-button';
-import { MashupItemBase } from 'src/module/item/mashup-item';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 
-export function ItemTable<T extends MashupItemBase, ChildProps extends Record<string, unknown>>({
+export function ItemTable<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
 	title,
 	items,
 	passedProps,
@@ -46,7 +46,7 @@ export function ItemTable<T extends MashupItemBase, ChildProps extends Record<st
 	);
 }
 
-function ItemTableRow<T extends MashupItemBase, ChildProps extends Record<string, unknown>>({
+function ItemTableRow<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
 	item,
 	passedProps,
 	body: TableBody,
@@ -101,7 +101,7 @@ function ItemTableRow<T extends MashupItemBase, ChildProps extends Record<string
 	);
 
 	function edit() {
-		item.sheet?.render(true, { focus: true });
+		item.showEditDialog();
 	}
 	function remove() {
 		item.delete();
