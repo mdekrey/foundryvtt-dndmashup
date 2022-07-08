@@ -1,6 +1,7 @@
 import { FeatureBonus } from 'src/module/bonuses';
+import { PossibleItemType } from '../../item-data-types-template';
 import { MashupItem } from '../../mashup-item';
-import { SpecificItemEquipmentData, PossibleItemType } from '../../types';
+import { SpecificItemEquipmentData } from '../../types';
 import { EquipmentData } from './dataSourceData';
 import { ItemSlot } from './item-slots';
 

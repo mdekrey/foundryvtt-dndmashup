@@ -1,7 +1,8 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from '../bonuses';
-import { PossibleItemData, PossibleItemSourceData, PossibleItemType, SpecificItemData } from './types';
+import { PossibleItemSourceData } from './item-data-types-template';
+import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 import Document, {
 	Context,
@@ -220,7 +221,10 @@ export class MashupItemBase extends Item implements SimpleDocument<PossibleItemS
 	}
 }
 
-export abstract class MashupItem<T extends PossibleItemType = PossibleItemType> extends MashupItemBase {
+export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
+	extends MashupItemBase
+	implements SimpleDocument<SpecificItemData<T>>
+{
 	data!: SpecificItemData<T>;
 	get type(): T {
 		return super.type as T;
