@@ -1,5 +1,4 @@
 import { MashupItem, MashupItemBase } from './mashup-item';
-import { itemMappings } from './subtypes';
 import { PossibleItemData, PossibleItemType } from './types';
 import { ClassSheet } from './subtypes/class/ClassSheet';
 import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
@@ -10,15 +9,27 @@ import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/fo
 import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
 import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';
 import { PowerSheet } from './subtypes/power/PowerSheet';
+import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { ItemDataByType } from './item-data-types-template';
+import { documentAsState, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { MashupItemRace } from './subtypes/race/config';
+import { RaceData } from './subtypes/race/dataSourceData';
 
-const sheets: { [K in PossibleItemType]: React.FC<{ item: InstanceType<typeof itemMappings[K]> }> } = {
-	class: ClassSheet,
-	race: RaceSheet,
-	equipment: EquipmentSheet,
-	feature: FeatureSheet,
-	epicDestiny: EpicDestinySheet,
-	paragonPath: ParagonPathSheet,
-	power: PowerSheet,
+const sheets: { [K in PossibleItemType]: React.FC<{ item: SimpleDocument<ItemDataByType[K]> }> } = {
+	class: ClassSheet as React.FC<{ item: SimpleDocument<ItemDataByType['class']> }>,
+	race: (({ item }: { item: MashupItemRace }) => (
+		<RaceSheet
+			items={item.items.contents}
+			{...(documentAsState(item) as never as ImmutableStateMutator<SimpleDocumentData<RaceData>>)}
+		/> /* TODO - no as never */
+	)) as React.FC<{
+		item: SimpleDocument<ItemDataByType['race']>;
+	}>,
+	equipment: EquipmentSheet as React.FC<{ item: SimpleDocument<ItemDataByType['equipment']> }>,
+	feature: FeatureSheet as React.FC<{ item: SimpleDocument<ItemDataByType['feature']> }>,
+	epicDestiny: EpicDestinySheet as React.FC<{ item: SimpleDocument<ItemDataByType['epicDestiny']> }>,
+	paragonPath: ParagonPathSheet as React.FC<{ item: SimpleDocument<ItemDataByType['paragonPath']> }>,
+	power: PowerSheet as React.FC<{ item: SimpleDocument<ItemDataByType['power']> }>,
 };
 
 function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {

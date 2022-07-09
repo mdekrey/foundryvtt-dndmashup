@@ -1,3 +1,4 @@
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { NoStringPath } from 'src/core/path-typings';
 import { DamageType, Defense, TypedData } from 'src/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
@@ -81,3 +82,5 @@ export type TargetEffect = {
 
 export type ApplicableEffect = NoStringPath &
 	(AttackEffect | DamageEffect | HalfDamageEffect | HealingEffect | TextEffect | TargetEffect);
+
+export type PowerDocument = SimpleDocument<PowerData>;

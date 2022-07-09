@@ -10,7 +10,7 @@ import {
 	itemSlots,
 } from 'src/module/item/subtypes/equipment/item-slots';
 import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
-import { isEquipment } from 'src/module/item/subtypes';
+import { isEquipment } from 'src/module/item/subtypes/equipment/isEquipment';
 import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
 import { getEquipmentProperties } from 'src/module/item/subtypes/equipment/getEquipmentProperties';

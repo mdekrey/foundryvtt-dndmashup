@@ -99,7 +99,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
-						<FeaturesList item={item} />
+						<FeaturesList items={item.items.contents} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="contents">
 						<Contents item={item} />

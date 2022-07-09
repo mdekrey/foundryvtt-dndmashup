@@ -3,18 +3,22 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { MashupItemRace } from './config';
-import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { RaceData } from './dataSourceData';
+import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { PossibleItemData } from '../../types';
 
-const baseLens = Lens.identity<SourceDataOf<MashupItemRace>>();
+const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
-export function RaceSheet({ item }: { item: MashupItemRace }) {
-	const documentState = documentAsState(item);
+export function RaceSheet({
+	items,
+	...documentState
+}: ImmutableStateMutator<SimpleDocumentData<RaceData>> & { items: SimpleDocument<PossibleItemData>[] }) {
+	const { value: item } = documentState;
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
@@ -43,7 +47,7 @@ export function RaceSheet({ item }: { item: MashupItemRace }) {
 			<Tabs defaultActiveTab="bonuses">
 				<Tabs.Nav>
 					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
-					{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
+					{items.filter((item) => item.type !== 'equipment').length ? (
 						<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
 					) : null}
 				</Tabs.Nav>
@@ -53,7 +57,7 @@ export function RaceSheet({ item }: { item: MashupItemRace }) {
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
-						<FeaturesList item={item} />
+						<FeaturesList items={items} />
 					</Tabs.Tab>
 				</section>
 			</Tabs>

@@ -46,7 +46,7 @@ export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
-						<FeaturesList item={item} />
+						<FeaturesList items={item.items.contents} />
 					</Tabs.Tab>
 				</section>
 			</Tabs>

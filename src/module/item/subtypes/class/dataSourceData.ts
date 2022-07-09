@@ -1,4 +1,5 @@
 import { Ability, TypedData } from 'src/types/types';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type ClassDataSourceData = BaseItemTemplateDataSourceData & {
@@ -11,3 +12,5 @@ export type ClassDataSourceData = BaseItemTemplateDataSourceData & {
 };
 
 export type ClassData = TypedData<'class', ClassDataSourceData>;
+
+export type ClassDocument = SimpleDocument<ClassData>;

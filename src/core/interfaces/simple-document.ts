@@ -7,6 +7,8 @@ export type StandardData = {
 	sort: number;
 };
 
+export type SimpleDocumentData<TData = unknown> = TData & StandardData;
+
 /**
  * Represents a simple document without using the Foundry types to try to speed up conpilation
  */
@@ -15,7 +17,10 @@ export type SimpleDocument<TData = unknown> = {
 	name: string | null;
 	img: string | null;
 	isOwner: boolean;
-	data: TData & StandardData;
+	data: SimpleDocumentData<TData>;
+	type: TData extends { type: infer TType } ? TType : unknown;
+
+	readonly items: { contents: SimpleDocument[] };
 
 	delete(): void;
 	showEditDialog(): void;

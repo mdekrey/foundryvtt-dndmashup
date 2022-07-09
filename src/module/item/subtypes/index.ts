@@ -7,8 +7,6 @@ import { MashupParagonPath } from './paragonPath/config';
 import { MashupEpicDestiny } from './epicDestiny/config';
 import { MashupPower } from './power/config';
 
-export * from './filters';
-
 export const itemMappings = {
 	class: MashupItemClass,
 	race: MashupItemRace,

@@ -1,8 +1,9 @@
 import { FeatureBonus } from 'src/module/bonuses';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
+import { ClassDocument } from './dataSourceData';
 
-export class MashupItemClass extends MashupItem<'class'> {
+export class MashupItemClass extends MashupItem<'class'> implements ClassDocument {
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'feature' || type === 'power';
 	}

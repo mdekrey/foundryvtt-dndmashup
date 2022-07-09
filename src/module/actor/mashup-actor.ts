@@ -12,7 +12,11 @@ import {
 	filterBonuses,
 	sumFinalBonuses,
 } from '../bonuses';
-import { isClass, isEpicDestiny, isParagonPath, isPower, isRace } from '../item/subtypes';
+import { isClass } from '../item/subtypes/class/isClass';
+import { isEpicDestiny } from '../item/subtypes/epicDestiny/isEpicDestiny';
+import { isParagonPath } from '../item/subtypes/paragonPath/isParagonPath';
+import { isPower } from '../item/subtypes/power/isPower';
+import { isRace } from '../item/subtypes/race/isRace';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
