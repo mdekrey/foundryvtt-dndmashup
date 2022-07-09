@@ -14,7 +14,8 @@ import { isEquipment } from 'src/module/item/subtypes/equipment/isEquipment';
 import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
 import { getEquipmentProperties } from 'src/module/item/subtypes/equipment/getEquipmentProperties';
-import { SourceDataOf } from 'src/core/foundry';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { EquipmentData } from 'src/module/item/subtypes/equipment/dataSourceData';
 
 export const orderedItemSlots: ItemSlot[] = [
 	'weapon',
@@ -47,7 +48,7 @@ export function Inventory({ actor }: { actor: SpecificActor }) {
 		</>
 	);
 
-	function equip(itemData: SourceDataOf<MashupItemEquipment<ItemSlot>>, equipSlot: EquippedItemSlot) {
+	function equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot) {
 		const { equippedSlots, slotsNeeded } = getItemSlotInfo(itemData.data.itemSlot);
 
 		const wasEquipped = itemData.data.equipped && itemData.data.equipped[0] === equipSlot;
