@@ -3,18 +3,18 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { MashupEpicDestiny } from './config';
 import { Lens } from 'src/core/lens';
-import { SourceDataOf } from 'src/core/foundry';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { EpicDestinyData, EpicDestinyDocument } from './dataSourceData';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
-const baseLens = Lens.identity<SourceDataOf<MashupEpicDestiny>>();
+const baseLens = Lens.identity<SimpleDocumentData<EpicDestinyData>>();
 const nameLens = baseLens.toField('name');
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
-export function EpicDestinySheet({ item }: { item: MashupEpicDestiny }) {
+export function EpicDestinySheet({ item }: { item: EpicDestinyDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
 
 	return (

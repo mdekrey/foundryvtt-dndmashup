@@ -3,10 +3,11 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { FeatureType, featureTypes, MashupItemFeature } from './config';
+import { FeatureType, featureTypes } from './config';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
+import { FeatureDocument, FeatureData } from './dataSourceData';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
 const options = Object.entries(featureTypes).map(
 	([key, { label: label }]): SelectItem<FeatureType> => ({
@@ -17,12 +18,12 @@ const options = Object.entries(featureTypes).map(
 	})
 );
 
-const baseLens = Lens.identity<SourceDataOf<MashupItemFeature>>();
+const baseLens = Lens.identity<SimpleDocumentData<FeatureData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
-export function FeatureSheet({ item }: { item: MashupItemFeature }) {
+export function FeatureSheet({ item }: { item: FeatureDocument }) {
 	const documentState = documentAsState(item);
 	return (
 		<div className="h-full flex flex-col gap-1">

@@ -1,24 +1,24 @@
 import { Draft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
-import { SourceDataOf } from 'src/core/foundry';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 import { Lens } from 'src/core/lens';
-import { MashupPower } from '../config';
-import { PowerEffect, AttackEffect, AttackRoll, TextEffect, ApplicableEffect, TargetEffect } from '../dataSourceData';
+import { not, or } from 'src/core/lens/functions';
+import {
+	PowerEffect,
+	AttackEffect,
+	AttackRoll,
+	TextEffect,
+	ApplicableEffect,
+	TargetEffect,
+	PowerData,
+} from '../dataSourceData';
 
-export const not =
-	<T extends U, U>(f: (e: U) => e is T) =>
-	(e: U): e is Exclude<T, U> =>
-		!f(e);
-export const or =
-	<U, T extends U, S extends U>(f1: (e: U) => e is T, f2: (e: U) => e is S) =>
-	(e: U): e is T | S =>
-		f1(e) || f2(e);
 export const isAttackEffect = (e: ApplicableEffect): e is AttackEffect => e.type === 'attack';
 export const isTargetEffect = (e: ApplicableEffect): e is TargetEffect => e.type === 'target';
 export const isTextEffect = (e: ApplicableEffect): e is TextEffect => e.type === 'text';
 export const isNull = (e: any): e is null => e === null;
 
-export const baseLens = Lens.identity<SourceDataOf<MashupPower>>();
+export const baseLens = Lens.identity<SimpleDocumentData<PowerData>>();
 
 const undefinedString = Lens.from<string | undefined, string>(
 	(d) => d ?? '',
@@ -85,7 +85,7 @@ export const attackRollLens = Lens.from<AttackEffect | null, AttackRoll | null>(
 	}
 );
 
-export const keywordsLens = Lens.from<SourceDataOf<MashupPower>, string>(
+export const keywordsLens = Lens.from<SimpleDocumentData<PowerData>, string>(
 	(power) => power.data.keywords.map((k) => k.capitalize()).join(', '),
 	(mutator) => (draft) => {
 		const keywords = mutator(draft.data.keywords.map((k) => k.capitalize()).join(', '));

@@ -3,11 +3,12 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Abilities, Ability } from 'src/types/types';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
-import { MashupItemClass } from './config';
 import { FeaturesList } from '../../components/FeaturesList';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SourceDataOf } from 'src/core/foundry';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
+import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { ClassData } from './dataSourceData';
+import { isEquipment } from '../equipment/isEquipment';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
@@ -17,7 +18,7 @@ const abilities = Abilities.map(
 	(v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase(), typeaheadLabel: v.toUpperCase() })
 );
 
-const baseLens = Lens.identity<SourceDataOf<MashupItemClass>>();
+const baseLens = Lens.identity<SimpleDocumentData<ClassData>>();
 const nameLens = baseLens.toField('name');
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
@@ -28,15 +29,16 @@ const hpPerLevelLens = dataLens.toField('hpPerLevel');
 const healingSurgesBaseLens = dataLens.toField('healingSurgesBase');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
-export function ClassSheet({ item }: { item: MashupItemClass }) {
-	const documentState = documentAsState(item, { deleteData: true });
-
+export function ClassSheet({
+	items,
+	...documentState
+}: { items: SimpleDocument[] } & Stateful<SimpleDocumentData<ClassData>>) {
 	return (
 		<div className="h-full flex flex-col gap-1">
 			<div className="flex flex-row gap-1">
 				<ImageEditor
 					{...imageLens.apply(documentState)}
-					title={item.name}
+					title={documentState.value.name}
 					className="w-24 h-24 border-2 border-black p-px"
 				/>
 				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
@@ -88,9 +90,7 @@ export function ClassSheet({ item }: { item: MashupItemClass }) {
 			<Tabs defaultActiveTab="bonuses">
 				<Tabs.Nav>
 					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
-					{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
-						<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
-					) : null}
+					{items.filter(isEquipment).length ? <Tabs.NavButton tabName="features">Features</Tabs.NavButton> : null}
 				</Tabs.Nav>
 
 				<section className="flex-grow">
@@ -98,7 +98,7 @@ export function ClassSheet({ item }: { item: MashupItemClass }) {
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
-						<FeaturesList items={item.items.contents} />
+						<FeaturesList items={items} />
 					</Tabs.Tab>
 				</section>
 			</Tabs>

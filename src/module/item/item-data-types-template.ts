@@ -1,10 +1,10 @@
-import { ClassData } from './subtypes/class/dataSourceData';
-import { RaceData } from './subtypes/race/dataSourceData';
-import { EquipmentData } from './subtypes/equipment/dataSourceData';
-import { FeatureData } from './subtypes/feature/dataSourceData';
-import { ParagonPathData } from './subtypes/paragonPath/dataSourceData';
-import { EpicDestinyData } from './subtypes/epicDestiny/dataSourceData';
-import { PowerData } from './subtypes/power/dataSourceData';
+import { ClassData, ClassDocument } from './subtypes/class/dataSourceData';
+import { RaceData, RaceDocument } from './subtypes/race/dataSourceData';
+import { EquipmentData, EquipmentDocument } from './subtypes/equipment/dataSourceData';
+import { FeatureData, FeatureDocument } from './subtypes/feature/dataSourceData';
+import { ParagonPathData, ParagonPathDocument } from './subtypes/paragonPath/dataSourceData';
+import { EpicDestinyData, EpicDestinyDocument } from './subtypes/epicDestiny/dataSourceData';
+import { PowerData, PowerDocument } from './subtypes/power/dataSourceData';
 import { ItemSlot } from './subtypes/equipment/item-slots';
 
 export interface ItemDataByType {
@@ -15,6 +15,16 @@ export interface ItemDataByType {
 	paragonPath: ParagonPathData;
 	epicDestiny: EpicDestinyData;
 	power: PowerData;
+}
+
+export interface ItemDocumentByType {
+	class: ClassDocument;
+	race: RaceDocument;
+	equipment: { [K in ItemSlot]: EquipmentDocument<K> }[ItemSlot];
+	feature: FeatureDocument;
+	paragonPath: ParagonPathDocument;
+	epicDestiny: EpicDestinyDocument;
+	power: PowerDocument;
 }
 
 export type PossibleItemType = keyof ItemDataByType;

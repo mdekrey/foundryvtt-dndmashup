@@ -1,5 +1,6 @@
 import produce, { Draft } from 'immer';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
+import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
 import { ImmerMutator, Lens } from 'src/core/lens';
 
 export type ImmutableMutatorOptions = { deleteData: boolean };
@@ -10,16 +11,27 @@ export type Stateful<T> = ImmutableStateMutator<T>;
 
 export function documentAsState<TDocument extends AnyDocument>(
 	document: TDocument,
+	options?: Partial<ImmutableMutatorOptions>
+): Stateful<SourceDataOf<TDocument>>;
+export function documentAsState<TData>(
+	document: SimpleDocument<TData>,
+	options?: Partial<ImmutableMutatorOptions>
+): Stateful<SimpleDocumentData<TData>>;
+export function documentAsState(
+	document: AnyDocument | SimpleDocument,
 	options: Partial<ImmutableMutatorOptions> = {}
-): ImmutableStateMutator<SourceDataOf<TDocument>> {
+): Stateful<any> {
 	return {
-		value: document.data._source,
+		value: '_source' in document.data ? document.data._source : document.data,
 		onChangeValue: (mutator, options2 = {}) => {
 			const { deleteData = true } = { ...options, ...options2 };
-			const result = produce(document.data._source, (draft: Draft<SourceDataOf<TDocument>>) => {
-				delete (draft as any)._id;
-				return mutator(draft);
-			});
+			const result = produce(
+				'_source' in document.data ? document.data._source : document.data,
+				(draft: Draft<any>) => {
+					delete draft._id;
+					return mutator(draft);
+				}
+			) as any;
 			document.update(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
 		},
 	};

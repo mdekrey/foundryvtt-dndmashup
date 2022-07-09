@@ -1,23 +1,23 @@
 import { FormInput } from 'src/components/form-input';
-import { SourceDataOf } from 'src/core/foundry';
 import { WeaponProperty } from './types';
 import { OtherDetails } from '../other/details';
 import { toNumericSelectItems, toSelectItems } from '../toSelectItems';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
-import { MashupItemEquipment } from '../../config';
 import { Lens } from 'src/core/lens';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
+import { EquipmentData } from '../../dataSourceData';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
 const allWeaponCategories = toSelectItems(weaponCategories);
 const allWeaponHands = toNumericSelectItems(weaponHands);
 const allWeaponGroups = toSelectItems(weaponGroups);
 const allWeaponProperties = toSelectItems(weaponProperties);
 
-const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<'weapon'>>>();
+const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<'weapon'>>>();
 const equipmentPropertiesLens = baseLens.toField('data').toField('equipmentProperties').default(defaultEquipmentInfo);
 
-export function WeaponDetails({ itemState }: { itemState: Stateful<SourceDataOf<MashupItemEquipment<'weapon'>>> }) {
+export function WeaponDetails({ itemState }: { itemState: Stateful<SimpleDocumentData<EquipmentData<'weapon'>>> }) {
 	const checkedProperties = itemState.value.data.equipmentProperties?.properties ?? [];
 	function setChecked(value: WeaponProperty, isChecked: boolean) {
 		if (isChecked) {

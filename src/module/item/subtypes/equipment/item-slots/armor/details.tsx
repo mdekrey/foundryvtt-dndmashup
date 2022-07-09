@@ -1,8 +1,8 @@
 import { FormInput } from 'src/components/form-input';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SourceDataOf } from 'src/core/foundry';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 import { Lens } from 'src/core/lens';
-import { MashupItemEquipment } from '../../config';
+import { EquipmentData } from '../../dataSourceData';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';
 import { defaultEquipmentInfo } from './armorEquipmentInfo';
@@ -11,7 +11,7 @@ import { allArmorCategories, allArmorTypes } from './config';
 const armorCategories = toSelectItems(allArmorCategories);
 const armorTypes = toSelectItems(allArmorTypes);
 
-const identityLens = Lens.identity<SourceDataOf<MashupItemEquipment<'armor'>>>();
+const identityLens = Lens.identity<SimpleDocumentData<EquipmentData<'armor'>>>();
 const equipmentPropertiesLens = identityLens
 	.toField('data')
 	.toField('equipmentProperties')
@@ -22,7 +22,7 @@ const armorBonusLens = equipmentPropertiesLens.toField('armorBonus');
 const checkPenaltyLens = equipmentPropertiesLens.toField('checkPenalty');
 const speedPenaltyLens = equipmentPropertiesLens.toField('speedPenalty');
 
-export function ArmorDetails({ itemState }: { itemState: Stateful<SourceDataOf<MashupItemEquipment<'armor'>>> }) {
+export function ArmorDetails({ itemState }: { itemState: Stateful<SimpleDocumentData<EquipmentData<'armor'>>> }) {
 	return (
 		<>
 			<FormInput className="text-lg col-span-6">

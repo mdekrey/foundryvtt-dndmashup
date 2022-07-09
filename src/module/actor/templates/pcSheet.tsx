@@ -13,10 +13,13 @@ import { Powers } from '../components/Powers';
 import { Features } from '../components/Features';
 import { Feats } from '../components/Feats';
 import { Effects } from '../components/Effects';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { documentAsState, Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
 import { SourceDataOf } from 'src/core/foundry';
 import { Ability } from 'src/types/types';
+import { ActorDataSource } from '../types';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { PossibleItemData } from 'src/module/item/types';
 
 const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
 const dataLens = baseLens.toField('data');
@@ -101,13 +104,16 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 									<Powers actor={actor} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
-									<Features actor={actor} />
+									<Features items={actor.items.contents as SimpleDocument<PossibleItemData>[]} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="feats">
-									<Feats actor={actor} />
+									<Feats items={actor.items.contents} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="effects">
-									<Effects actor={actor} />
+									<Effects
+										{...(dataLens.apply(documentState) as never as Stateful<ActorDataSource['data']>)}
+										bonusList={actor.specialBonuses}
+									/>
 								</Tabs.Tab>
 							</section>
 						</Tabs>

@@ -1,15 +1,15 @@
 import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
 import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
-import { SpecificActor } from '../mashup-actor';
 import { ItemTable } from 'src/components/ItemTable';
-import { MashupItemBase } from 'src/module/item/mashup-item';
+import { PossibleItemData } from 'src/module/item/types';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 
 const features: {
 	key: React.Key;
 	label: string;
-	filter: (item: MashupItemBase) => boolean;
+	filter: (item: SimpleDocument<PossibleItemData>) => boolean;
 	header?: React.FC;
-	body?: React.FC<{ item: MashupItemBase }>;
+	body?: React.FC<{ item: SimpleDocument<PossibleItemData> }>;
 	addedCellCount?: number;
 }[] = [
 	{
@@ -23,7 +23,7 @@ const features: {
 		label: 'Racial Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
 		addedCellCount: 1,
 	},
 	{
@@ -31,7 +31,7 @@ const features: {
 		label: 'Class Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
 		addedCellCount: 1,
 	},
 	{
@@ -39,7 +39,7 @@ const features: {
 		label: 'Paragon Path Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
 		addedCellCount: 1,
 	},
 	{
@@ -47,19 +47,19 @@ const features: {
 		label: 'Epic Destiny Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: MashupItemBase }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
 		addedCellCount: 1,
 	},
 ];
 
-export function Features({ actor }: { actor: SpecificActor }) {
-	const nonEquipment = actor.items.contents.filter(
+export function Features({ items }: { items: SimpleDocument<PossibleItemData>[] }) {
+	const nonEquipment = items.filter(
 		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.data.data.featureType !== 'feat')
 	);
 	const groups = features
 		.map(({ filter, ...others }) => ({
 			...others,
-			items: actor.items.filter(filter),
+			items: items.filter(filter),
 		}))
 		.filter(({ items }) => items.length > 0);
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));

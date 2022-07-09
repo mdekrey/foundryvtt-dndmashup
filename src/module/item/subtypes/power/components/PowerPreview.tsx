@@ -1,11 +1,17 @@
-import { MashupPower } from '../config';
 import classNames from 'classnames';
 import { pipeJsx } from 'src/core/jsx/pipeJsx';
 import { recurse } from 'src/core/jsx/recurse';
 import { mergeStyles } from 'src/core/jsx/mergeStyles';
-import { ActionType, ApplicableEffect, AttackRoll, EffectTypeAndRange, PowerUsage } from '../dataSourceData';
+import {
+	ActionType,
+	ApplicableEffect,
+	AttackRoll,
+	EffectTypeAndRange,
+	PowerDocument,
+	PowerUsage,
+} from '../dataSourceData';
 import { neverEver } from 'src/core/neverEver';
-import { isAttackEffect, isTargetEffect, or } from './sheetLenses';
+import { isAttackEffect, isTargetEffect } from './sheetLenses';
 import { Defense } from 'src/types/types';
 import {
 	MeleeIcon,
@@ -20,8 +26,9 @@ import {
 	D6_5Icon,
 	D6_6Icon,
 } from './icons';
+import { or } from 'src/core/lens/functions';
 
-export function PowerPreview({ item }: { item: MashupPower }) {
+export function PowerPreview({ item }: { item: PowerDocument }) {
 	const { name, data: itemData } = item.data;
 	const primaryAttack = itemData.effect.effects.find(isAttackEffect);
 	const rulesText = itemData.effect.effects

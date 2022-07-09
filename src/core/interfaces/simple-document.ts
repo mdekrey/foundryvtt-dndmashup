@@ -22,6 +22,8 @@ export type SimpleDocument<TData = unknown> = {
 
 	readonly items: { contents: SimpleDocument[] };
 
+	// first parameter should be SimpleDocumentData<TData> but doesn't really match yet
+	update(newData: unknown, options: { overwrite?: boolean; diff?: boolean; recursive?: boolean }): void;
 	delete(): void;
 	showEditDialog(): void;
 };

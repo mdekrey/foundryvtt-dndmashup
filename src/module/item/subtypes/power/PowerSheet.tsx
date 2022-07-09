@@ -1,10 +1,10 @@
 import { Tabs } from 'src/components/tab-section';
-import { MashupPower } from './config';
 import { PowerEditor } from './components/PowerEditor';
 import { useRef, useState } from 'react';
 import { PowerPreview } from './components/PowerPreview';
+import { PowerDocument } from './dataSourceData';
 
-export function PowerSheet({ item }: { item: MashupPower }) {
+export function PowerSheet({ item }: { item: PowerDocument }) {
 	const isNew = useRef(item.data.data.flavorText === '' && item.data.data.effect.effects.length === 0);
 	const [activeTab, setActiveTab] = useState(isNew.current ? 'editor' : 'preview');
 

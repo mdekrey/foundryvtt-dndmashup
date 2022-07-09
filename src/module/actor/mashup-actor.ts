@@ -108,7 +108,7 @@ export class MashupActor extends Actor {
 		return Math.floor(this.data.data.details.level / 10);
 	}
 
-	get specialBonuses() {
+	get specialBonuses(): FeatureBonusWithContext[] {
 		return this.data.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
 		);
@@ -198,6 +198,10 @@ export class MashupActor extends Actor {
 		if (!(this.parent instanceof Actor)) return super.update(resultData, context);
 		await (this.parent as MashupActor).updateEmbeddedDocuments('Actor', [{ ...resultData, _id: this.id }]);
 		this.render(false);
+	}
+
+	showEditDialog() {
+		this.sheet?.render(true, { focus: true });
 	}
 }
 

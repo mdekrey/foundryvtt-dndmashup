@@ -2,14 +2,13 @@ import { ItemTable } from 'src/components/ItemTable';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { FeatureData } from '../subtypes/feature/dataSourceData';
 import { isFeature } from '../subtypes/feature/isFeature';
-import { PossibleItemData } from '../types';
 
 const features: {
 	key: React.Key;
 	label: string;
-	filter: (item: SimpleDocument<PossibleItemData>) => boolean;
+	filter: (item: SimpleDocument) => boolean;
 	header?: React.FC;
-	body?: React.FC<{ item: SimpleDocument<PossibleItemData> }>;
+	body?: React.FC<{ item: SimpleDocument }>;
 }[] = [
 	{
 		key: 'character-details',
@@ -22,32 +21,32 @@ const features: {
 		label: 'Racial Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument }>,
 	},
 	{
 		key: 'class-feature',
 		label: 'Class Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument }>,
 	},
 	{
 		key: 'paragon-feature',
 		label: 'Paragon Path Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument }>,
 	},
 	{
 		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
 		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemData> }>,
+		body: FeatureBody as React.FC<{ item: SimpleDocument }>,
 	},
 ];
 
-export function FeaturesList({ items }: { items: SimpleDocument<PossibleItemData>[] }) {
+export function FeaturesList({ items }: { items: SimpleDocument[] }) {
 	const nonEquipment = items.filter((i) => i.type !== 'equipment');
 	const groups = features
 		.map(({ filter, ...others }) => ({

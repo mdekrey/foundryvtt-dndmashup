@@ -3,7 +3,6 @@ import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsSt
 import { ImageEditor } from 'src/components/image-editor';
 import { AttackEffectFields } from './AttackEffectFields';
 import { AttackRollFields } from './AttackRollFields';
-import { MashupPower } from '../config';
 import { TypeAndRange } from './TypeAndRange';
 import { usageOptions } from './usageOptions';
 import { actionTypeOptions } from './actionTypeOptions';
@@ -33,8 +32,9 @@ import {
 	imageLens,
 } from './sheetLenses';
 import classNames from 'classnames';
+import { PowerDocument } from '../dataSourceData';
 
-export function PowerEditor({ item }: { item: MashupPower }) {
+export function PowerEditor({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
 
 	const attackEffectState = attackEffectLens.apply(documentState);

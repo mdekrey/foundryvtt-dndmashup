@@ -4,10 +4,9 @@ import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { RaceData } from './dataSourceData';
 import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { PossibleItemData } from '../../types';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');
@@ -17,7 +16,7 @@ const bonusesLens = dataLens.toField('grantedBonuses');
 export function RaceSheet({
 	items,
 	...documentState
-}: ImmutableStateMutator<SimpleDocumentData<RaceData>> & { items: SimpleDocument<PossibleItemData>[] }) {
+}: Stateful<SimpleDocumentData<RaceData>> & { items: SimpleDocument[] }) {
 	const { value: item } = documentState;
 	return (
 		<div className="h-full flex flex-col gap-1">

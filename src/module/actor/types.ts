@@ -116,6 +116,12 @@ export type MonsterDataProperties = Merge<MonsterDataSourceData, CommonDataPrope
 export type PlayerCharacterData = { type: 'pc'; data: PlayerCharacterDataProperties };
 export type MonsterData = { type: 'monster'; data: MonsterDataProperties };
 
+export interface PossibleActorType {
+	pc: PlayerCharacterDataSource;
+	monster: MonsterDataSource;
+}
+export type ActorDataSource = PossibleActorType[keyof PossibleActorType];
+
 declare global {
 	interface SourceConfig {
 		Actor: PlayerCharacterDataSource | MonsterDataSource;

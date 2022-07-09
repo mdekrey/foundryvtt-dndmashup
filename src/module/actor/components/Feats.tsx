@@ -1,12 +1,12 @@
-import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
-import { SpecificActor } from '../mashup-actor';
 import { ItemTable } from 'src/components/ItemTable';
 import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { FeatureDocument } from 'src/module/item/subtypes/feature/dataSourceData';
 
-export function Feats({ actor }: { actor: SpecificActor }) {
+export function Feats({ items }: { items: SimpleDocument[] }) {
 	return (
 		<ItemTable
-			items={actor.items.filter(isFeature).filter((item) => item.data.data.featureType === 'feat')}
+			items={items.filter<FeatureDocument>(isFeature).filter((item) => item.data.data.featureType === 'feat')}
 			title="Feat"
 			header={FeatureHeader}
 			body={FeatureBody}
@@ -19,6 +19,6 @@ function FeatureHeader() {
 	return <th className="text-left">Summary</th>;
 }
 
-function FeatureBody({ item }: { item: MashupItemFeature }) {
+function FeatureBody({ item }: { item: FeatureDocument }) {
 	return <td className="text-left">{item.data.data.summary}</td>;
 }

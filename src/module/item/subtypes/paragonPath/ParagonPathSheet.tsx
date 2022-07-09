@@ -3,17 +3,17 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { MashupParagonPath } from './config';
-import { SourceDataOf } from 'src/core/foundry';
 import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { ParagonPathData, ParagonPathDocument } from './dataSourceData';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
-const baseLens = Lens.identity<SourceDataOf<MashupParagonPath>>();
+const baseLens = Lens.identity<SimpleDocumentData<ParagonPathData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 
-export function ParagonPathSheet({ item }: { item: MashupParagonPath }) {
+export function ParagonPathSheet({ item }: { item: ParagonPathDocument }) {
 	const documentState = documentAsState(item);
 	return (
 		<div className="h-full flex flex-col gap-1">

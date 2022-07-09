@@ -9,27 +9,17 @@ import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/fo
 import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
 import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';
 import { PowerSheet } from './subtypes/power/PowerSheet';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { ItemDataByType } from './item-data-types-template';
-import { documentAsState, ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
-import { MashupItemRace } from './subtypes/race/config';
-import { RaceData } from './subtypes/race/dataSourceData';
+import { ItemDocumentByType } from './item-data-types-template';
+import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 
-const sheets: { [K in PossibleItemType]: React.FC<{ item: SimpleDocument<ItemDataByType[K]> }> } = {
-	class: ClassSheet as React.FC<{ item: SimpleDocument<ItemDataByType['class']> }>,
-	race: (({ item }: { item: MashupItemRace }) => (
-		<RaceSheet
-			items={item.items.contents}
-			{...(documentAsState(item) as never as ImmutableStateMutator<SimpleDocumentData<RaceData>>)}
-		/> /* TODO - no as never */
-	)) as React.FC<{
-		item: SimpleDocument<ItemDataByType['race']>;
-	}>,
-	equipment: EquipmentSheet as React.FC<{ item: SimpleDocument<ItemDataByType['equipment']> }>,
-	feature: FeatureSheet as React.FC<{ item: SimpleDocument<ItemDataByType['feature']> }>,
-	epicDestiny: EpicDestinySheet as React.FC<{ item: SimpleDocument<ItemDataByType['epicDestiny']> }>,
-	paragonPath: ParagonPathSheet as React.FC<{ item: SimpleDocument<ItemDataByType['paragonPath']> }>,
-	power: PowerSheet as React.FC<{ item: SimpleDocument<ItemDataByType['power']> }>,
+const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] }> } = {
+	class: ({ item }) => <ClassSheet items={item.items.contents} {...documentAsState(item)} />,
+	race: ({ item }) => <RaceSheet items={item.items.contents} {...documentAsState(item)} />,
+	equipment: EquipmentSheet,
+	feature: FeatureSheet,
+	epicDestiny: EpicDestinySheet,
+	paragonPath: ParagonPathSheet,
+	power: PowerSheet,
 };
 
 function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {

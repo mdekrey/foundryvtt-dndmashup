@@ -1,18 +1,17 @@
 import classNames from 'classnames';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SourceDataOf } from 'src/core/foundry';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
-import { Bonuses, targets, conditions } from 'src/module/bonuses';
+import { Bonuses, targets, conditions, FeatureBonusWithContext } from 'src/module/bonuses';
 import { MashupItemBase } from 'src/module/item/mashup-item';
-import { SpecificActor } from '../mashup-actor';
+import { ActorDataSource } from '../types';
 
-const baseLens = Lens.identity<SourceDataOf<SpecificActor>>();
-const dataLens = baseLens.toField('data');
+const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
 const bonusesLens = dataLens.toField('bonuses');
 
-export function Effects({ actor }: { actor: SpecificActor }) {
-	const documentState = documentAsState(actor);
-	const bonusList = actor.specialBonuses;
+export function Effects({
+	bonusList,
+	...documentState
+}: Stateful<ActorDataSource['data']> & { bonusList: FeatureBonusWithContext[] }) {
 	return (
 		<>
 			<Bonuses bonuses={bonusesLens.apply(documentState)} />
@@ -38,12 +37,17 @@ export function Effects({ actor }: { actor: SpecificActor }) {
 								{/* TODO - better display */}
 							</td>
 							<td>
-								<button type="button" className="w-full text-left" onClick={() => edit(bonus.context.item)}>
-									{bonus.context.item.img ? (
-										<img src={bonus.context.item.img} alt="" className="w-8 h-8 inline-block mr-2" />
-									) : null}
-									{bonus.context.item.name}
-								</button>
+								{bonus.context.item ? (
+									<button
+										type="button"
+										className="w-full text-left"
+										onClick={() => bonus.context.item && edit(bonus.context.item)}>
+										{bonus.context.item.img ? (
+											<img src={bonus.context.item.img} alt="" className="w-8 h-8 inline-block mr-2" />
+										) : null}
+										{bonus.context.item.name}
+									</button>
+								) : null}
 							</td>
 						</tr>
 					))}

@@ -1,7 +1,7 @@
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SourceDataOf } from 'src/core/foundry';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 import { FeatureBonus } from 'src/module/bonuses';
-import { MashupItemEquipment } from '../config';
+import { EquipmentData } from '../dataSourceData';
 import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';
 import { WeaponItemSlotTemplate } from './weapon/types';
@@ -43,7 +43,7 @@ export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
 }[T];
 
 export type MutableItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
-	itemState: Stateful<SourceDataOf<MashupItemEquipment<T>>>;
+	itemState: Stateful<SimpleDocumentData<EquipmentData<T>>>;
 }>;
 
 export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{

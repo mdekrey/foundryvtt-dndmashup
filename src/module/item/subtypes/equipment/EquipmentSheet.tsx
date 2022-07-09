@@ -3,15 +3,15 @@ import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Description } from '../../components/Description';
-import { getItemSlotInfo, ItemSlot, itemSlots, ItemSlotTemplates } from './item-slots';
-import { deepUpdate, SourceDataOf } from 'src/core/foundry';
+import { getItemSlotInfo, ItemSlot, itemSlots } from './item-slots';
 import { Tabs } from 'src/components/tab-section';
-import { MashupItemEquipment } from './config';
 import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { EquipmentData, EquipmentDocument } from './dataSourceData';
+import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
 	value: key as ItemSlot,
@@ -20,22 +20,22 @@ const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: labe
 	typeaheadLabel: label,
 }));
 
-export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: MashupItemEquipment<T> }) {
+export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: EquipmentDocument<T> }) {
 	const documentState = documentAsState(item, { deleteData: true });
 	const [activeTab, setActiveTab] = useState('description');
 	const { buildSummary: Summary, details: Details } = getItemSlotInfo<T>(item.data.data.itemSlot);
 
-	const baseLens = Lens.identity<SourceDataOf<MashupItemEquipment<T>>>();
+	const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<T>>>();
 	const imageLens = baseLens.toField('img');
 	const dataLens = baseLens.toField('data');
 	const bonusesLens = dataLens.toField('grantedBonuses');
 
 	function onChangeItemSlot(itemSlot: React.SetStateAction<ItemSlot>) {
-		deepUpdate(item as unknown as MashupItemEquipment<ItemSlot>, (draft) => {
-			draft.data.itemSlot = typeof itemSlot === 'function' ? itemSlot(draft.data.itemSlot) : itemSlot;
+		documentState.onChangeValue((draft) => {
+			draft.data.itemSlot = (typeof itemSlot === 'function' ? itemSlot(draft.data.itemSlot) : itemSlot) as never;
 			draft.data.equipmentProperties = {
 				...itemSlots[draft.data.itemSlot].defaultEquipmentInfo,
-			} as ItemSlotTemplates[keyof ItemSlotTemplates];
+			} as never;
 		});
 		setActiveTab('details');
 	}
