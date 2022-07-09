@@ -93,7 +93,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						</div>
 					</Tabs.Tab>
 					<Tabs.Tab tabName="description">
-						<Description item={item} />
+						<Description {...dataLens.toField('description').apply(documentState)} isEditor={item.isOwner} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />

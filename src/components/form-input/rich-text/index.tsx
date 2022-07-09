@@ -1,39 +1,79 @@
-import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { getFieldValue, PathName } from 'src/core/path-typings';
+import { useEffect, useRef } from 'react';
+import { Stateful } from '../hooks/useDocumentAsState';
 
-export function RichText<TDocument extends AnyDocument>({
-	document,
-	field,
+export function RichText({
 	rollData,
+	value: html,
+	onChangeValue,
+	isEditor,
 }: {
-	document: TDocument;
-	field: PathName<SourceDataOf<TDocument>, string>;
+	isEditor: boolean;
 	rollData?: object | (() => object);
-}) {
-	const html = getFieldValue(document.data._source, field);
-
+} & Stateful<string>) {
 	const enriched = TextEditor.enrichHTML(html ?? '', {
 		rollData,
-		/* TODO - parameters: secrets: owner, documents */
+		/* TODO - parameters: secrets: owner, documents - but I'm not sure what they do */
 	});
+	const editorContent = useRef<HTMLDivElement>(null);
+	const initialContent = useRef(html);
+	const latestContent = useRef(html);
+	latestContent.current = html;
 
-	const isEditor = document.isOwner;
-
-	// TODO - use TextEditor as in foundry.js to activateEditor
+	useEffect(() => {
+		return () => {
+			if (latestContent.current !== initialContent.current) {
+				onChangeValue(() => latestContent.current);
+			}
+		};
+	}, []);
 
 	return (
 		<>
-			<div className="editor">
+			<div className="editor relative h-full group">
+				<div className="h-full" ref={editorContent} dangerouslySetInnerHTML={{ __html: enriched }} />
 				{isEditor ? (
-					<div className="editor-content" data-edit={field} dangerouslySetInnerHTML={{ __html: enriched }} />
+					<button
+						type="button"
+						className="editor-edit group-hover:block hidden absolute top-1 right-1 ring-transparent hover:ring-blue-bright-600 cursor-pointer ring-text-shadow"
+						onClick={activateEditor}>
+						<i className="fas fa-edit"></i>
+					</button>
 				) : null}
-				<a className="editor-edit">
-					<i className="fas fa-edit"></i>
-				</a>
 			</div>
 		</>
 	);
-}
 
-/* {{editor content=actorData.details.biography target="data.details.biography" button=true owner=owner editable=editable rollData=rollData}}
- */
+	function activateEditor() {
+		if (editorContent.current == null) {
+			throw new Error('No editor div');
+		}
+		let editor: tinyMCE.Editor | null = null;
+		const editorOptions = {
+			target: editorContent.current,
+			height: editorContent.current?.offsetHeight,
+			save_onsavecallback: closeEditor,
+		};
+
+		initialContent.current = html;
+		TextEditor.create(editorOptions, html).then((mce) => {
+			editor = mce;
+			mce.focus();
+			mce.on('change', () => {
+				latestContent.current = mce.getContent();
+			});
+		});
+
+		async function closeEditor() {
+			if (!editor) {
+				throw new Error('No editor');
+			}
+			// Submit the form if the editor has changes
+			const newContent = editor.getContent();
+			const isDirty = newContent !== html;
+			if (isDirty) await onChangeValue(() => newContent);
+
+			// Remove the editor
+			editor.destroy();
+		}
+	}
+}

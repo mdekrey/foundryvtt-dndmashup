@@ -1,11 +1,13 @@
 import { FormInput } from 'src/components/form-input';
-import { EquipmentDocument } from '../subtypes/equipment/dataSourceData';
-import { ItemSlot } from '../subtypes/equipment/item-slots';
+import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from 'src/core/lens';
 
-export function Description<T extends ItemSlot>({ item }: { item: EquipmentDocument<T> }) {
+const textLens = Lens.identity<{ text: string }>().toField('text').default('');
+
+export function Description({ isEditor, ...descriptionState }: { isEditor: boolean } & Stateful<{ text: string }>) {
 	return (
 		<>
-			<FormInput.RichText document={item as any} field={'data.description.text' as never} />
+			<FormInput.RichText {...textLens.apply(descriptionState)} isEditor={isEditor} />
 		</>
 	);
 }
