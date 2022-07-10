@@ -1,6 +1,6 @@
 import { MashupActor } from '../mashup-actor';
-import { PossibleActorData, SpecificActorData } from '../types';
+import { PossibleActorData, ActorDerivedData } from '../types';
 
 export type SubActorFunctions<T extends PossibleActorData['type']> = {
-	prepare: (data: SpecificActorData<T>, actor: MashupActor) => void;
+	prepare: (data: ActorDerivedData<T>, actor: MashupActor) => void;
 };

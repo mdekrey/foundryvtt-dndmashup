@@ -19,7 +19,7 @@ import { isPower } from '../item/subtypes/power/isPower';
 import { isRace } from '../item/subtypes/race/isRace';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
-import { PossibleActorData, SpecificActorData } from './types';
+import { ActorDerivedData, PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -36,36 +36,36 @@ const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
 	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
 	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
-	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.data.data.abilities.con.final`, type: 'base' },
-	{ ...base, target: 'surges-max', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.derivedData.abilities.con`, type: 'base' },
+	{ ...base, target: 'surges-max', amount: '@actor.derivedData.abilities.con', type: 'ability' },
 	{ ...base, target: 'defense-ac', amount: 10 },
-	{ ...base, target: 'defense-ac', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
+	{ ...base, target: 'defense-ac', amount: '@actor.derivedData.abilities.dex', type: 'ability' },
 	{ ...base, target: 'defense-fort', amount: 10 },
-	{ ...base, target: 'defense-fort', amount: '@actor.data.data.abilities.str.final', type: 'ability' },
-	{ ...base, target: 'defense-fort', amount: '@actor.data.data.abilities.con.final', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.str', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.con', type: 'ability' },
 	{ ...base, target: 'defense-refl', amount: 10 },
-	{ ...base, target: 'defense-refl', amount: '@actor.data.data.abilities.dex.final', type: 'ability' },
-	{ ...base, target: 'defense-refl', amount: '@actor.data.data.abilities.int.final', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.dex', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.int', type: 'ability' },
 	{ ...base, target: 'defense-will', amount: 10 },
-	{ ...base, target: 'defense-will', amount: '@actor.data.data.abilities.wis.final', type: 'ability' },
-	{ ...base, target: 'defense-will', amount: '@actor.data.data.abilities.cha.final', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha', type: 'ability' },
 ];
 
-const setters: Record<BonusTarget, (data: PossibleActorData, value: number) => void> = {
-	'ability-str': (data, value) => (data.data.abilities.str.final = value),
-	'ability-con': (data, value) => (data.data.abilities.con.final = value),
-	'ability-dex': (data, value) => (data.data.abilities.dex.final = value),
-	'ability-int': (data, value) => (data.data.abilities.int.final = value),
-	'ability-wis': (data, value) => (data.data.abilities.wis.final = value),
-	'ability-cha': (data, value) => (data.data.abilities.cha.final = value),
-	'defense-ac': (data, value) => (data.data.defenses.ac = value),
-	'defense-fort': (data, value) => (data.data.defenses.fort = value),
-	'defense-refl': (data, value) => (data.data.defenses.refl = value),
-	'defense-will': (data, value) => (data.data.defenses.will = value),
-	maxHp: (data, value) => (data.data.health.maxHp = value),
-	'surges-max': (data, value) => (data.data.health.surges.max = value),
-	'surges-value': (data, value) => (data.data.health.surges.value = value),
-	speed: (data, value) => (data.data.speed = value),
+const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => void> = {
+	'ability-str': (data, value) => (data.abilities.str = value),
+	'ability-con': (data, value) => (data.abilities.con = value),
+	'ability-dex': (data, value) => (data.abilities.dex = value),
+	'ability-int': (data, value) => (data.abilities.int = value),
+	'ability-wis': (data, value) => (data.abilities.wis = value),
+	'ability-cha': (data, value) => (data.abilities.cha = value),
+	'defense-ac': (data, value) => (data.defenses.ac = value),
+	'defense-fort': (data, value) => (data.defenses.fort = value),
+	'defense-refl': (data, value) => (data.defenses.refl = value),
+	'defense-will': (data, value) => (data.defenses.will = value),
+	maxHp: (data, value) => (data.health.maxHp = value),
+	'surges-max': (data, value) => (data.health.surges.max = value),
+	'surges-value': (data, value) => (data.health.surges.value = value),
+	speed: (data, value) => (data.speed = value),
 };
 
 export class MashupActor extends Actor {
@@ -114,48 +114,72 @@ export class MashupActor extends Actor {
 		);
 	}
 
-	/**
-	 * @override
-	 * Augment the basic actor data with additional dynamic data. Typically,
-	 * you'll want to handle most of your calculated/derived data in this step.
-	 * Data calculated in this step should generally not exist in template.json
-	 * (such as ability modifiers rather than ability scores) and should be
-	 * available both inside and outside of character sheets (such as if an actor
-	 * is queried and has a roll executed directly from it).
-	 */
+	private _derivedData: ActorDerivedData | null = null;
+	get derivedData(): ActorDerivedData {
+		return this._derivedData ?? (this._derivedData = this.calculateDerivedData());
+	}
+
+	private _allBonuses: FeatureBonusWithContext[] | null = null;
+	get allBonuses(): FeatureBonusWithContext[] {
+		return (
+			this._allBonuses ??
+			(this._allBonuses = [
+				// all active effects and other linked objects should be loaded here
+				...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
+				...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
+				...this.specialBonuses,
+			])
+		);
+	}
+
 	prepareDerivedData() {
-		// TODO: derived data doesn't need to go to data
+		this._derivedData = null;
+	}
 
-		const allData = this.data;
-		allData.data.defenses ??= {} as typeof allData.data.defenses;
+	private calculateDerivedData(): ActorDerivedData {
+		// TODO: this would be better as a proxy object
+		const allBonuses = this.allBonuses;
 
-		// all active effects and other linked objects should be loaded here
-		const allBonuses: FeatureBonusWithContext[] = [
-			...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-			...this.specialBonuses,
-		];
-
+		const resultData: ActorDerivedData = {
+			abilities: {
+				str: 0,
+				con: 0,
+				dex: 0,
+				int: 0,
+				wis: 0,
+				cha: 0,
+			},
+			health: {
+				maxHp: 0,
+				bloodied: 0,
+				surges: {
+					value: 0,
+					max: 0,
+				},
+			},
+			defenses: {
+				ac: 0,
+				fort: 0,
+				refl: 0,
+				will: 0,
+			},
+			speed: 0,
+		};
+		this._derivedData = resultData;
 		const groupedByTarget = byTarget(allBonuses);
 		bonusTargets.forEach((target) => {
 			const filtered = filterBonuses(groupedByTarget[target] ?? []);
 			const evaluatedBonuses = evaluateAndRoll(filtered);
 			const final = sumFinalBonuses(evaluatedBonuses);
-			setters[target](allData, final);
+			setters[target](resultData, final);
 		});
 
-		allData.data.defenses ??= {} as typeof allData.data.defenses;
+		this.subActorFunctions.prepare(resultData, this);
 
-		if (allData._source.type !== allData.type) {
-			// seriously, wtf?
-			console.error('Got two different actor types:', allData._source.type, allData.type);
-			return;
-		}
+		resultData.health.bloodied = Math.floor(resultData.health.maxHp / 2);
+		resultData.health.surges.value = Math.floor(resultData.health.maxHp / 4);
 
-		this.subActorFunctions.prepare(allData, this);
-
-		allData.data.health.bloodied = Math.floor(allData.data.health.maxHp / 2);
-		allData.data.health.surges.value = Math.floor(allData.data.health.maxHp / 4);
+		return resultData;
 	}
 
 	allPowers() {

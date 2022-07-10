@@ -78,43 +78,39 @@ export type MonsterDataSourceData = Merge<BaseActorTemplateDataSourceData, Monst
 export type PlayerCharacterDataSource = TypedData<'pc', PlayerCharacterDataSourceData>;
 export type MonsterDataSource = TypedData<'monster', MonsterDataSourceData>;
 
-export type CommonDataProperties = Merge<
-	BaseActorTemplateDataSourceData,
-	{
-		abilities: {
-			[ability in Ability]: { final: number };
+export type CommonDerivedDataProperties = {
+	abilities: {
+		[ability in Ability]: number;
+	};
+	health: {
+		maxHp: number;
+		bloodied: number;
+		surges: {
+			value: number;
+			max: number;
 		};
-		health: {
-			maxHp: number;
-			bloodied: number;
-			surges: {
-				value: number;
-				max: number;
-			};
-		};
-		defenses: {
-			[defense in Defense]: number;
-		};
-		speed: number;
-	}
->;
+	};
+	defenses: {
+		[defense in Defense]: number;
+	};
+	speed: number;
+};
 
-export type PlayerCharacterDataProperties = Merge<
-	PlayerCharacterDataSourceData,
-	Merge<
-		CommonDataProperties,
-		{
-			magicItemUse: {
-				usesPerDay: number;
-			};
-		}
-	>
->;
+export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {
+	magicItemUse: {
+		usesPerDay: number;
+	};
+};
 
-export type MonsterDataProperties = Merge<MonsterDataSourceData, CommonDataProperties>;
+export type MonsterDerivedDataProperties = CommonDerivedDataProperties;
 
-export type PlayerCharacterData = { type: 'pc'; data: PlayerCharacterDataProperties };
-export type MonsterData = { type: 'monster'; data: MonsterDataProperties };
+interface ActorDerivedDataTemplates {
+	pc: PlayerCharacterDerivedDataProperties;
+	monster: MonsterDerivedDataProperties;
+}
+
+export type ActorDerivedData<T extends keyof ActorDerivedDataTemplates = keyof ActorDerivedDataTemplates> =
+	ActorDerivedDataTemplates[T];
 
 export interface PossibleActorType {
 	pc: PlayerCharacterDataSource;
@@ -127,12 +123,12 @@ declare global {
 		Actor: PlayerCharacterDataSource | MonsterDataSource;
 	}
 	interface DataConfig {
-		Actor: PlayerCharacterData | MonsterData;
+		Actor: PlayerCharacterDataSource | MonsterDataSource;
 	}
 }
 
 export type PossibleActorData =
-	| ActorData<PlayerCharacterData, PlayerCharacterDataSource>
-	| ActorData<MonsterData, MonsterDataSource>;
+	| ActorData<PlayerCharacterDataSource, PlayerCharacterDataSource>
+	| ActorData<MonsterDataSource, MonsterDataSource>;
 
 export type SpecificActorData<T extends PossibleActorData['type']> = PossibleActorData & { type: T };
