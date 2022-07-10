@@ -3,6 +3,7 @@ import { MashupItem } from 'src/module/item/mashup-item';
 
 // export function proficientIn({ actor, item }: { actor: MashupActor; item: MashupItemBase }) {
 export function proficientIn({ actor, item }: { actor: MashupActor; item: MashupItem }) {
+	// TODO: better proficiency logic
 	if (actor && item) return true;
 	return false;
 }
