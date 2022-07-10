@@ -1,4 +1,4 @@
-import { MashupItem, MashupItemBase } from './mashup-item';
+import { MashupItemBase } from './mashup-item';
 import { PossibleItemData, PossibleItemType } from './types';
 import { ClassSheet } from './subtypes/class/ClassSheet';
 import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
@@ -24,9 +24,9 @@ const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] 
 
 function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {
 	const item = sheet.item;
-	const Sheet = sheets[item.type] as React.FC<{ item: MashupItem }>;
+	const Sheet = sheets[item.type] as React.FC<{ item: ItemDocumentByType[keyof ItemDocumentByType] }>;
 
-	return <Sheet item={item} />;
+	return <Sheet item={item as ItemDocumentByType[keyof ItemDocumentByType]} />;
 }
 
 export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(ItemSheet) {
