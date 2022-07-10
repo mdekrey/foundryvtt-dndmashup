@@ -1,9 +1,13 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { MashupItem, MashupItemBase } from 'src/module/item/mashup-item';
 import { Lens } from 'src/core/lens';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { PcDetails } from '../types';
+import { RaceDocument } from 'src/module/item/subtypes/race/dataSourceData';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { ClassDocument } from 'src/module/item/subtypes/class/dataSourceData';
+import { ParagonPathDocument } from 'src/module/item/subtypes/paragonPath/dataSourceData';
+import { EpicDestinyDocument } from 'src/module/item/subtypes/epicDestiny/dataSourceData';
 
 const detailsLens = Lens.identity<PcDetails>();
 
@@ -21,13 +25,13 @@ export function Header({
 	imageState: Stateful<string | null>;
 	detailsState: Stateful<PcDetails>;
 
-	appliedRace: MashupItem<'race'> | undefined;
-	appliedClass: MashupItem<'class'> | undefined;
-	appliedParagonPath: MashupItem<'paragonPath'> | undefined;
-	appliedEpicDestiny: MashupItem<'epicDestiny'> | undefined;
+	appliedRace: RaceDocument | undefined;
+	appliedClass: ClassDocument | undefined;
+	appliedParagonPath: ParagonPathDocument | undefined;
+	appliedEpicDestiny: EpicDestinyDocument | undefined;
 }) {
-	function showItem(item: MashupItemBase | undefined | null) {
-		item?.sheet?.render(true);
+	function showItem(item: SimpleDocument | undefined | null) {
+		item?.showEditDialog();
 	}
 
 	return (
