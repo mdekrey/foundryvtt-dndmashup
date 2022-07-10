@@ -112,11 +112,12 @@ interface ActorDerivedDataTemplates {
 export type ActorDerivedData<T extends keyof ActorDerivedDataTemplates = keyof ActorDerivedDataTemplates> =
 	ActorDerivedDataTemplates[T];
 
-export interface PossibleActorType {
+export interface PossibleActorTypeTemplates {
 	pc: PlayerCharacterDataSource;
 	monster: MonsterDataSource;
 }
-export type ActorDataSource = PossibleActorType[keyof PossibleActorType];
+export type PossibleActorType = keyof PossibleActorTypeTemplates;
+export type ActorDataSource<T extends PossibleActorType = PossibleActorType> = PossibleActorTypeTemplates[T];
 
 declare global {
 	interface SourceConfig {

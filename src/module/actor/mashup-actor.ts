@@ -2,6 +2,7 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
+import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import {
 	BonusTarget,
 	bonusTargets,
@@ -19,7 +20,7 @@ import { isPower } from '../item/subtypes/power/isPower';
 import { isRace } from '../item/subtypes/race/isRace';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
-import { ActorDerivedData, PossibleActorData, SpecificActorData } from './types';
+import { ActorDataSource, ActorDerivedData, PossibleActorData, SpecificActorData } from './types';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -68,7 +69,7 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	speed: (data, value) => (data.speed = value),
 };
 
-export class MashupActor extends Actor {
+export class MashupActor extends Actor implements SimpleDocument<ActorDataSource> {
 	data!: PossibleActorData;
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
