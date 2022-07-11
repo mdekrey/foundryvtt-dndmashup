@@ -14,5 +14,5 @@
 		"noEmit": true,
 		"outDir": "../dist/module/"
 	},
-	"include": ["foundry/src", "test", "*.js", "*.cjs", ".*.js", ".*.cjs"]
+	"include": ["foundry/src", "foundry/test", "*.js", "*.cjs", ".*.js", ".*.cjs"]
 }

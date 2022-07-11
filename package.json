@@ -1,6 +1,6 @@
 {
 	"private": true,
-	"name": "foundryvtt-dndmashup",
+	"name": "foundryvtt-dndmashup-root",
 	"description": "",
 	"license": "MIT",
 	"homepage": "https://github.com/mdekrey/foundryvtt-dndmashup",

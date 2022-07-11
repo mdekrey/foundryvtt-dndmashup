@@ -3,7 +3,7 @@ export default {
 	testEnvironment: 'node',
 	globals: {
 		'ts-jest': {
-			tsconfig: '<rootDir>/test/tsconfig.json',
+			tsconfig: '<rootDir>/foundry/test/tsconfig.json',
 		},
 	},
 };
