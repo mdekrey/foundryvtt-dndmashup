@@ -10,16 +10,16 @@ const { hideBin } = require('yargs/helpers');
 
 const rollupStream = require('@rollup/stream');
 
-const rollupConfig = require('./rollup.config.cjs');
+const rollupConfig = require('./foundry/rollup.config.cjs');
 
 /********************/
 /*  CONFIGURATION   */
 /********************/
 
 const name = 'foundryvtt-dndmashup';
-const sourceDirectory = './src';
+const sourceDirectory = './foundry/src';
 const distDirectory = './dist';
-const stylesDirectory = `${sourceDirectory}/styles`;
+const stylesDirectory = `./src/styles`;
 const stylesExtension = 'css';
 const staticFiles = [
 	'assets/**/*',

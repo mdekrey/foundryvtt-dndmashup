@@ -4,7 +4,7 @@ const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 
 module.exports = (isProduction) => ({
-	input: 'src/module/foundryvtt-dndmashup.ts',
+	input: `${__dirname}/src/module/foundryvtt-dndmashup.ts`,
 	output: {
 		dir: 'dist/module',
 		format: 'es',
@@ -12,7 +12,7 @@ module.exports = (isProduction) => ({
 	},
 	plugins: [
 		nodeResolve(),
-		typescript(),
+		typescript({ tsconfig: `${__dirname}/tsconfig.json` }),
 		commonjs(),
 		replace({ 'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development') }),
 	],
