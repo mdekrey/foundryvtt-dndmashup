@@ -24,26 +24,24 @@
 		"link-project": "gulp link",
 		"clean": "gulp clean",
 		"clean:link": "gulp link --clean",
-		"typecheck": "tsc --noEmit",
 		"lint": "eslint --ext .ts,.js,.cjs .",
 		"lint:fix": "eslint --ext .ts,.js,.cjs --fix .",
 		"format": "prettier --write \"./**/*.(ts|js|cjs|json|yml|css|html)\"",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:ci": "jest --ci --reporters=default --reporters=jest-junit",
-		"postinstall": "husky install"
+		"postinstall": "husky install",
+		"prepare": "cd foundry && npm install && cd .."
 	},
 	"devDependencies": {
-		"@league-of-foundry-developers/foundry-vtt-types": "^9.268.2",
+		"@rollup/plugin-commonjs": "^22.0.0",
 		"@rollup/plugin-node-resolve": "^13.3.0",
 		"@rollup/plugin-typescript": "^8.3.2",
 		"@rollup/stream": "^2.0.0",
 		"@types/jest": "^27.5.1",
-		"@types/uuid": "^8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.24.0",
 		"@typescript-eslint/parser": "^5.24.0",
 		"autoprefixer": "^10.4.7",
-		"classnames": "^2.3.1",
 		"eslint": "^8.15.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-jest": "^26.2.2",
@@ -53,18 +51,17 @@
 		"gulp-postcss": "^9.0.1",
 		"gulp-sourcemaps": "^3.0.0",
 		"husky": "^8.0.1",
-		"immer": "^9.0.14",
 		"jest": "^28.1.0",
 		"jest-junit": "^13.2.0",
 		"lint-staged": "^12.4.1",
 		"postcss-import": "^14.1.0",
 		"prettier": "^2.6.2",
 		"rollup": "^2.73.0",
+		"rollup-plugin-replace": "^2.2.0",
 		"tailwindcss": "^3.0.24",
 		"ts-jest": "^28.0.2",
 		"tslib": "^2.4.0",
 		"typescript": "^4.6.4",
-		"uuid": "^8.3.2",
 		"vinyl-buffer": "^1.0.1",
 		"vinyl-source-stream": "^2.0.0",
 		"yargs": "^17.5.1"
@@ -72,17 +69,5 @@
 	"lint-staged": {
 		"*.(ts|js|cjs)": "eslint --fix",
 		"*.(json|yml|css)": "prettier --write"
-	},
-	"dependencies": {
-		"@headlessui/react": "^1.6.4",
-		"@heroicons/react": "^1.0.6",
-		"@rollup/plugin-commonjs": "^22.0.0",
-		"@types/lodash": "^4.14.182",
-		"@types/react": "^18.0.9",
-		"@types/react-dom": "^18.0.5",
-		"lodash": "^4.17.21",
-		"react": "^18.1.0",
-		"react-dom": "^18.1.0",
-		"rollup-plugin-replace": "^2.2.0"
 	}
 }
