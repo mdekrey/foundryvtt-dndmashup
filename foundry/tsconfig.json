@@ -12,7 +12,15 @@
 		"baseUrl": "./",
 		"jsx": "react-jsx",
 		"noEmit": true,
-		"outDir": "../dist/module/"
+		"outDir": "../dist/module/",
+		"paths": {
+			"dndmashup-react/*": ["../react/src/*"]
+		}
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"references": [
+		{
+			"path": "../react"
+		}
+	]
 }

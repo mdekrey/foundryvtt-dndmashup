@@ -2,7 +2,7 @@ import { FormInput } from 'src/components/form-input';
 import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SelectItem } from 'src/components/form-input';
 import { Lens } from 'src/core/lens';
-import { Defense, Defenses } from 'src/types/types';
+import { Defense, Defenses } from 'dndmashup-react/types/types';
 import { AttackRoll } from '../dataSourceData';
 
 const abilityLens = Lens.from<AttackRoll | null, string>(

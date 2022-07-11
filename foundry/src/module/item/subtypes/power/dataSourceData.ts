@@ -1,6 +1,6 @@
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { NoStringPath } from 'src/core/path-typings';
-import { DamageType, Defense, TypedData } from 'src/types/types';
+import { DamageType, Defense, TypedData } from 'dndmashup-react/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type PowerDataSourceData = BaseItemTemplateDataSourceData & {

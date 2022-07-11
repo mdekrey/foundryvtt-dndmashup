@@ -1,4 +1,4 @@
-import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
+import { Abilities, Ability, Defense, Defenses } from 'dndmashup-react/types/types';
 import { MashupActor } from '../actor/mashup-actor';
 import { MashupItem } from '../item/mashup-item';
 import * as ConditionRules from './conditionRules';

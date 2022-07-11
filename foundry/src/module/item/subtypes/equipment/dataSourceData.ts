@@ -4,7 +4,7 @@ import {
 	ItemDescriptionItemTemplateDataSourceData,
 	CarriedItemItemTemplateDataSourceData,
 } from '../../templates/bases';
-import { TypedData } from 'src/types/types';
+import { TypedData } from 'dndmashup-react/types/types';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &

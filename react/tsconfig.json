@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ES2020",
 		"lib": ["DOM", "ES2020"],
-		"types": ["@league-of-foundry-developers/foundry-vtt-types"],
+		"types": [],
 		"esModuleInterop": true,
 		"moduleResolution": "node",
 		"forceConsistentCasingInFileNames": true,
@@ -11,8 +11,10 @@
 		"strict": true,
 		"baseUrl": "./",
 		"jsx": "react-jsx",
-		"noEmit": true,
-		"outDir": "../dist/module/"
+		"noEmit": false,
+		"declaration": true,
+		"outDir": "./out/",
+		"composite": true
 	},
-	"include": ["foundry/src", "foundry/test", "react/src", "*.js", "*.cjs", ".*.js", ".*.cjs"]
+	"include": ["src"]
 }

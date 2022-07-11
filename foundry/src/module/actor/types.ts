@@ -1,4 +1,4 @@
-import { Ability, Currency, TypedData, Defense } from 'src/types/types';
+import { Ability, Currency, TypedData, Defense } from 'dndmashup-react/types/types';
 import { ActorData } from './actor.types';
 import { FeatureBonus } from '../bonuses';
 

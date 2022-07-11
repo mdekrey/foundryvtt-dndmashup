@@ -12,7 +12,7 @@ import {
 } from '../dataSourceData';
 import { neverEver } from 'src/core/neverEver';
 import { isAttackEffect, isTargetEffect } from './sheetLenses';
-import { Defense } from 'src/types/types';
+import { Defense } from 'dndmashup-react/types/types';
 import {
 	MeleeIcon,
 	RangedIcon,

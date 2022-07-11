@@ -1,4 +1,4 @@
-import { TypedData } from 'src/types/types';
+import { TypedData } from 'dndmashup-react/types/types';
 import { ItemSlot } from './subtypes/equipment/item-slots';
 import {
 	ItemDataBaseProperties,

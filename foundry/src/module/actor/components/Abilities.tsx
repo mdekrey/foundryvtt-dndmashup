@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { FormInput } from 'src/components/form-input';
-import { Abilities as abilities, Ability } from 'src/types/types';
+import { Abilities as abilities, Ability } from 'dndmashup-react/types/types';
 import { Lens } from 'src/core/lens';
 import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { AbilityScores } from '../types';

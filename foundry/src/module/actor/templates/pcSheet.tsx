@@ -16,7 +16,7 @@ import { Effects } from '../components/Effects';
 import { documentAsState, Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
 import { SourceDataOf } from 'src/core/foundry';
-import { Ability } from 'src/types/types';
+import { Ability } from 'dndmashup-react/types/types';
 import { ActorDataSource } from '../types';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { PossibleItemData } from 'src/module/item/types';

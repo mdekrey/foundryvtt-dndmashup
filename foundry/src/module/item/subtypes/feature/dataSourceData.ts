@@ -1,6 +1,6 @@
 import { FeatureType } from './config';
 import { BaseItemTemplateDataSourceData, ItemDescriptionItemTemplateDataSourceData } from '../../templates/bases';
-import { TypedData } from 'src/types/types';
+import { TypedData } from 'dndmashup-react/types/types';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 
 export type FeatureDataSourceData = BaseItemTemplateDataSourceData &

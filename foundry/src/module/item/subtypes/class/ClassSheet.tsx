@@ -1,6 +1,6 @@
 import { FormInput, SelectItem } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { Abilities, Ability } from 'src/types/types';
+import { Abilities, Ability } from 'dndmashup-react/types/types';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
