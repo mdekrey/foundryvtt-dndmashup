@@ -14,13 +14,13 @@
 		"noEmit": true,
 		"outDir": "out/",
 		"paths": {
-			"dndmashup-react/*": ["../react/src/*"]
+			"dndmashup-react/*": ["node_modules/dndmashup-react/src/*"]
 		}
 	},
 	"include": ["src"],
 	"references": [
 		{
-			"path": "../react"
+			"path": "node_modules/dndmashup-react"
 		}
 	]
 }
