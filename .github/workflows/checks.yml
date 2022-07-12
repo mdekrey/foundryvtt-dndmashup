@@ -83,6 +83,10 @@ jobs:
       - name: Install dependencies
         run: npm ci --cache .npm --prefer-offline
 
+      - name: Build react folder
+        working-directory: ./react
+        run: npm run build
+
       - name: Typecheck
         run: npm run typecheck
 
