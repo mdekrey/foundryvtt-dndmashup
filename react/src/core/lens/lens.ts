@@ -1,11 +1,10 @@
 import { Draft } from 'immer';
-import { makeFieldLens } from './makeFieldLens';
 import { ImmerMutator, Mutator, Stateful } from './types';
 
 function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
 	return (draft) => {
 		const result = m(draft);
-		return result === undefined ? draft : result;
+		return (result === undefined ? draft : result) as T | Draft<T>;
 	};
 }
 
@@ -53,7 +52,7 @@ export class Lens<TSource, TValue> {
 	default(value: NonNullable<TValue>) {
 		return this.combine(
 			Lens.from<TValue, NonNullable<TValue>>(
-				(source) => source ?? value,
+				(source) => (source ?? value) as NonNullable<TValue>,
 				(mutator) => (draft) => {
 					return mutator((draft ?? value) as any) as any;
 				}
@@ -131,4 +130,13 @@ export class Lens<TSource, TValue> {
 			},
 		};
 	}
+}
+
+export function makeFieldLens<TTarget, TProp extends keyof TTarget>(field: TProp) {
+	return Lens.from<TTarget, TTarget[TProp]>(
+		(data) => data[field],
+		(mutator) => (data) => {
+			(data as any)[field] = mutator((data as any)[field]);
+		}
+	);
 }

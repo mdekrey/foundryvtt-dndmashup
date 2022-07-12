@@ -1,4 +1,4 @@
-import { Stateful } from 'src/core/lens';
+import { Stateful } from 'dndmashup-react/core/lens';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { FeatureBonus } from 'src/module/bonuses';
 import { EquipmentData } from '../dataSourceData';

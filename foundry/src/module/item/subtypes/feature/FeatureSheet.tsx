@@ -5,7 +5,7 @@ import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens } from 'dndmashup-react/core/lens';
 import { FeatureDocument, FeatureData } from './dataSourceData';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 

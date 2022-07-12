@@ -4,7 +4,7 @@ import { Abilities, Ability } from 'dndmashup-react/types/types';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { ClassData } from './dataSourceData';
 import { isEquipment } from '../equipment/isEquipment';

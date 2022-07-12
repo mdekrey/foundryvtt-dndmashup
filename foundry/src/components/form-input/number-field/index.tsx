@@ -1,5 +1,5 @@
 import { Field } from '../field';
-import { ImmutableMutator } from 'src/core/lens';
+import { ImmutableMutator } from 'dndmashup-react/core/lens';
 import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export function NumberField({

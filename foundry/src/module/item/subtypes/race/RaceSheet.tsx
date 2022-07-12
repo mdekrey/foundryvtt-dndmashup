@@ -3,7 +3,7 @@ import { ImageEditor } from 'src/components/image-editor';
 import { Bonuses } from 'src/module/bonuses';
 import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { RaceData } from './dataSourceData';
 import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 

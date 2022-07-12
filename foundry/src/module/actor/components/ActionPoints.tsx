@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { ActionPoints } from '../types';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 
 const actionPointsLens = Lens.identity<ActionPoints>();
 

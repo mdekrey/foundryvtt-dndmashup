@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { FormInput } from 'src/components/form-input';
 import { setWith } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SelectItem } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { neverEver } from 'src/core/neverEver';
 import {
 	AreaEffectTypeAndRange,

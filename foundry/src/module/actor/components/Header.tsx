@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { ImageEditor } from 'src/components/image-editor';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { PcDetails } from '../types';
 import { RaceDocument } from 'src/module/item/subtypes/race/dataSourceData';
 import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';

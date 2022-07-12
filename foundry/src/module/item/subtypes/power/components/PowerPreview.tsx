@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { pipeJsx } from 'src/core/jsx/pipeJsx';
-import { recurse } from 'src/core/jsx/recurse';
-import { mergeStyles } from 'src/core/jsx/mergeStyles';
+import { pipeJsx } from 'dndmashup-react/core/jsx/pipeJsx';
+import { recurse } from 'dndmashup-react/core/jsx/recurse';
+import { mergeStyles } from 'dndmashup-react/core/jsx/mergeStyles';
 import {
 	ActionType,
 	ApplicableEffect,
@@ -26,7 +26,7 @@ import {
 	D6_5Icon,
 	D6_6Icon,
 } from './icons';
-import { or } from 'src/core/lens/functions';
+import { or } from 'dndmashup-react/core/lens/functions';
 
 export function PowerPreview({ item }: { item: PowerDocument }) {
 	const { name, data: itemData } = item.data;

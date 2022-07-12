@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { Health } from '../types';
 
 const healthLens = Lens.identity<Health>();

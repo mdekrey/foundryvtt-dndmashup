@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens } from 'dndmashup-react/core/lens';
 import { SpecificActor } from '../mashup-actor';
 import { PossibleActorData } from '../types';
 

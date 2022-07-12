@@ -14,7 +14,7 @@ import { Features } from '../components/Features';
 import { Feats } from '../components/Feats';
 import { Effects } from '../components/Effects';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { Ability } from 'dndmashup-react/types/types';
 import { ActorDataSource, SpecificActorData } from '../types';
 import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';

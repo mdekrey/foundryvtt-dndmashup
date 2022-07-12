@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { DamageTypes, DamageType } from 'dndmashup-react/types/types';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';

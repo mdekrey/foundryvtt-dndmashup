@@ -8,7 +8,7 @@ import { Tabs } from 'src/components/tab-section';
 import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens } from 'src/core/lens';
+import { Lens } from 'dndmashup-react/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';

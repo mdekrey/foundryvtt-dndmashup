@@ -1,5 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 
 const textLens = Lens.identity<{ text: string }>().toField('text').default('');
 

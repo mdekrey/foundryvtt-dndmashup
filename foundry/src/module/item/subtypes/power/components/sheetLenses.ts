@@ -1,8 +1,8 @@
 import { Draft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { Lens } from 'src/core/lens';
-import { not, or } from 'src/core/lens/functions';
+import { Lens } from 'dndmashup-react/core/lens';
+import { not, or } from 'dndmashup-react/core/lens/functions';
 import {
 	PowerEffect,
 	AttackEffect,

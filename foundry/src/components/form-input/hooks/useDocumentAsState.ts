@@ -1,6 +1,6 @@
 import produce, { Draft } from 'immer';
 import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from 'src/core/lens';
+import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from 'dndmashup-react/core/lens';
 
 export function documentAsState<TData>(
 	document: SimpleDocument<TData>,

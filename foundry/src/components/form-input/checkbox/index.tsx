@@ -1,4 +1,4 @@
-import { Stateful } from 'src/core/lens';
+import { Stateful } from 'dndmashup-react/core/lens';
 
 export function Checkbox({
 	value,

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { Abilities as abilities, Ability } from 'dndmashup-react/types/types';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { AbilityScores } from '../types';
 
 const baseLens = Lens.identity<AbilityScores>();

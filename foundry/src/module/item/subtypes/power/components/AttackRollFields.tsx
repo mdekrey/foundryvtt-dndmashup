@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { SelectItem } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { Defense, Defenses } from 'dndmashup-react/types/types';
 import { AttackRoll } from '../dataSourceData';
 

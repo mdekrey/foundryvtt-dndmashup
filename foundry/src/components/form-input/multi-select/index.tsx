@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react';
 import { Combobox } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import { SelectItem } from '../select';
-import { ImmutableMutator } from 'src/core/lens';
+import { ImmutableMutator } from 'dndmashup-react/core/lens';
 import { Primitive } from 'src/core/path-typings';
 import classNames from 'classnames';
 import { Field } from '../field';

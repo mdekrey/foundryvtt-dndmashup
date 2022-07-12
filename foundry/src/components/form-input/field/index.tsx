@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
-import { mergeStyles } from 'src/core/jsx/mergeStyles';
-import { pipeJsxChildren } from 'src/core/jsx/pipeJsx';
+import { mergeStyles } from 'dndmashup-react/core/jsx/mergeStyles';
+import { pipeJsxChildren } from 'dndmashup-react/core/jsx/pipeJsx';
 
 export function Field({ className, children }: { className?: string; children?: ReactNode }) {
 	const result =

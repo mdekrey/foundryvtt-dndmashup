@@ -4,7 +4,7 @@ import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets, conditions } from './bonus-sheet-utils';
 import { IconButton } from 'src/components/icon-button';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,

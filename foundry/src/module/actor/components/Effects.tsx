@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { Bonuses, targets, conditions, FeatureBonusWithContext } from 'src/module/bonuses';
 import { MashupItemBase } from 'src/module/item/mashup-item';
 import { ActorDataSource } from '../types';

@@ -1,6 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from 'dndmashup-react/core/lens';
 import { EquipmentData } from '../../dataSourceData';
 import { ItemSlot } from '../types';
 

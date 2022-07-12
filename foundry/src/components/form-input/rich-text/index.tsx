@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Stateful } from 'src/core/lens';
+import { Stateful } from 'dndmashup-react/core/lens';
 
 export function RichText({
 	rollData,
