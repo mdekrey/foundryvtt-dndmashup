@@ -15,20 +15,19 @@ import { Feats } from '../components/Feats';
 import { Effects } from '../components/Effects';
 import { documentAsState, Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
-import { SourceDataOf } from 'src/core/foundry';
 import { Ability } from 'dndmashup-react/types/types';
-import { ActorDataSource } from '../types';
+import { ActorDataSource, SpecificActorData } from '../types';
 import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { PossibleItemData } from 'src/module/item/types';
 
-const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();
+const baseLens = Lens.identity<SpecificActorData<'pc'>>();
 const dataLens = baseLens.toField('data');
 const abilitiesLens = dataLens.toField('abilities');
 const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
-	const documentState = documentAsState(actor);
+	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
 
 	// TODO: derived data doesn't need to go to actor.data
 	const data = actor.derivedData;
