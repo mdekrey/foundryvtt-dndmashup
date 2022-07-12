@@ -1,6 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens } from 'src/core/lens';
-import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens, Stateful } from 'src/core/lens';
 import { Health } from '../types';
 
 const healthLens = Lens.identity<Health>();

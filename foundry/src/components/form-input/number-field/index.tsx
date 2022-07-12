@@ -1,5 +1,5 @@
 import { Field } from '../field';
-import { ImmutableMutator } from '../hooks/useDocumentAsState';
+import { ImmutableMutator } from 'src/core/lens';
 import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export function NumberField({

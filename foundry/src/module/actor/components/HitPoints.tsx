@@ -1,11 +1,10 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens } from 'src/core/lens';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens, Stateful } from 'src/core/lens';
 import { Health } from '../types';
 
 const healthLens = Lens.identity<Health>();
 
-export function HitPoints({ healthState, maxHp }: { healthState: ImmutableStateMutator<Health>; maxHp: number }) {
+export function HitPoints({ healthState, maxHp }: { healthState: Stateful<Health>; maxHp: number }) {
 	return (
 		<>
 			<h2 className="text-lg">Hit Points</h2>

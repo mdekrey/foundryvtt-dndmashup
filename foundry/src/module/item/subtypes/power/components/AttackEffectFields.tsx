@@ -1,6 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 import { AttackEffect, DamageEffect, TextEffect } from '../dataSourceData';
 import { DamageFields } from './DamageFields';
 
@@ -65,7 +64,7 @@ const missTextLens = Lens.from<AttackEffect, string>(
 	}
 );
 
-export function AttackEffectFields(props: ImmutableStateMutator<AttackEffect>) {
+export function AttackEffectFields(props: Stateful<AttackEffect>) {
 	const hitTextState = hitTextLens.apply(props);
 	const hitDamageEffectState = hitDamageEffectLens.apply(props);
 	const missTextState = missTextLens.apply(props);

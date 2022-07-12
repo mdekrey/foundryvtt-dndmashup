@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { FormInput } from 'src/components/form-input';
-import { ImmutableStateMutator, setWith } from 'src/components/form-input/hooks/useDocumentAsState';
+import { setWith } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SelectItem } from 'src/components/form-input';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 import { neverEver } from 'src/core/neverEver';
 import {
 	AreaEffectTypeAndRange,
@@ -96,7 +96,7 @@ const areaShapeLens = areaLens.combine(Lens.fromProp('shape'));
 const areaSizeLens = areaLens.combine(Lens.fromProp('size'));
 const areaWithinLens = areaLens.combine(Lens.fromProp('within'));
 
-export function TypeAndRange({ value, onChangeValue: setValue }: ImmutableStateMutator<EffectTypeAndRange>) {
+export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<EffectTypeAndRange>) {
 	return (
 		<div
 			className={classNames('grid gap-1', {

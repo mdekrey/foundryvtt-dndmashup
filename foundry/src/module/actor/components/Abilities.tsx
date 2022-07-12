@@ -1,8 +1,7 @@
 import { Fragment } from 'react';
 import { FormInput } from 'src/components/form-input';
 import { Abilities as abilities, Ability } from 'dndmashup-react/types/types';
-import { Lens } from 'src/core/lens';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens, Stateful } from 'src/core/lens';
 import { AbilityScores } from '../types';
 
 const baseLens = Lens.identity<AbilityScores>();
@@ -11,7 +10,7 @@ export function Abilities({
 	abilitiesState,
 	getFinalScore,
 }: {
-	abilitiesState: ImmutableStateMutator<AbilityScores>;
+	abilitiesState: Stateful<AbilityScores>;
 	getFinalScore(ability: Ability): number;
 }) {
 	return (

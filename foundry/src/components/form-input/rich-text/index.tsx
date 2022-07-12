@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Stateful } from '../hooks/useDocumentAsState';
+import { Stateful } from 'src/core/lens';
 
 export function RichText({
 	rollData,

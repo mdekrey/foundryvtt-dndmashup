@@ -1,6 +1,5 @@
 import { FormInput } from 'src/components/form-input';
-import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 
 const textLens = Lens.identity<{ text: string }>().toField('text').default('');
 

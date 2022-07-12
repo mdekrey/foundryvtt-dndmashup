@@ -1,7 +1,6 @@
 import { FormInput } from 'src/components/form-input';
-import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 import { EquipmentData } from '../../dataSourceData';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';

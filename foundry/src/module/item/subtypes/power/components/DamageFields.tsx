@@ -1,7 +1,6 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 import { DamageTypes, DamageType } from 'dndmashup-react/types/types';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
 import { SelectItem } from 'src/components/form-input';
@@ -39,7 +38,7 @@ export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 	}
 );
 
-export function DamageFields({ prefix, ...props }: { prefix?: string } & ImmutableStateMutator<DamageEffect | null>) {
+export function DamageFields({ prefix, ...props }: { prefix?: string } & Stateful<DamageEffect | null>) {
 	const damageState = damageDiceLens.apply(props);
 	const damageTypeState = damageTypesLens.apply(props);
 	return (

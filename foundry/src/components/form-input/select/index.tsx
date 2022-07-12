@@ -4,8 +4,8 @@ import SelectorIcon from '@heroicons/react/solid/SelectorIcon';
 import classNames from 'classnames';
 import { ReactNode, Key, useState, useCallback } from 'react';
 import { Primitive } from 'src/core/path-typings';
+import { ImmutableMutator } from 'src/core/lens';
 import { Field } from '../field';
-import { ImmutableMutator } from '../hooks/useDocumentAsState';
 
 export type SelectItem<TValue> = {
 	value: TValue;

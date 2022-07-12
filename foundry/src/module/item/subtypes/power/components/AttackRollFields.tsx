@@ -1,7 +1,6 @@
 import { FormInput } from 'src/components/form-input';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
 import { SelectItem } from 'src/components/form-input';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 import { Defense, Defenses } from 'dndmashup-react/types/types';
 import { AttackRoll } from '../dataSourceData';
 
@@ -34,7 +33,7 @@ const defenseOptions = Defenses.map(
 	})
 );
 
-export function AttackRollFields(props: ImmutableStateMutator<AttackRoll | null>) {
+export function AttackRollFields(props: Stateful<AttackRoll | null>) {
 	const abilityState = abilityLens.apply(props);
 
 	return (

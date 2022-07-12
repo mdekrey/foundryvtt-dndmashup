@@ -16,5 +16,5 @@
 		"outDir": "./out/",
 		"composite": true
 	},
-	"include": ["src", "src/types"]
+	"include": ["src"]
 }

@@ -4,8 +4,7 @@ import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets, conditions } from './bonus-sheet-utils';
 import { IconButton } from 'src/components/icon-button';
-import { ImmutableStateMutator } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens, Stateful } from 'src/core/lens';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
@@ -24,13 +23,7 @@ const selectConditions = Object.entries(conditions).map(
 
 const baseLens = Lens.identity<FeatureBonus[]>();
 
-export function Bonuses({
-	bonuses,
-	className,
-}: {
-	bonuses: ImmutableStateMutator<FeatureBonus[]>;
-	className?: string;
-}) {
+export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({

@@ -1,4 +1,4 @@
-import { ImmutableStateMutator } from '../form-input/hooks/useDocumentAsState';
+import { Stateful } from 'src/core/lens';
 
 export function ImageEditor({
 	title,
@@ -8,7 +8,7 @@ export function ImageEditor({
 }: {
 	title: string | null;
 	className?: string;
-} & ImmutableStateMutator<string | null>) {
+} & Stateful<string | null>) {
 	return (
 		<img
 			src={value ?? ''}

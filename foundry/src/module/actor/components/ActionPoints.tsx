@@ -1,7 +1,6 @@
 import { FormInput } from 'src/components/form-input';
 import { ActionPoints } from '../types';
-import { Lens } from 'src/core/lens';
-import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens, Stateful } from 'src/core/lens';
 
 const actionPointsLens = Lens.identity<ActionPoints>();
 

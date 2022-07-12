@@ -1,12 +1,6 @@
 import produce, { Draft } from 'immer';
 import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { ImmerMutator, Lens } from 'src/core/lens';
-
-export type ImmutableMutatorOptions = { deleteData: boolean };
-export type ImmutableMutator<T> = (mutator: ImmerMutator<T>, config?: Partial<ImmutableMutatorOptions>) => void;
-
-export type ImmutableStateMutator<T> = { value: T; onChangeValue: ImmutableMutator<T> };
-export type Stateful<T> = ImmutableStateMutator<T>;
+import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from 'src/core/lens';
 
 export function documentAsState<TData>(
 	document: SimpleDocument<TData>,
