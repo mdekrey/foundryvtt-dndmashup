@@ -13,7 +13,7 @@ import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types
 import { AnyDocument } from 'src/core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { MashupPower } from './subtypes/power/config';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 

@@ -6,7 +6,7 @@ import { Tabs } from 'src/components/tab-section';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { Lens } from 'src/core/lens';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { ClassData } from './dataSourceData';
 import { isEquipment } from '../equipment/isEquipment';
 

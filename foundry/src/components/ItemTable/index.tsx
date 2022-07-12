@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useRef } from 'react';
 import { IconButton } from 'src/components/icon-button';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 
 export function ItemTable<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
 	title,

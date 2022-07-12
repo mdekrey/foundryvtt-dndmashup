@@ -18,7 +18,7 @@ import { Lens } from 'src/core/lens';
 import { SourceDataOf } from 'src/core/foundry';
 import { Ability } from 'dndmashup-react/types/types';
 import { ActorDataSource } from '../types';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { PossibleItemData } from 'src/module/item/types';
 
 const baseLens = Lens.identity<SourceDataOf<SpecificActor<'pc'>>>();

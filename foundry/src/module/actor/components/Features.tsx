@@ -2,7 +2,7 @@ import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
 import { MashupItemFeature } from 'src/module/item/subtypes/feature/config';
 import { ItemTable } from 'src/components/ItemTable';
 import { PossibleItemData } from 'src/module/item/types';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 
 const features: {
 	key: React.Key;

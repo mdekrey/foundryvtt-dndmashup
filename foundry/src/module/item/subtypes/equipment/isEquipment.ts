@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { MashupItemBase } from '../../mashup-item';
 import { MashupItemEquipment } from './config';
 import { EquipmentDocument } from './dataSourceData';

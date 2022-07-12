@@ -1,5 +1,5 @@
 import { ItemTable } from 'src/components/ItemTable';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { FeatureData } from '../subtypes/feature/dataSourceData';
 import { isFeature } from '../subtypes/feature/isFeature';
 

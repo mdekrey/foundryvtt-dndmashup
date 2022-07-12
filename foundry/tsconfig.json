@@ -17,7 +17,7 @@
 			"dndmashup-react/*": ["../react/src/*"]
 		}
 	},
-	"include": ["src", "../react/src/types"],
+	"include": ["src", "../react/src/types", "../react/src/interfaces"],
 	"references": [
 		{
 			"path": "../react"

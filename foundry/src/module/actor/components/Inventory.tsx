@@ -14,7 +14,7 @@ import { isEquipment } from 'src/module/item/subtypes/equipment/isEquipment';
 import { ItemTable } from 'src/components/ItemTable';
 import { useCallback } from 'react';
 import { getEquipmentProperties } from 'src/module/item/subtypes/equipment/getEquipmentProperties';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { EquipmentData } from 'src/module/item/subtypes/equipment/dataSourceData';
 
 export const orderedItemSlots: ItemSlot[] = [

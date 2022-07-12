@@ -6,7 +6,7 @@ import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { RaceData } from './dataSourceData';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');

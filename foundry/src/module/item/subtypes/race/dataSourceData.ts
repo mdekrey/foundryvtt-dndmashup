@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { TypedData } from 'dndmashup-react/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 

@@ -7,7 +7,7 @@ import { Lens } from 'src/core/lens';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { EquipmentData } from '../../dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 
 const allWeaponCategories = toSelectItems(weaponCategories);
 const allWeaponHands = toNumericSelectItems(weaponHands);

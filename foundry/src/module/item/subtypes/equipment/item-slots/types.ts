@@ -1,5 +1,5 @@
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { FeatureBonus } from 'src/module/bonuses';
 import { EquipmentData } from '../dataSourceData';
 import { ArmorItemSlotTemplate } from './armor/types';

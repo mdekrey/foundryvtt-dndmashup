@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { NoStringPath } from 'src/core/path-typings';
 import { DamageType, Defense, TypedData } from 'dndmashup-react/types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';

@@ -1,6 +1,6 @@
 import { ItemTable } from 'src/components/ItemTable';
 import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { FeatureDocument } from 'src/module/item/subtypes/feature/dataSourceData';
 
 export function Feats({ items }: { items: SimpleDocument[] }) {

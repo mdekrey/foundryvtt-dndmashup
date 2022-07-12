@@ -11,7 +11,7 @@ import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
 	value: key as ItemSlot,

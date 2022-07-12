@@ -2,7 +2,7 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import {
 	BonusTarget,
 	bonusTargets,

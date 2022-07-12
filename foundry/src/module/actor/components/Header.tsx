@@ -4,7 +4,7 @@ import { Lens } from 'src/core/lens';
 import { Stateful } from 'src/components/form-input/hooks/useDocumentAsState';
 import { PcDetails } from '../types';
 import { RaceDocument } from 'src/module/item/subtypes/race/dataSourceData';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import { ClassDocument } from 'src/module/item/subtypes/class/dataSourceData';
 import { ParagonPathDocument } from 'src/module/item/subtypes/paragonPath/dataSourceData';
 import { EpicDestinyDocument } from 'src/module/item/subtypes/epicDestiny/dataSourceData';

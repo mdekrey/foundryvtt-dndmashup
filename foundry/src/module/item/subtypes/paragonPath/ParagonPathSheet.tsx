@@ -6,7 +6,7 @@ import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from 'src/core/lens';
 import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
 import { ParagonPathData, ParagonPathDocument } from './dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 
 const baseLens = Lens.identity<SimpleDocumentData<ParagonPathData>>();
 const imageLens = baseLens.toField('img');

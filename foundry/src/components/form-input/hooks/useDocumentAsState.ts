@@ -1,6 +1,6 @@
 import produce, { Draft } from 'immer';
 import { AnyDocument, SourceDataOf } from 'src/core/foundry';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
 import { ImmerMutator, Lens } from 'src/core/lens';
 
 export type ImmutableMutatorOptions = { deleteData: boolean };
