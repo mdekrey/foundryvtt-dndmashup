@@ -1,12 +1,14 @@
 const fs = require('fs-extra');
 const gulp = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
+const typescript = require('gulp-typescript');
 const postcss = require('gulp-postcss');
 const path = require('node:path');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const yargs = require('yargs');
 const { hideBin } = require('yargs/helpers');
+const merge = require('merge2');
 
 const rollupStream = require('@rollup/stream');
 
@@ -19,6 +21,8 @@ const rollupConfig = require('./foundry/rollup.config.cjs');
 const name = 'foundryvtt-dndmashup';
 const sourceDirectory = './foundry/src';
 const distDirectory = './dist';
+const reactSourceDirectory = './react/src';
+const reactOutput = './react/out';
 const stylesDirectory = `./src/styles`;
 const stylesExtension = 'css';
 const staticFiles = [
@@ -37,6 +41,18 @@ const sourceFiles = [`**/*.js`, `**/*.ts`, `**/*.tsx`];
 /********************/
 
 let cache;
+
+/**
+ * Build the shared TS code
+ */
+function buildSharedCode() {
+	return function buildSharedCode() {
+		const tsResult = gulp
+			.src(sourceFiles.map((file) => `${reactSourceDirectory}/${file}`))
+			.pipe(typescript({ project: `./react/tsconfig.json`, declaration: true }));
+		return merge([tsResult.dts.pipe(gulp.dest(reactOutput)), tsResult.js.pipe(gulp.dest(reactOutput))]);
+	};
+}
 
 /**
  * Build the distributable JavaScript code
@@ -91,7 +107,15 @@ async function copyFiles() {
  */
 function watch() {
 	gulp.watch(
-		sourceFiles.map((file) => `${sourceDirectory}/${file}`),
+		sourceFiles.map((file) => `${reactSourceDirectory}/${file}`),
+		{ ignoreInitial: false },
+		buildSharedCode()
+	);
+	gulp.watch(
+		[
+			sourceFiles.map((file) => `${sourceDirectory}/${file}`),
+			sourceFiles.map((file) => `${reactOutput}/${file}`),
+		].flat(),
 		{ ignoreInitial: false },
 		buildCode(false)
 	);
@@ -99,6 +123,7 @@ function watch() {
 		[
 			`${stylesDirectory}/**/*.${stylesExtension}`,
 			...sourceFiles.map((file) => `${sourceDirectory}/${file}`),
+			...sourceFiles.map((file) => `${reactOutput}/${file}`),
 			`./tailwind.config.cjs`,
 			...staticFiles.map((file) => `${sourceDirectory}/${file}`),
 		],
@@ -112,7 +137,7 @@ function watch() {
 	);
 }
 
-const build = gulp.series(clean, gulp.parallel(buildCode(true), buildStyles, copyFiles));
+const build = gulp.series(clean, buildSharedCode(), gulp.parallel(buildCode(true), buildStyles, copyFiles));
 
 /********************/
 /*      CLEAN       */
@@ -122,7 +147,7 @@ const build = gulp.series(clean, gulp.parallel(buildCode(true), buildStyles, cop
  * Remove built files from `dist` folder while ignoring source files
  */
 async function clean() {
-	const files = [...staticFiles, 'module'];
+	const files = [...staticFiles, 'module', reactOutput];
 
 	if (fs.existsSync(`${stylesDirectory}/${name}.${stylesExtension}`)) {
 		files.push('styles');
