@@ -1,10 +1,5 @@
 import { AnyDocument } from './types';
 
-export function toMashupId(target: AnyDocument): string {
-	const current = `${target.collectionName}.${target.id}`;
-	if (target.parent) return `${toMashupId(target.parent)}:${current}`;
-	return current;
-}
 export function fromMashupId(id: string): AnyDocument {
 	const steps = id.split(':');
 	const result = steps.reduce((prev: any, next, index) => {

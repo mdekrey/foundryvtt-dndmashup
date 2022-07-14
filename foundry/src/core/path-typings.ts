@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Primitive } from 'dndmashup-react/core/path-typings';
 
-export type Primitive = null | undefined | string | number | boolean | symbol | bigint;
+export { Primitive };
+
 type PathImpl<K extends string | number, V, Type> = V extends NoStringPath
 	? never
 	: V extends Type

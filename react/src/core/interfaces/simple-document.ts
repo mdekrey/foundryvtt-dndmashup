@@ -9,21 +9,26 @@ export type StandardData = {
 
 export type SimpleDocumentData<TData = unknown> = TData & StandardData;
 
+export type BaseDocument = {
+	id: string | null;
+	name: string | null;
+	isOwner: boolean;
+	collectionName: string;
+	readonly parent?: BaseDocument | null;
+
+	update(newData: unknown, options: { overwrite?: boolean; diff?: boolean; recursive?: boolean }): void;
+	delete(): void;
+};
+
 /**
  * Represents a simple document without using the Foundry types to try to speed up conpilation
  */
-export type SimpleDocument<TData = unknown> = {
-	id: string | null;
-	name: string | null;
+export type SimpleDocument<TData = unknown> = BaseDocument & {
 	img: string | null;
-	isOwner: boolean;
 	data: SimpleDocumentData<TData>;
 	type: TData extends { type: infer TType } ? TType : unknown;
 
 	readonly items: { contents: SimpleDocument[] };
 
-	// first parameter should be SimpleDocumentData<TData> but doesn't really match yet
-	update(newData: unknown, options: { overwrite?: boolean; diff?: boolean; recursive?: boolean }): void;
-	delete(): void;
 	showEditDialog(): void;
 };

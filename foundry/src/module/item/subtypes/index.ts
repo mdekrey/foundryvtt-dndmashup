@@ -1,11 +1,11 @@
 import type { PossibleItemType } from '../types';
-import { MashupItemClass } from './class/config';
-import { MashupItemRace } from './race/config';
-import { MashupItemEquipment } from './equipment/config';
-import { MashupItemFeature } from './feature/config';
-import { MashupParagonPath } from './paragonPath/config';
-import { MashupEpicDestiny } from './epicDestiny/config';
-import { MashupPower } from './power/config';
+import { MashupItemClass } from './class/class';
+import { MashupItemRace } from './race/class';
+import { MashupItemEquipment } from './equipment/class';
+import { MashupItemFeature } from './feature/class';
+import { MashupParagonPath } from './paragonPath/class';
+import { MashupEpicDestiny } from './epicDestiny/class';
+import { MashupPower } from './power/class';
 
 export const itemMappings = {
 	class: MashupItemClass,

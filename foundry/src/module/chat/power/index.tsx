@@ -1,12 +1,12 @@
 import { renderReactToHtml } from 'src/core/react';
-import { SpecificActor } from 'src/module/actor/mashup-actor';
-import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
-import { MashupPower } from 'src/module/item/subtypes/power/config';
+import { PowerPreview } from 'dndmashup-react/module/item/subtypes/power/components/PowerPreview';
 import { fromMashupId, toMashupId } from 'src/core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
+import { ActorDocument } from 'dndmashup-react/src/module/actor/types';
+import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
 
-export async function powerChatMessage(actor: SpecificActor, item: MashupPower) {
+export async function powerChatMessage(actor: ActorDocument, item: PowerDocument) {
 	if (!('user' in game) || !game.user) return;
 
 	const html = await renderReactToHtml(<PowerPreview item={item} />);
@@ -42,5 +42,5 @@ function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: 
 		throw new Error('Could not attach');
 	}
 
-	return <PowerChat item={item as MashupPower} actor={actor} />;
+	return <PowerChat item={item as PowerDocument} actor={actor} />;
 }

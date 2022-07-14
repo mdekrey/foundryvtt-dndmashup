@@ -2,25 +2,32 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
-import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
 import {
 	BonusTarget,
 	bonusTargets,
 	byTarget,
-	evaluateAndRoll,
 	FeatureBonus,
 	FeatureBonusWithContext,
 	filterBonuses,
 	sumFinalBonuses,
-} from '../bonuses';
-import { isClass } from '../item/subtypes/class/isClass';
-import { isEpicDestiny } from '../item/subtypes/epicDestiny/isEpicDestiny';
-import { isParagonPath } from '../item/subtypes/paragonPath/isParagonPath';
-import { isPower } from '../item/subtypes/power/isPower';
-import { isRace } from '../item/subtypes/race/isRace';
+} from 'dndmashup-react/module/bonuses';
+import { isClass } from 'dndmashup-react/module/item/subtypes/class/isClass';
+import { isEpicDestiny } from 'dndmashup-react/module/item/subtypes/epicDestiny/isEpicDestiny';
+import { isEquipment } from 'dndmashup-react/module/item/subtypes/equipment/isEquipment';
+import { isParagonPath } from 'dndmashup-react/module/item/subtypes/paragonPath/isParagonPath';
+import { isPower } from 'dndmashup-react/module/item/subtypes/power/isPower';
+import { isRace } from 'dndmashup-react/module/item/subtypes/race/isRace';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
-import { ActorDataSource, ActorDerivedData, PossibleActorData, SpecificActorData } from './types';
+import { PossibleActorData, SpecificActorData } from './types';
+import { ActorDerivedData } from 'dndmashup-react/module/actor/derivedDataType';
+import { ActorDocument } from 'dndmashup-react/module/actor/documentType';
+import { EquippedItemSlot, getItemSlotInfo } from 'dndmashup-react/module/item/subtypes/equipment/item-slots';
+import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
+import { EquipmentData } from 'dndmashup-react/module/item/subtypes/equipment/dataSourceData';
+import { getEquipmentProperties } from 'dndmashup-react/module/item/subtypes/equipment/getEquipmentProperties';
+import { ItemDocument } from 'dndmashup-react/module/item';
+import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -69,7 +76,7 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	speed: (data, value) => (data.speed = value),
 };
 
-export class MashupActor extends Actor implements SimpleDocument<ActorDataSource> {
+export class MashupActor extends Actor implements ActorDocument {
 	data!: PossibleActorData;
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
@@ -184,7 +191,7 @@ export class MashupActor extends Actor implements SimpleDocument<ActorDataSource
 	}
 
 	allPowers() {
-		return this.items.contents.flatMap((item) => (isPower(item) ? item : item.allGrantedPowers()));
+		return this.items.contents.flatMap((item: ItemDocument) => (isPower(item) ? item : item.allGrantedPowers()));
 	}
 
 	getRollData() {
@@ -227,6 +234,26 @@ export class MashupActor extends Actor implements SimpleDocument<ActorDataSource
 
 	showEditDialog() {
 		this.sheet?.render(true, { focus: true });
+	}
+
+	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot) {
+		const { equippedSlots, slotsNeeded } = getItemSlotInfo(itemData.data.itemSlot);
+
+		const wasEquipped = itemData.data.equipped && itemData.data.equipped[0] === equipSlot;
+		const next = wasEquipped ? [] : [equipSlot];
+		if (!wasEquipped && slotsNeeded(getEquipmentProperties(itemData)) > 1) {
+			next.push(...equippedSlots.filter((e) => e !== equipSlot));
+		}
+		const unequip = this.items.contents
+			.filter(isEquipment)
+			.filter(
+				(eq) => eq.id !== itemData._id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p))
+			);
+
+		this.updateEmbeddedDocuments('Item', [
+			{ _id: itemData._id, data: { equipped: next } },
+			...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
+		]);
 	}
 }
 

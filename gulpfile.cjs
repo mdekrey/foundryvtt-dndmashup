@@ -22,7 +22,7 @@ const name = 'foundryvtt-dndmashup';
 const sourceDirectory = './foundry/src';
 const distDirectory = './dist';
 const reactSourceDirectory = './react/src';
-const reactOutput = './react/out';
+const reactOutput = './react/out/src';
 const stylesDirectory = `./src/styles`;
 const stylesExtension = 'css';
 const staticFiles = [
@@ -45,11 +45,10 @@ let cache;
 /**
  * Build the shared TS code
  */
+const sharedProject = typescript.createProject(`./react/tsconfig.json`);
 function buildSharedCode() {
 	return function buildSharedCode() {
-		const tsResult = gulp
-			.src(sourceFiles.map((file) => `${reactSourceDirectory}/${file}`))
-			.pipe(typescript({ project: `./react/tsconfig.json`, declaration: true }));
+		const tsResult = sharedProject.src().pipe(sharedProject());
 		return merge([tsResult.dts.pipe(gulp.dest(reactOutput)), tsResult.js.pipe(gulp.dest(reactOutput))]);
 	};
 }
@@ -214,6 +213,7 @@ async function link() {
 }
 
 module.exports = {
+	buildSharedCode: buildSharedCode(),
 	watch,
 	build,
 	clean,

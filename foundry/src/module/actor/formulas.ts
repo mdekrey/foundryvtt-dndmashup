@@ -1,7 +1,7 @@
-import { ClassData } from 'src/module/item/subtypes/class/dataSourceData';
-import { EpicDestinyData } from 'src/module/item/subtypes/epicDestiny/dataSourceData';
-import { ParagonPathData } from 'src/module/item/subtypes/paragonPath/dataSourceData';
-import { RaceData } from 'src/module/item/subtypes/race/dataSourceData';
+import { ClassData } from 'dndmashup-react/module/item/subtypes/class/dataSourceData';
+import { EpicDestinyData } from 'dndmashup-react/module/item/subtypes/epicDestiny/dataSourceData';
+import { ParagonPathData } from 'dndmashup-react/module/item/subtypes/paragonPath/dataSourceData';
+import { RaceData } from 'dndmashup-react/module/item/subtypes/race/dataSourceData';
 
 export function isClassSource(item: SourceConfig['Item']): item is ClassData {
 	return item.type === 'class';
