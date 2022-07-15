@@ -1,5 +1,6 @@
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { DamageType, Defense, TypedData } from 'src/types/types';
+import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
@@ -87,4 +88,4 @@ export type ApplicableEffect =
 	| TextEffect
 	| TargetEffect;
 
-export type PowerDocument = SimpleDocument<PowerData>;
+export type PowerDocument = SimpleDocument<PowerData> & CommonItemDocumentProperties;

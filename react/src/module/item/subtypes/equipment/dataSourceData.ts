@@ -5,7 +5,7 @@ import {
 	CarriedItemItemTemplateDataSourceData,
 } from '../../templates/bases';
 import { TypedData } from 'src/types/types';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { ItemDocument } from '../../item-data-types-template';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData &
@@ -21,4 +21,4 @@ export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
 	EquipmentDataSourceData<TItemSlot>
 >;
 
-export type EquipmentDocument<TItemSlot extends ItemSlot = ItemSlot> = SimpleDocument<EquipmentData<TItemSlot>>;
+export type EquipmentDocument<TItemSlot extends ItemSlot = ItemSlot> = ItemDocument<EquipmentData<TItemSlot>>;

@@ -42,5 +42,5 @@ function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: 
 		throw new Error('Could not attach');
 	}
 
-	return <PowerChat item={item as PowerDocument} actor={actor} />;
+	return <PowerChat item={item as unknown as PowerDocument} actor={actor} />;
 }

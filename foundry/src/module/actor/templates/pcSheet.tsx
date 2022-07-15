@@ -26,6 +26,7 @@ const dataLens = baseLens.toField('data');
 const abilitiesLens = dataLens.toField('abilities');
 const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
+const detailsLens = dataLens.toField('details').toField('biography');
 
 export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
@@ -95,7 +96,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 							</Tabs.Nav>
 							<section className="flex-grow">
 								<Tabs.Tab tabName="details">
-									<Details actor={actor} />
+									<Details isEditor={actor.isOwner} {...detailsLens.apply(documentState)} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="inventory">
 									<Inventory actor={actor} />

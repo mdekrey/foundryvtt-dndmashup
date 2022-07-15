@@ -7,6 +7,9 @@ import { EpicDestinyData, EpicDestinyDocument } from './subtypes/epicDestiny/dat
 import { PowerData, PowerDocument } from './subtypes/power/dataSourceData';
 import { ItemSlot } from './subtypes/equipment/item-slots';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { FeatureBonus } from '../bonuses';
+import { BaseItemTemplateDataSourceData } from './templates/bases';
+import { TypedData } from 'src/types/types';
 
 export interface ItemDataByType {
 	class: ClassData;
@@ -33,4 +36,11 @@ export type PossibleItemType = keyof ItemDataByType;
 export type PossibleItemSourceData = ItemDataByType[keyof ItemDataByType];
 export type SpecificItemSourceData<T extends PossibleItemType> = ItemDataByType[T];
 
-export type ItemDocument<T extends PossibleItemType = PossibleItemType> = SimpleDocument<SpecificItemSourceData<T>>;
+export type CommonItemDocumentProperties = {
+	allGrantedBonuses(): FeatureBonus[];
+	allGrantedPowers(): PowerDocument[];
+};
+
+export type ItemDocument<
+	TData extends TypedData<string, BaseItemTemplateDataSourceData> = TypedData<string, BaseItemTemplateDataSourceData>
+> = SimpleDocument<TData> & CommonItemDocumentProperties;

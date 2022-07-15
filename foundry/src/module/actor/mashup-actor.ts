@@ -23,7 +23,7 @@ import { PossibleActorData, SpecificActorData } from './types';
 import { ActorDerivedData } from 'dndmashup-react/src/module/actor/derivedDataType';
 import { ActorDocument } from 'dndmashup-react/src/module/actor/documentType';
 import { EquippedItemSlot, getItemSlotInfo } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
-import { SimpleDocumentData } from 'dndmashup-react/src/core/interfaces/simple-document';
+import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/src/core/interfaces/simple-document';
 import { EquipmentData } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
 import { getEquipmentProperties } from 'dndmashup-react/src/module/item/subtypes/equipment/getEquipmentProperties';
 import { ItemDocument } from 'dndmashup-react/src/module/item';
@@ -97,16 +97,16 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	get appliedClass() {
-		return this.items?.find(isClass);
+		return (this.items.contents as SimpleDocument[]).find(isClass);
 	}
 	get appliedRace() {
-		return this.items?.find(isRace);
+		return (this.items.contents as SimpleDocument[]).find(isRace);
 	}
 	get appliedParagonPath() {
-		return this.items?.find(isParagonPath);
+		return (this.items.contents as SimpleDocument[]).find(isParagonPath);
 	}
 	get appliedEpicDestiny() {
-		return this.items?.find(isEpicDestiny);
+		return (this.items.contents as SimpleDocument[]).find(isEpicDestiny);
 	}
 
 	get extraLevels() {
@@ -244,7 +244,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (!wasEquipped && slotsNeeded(getEquipmentProperties(itemData)) > 1) {
 			next.push(...equippedSlots.filter((e) => e !== equipSlot));
 		}
-		const unequip = this.items.contents
+		const unequip = (this.items.contents as SimpleDocument[])
 			.filter(isEquipment)
 			.filter(
 				(eq) => eq.id !== itemData._id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p))

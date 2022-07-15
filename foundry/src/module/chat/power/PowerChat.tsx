@@ -2,13 +2,13 @@ import { intersection } from 'lodash/fp';
 import { useState } from 'react';
 import { Select, SelectItem } from 'dndmashup-react/src/components/form-input/select';
 import { SpecificActor } from 'src/module/actor/mashup-actor';
-import { MashupItemBase } from 'src/module/item/mashup-item';
 import { isEquipment } from 'dndmashup-react/src/module/item/subtypes/equipment/isEquipment';
 import { EquippedItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
 import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
 import { PowerDialog } from './PowerDialog';
 import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
 import { EquipmentDocument } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
+import { ItemDocument } from 'dndmashup-react/src/module/item';
 
 export function PowerChat({ item, actor }: { item: PowerDocument; actor: SpecificActor }) {
 	return (
@@ -33,7 +33,7 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 		(intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined) ?? null;
 	const usesTool = toolType !== null;
 	const [tool, setTool] = useState<EquipmentDocument<'weapon' | 'implement'> | null>(null);
-	const possibleTools = actor.items.contents
+	const possibleTools = (actor.items.contents as ItemDocument[])
 		.filter(isEquipment)
 		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
 		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
@@ -67,7 +67,7 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 	}
 }
 
-function ItemSelector<T extends MashupItemBase>({
+function ItemSelector<T extends ItemDocument>({
 	items,
 	item,
 	onChange,

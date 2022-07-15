@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { Lens, Stateful } from 'src/core/lens';
 import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext } from 'src/module/bonuses';
-import { PossibleItemSourceData } from 'src/module/item';
 import { ActorDataSource } from '../types';
 
 const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
@@ -67,7 +66,7 @@ export function Effects({
 		</>
 	);
 
-	function edit(item: SimpleDocument<PossibleItemSourceData>) {
+	function edit(item: SimpleDocument) {
 		item.showEditDialog();
 	}
 }

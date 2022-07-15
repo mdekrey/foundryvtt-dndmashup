@@ -1,5 +1,5 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { TypedData } from 'src/types/types';
+import { ItemDocument } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
@@ -8,4 +8,4 @@ export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
 
 export type RaceData = TypedData<'race', RaceDataSourceData>;
 
-export type RaceDocument = SimpleDocument<RaceData>;
+export type RaceDocument = ItemDocument<RaceData>;

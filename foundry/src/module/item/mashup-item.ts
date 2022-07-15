@@ -1,7 +1,7 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { PossibleItemSourceData } from 'dndmashup-react/src/module/item/item-data-types-template';
+import { ItemDocument } from 'dndmashup-react/src/module/item/item-data-types-template';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 import Document, {
@@ -14,12 +14,13 @@ import { AnyDocument } from 'src/core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
 import { SimpleDocument } from 'dndmashup-react/src/core/interfaces/simple-document';
+import { TypedData } from 'dndmashup-react/src/types/types';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
 const itemCollectionPath = 'data.items';
 
-export class MashupItemBase extends Item implements SimpleDocument<PossibleItemSourceData> {
+export class MashupItemBase extends Item implements ItemDocument {
 	// TODO: schema support doesn't seem to be working in v9
 	// static override get schema() {
 	// 	return MashupItemData as any;
@@ -131,7 +132,7 @@ export class MashupItemBase extends Item implements SimpleDocument<PossibleItemS
 	// 	return parent.updateEmbeddedDocuments('Item', updates, options);
 	// }
 
-	static async setCollection(item: MashupItemBase, contents: AnyDocumentData[]) {
+	static async setCollection(item: MashupItemBase, contents: TypedData<string, unknown>[]) {
 		item.update({ [itemCollectionPath]: duplicate(contents) });
 	}
 

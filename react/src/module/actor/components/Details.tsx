@@ -1,13 +1,10 @@
 import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
-import { ActorDataSource } from '../types';
+import { Stateful } from 'src/core/lens';
 
-const lens = Lens.identity<ActorDataSource>().toField('data').toField('details').toField('biography');
-
-export function Details({ isEditor, ...documentState }: { isEditor: boolean } & Stateful<ActorDataSource>) {
+export function Details({ isEditor, ...documentState }: { isEditor: boolean } & Stateful<string>) {
 	return (
 		<>
-			<FormInput.RichText {...lens.apply(documentState)} isEditor={isEditor} />
+			<FormInput.RichText {...documentState} isEditor={isEditor} />
 		</>
 	);
 }

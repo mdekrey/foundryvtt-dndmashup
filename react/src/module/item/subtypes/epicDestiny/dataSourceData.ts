@@ -1,9 +1,9 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
 import { TypedData } from 'src/types/types';
+import { ItemDocument } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type EpicDestinyDataSourceData = BaseItemTemplateDataSourceData; // TODO
 
 export type EpicDestinyData = TypedData<'epicDestiny', EpicDestinyDataSourceData>;
 
-export type EpicDestinyDocument = SimpleDocument<EpicDestinyData>;
+export type EpicDestinyDocument = ItemDocument<EpicDestinyData>;
