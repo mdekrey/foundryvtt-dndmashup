@@ -1,11 +1,14 @@
-import { FeatureBonus } from 'src/module/bonuses';
-import { PossibleItemType } from '../../item-data-types-template';
+import { EquipmentData, EquipmentDocument } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
+import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
+import { PossibleItemType } from 'dndmashup-react/src/module/item/item-data-types-template';
 import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
-import { EquipmentData } from './dataSourceData';
-import { ItemSlot } from './item-slots';
+import { ItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
 
-export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot> extends MashupItem<'equipment'> {
+export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
+	extends MashupItem<'equipment'>
+	implements EquipmentDocument<TItemSlot>
+{
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
 	override allGrantedBonuses(): FeatureBonus[] {

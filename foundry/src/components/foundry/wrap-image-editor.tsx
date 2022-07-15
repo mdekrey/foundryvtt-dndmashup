@@ -1,7 +1,7 @@
 import {
 	ImageEditorContextProvider,
 	ImageEditorContext,
-} from 'dndmashup-react/components/form-input/image-editor/context';
+} from 'dndmashup-react/src/components/form-input/image-editor/context';
 
 const imageEditorContextValue: ImageEditorContext = ({ value, onChangeValue }) => {
 	const fp = new FilePicker({

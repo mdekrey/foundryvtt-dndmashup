@@ -1,16 +1,16 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
-import { Select, SelectItem } from 'src/components/form-input/select';
+import { Select, SelectItem } from 'dndmashup-react/src/components/form-input/select';
 import { SpecificActor } from 'src/module/actor/mashup-actor';
 import { MashupItemBase } from 'src/module/item/mashup-item';
-import { MashupItemEquipment } from 'src/module/item/subtypes/equipment';
-import { isEquipment } from 'src/module/item/subtypes/equipment/isEquipment';
-import { EquippedItemSlot } from 'src/module/item/subtypes/equipment/item-slots';
-import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
-import { MashupPower } from 'src/module/item/subtypes/power/config';
+import { isEquipment } from 'dndmashup-react/src/module/item/subtypes/equipment/isEquipment';
+import { EquippedItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
+import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
 import { PowerDialog } from './PowerDialog';
+import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
+import { EquipmentDocument } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
 
-export function PowerChat({ item, actor }: { item: MashupPower; actor: SpecificActor }) {
+export function PowerChat({ item, actor }: { item: PowerDocument; actor: SpecificActor }) {
 	return (
 		<div className="flex flex-col items-center">
 			<div className="max-w-sm mx-auto border-4 border-white">
@@ -28,15 +28,15 @@ export function PowerChat({ item, actor }: { item: MashupPower; actor: SpecificA
 
 const toolKeywords = ['weapon', 'implement'] as const;
 const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
-function PowerOptions({ power, actor }: { power: MashupPower; actor: SpecificActor }) {
+function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificActor }) {
 	const toolType =
 		(intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined) ?? null;
 	const usesTool = toolType !== null;
-	const [tool, setTool] = useState<MashupItemEquipment<'weapon' | 'implement'> | null>(null);
+	const [tool, setTool] = useState<EquipmentDocument<'weapon' | 'implement'> | null>(null);
 	const possibleTools = actor.items.contents
 		.filter(isEquipment)
 		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
-		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as MashupItemEquipment<'weapon' | 'implement'>[];
+		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
 
 	return (
 		<>

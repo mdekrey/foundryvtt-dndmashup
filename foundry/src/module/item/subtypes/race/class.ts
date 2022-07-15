@@ -1,8 +1,9 @@
-import { FeatureBonus } from 'src/module/bonuses';
+import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
+import { RaceDocument } from 'dndmashup-react/src/module/item/subtypes/race/dataSourceData';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
 
-export class MashupItemRace extends MashupItem<'race'> {
+export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'feature' || type === 'power';
 	}

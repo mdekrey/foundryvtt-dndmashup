@@ -1,7 +1,7 @@
 import {
 	RichTextEditorContextProvider,
 	RichTextEditorContext,
-} from 'dndmashup-react/components/form-input/rich-text/context';
+} from 'dndmashup-react/src/components/form-input/rich-text/context';
 
 const richTextEditorContextValue: RichTextEditorContext = {
 	sanitizeHtml(input, options) {

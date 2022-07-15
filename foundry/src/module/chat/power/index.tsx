@@ -1,9 +1,9 @@
 import { renderReactToHtml } from 'src/core/react';
-import { PowerPreview } from 'dndmashup-react/module/item/subtypes/power/components/PowerPreview';
+import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
 import { fromMashupId, toMashupId } from 'src/core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
-import { ActorDocument } from 'dndmashup-react/src/module/actor/types';
+import { ActorDocument } from 'dndmashup-react/src/module/actor/documentType';
 import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
 
 export async function powerChatMessage(actor: ActorDocument, item: PowerDocument) {

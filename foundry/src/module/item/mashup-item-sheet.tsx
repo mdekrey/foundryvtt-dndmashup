@@ -1,16 +1,16 @@
 import { MashupItemBase } from './mashup-item';
 import { PossibleItemData, PossibleItemType } from './types';
-import { ClassSheet } from './subtypes/class/ClassSheet';
-import { EquipmentSheet } from './subtypes/equipment/EquipmentSheet';
-import { RaceSheet } from './subtypes/race/RaceSheet';
-import { FeatureSheet } from './subtypes/feature/FeatureSheet';
+import { ClassSheet } from 'dndmashup-react/src/module/item/subtypes/class/ClassSheet';
+import { EquipmentSheet } from 'dndmashup-react/src/module/item/subtypes/equipment/EquipmentSheet';
+import { RaceSheet } from 'dndmashup-react/src/module/item/subtypes/race/RaceSheet';
+import { FeatureSheet } from 'dndmashup-react/src/module/item/subtypes/feature/FeatureSheet';
 import { ReactApplicationMixin } from 'src/core/react';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
-import { EpicDestinySheet } from './subtypes/epicDestiny/EpicDestinySheet';
-import { ParagonPathSheet } from './subtypes/paragonPath/ParagonPathSheet';
-import { PowerSheet } from './subtypes/power/PowerSheet';
-import { ItemDocumentByType } from './item-data-types-template';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { EpicDestinySheet } from 'dndmashup-react/src/module/item/subtypes/epicDestiny/EpicDestinySheet';
+import { ParagonPathSheet } from 'dndmashup-react/src/module/item/subtypes/paragonPath/ParagonPathSheet';
+import { PowerSheet } from 'dndmashup-react/src/module/item/subtypes/power/PowerSheet';
+import { ItemDocumentByType } from 'dndmashup-react/src/module/item/item-data-types-template';
+import { documentAsState } from 'dndmashup-react/src/components/form-input/hooks/useDocumentAsState';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] }> } = {
 	class: ({ item }) => <ClassSheet items={item.items.contents} {...documentAsState(item)} />,

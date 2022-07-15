@@ -1,8 +1,9 @@
-import { FeatureBonus } from 'src/module/bonuses';
+import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
+import { ParagonPathDocument } from 'dndmashup-react/src/module/item/subtypes/paragonPath/dataSourceData';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
 
-export class MashupParagonPath extends MashupItem<'paragonPath'> {
+export class MashupParagonPath extends MashupItem<'paragonPath'> implements ParagonPathDocument {
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'feature';
 	}

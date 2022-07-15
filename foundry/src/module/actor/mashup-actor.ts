@@ -10,23 +10,23 @@ import {
 	FeatureBonusWithContext,
 	filterBonuses,
 	sumFinalBonuses,
-} from 'dndmashup-react/module/bonuses';
-import { isClass } from 'dndmashup-react/module/item/subtypes/class/isClass';
-import { isEpicDestiny } from 'dndmashup-react/module/item/subtypes/epicDestiny/isEpicDestiny';
-import { isEquipment } from 'dndmashup-react/module/item/subtypes/equipment/isEquipment';
-import { isParagonPath } from 'dndmashup-react/module/item/subtypes/paragonPath/isParagonPath';
-import { isPower } from 'dndmashup-react/module/item/subtypes/power/isPower';
-import { isRace } from 'dndmashup-react/module/item/subtypes/race/isRace';
+} from 'dndmashup-react/src/module/bonuses';
+import { isClass } from 'dndmashup-react/src/module/item/subtypes/class/isClass';
+import { isEpicDestiny } from 'dndmashup-react/src/module/item/subtypes/epicDestiny/isEpicDestiny';
+import { isEquipment } from 'dndmashup-react/src/module/item/subtypes/equipment/isEquipment';
+import { isParagonPath } from 'dndmashup-react/src/module/item/subtypes/paragonPath/isParagonPath';
+import { isPower } from 'dndmashup-react/src/module/item/subtypes/power/isPower';
+import { isRace } from 'dndmashup-react/src/module/item/subtypes/race/isRace';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
-import { ActorDerivedData } from 'dndmashup-react/module/actor/derivedDataType';
-import { ActorDocument } from 'dndmashup-react/module/actor/documentType';
-import { EquippedItemSlot, getItemSlotInfo } from 'dndmashup-react/module/item/subtypes/equipment/item-slots';
-import { SimpleDocumentData } from 'dndmashup-react/core/interfaces/simple-document';
-import { EquipmentData } from 'dndmashup-react/module/item/subtypes/equipment/dataSourceData';
-import { getEquipmentProperties } from 'dndmashup-react/module/item/subtypes/equipment/getEquipmentProperties';
-import { ItemDocument } from 'dndmashup-react/module/item';
+import { ActorDerivedData } from 'dndmashup-react/src/module/actor/derivedDataType';
+import { ActorDocument } from 'dndmashup-react/src/module/actor/documentType';
+import { EquippedItemSlot, getItemSlotInfo } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
+import { SimpleDocumentData } from 'dndmashup-react/src/core/interfaces/simple-document';
+import { EquipmentData } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
+import { getEquipmentProperties } from 'dndmashup-react/src/module/item/subtypes/equipment/getEquipmentProperties';
+import { ItemDocument } from 'dndmashup-react/src/module/item';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [

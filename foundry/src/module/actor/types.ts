@@ -1,4 +1,4 @@
-import { PlayerCharacterDataSource, MonsterDataSource, ActorDataSource } from 'dndmashup-react/module/actor/types';
+import { PlayerCharacterDataSource, MonsterDataSource, ActorDataSource } from 'dndmashup-react/src/module/actor/types';
 import { ActorData } from './actor.types';
 
 declare global {

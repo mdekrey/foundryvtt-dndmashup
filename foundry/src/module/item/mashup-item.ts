@@ -1,7 +1,7 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { FeatureBonus } from '../bonuses';
-import { PossibleItemSourceData } from './item-data-types-template';
+import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
+import { PossibleItemSourceData } from 'dndmashup-react/src/module/item/item-data-types-template';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
 import Document, {
@@ -12,8 +12,8 @@ import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-t
 import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
 import { AnyDocument } from 'src/core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
-import type { MashupPower } from './subtypes/power/config';
-import { SimpleDocument } from 'dndmashup-react/core/interfaces/simple-document';
+import type { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
+import { SimpleDocument } from 'dndmashup-react/src/core/interfaces/simple-document';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
@@ -33,7 +33,7 @@ export class MashupItemBase extends Item implements SimpleDocument<PossibleItemS
 	allGrantedBonuses(): FeatureBonus[] {
 		return [];
 	}
-	allGrantedPowers(): MashupPower[] {
+	allGrantedPowers(): PowerDocument[] {
 		return [];
 	}
 	get type(): PossibleItemType {

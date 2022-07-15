@@ -7,7 +7,7 @@ import type {
 	ActorDataConstructorData,
 	ActorDataSchema,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
-import { TypedData } from 'dndmashup-react/types/types';
+import { TypedData } from 'dndmashup-react/src/types/types';
 
 export type ActorData<TData, TSource extends TypedData<string, unknown>> = DocumentData<
 	ActorDataSchema,

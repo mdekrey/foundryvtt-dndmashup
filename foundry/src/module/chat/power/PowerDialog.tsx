@@ -1,11 +1,11 @@
 import { ReactApplicationMixin } from 'src/core/react';
 import { SpecificActor } from 'src/module/actor/mashup-actor';
-import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
-import { MashupPower } from 'src/module/item/subtypes/power/config';
+import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
+import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
 
 export class PowerDialog extends ReactApplicationMixin(Dialog) {
 	constructor(
-		private item: MashupPower,
+		private item: PowerDocument,
 		private actor: SpecificActor,
 		data: Omit<Dialog.Data, 'buttons' | 'default' | 'content'>,
 		options?: Partial<DialogOptions>
@@ -17,7 +17,7 @@ export class PowerDialog extends ReactApplicationMixin(Dialog) {
 		return <PowerPreview item={this.item} />;
 	}
 
-	static create(item: MashupPower, actor: SpecificActor) {
+	static create(item: PowerDocument, actor: SpecificActor) {
 		return new Promise((resolve, reject) => {
 			const dialog = new PowerDialog(item, actor, {
 				title: `Use Power: ${item.name}`,

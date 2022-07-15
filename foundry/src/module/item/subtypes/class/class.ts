@@ -1,7 +1,7 @@
-import { FeatureBonus } from 'src/module/bonuses';
+import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
+import { ClassDocument } from 'dndmashup-react/src/module/item/subtypes/class/dataSourceData';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
-import { ClassDocument } from './dataSourceData';
 
 export class MashupItemClass extends MashupItem<'class'> implements ClassDocument {
 	override canEmbedItem(type: PossibleItemType): boolean {
