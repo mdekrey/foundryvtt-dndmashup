@@ -27,22 +27,6 @@ You also need to install the project's dependencies. To do so, run
 npm install
 ```
 
-### Building
-
-You can build the project by running
-
-```
-npm run build
-```
-
-Alternatively, you can run
-
-```
-npm run build:watch
-```
-
-to watch for changes and automatically build as necessary.
-
 ### Linking the built project to Foundry VTT
 
 In order to provide a fluent development experience, it is recommended to link
@@ -68,12 +52,10 @@ npm run link-project
 On Windows, creating symlinks requires administrator privileges, so unfortunately
 you need to run the above command in an administrator terminal for it to work.
 
-### Running the tests
-
-You can run the tests with the following command:
+### Creating new libs using Nx
 
 ```
-npm test
+nx generate @nrwl/react:library reactlib --compiler=swc --buildable
 ```
 
 ### Creating a release
@@ -87,9 +69,9 @@ This project is being developed under the terms of the
 [LIMITED LICENSE AGREEMENT FOR MODULE DEVELOPMENT] for Foundry Virtual Tabletop.
 
 Please add your licensing information here. Add your chosen license as
-`LICENSE` file to the project root and mention it here.  If you don't know which
+`LICENSE` file to the project root and mention it here. If you don't know which
 license to choose, take a look at [Choose an open source license].
 
-[League Basic JS Module Template]: https://github.com/League-of-Foundry-Developers/FoundryVTT-Module-Template
-[LIMITED LICENSE AGREEMENT FOR MODULE DEVELOPMENT]: https://foundryvtt.com/article/license/
-[Choose an open source license]: https://choosealicense.com/
+[league basic js module template]: https://github.com/League-of-Foundry-Developers/FoundryVTT-Module-Template
+[limited license agreement for module development]: https://foundryvtt.com/article/license/
+[choose an open source license]: https://choosealicense.com/
