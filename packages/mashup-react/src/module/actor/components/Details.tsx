@@ -1,5 +1,5 @@
-import { FormInput } from 'src/components/form-input';
-import { Stateful } from 'src/core/lens';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
 
 export function Details({ isEditor, ...documentState }: { isEditor: boolean } & Stateful<string>) {
 	return (

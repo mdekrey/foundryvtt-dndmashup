@@ -1,12 +1,11 @@
-import { FormInput, SelectItem } from 'src/components/form-input';
-import { Bonuses } from 'src/module/bonuses';
-import { Tabs } from 'src/components/tab-section';
+import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { Bonuses } from '../../../bonuses';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
-import { Lens } from 'src/core/lens';
+import { Lens } from '@foundryvtt-dndmashup/mashup-core';
 import { FeatureDocument, FeatureData } from './dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 
 const options = Object.entries(featureTypes).map(
 	([key, { label: label }]): SelectItem<FeatureType> => ({

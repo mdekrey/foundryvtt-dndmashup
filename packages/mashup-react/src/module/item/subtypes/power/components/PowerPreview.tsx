@@ -1,7 +1,5 @@
 import classNames from 'classnames';
-import { pipeJsx } from 'src/core/jsx/pipeJsx';
-import { recurse } from 'src/core/jsx/recurse';
-import { mergeStyles } from 'src/core/jsx/mergeStyles';
+import { pipeJsx, recurse, mergeStyles, neverEver, or } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	ActionType,
 	ApplicableEffect,
@@ -10,9 +8,8 @@ import {
 	PowerDocument,
 	PowerUsage,
 } from '../dataSourceData';
-import { neverEver } from 'src/core/neverEver';
 import { isAttackEffect, isTargetEffect } from './sheetLenses';
-import { Defense } from 'src/types/types';
+import { Defense } from '../../../../../types/types';
 import {
 	MeleeIcon,
 	RangedIcon,
@@ -26,7 +23,6 @@ import {
 	D6_5Icon,
 	D6_6Icon,
 } from './icons';
-import { or } from 'src/core/lens/functions';
 import capitalize from 'lodash/fp/capitalize';
 
 export function PowerPreview({ item }: { item: PowerDocument }) {

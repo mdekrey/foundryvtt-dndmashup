@@ -1,7 +1,6 @@
-import { ItemTable } from 'src/components/ItemTable';
-import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
-import { FeatureDocument } from 'src/module/item/subtypes/feature/dataSourceData';
+import { isFeature } from '../../item/subtypes/feature/isFeature';
+import { ItemTable, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
 
 export function Feats({ items }: { items: SimpleDocument[] }) {
 	return (

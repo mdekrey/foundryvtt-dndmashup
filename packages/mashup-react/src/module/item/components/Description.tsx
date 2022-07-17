@@ -1,5 +1,5 @@
-import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 
 const textLens = Lens.identity<{ text: string }>().toField('text').default('');
 

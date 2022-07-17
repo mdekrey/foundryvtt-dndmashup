@@ -1,5 +1,5 @@
-import { FormInput } from 'src/components/form-input';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 import { AttackEffectFields } from './AttackEffectFields';
 import { AttackRollFields } from './AttackRollFields';
 import { TypeAndRange } from './TypeAndRange';

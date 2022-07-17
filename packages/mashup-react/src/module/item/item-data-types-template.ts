@@ -6,10 +6,9 @@ import { ParagonPathData, ParagonPathDocument } from './subtypes/paragonPath/dat
 import { EpicDestinyData, EpicDestinyDocument } from './subtypes/epicDestiny/dataSourceData';
 import { PowerData, PowerDocument } from './subtypes/power/dataSourceData';
 import { ItemSlot } from './subtypes/equipment/item-slots';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureBonus } from '../bonuses';
 import { BaseItemTemplateDataSourceData } from './templates/bases';
-import { TypedData } from 'src/types/types';
 
 export interface ItemDataByType {
 	class: ClassData;

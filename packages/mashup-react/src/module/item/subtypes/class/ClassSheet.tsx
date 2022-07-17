@@ -1,10 +1,10 @@
-import { FormInput, SelectItem } from 'src/components/form-input';
-import { Abilities, Ability } from 'src/types/types';
-import { Bonuses } from 'src/module/bonuses';
-import { Tabs } from 'src/components/tab-section';
+import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { Abilities, Ability } from '../../../../types/types';
+import { Bonuses } from '../../../bonuses';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens, Stateful } from 'src/core/lens';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ClassData } from './dataSourceData';
 import { isEquipment } from '../equipment/isEquipment';
 

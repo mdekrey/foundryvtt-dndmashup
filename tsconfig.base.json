@@ -8,13 +8,15 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"importHelpers": true,
-		"target": "es2015",
+		"target": "es2020",
 		"module": "esnext",
-		"lib": ["es2017", "dom"],
+		"lib": ["es2020", "dom"],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
+			"@foundryvtt-dndmashup/components": ["packages/components/src/index.ts"],
+			"@foundryvtt-dndmashup/foundry-compat": ["packages/foundry-compat/src/index.ts"],
 			"@foundryvtt-dndmashup/mashup-core": ["./packages/mashup-core/src/index.ts"],
 			"@foundryvtt-dndmashup/mashup-react": ["./packages/mashup-react/src/index.ts"]
 		}

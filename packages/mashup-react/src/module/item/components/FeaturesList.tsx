@@ -1,5 +1,4 @@
-import { ItemTable } from 'src/components/ItemTable';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { ItemTable, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureData } from '../subtypes/feature/dataSourceData';
 import { isFeature } from '../subtypes/feature/isFeature';
 

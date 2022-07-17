@@ -1,8 +1,8 @@
-import { isFeature } from 'src/module/item/subtypes/feature/isFeature';
-import { ItemTable } from 'src/components/ItemTable';
-import { PossibleItemSourceData } from 'src/module/item/item-data-types-template';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
-import { FeatureDocument } from 'src/module/item/subtypes/feature/dataSourceData';
+import { isFeature } from '../../item/subtypes/feature/isFeature';
+import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
+import { PossibleItemSourceData } from '../../item/item-data-types-template';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
 
 const features: {
 	key: React.Key;

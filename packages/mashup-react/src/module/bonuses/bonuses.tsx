@@ -1,10 +1,10 @@
 import classNames from 'classnames';
-import { FormInput, SelectItem } from 'src/components/form-input';
+import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule } from './constants';
 import { targets } from './bonus-sheet-utils';
-import { IconButton } from 'src/components/icon-button';
-import { Lens, Stateful } from 'src/core/lens';
+import { IconButton } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { conditionsRegistry } from './registry';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({

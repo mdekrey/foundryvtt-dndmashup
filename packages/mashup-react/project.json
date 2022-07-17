@@ -4,13 +4,23 @@
 	"projectType": "library",
 	"targets": {
 		"build": {
-			"executor": "@nrwl/js:swc",
+			"executor": "@nrwl/web:rollup",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/packages/mashup-react",
-				"main": "packages/mashup-react/src/index.ts",
 				"tsConfig": "packages/mashup-react/tsconfig.lib.json",
-				"assets": ["packages/mashup-react/*.md"]
+				"project": "packages/mashup-react/package.json",
+				"entryFile": "packages/mashup-react/src/index.ts",
+				"external": ["react/jsx-runtime"],
+				"rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+				"compiler": "swc",
+				"assets": [
+					{
+						"glob": "packages/mashup-react/*.md",
+						"input": ".",
+						"output": "."
+					}
+				]
 			}
 		},
 		"lint": {

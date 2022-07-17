@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectItem } from 'src/components/form-input';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
 
 export function toSelectItems<TKey extends React.Key & string>(record: Record<TKey, string>): SelectItem<TKey>[] {
 	return Object.entries(record).map(([value, label]) => ({

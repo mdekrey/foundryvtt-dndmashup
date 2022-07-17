@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ParagonPathDocument } from './dataSourceData';
 
 export function isParagonPath(item: SimpleDocument): item is ParagonPathDocument {

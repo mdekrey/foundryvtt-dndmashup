@@ -1,16 +1,15 @@
 import capitalize from 'lodash/fp/capitalize';
 import classNames from 'classnames';
-import { FormInput } from 'src/components/form-input';
-import { setWith } from 'src/components/form-input/hooks/useDocumentAsState';
-import { SelectItem } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
-import { neverEver } from 'src/core/neverEver';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful, neverEver } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	AreaEffectTypeAndRange,
 	CloseEffectTypeAndRange,
 	EffectTypeAndRange,
 	MeleeEffectTypeAndRange,
 } from '../dataSourceData';
+import { setWith } from '@foundryvtt-dndmashup/foundry-compat';
 
 const effectTypeOptions = (['melee', 'ranged', 'close', 'area', 'personal'] as EffectTypeAndRange['type'][]).map(
 	(value): SelectItem<EffectTypeAndRange['type']> => ({

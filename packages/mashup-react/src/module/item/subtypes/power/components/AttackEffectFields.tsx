@@ -1,5 +1,5 @@
-import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { AttackEffect, DamageEffect, TextEffect } from '../dataSourceData';
 import { DamageFields } from './DamageFields';
 

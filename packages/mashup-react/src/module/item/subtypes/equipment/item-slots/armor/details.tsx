@@ -1,6 +1,6 @@
-import { FormInput } from 'src/components/form-input';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { Lens, Stateful } from 'src/core/lens';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { EquipmentData } from '../../dataSourceData';
 import { OtherDetails } from '../other/details';
 import { toSelectItems } from '../toSelectItems';

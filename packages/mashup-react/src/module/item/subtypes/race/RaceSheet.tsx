@@ -1,10 +1,9 @@
-import { FormInput } from 'src/components/form-input';
-import { Bonuses } from 'src/module/bonuses';
-import { Tabs } from 'src/components/tab-section';
+import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Bonuses } from '../../../bonuses';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens, Stateful } from 'src/core/lens';
 import { RaceData } from './dataSourceData';
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');

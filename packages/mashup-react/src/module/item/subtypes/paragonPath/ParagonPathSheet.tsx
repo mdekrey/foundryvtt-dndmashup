@@ -1,11 +1,10 @@
-import { FormInput } from 'src/components/form-input';
-import { Bonuses } from 'src/module/bonuses';
-import { Tabs } from 'src/components/tab-section';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Bonuses } from '../../../bonuses';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens } from 'src/core/lens';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from '@foundryvtt-dndmashup/mashup-core';
 import { ParagonPathData, ParagonPathDocument } from './dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 
 const baseLens = Lens.identity<SimpleDocumentData<ParagonPathData>>();
 const imageLens = baseLens.toField('img');

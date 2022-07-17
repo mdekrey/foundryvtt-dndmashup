@@ -1,5 +1,5 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
-import { DamageType, Defense, TypedData } from 'src/types/types';
+import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { DamageType, Defense } from '../../../../types/types';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 

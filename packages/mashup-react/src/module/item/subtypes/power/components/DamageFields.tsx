@@ -1,10 +1,10 @@
 import capitalize from 'lodash/fp/capitalize';
-import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
-import { DamageTypes, DamageType } from 'src/types/types';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { DamageTypes, DamageType } from '../../../../../types/types';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
-import { SelectItem } from 'src/components/form-input';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
 
 const damageTypeOptions = DamageTypes.map(
 	(dt): SelectItem<DamageType> => ({
@@ -21,8 +21,10 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 		const damage = mutator(damageDraft?.damage ?? '');
 		console.log('new damage', damage, damageDraft, mutator);
 		if (!damage) return null;
-		if (damageDraft) damageDraft.damage = damage;
-		else return { type: 'damage', damage: damage, damageTypes: [] };
+		if (damageDraft) {
+			damageDraft.damage = damage;
+			return damageDraft;
+		} else return { type: 'damage', damage: damage, damageTypes: [] };
 	}
 );
 export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
@@ -34,8 +36,10 @@ export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 			return;
 		}
 		const damageTypes = mutator(damageDraft?.damageTypes ?? []);
-		if (damageDraft) damageDraft.damageTypes = damageTypes;
-		else return { type: 'damage', damage: '1[W]', damageTypes };
+		if (damageDraft) {
+			damageDraft.damageTypes = damageTypes;
+			return damageDraft;
+		} else return { type: 'damage', damage: '1[W]', damageTypes };
 	}
 );
 

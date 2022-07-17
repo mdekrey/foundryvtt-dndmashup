@@ -1,7 +1,7 @@
-import { FormInput } from 'src/components/form-input';
-import { SelectItem } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
-import { Defense, Defenses } from 'src/types/types';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Defense, Defenses } from '../../../../../types/types';
 import { AttackRoll } from '../dataSourceData';
 
 const abilityLens = Lens.from<AttackRoll | null, string>(
@@ -11,6 +11,7 @@ const abilityLens = Lens.from<AttackRoll | null, string>(
 
 		if (attackRoll !== '' && draft) {
 			draft.attack = attackRoll;
+			return draft;
 		} else {
 			return attackRoll === '' ? undefined : { attack: attackRoll, defense: 'ac' };
 		}

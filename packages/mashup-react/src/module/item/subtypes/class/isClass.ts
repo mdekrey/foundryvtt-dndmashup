@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ClassDocument } from './dataSourceData';
 
 export function isClass(item: SimpleDocument): item is ClassDocument {

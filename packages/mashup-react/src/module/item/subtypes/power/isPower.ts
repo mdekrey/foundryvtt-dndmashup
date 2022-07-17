@@ -1,4 +1,4 @@
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { PowerDocument } from './dataSourceData';
 
 export function isPower(item: SimpleDocument): item is PowerDocument {

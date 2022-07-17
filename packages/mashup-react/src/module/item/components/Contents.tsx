@@ -1,4 +1,4 @@
-import { ItemTable } from 'src/components/ItemTable';
+import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentDocument } from '../subtypes/equipment/dataSourceData';
 import { isEquipment } from '../subtypes/equipment/isEquipment';
 

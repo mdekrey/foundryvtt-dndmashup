@@ -1,4 +1,4 @@
-import { SimpleDocument, SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
 import { PowerDocument } from '../item/subtypes/power/dataSourceData';

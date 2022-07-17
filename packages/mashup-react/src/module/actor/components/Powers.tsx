@@ -1,9 +1,8 @@
-import { ImageButton } from 'src/components/image-button';
-import { ItemTable } from 'src/components/ItemTable';
-import { toMashupId } from 'src/core/toMashupId';
-import { useChatMessageDispatcher } from 'src/module/chat';
-import { PowerPreview } from 'src/module/item/subtypes/power/components/PowerPreview';
-import { PowerDocument } from 'src/module/item/subtypes/power/dataSourceData';
+import { ImageButton } from '@foundryvtt-dndmashup/components';
+import { ItemTable, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { useChatMessageDispatcher } from '../../chat';
+import { PowerPreview } from '../../item/subtypes/power/components/PowerPreview';
+import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
 import { ActorDocument } from '../documentType';
 
 const powerGroups: {

@@ -1,18 +1,13 @@
 import { groupBy } from 'lodash/fp';
 import classNames from 'classnames';
-import { IconButton } from 'src/components/icon-button';
-import {
-	EquippedItemSlot,
-	equippedItemSlots,
-	ItemSlot,
-	itemSlots,
-} from 'src/module/item/subtypes/equipment/item-slots';
-import { isEquipment } from 'src/module/item/subtypes/equipment/isEquipment';
-import { ItemTable } from 'src/components/ItemTable';
+import { IconButton } from '@foundryvtt-dndmashup/components';
+import { EquippedItemSlot, equippedItemSlots, ItemSlot, itemSlots } from '../../item/subtypes/equipment/item-slots';
+import { isEquipment } from '../../item/subtypes/equipment/isEquipment';
+import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
 import { useCallback } from 'react';
-import { getEquipmentProperties } from 'src/module/item/subtypes/equipment/getEquipmentProperties';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { EquipmentData, EquipmentDocument } from 'src/module/item/subtypes/equipment/dataSourceData';
+import { getEquipmentProperties } from '../../item/subtypes/equipment/getEquipmentProperties';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { EquipmentData, EquipmentDocument } from '../../item/subtypes/equipment/dataSourceData';
 import { ActorDocument } from '../documentType';
 
 export const orderedItemSlots: ItemSlot[] = [

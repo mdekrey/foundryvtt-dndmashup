@@ -1,4 +1,5 @@
-import { Ability, TypedData } from 'src/types/types';
+import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Ability } from '../../../../types/types';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 import { ItemDocument } from '../../item-data-types-template';
 

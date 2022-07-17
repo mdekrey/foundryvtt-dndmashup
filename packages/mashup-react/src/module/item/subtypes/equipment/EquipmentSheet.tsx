@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { FormInput } from 'src/components/form-input';
-import { Bonuses } from 'src/module/bonuses';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Bonuses } from '../../../bonuses';
 import { Description } from '../../components/Description';
 import { getItemSlotInfo, ItemSlot, itemSlots } from './item-slots';
-import { Tabs } from 'src/components/tab-section';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens } from 'src/core/lens';
-import { documentAsState } from 'src/components/form-input/hooks/useDocumentAsState';
+import { Lens } from '@foundryvtt-dndmashup/mashup-core';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
 	value: key as ItemSlot,

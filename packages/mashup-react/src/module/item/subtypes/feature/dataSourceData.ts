@@ -1,6 +1,6 @@
 import { FeatureType } from './config';
 import { BaseItemTemplateDataSourceData, ItemDescriptionItemTemplateDataSourceData } from '../../templates/bases';
-import { TypedData } from 'src/types/types';
+import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ItemDocument } from '../../item-data-types-template';
 
 export type FeatureDataSourceData = BaseItemTemplateDataSourceData &

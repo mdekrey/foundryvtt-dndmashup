@@ -7,8 +7,6 @@ export type Defense = typeof Defenses[number];
 export const Currencies = ['ad', 'pp', 'gp', 'sp', 'cp'] as const;
 export type Currency = typeof Currencies[number];
 
-export type TypedData<T extends string, TData> = { _id: string; type: T; data: TData };
-
 export const DamageTypes = [
 	'acid',
 	'cold',

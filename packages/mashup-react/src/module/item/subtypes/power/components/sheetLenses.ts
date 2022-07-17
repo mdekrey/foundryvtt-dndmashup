@@ -1,9 +1,8 @@
 import { Draft } from 'immer';
 import { WritableDraft } from 'immer/dist/types/types-external';
 import capitalize from 'lodash/fp/capitalize';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { Lens } from 'src/core/lens';
-import { not, or } from 'src/core/lens/functions';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Lens, not, or } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	PowerEffect,
 	AttackEffect,
@@ -82,6 +81,7 @@ export const attackRollLens = Lens.from<AttackEffect | null, AttackRoll | null>(
 			return { type: 'attack', attackRoll: newAttackRoll, hit: [], miss: [] };
 		} else {
 			attackEffect.attackRoll = newAttackRoll;
+			return draft;
 		}
 	}
 );
@@ -265,6 +265,7 @@ export const targetTextLens = Lens.from<TargetEffect | null, string>(
 		if (!target) return null;
 		if (targetEffect) {
 			targetEffect.target = target;
+			return targetEffect;
 		} else {
 			return { effects: [], target, type: 'target', typeAndRange: { type: 'same-as-primary' } };
 		}

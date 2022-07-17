@@ -1,4 +1,4 @@
-import { Abilities, Ability, Defense, Defenses } from 'src/types/types';
+import { Abilities, Ability, Defense, Defenses } from '../../types/types';
 import { ActorDocument } from '../actor/documentType';
 import { ItemDocument } from '../item';
 

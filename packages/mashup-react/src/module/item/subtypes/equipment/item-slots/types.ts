@@ -1,6 +1,6 @@
-import { Stateful } from 'src/core/lens';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
-import { FeatureBonus } from 'src/module/bonuses';
+import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { FeatureBonus } from '../../../../bonuses';
 import { EquipmentData } from '../dataSourceData';
 import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';

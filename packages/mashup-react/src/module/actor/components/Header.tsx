@@ -1,11 +1,11 @@
-import { FormInput } from 'src/components/form-input';
-import { Lens, Stateful } from 'src/core/lens';
+import { FormInput } from '@foundryvtt-dndmashup/components';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { PcDetails } from '../types';
-import { RaceDocument } from 'src/module/item/subtypes/race/dataSourceData';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
-import { ClassDocument } from 'src/module/item/subtypes/class/dataSourceData';
-import { ParagonPathDocument } from 'src/module/item/subtypes/paragonPath/dataSourceData';
-import { EpicDestinyDocument } from 'src/module/item/subtypes/epicDestiny/dataSourceData';
+import { RaceDocument } from '../../item/subtypes/race/dataSourceData';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { ClassDocument } from '../../item/subtypes/class/dataSourceData';
+import { ParagonPathDocument } from '../../item/subtypes/paragonPath/dataSourceData';
+import { EpicDestinyDocument } from '../../item/subtypes/epicDestiny/dataSourceData';
 
 const detailsLens = Lens.identity<PcDetails>();
 

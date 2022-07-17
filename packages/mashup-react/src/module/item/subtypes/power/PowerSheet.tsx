@@ -1,4 +1,4 @@
-import { Tabs } from 'src/components/tab-section';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { PowerEditor } from './components/PowerEditor';
 import { useRef, useState } from 'react';
 import { PowerPreview } from './components/PowerPreview';

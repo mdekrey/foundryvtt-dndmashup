@@ -1,4 +1,4 @@
-import { Ability, Defense } from 'src/types/types';
+import { Ability, Defense } from '../../types/types';
 
 export type CommonDerivedDataProperties = {
 	abilities: {

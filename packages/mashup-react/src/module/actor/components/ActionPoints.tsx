@@ -1,6 +1,6 @@
-import { FormInput } from 'src/components/form-input';
+import { FormInput } from '@foundryvtt-dndmashup/components';
 import { ActionPoints } from '../types';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 
 const actionPointsLens = Lens.identity<ActionPoints>();
 

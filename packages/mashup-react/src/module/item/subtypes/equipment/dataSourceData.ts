@@ -4,7 +4,7 @@ import {
 	ItemDescriptionItemTemplateDataSourceData,
 	CarriedItemItemTemplateDataSourceData,
 } from '../../templates/bases';
-import { TypedData } from 'src/types/types';
+import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ItemDocument } from '../../item-data-types-template';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &

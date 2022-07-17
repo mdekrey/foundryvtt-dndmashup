@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { SimpleDocument } from 'src/core/interfaces/simple-document';
-import { Lens, Stateful } from 'src/core/lens';
-import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext } from 'src/module/bonuses';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext } from '../../bonuses';
 import { ActorDataSource } from '../types';
 
 const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');

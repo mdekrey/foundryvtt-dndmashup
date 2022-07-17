@@ -1,4 +1,4 @@
-import { SelectItem } from 'src/components/form-input';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
 import { PowerUsage } from '../dataSourceData';
 
 export const usageOptions: SelectItem<PowerUsage>[] = [

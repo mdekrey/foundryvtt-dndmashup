@@ -1,4 +1,5 @@
-import { Ability, Currency, TypedData } from 'src/types/types';
+import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Ability, Currency } from '../../types/types';
 import { FeatureBonus } from '../bonuses';
 
 export type AbilityScores = {

@@ -1,12 +1,12 @@
-import { FormInput } from 'src/components/form-input';
+import { FormInput } from '@foundryvtt-dndmashup/components';
 import { WeaponProperty } from './types';
 import { OtherDetails } from '../other/details';
 import { toNumericSelectItems, toSelectItems } from '../toSelectItems';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
-import { Lens, Stateful } from 'src/core/lens';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
 import { EquipmentData } from '../../dataSourceData';
-import { SimpleDocumentData } from 'src/core/interfaces/simple-document';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 
 const allWeaponCategories = toSelectItems(weaponCategories);
 const allWeaponHands = toNumericSelectItems(weaponHands);

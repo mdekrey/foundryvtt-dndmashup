@@ -1,4 +1,4 @@
-import { SelectItem } from 'src/components/form-input';
+import { SelectItem } from '@foundryvtt-dndmashup/components';
 import { ActionType } from '../dataSourceData';
 
 export const actionTypeOptions: SelectItem<ActionType>[] = [
