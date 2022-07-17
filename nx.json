@@ -31,8 +31,20 @@
 	"generators": {
 		"@nrwl/react": {
 			"application": {
-				"babel": true
+				"babel": false
 			}
+		},
+		"@nrwl/web:application": {
+			"style": "css",
+			"linter": "eslint",
+			"unitTestRunner": "jest",
+			"e2eTestRunner": "cypress"
+		},
+		"@nrwl/web:library": {
+			"style": "css",
+			"linter": "eslint",
+			"unitTestRunner": "jest"
 		}
-	}
+	},
+	"defaultProject": "foundry-system"
 }

@@ -1,0 +1,8 @@
+{
+	"name": "@foundryvtt-dndmashup/foundry-system",
+	"version": "0.0.1",
+	"type": "commonjs",
+	"devDependencies": {
+		"@league-of-foundry-developers/foundry-vtt-types": "^9.268.2"
+	}
+}

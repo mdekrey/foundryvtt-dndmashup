@@ -1,3 +1,4 @@
+/// <reference types="@league-of-foundry-developers/foundry-vtt-types" />
 /**
  * This is your TypeScript entry file for Foundry VTT.
  * Register custom settings, sheets, and constants using the Foundry API.
@@ -11,11 +12,11 @@
  */
 
 // Import TypeScript modules
-import { registerSettings, registerCustomSheets } from './settings';
-import { systemName } from './constants';
+import { registerSettings, registerCustomSheets } from './module/settings';
+import { systemName } from './module/constants';
 
 import './fixup';
-import { attachToChat } from './chat/attach';
+import { attachToChat } from './module/chat/attach';
 
 // Initialize system
 Hooks.once('init', async () => {
