@@ -1,4 +1,4 @@
-import { Stateful } from 'src/core/lens';
+import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
 
 export function Checkbox({
 	value,

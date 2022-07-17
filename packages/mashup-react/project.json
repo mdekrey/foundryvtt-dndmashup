@@ -1,0 +1,33 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/mashup-react/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nrwl/js:swc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/packages/mashup-react",
+				"main": "packages/mashup-react/src/index.ts",
+				"tsConfig": "packages/mashup-react/tsconfig.lib.json",
+				"assets": ["packages/mashup-react/*.md"]
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/mashup-react/**/*.{ts,tsx}"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/packages/mashup-react"],
+			"options": {
+				"jestConfig": "packages/mashup-react/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	},
+	"tags": []
+}
