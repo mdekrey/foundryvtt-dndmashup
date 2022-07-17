@@ -7,7 +7,7 @@ export function createMashupItem(
 ): ReturnType<typeof MashupItemBase['create']> {
 	if (!data) throw new Error('No data for item');
 
-	const type = (data as Record<string, unknown>).type as PossibleItemType;
+	const type = (data as Record<string, unknown>)['type'] as PossibleItemType;
 
 	if (!itemMappings.hasOwnProperty(type)) throw new Error(`Unsupported Entity type for create(): ${type}`);
 

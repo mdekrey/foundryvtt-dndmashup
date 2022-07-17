@@ -19,7 +19,8 @@
 				"tsConfig": "packages/foundry-system/tsconfig.app.json",
 				"assets": ["packages/foundry-system/src/system.json", "packages/foundry-system/src/template.json"],
 				"styles": ["packages/foundry-system/src/styles.css"],
-				"scripts": []
+				"scripts": [],
+				"webpackConfig": "packages/foundry-system/webpack-config.js"
 			},
 			"configurations": {
 				"production": {

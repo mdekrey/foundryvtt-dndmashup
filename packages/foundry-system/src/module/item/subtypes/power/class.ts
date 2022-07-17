@@ -1,5 +1,5 @@
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
 

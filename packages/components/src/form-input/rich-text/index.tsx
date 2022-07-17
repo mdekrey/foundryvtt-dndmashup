@@ -2,6 +2,9 @@ import { useEffect, useRef } from 'react';
 import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { useRichTextEditor } from './context';
 
+export { RichTextEditorContextProvider } from './context';
+export type { RichTextEditorContext } from './context';
+
 export function RichText({
 	rollData,
 	value: html,

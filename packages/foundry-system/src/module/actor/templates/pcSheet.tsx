@@ -1,25 +1,13 @@
-import { Tabs } from 'dndmashup-react/src/components/tab-section';
+import { Tabs } from '@foundryvtt-dndmashup/components';
 import { SpecificActor } from '../mashup-actor';
-import { Header } from 'dndmashup-react/src/module/actor/components/Header';
-import { HitPoints } from 'dndmashup-react/src/module/actor/components/HitPoints';
-import { Defenses } from 'dndmashup-react/src/module/actor/components/Defenses';
-import { HealingSurges } from 'dndmashup-react/src/module/actor/components/HealingSurges';
-import { ActionPoints } from 'dndmashup-react/src/module/actor/components/ActionPoints';
-import { Abilities } from 'dndmashup-react/src/module/actor/components/Abilities';
-
-import { Details } from 'dndmashup-react/src/module/actor/components/Details';
-import { Inventory } from 'dndmashup-react/src/module/actor/components/Inventory';
-import { Powers } from 'dndmashup-react/src/module/actor/components/Powers';
-import { Features } from 'dndmashup-react/src/module/actor/components/Features';
-import { Feats } from 'dndmashup-react/src/module/actor/components/Feats';
-import { Effects } from 'dndmashup-react/src/module/actor/components/Effects';
-import { documentAsState } from 'dndmashup-react/src/components/form-input/hooks/useDocumentAsState';
-import { Lens, Stateful } from 'dndmashup-react/src/core/lens';
-import { Ability } from 'dndmashup-react/src/types/types';
+import { ActorComponents } from '@foundryvtt-dndmashup/mashup-react';
+import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Ability } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActorData } from '../types';
-import { ActorDataSource } from 'dndmashup-react/src/module/actor/types';
-import { SimpleDocument } from 'dndmashup-react/src/core/interfaces/simple-document';
-import { PossibleItemData } from 'src/module/item/types';
+import { ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { PossibleItemData } from '../../item/types';
 
 const baseLens = Lens.identity<SpecificActorData<'pc'>>();
 const dataLens = baseLens.toField('data');
@@ -43,7 +31,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 		<>
 			<article className="flex flex-col h-full">
 				<header className="flex flex-row gap-1">
-					<Header
+					<ActorComponents.Header
 						nameState={baseLens.toField('name').apply(documentState)}
 						imageState={baseLens.toField('img').apply(documentState)}
 						detailsState={baseLens.toField('data').toField('details').apply(documentState)}
@@ -56,17 +44,17 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
 					<section className="flex flex-col items-center">
-						<HitPoints healthState={healthLens.apply(documentState)} maxHp={maxHp} />
+						<ActorComponents.HitPoints healthState={healthLens.apply(documentState)} maxHp={maxHp} />
 					</section>
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<Defenses defenses={defenses} />
+						<ActorComponents.Defenses defenses={defenses} />
 					</section>
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<HealingSurges
+						<ActorComponents.HealingSurges
 							healingSurgeValue={healingSurgeValue}
 							healingSurgesPerDay={healingSurgesPerDay}
 							healthState={healthLens.apply(documentState)}
@@ -75,13 +63,16 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					<div className="border-r-2 border-black"></div>
 
 					<section className="flex flex-col items-center">
-						<ActionPoints actionPointsState={actionPointsLens.apply(documentState)} />
+						<ActorComponents.ActionPoints actionPointsState={actionPointsLens.apply(documentState)} />
 					</section>
 				</div>
 
 				<div className="flex-grow flex flex-row gap-1">
 					<div>
-						<Abilities abilitiesState={abilitiesLens.apply(documentState)} getFinalScore={getFinalScore} />
+						<ActorComponents.Abilities
+							abilitiesState={abilitiesLens.apply(documentState)}
+							getFinalScore={getFinalScore}
+						/>
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
@@ -96,22 +87,22 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 							</Tabs.Nav>
 							<section className="flex-grow">
 								<Tabs.Tab tabName="details">
-									<Details isEditor={actor.isOwner} {...detailsLens.apply(documentState)} />
+									<ActorComponents.Details isEditor={actor.isOwner} {...detailsLens.apply(documentState)} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="inventory">
-									<Inventory actor={actor} />
+									<ActorComponents.Inventory actor={actor} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="powers">
-									<Powers actor={actor} />
+									<ActorComponents.Powers actor={actor} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
-									<Features items={actor.items.contents as SimpleDocument<PossibleItemData>[]} />
+									<ActorComponents.Features items={actor.items.contents as SimpleDocument<PossibleItemData>[]} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="feats">
-									<Feats items={actor.items.contents} />
+									<ActorComponents.Feats items={actor.items.contents} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="effects">
-									<Effects
+									<ActorComponents.Effects
 										{...(dataLens.apply(documentState) as never as Stateful<ActorDataSource['data']>)}
 										bonusList={actor.specialBonuses}
 									/>

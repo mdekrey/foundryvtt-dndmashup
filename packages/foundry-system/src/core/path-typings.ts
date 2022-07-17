@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Primitive } from 'dndmashup-react/src/core/path-typings';
+import { Primitive } from '@foundryvtt-dndmashup/mashup-core';
 
 export { Primitive };
 

@@ -1,5 +1,5 @@
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { RaceDocument } from 'dndmashup-react/src/module/item/subtypes/race/dataSourceData';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { RaceDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
 

@@ -26,3 +26,8 @@ export const FormInput = Object.assign(Container, {
 	Structured,
 });
 export type { SelectItem } from './select';
+export type { RichTextEditorContext } from './rich-text';
+export { RichTextEditorContextProvider } from './rich-text';
+
+export { ImageEditorContextProvider } from './image-editor';
+export type { ImageEditorContext } from './image-editor';

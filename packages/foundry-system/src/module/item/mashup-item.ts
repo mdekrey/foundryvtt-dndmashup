@@ -1,20 +1,19 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { ItemDocument } from 'dndmashup-react/src/module/item/item-data-types-template';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
-import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
+import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import Document, {
 	Context,
 	Metadata,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
-import { AnyDocument } from 'src/core/foundry';
+import { AnyDocument } from '../../core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
-import type { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
-import { SimpleDocument } from 'dndmashup-react/src/core/interfaces/simple-document';
-import { TypedData } from 'dndmashup-react/src/types/types';
+import type { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
@@ -30,14 +29,14 @@ export class MashupItemBase extends Item implements ItemDocument {
 		super(data, context as any);
 	}
 
-	data!: PossibleItemData;
+	override data!: PossibleItemData;
 	allGrantedBonuses(): FeatureBonus[] {
 		return [];
 	}
 	allGrantedPowers(): PowerDocument[] {
 		return [];
 	}
-	get type(): PossibleItemType {
+	override get type(): PossibleItemType {
 		return super.type as PossibleItemType;
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,7 +70,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 		}
 	}
 
-	get isEmbedded() {
+	override get isEmbedded() {
 		// TODO - there was something different here in itemcontainer that checked documentname
 		if (this.parent === null) return false;
 		return this.parent !== null;
@@ -96,7 +95,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 		const allUpdates = Array.isArray(updates) ? updates : updates ? [updates] : [];
 		const updated: any[] = [];
 		const newContained = contained.map((existing): PossibleItemData => {
-			const theUpdate = allUpdates.find((update) => update._id === existing._id);
+			const theUpdate = allUpdates.find((update) => update['_id'] === existing._id);
 			if (theUpdate) {
 				const newData = mergeObject(theUpdate, existing, {
 					overwrite: false,
@@ -208,6 +207,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 		};
 		await (this.parent as MashupItemBase).updateEmbeddedDocuments('Item', [resultData]);
 		this.render(false);
+		return this;
 	}
 
 	override async delete(context?: DocumentModificationContext): Promise<this | undefined> {
@@ -226,11 +226,11 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	extends MashupItemBase
 	implements SimpleDocument<SpecificItemData<T>>
 {
-	data!: SpecificItemData<T>;
-	get type(): T {
+	override data!: SpecificItemData<T>;
+	override get type(): T {
 		return super.type as T;
 	}
 
-	abstract allGrantedBonuses(): FeatureBonus[];
-	abstract canEmbedItem(type: PossibleItemType): boolean;
+	abstract override allGrantedBonuses(): FeatureBonus[];
+	abstract override canEmbedItem(type: PossibleItemType): boolean;
 }

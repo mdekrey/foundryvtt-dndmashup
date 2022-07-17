@@ -1,7 +1,7 @@
-import { ReactApplicationMixin } from 'src/core/react';
-import { SpecificActor } from 'src/module/actor/mashup-actor';
-import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
-import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
+import { ReactApplicationMixin } from '../../../core/react';
+import { SpecificActor } from '../../actor/mashup-actor';
+import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
+import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 
 export class PowerDialog extends ReactApplicationMixin(Dialog) {
 	constructor(

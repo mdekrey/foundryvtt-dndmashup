@@ -1,7 +1,7 @@
 import { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { expandObjectsAndArrays } from 'src/core/foundry/expandObjectsAndArrays';
+import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import {
 	BonusTarget,
 	bonusTargets,
@@ -10,23 +10,23 @@ import {
 	FeatureBonusWithContext,
 	filterBonuses,
 	sumFinalBonuses,
-} from 'dndmashup-react/src/module/bonuses';
-import { isClass } from 'dndmashup-react/src/module/item/subtypes/class/isClass';
-import { isEpicDestiny } from 'dndmashup-react/src/module/item/subtypes/epicDestiny/isEpicDestiny';
-import { isEquipment } from 'dndmashup-react/src/module/item/subtypes/equipment/isEquipment';
-import { isParagonPath } from 'dndmashup-react/src/module/item/subtypes/paragonPath/isParagonPath';
-import { isPower } from 'dndmashup-react/src/module/item/subtypes/power/isPower';
-import { isRace } from 'dndmashup-react/src/module/item/subtypes/race/isRace';
+} from '@foundryvtt-dndmashup/mashup-react';
+import { isClass } from '@foundryvtt-dndmashup/mashup-react';
+import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
+import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';
+import { isParagonPath } from '@foundryvtt-dndmashup/mashup-react';
+import { isPower } from '@foundryvtt-dndmashup/mashup-react';
+import { isRace } from '@foundryvtt-dndmashup/mashup-react';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
-import { ActorDerivedData } from 'dndmashup-react/src/module/actor/derivedDataType';
-import { ActorDocument } from 'dndmashup-react/src/module/actor/documentType';
-import { EquippedItemSlot, getItemSlotInfo } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
-import { SimpleDocument, SimpleDocumentData } from 'dndmashup-react/src/core/interfaces/simple-document';
-import { EquipmentData } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
-import { getEquipmentProperties } from 'dndmashup-react/src/module/item/subtypes/equipment/getEquipmentProperties';
-import { ItemDocument } from 'dndmashup-react/src/module/item';
+import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { EquippedItemSlot, getItemSlotInfo } from '@foundryvtt-dndmashup/mashup-react';
+import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { EquipmentData } from '@foundryvtt-dndmashup/mashup-react';
+import { getEquipmentProperties } from '@foundryvtt-dndmashup/mashup-react';
+import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
@@ -77,7 +77,7 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 };
 
 export class MashupActor extends Actor implements ActorDocument {
-	data!: PossibleActorData;
+	override data!: PossibleActorData;
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
 	A few more methods:
@@ -140,7 +140,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
-	prepareDerivedData() {
+	override prepareDerivedData() {
 		this._derivedData = null;
 	}
 
@@ -194,11 +194,11 @@ export class MashupActor extends Actor implements ActorDocument {
 		return this.items.contents.flatMap((item: ItemDocument) => (isPower(item) ? item : item.allGrantedPowers()));
 	}
 
-	getRollData() {
-		const data = super.getRollData();
-		// see https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD06-Extending-the-Actor-class#actorgetrolldata
-		return data;
-	}
+	// override getRollData() {
+	// 	const data = super.getRollData();
+	// 	// see https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD06-Extending-the-Actor-class#actorgetrolldata
+	// 	return data;
+	// }
 
 	/** When adding a new embedded document, clean up others of the same type */
 	protected override _preCreateEmbeddedDocuments(
@@ -230,6 +230,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (!(this.parent instanceof Actor)) return super.update(resultData, context);
 		await (this.parent as MashupActor).updateEmbeddedDocuments('Actor', [{ ...resultData, _id: this.id }]);
 		this.render(false);
+		return this;
 	}
 
 	showEditDialog() {

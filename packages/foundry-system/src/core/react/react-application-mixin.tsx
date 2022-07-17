@@ -11,12 +11,12 @@ export const ReactApplicationMixin = <T extends ConstructorOf<Application>>(
 			return <>JSX should be overridden by sheet</>;
 		}
 
-		protected async _renderInner(): Promise<JQuery<HTMLElement>> {
+		protected override async _renderInner(): Promise<JQuery<HTMLElement>> {
 			const rootElement = renderReact(this, this._getJsx());
 			return $(rootElement);
 		}
 
-		protected _replaceHTML(element: JQuery<HTMLElement>): void {
+		protected override _replaceHTML(element: JQuery<HTMLElement>): void {
 			if (!element.length) return;
 
 			if (this.popOut) {

@@ -4,6 +4,9 @@ import { useImageEditor } from './context';
 
 const defaultEmpty = Lens.identity<string | null>().default('');
 
+export { ImageEditorContextProvider } from './context';
+export type { ImageEditorContext } from './context';
+
 export function ImageEditor({
 	title,
 	className,

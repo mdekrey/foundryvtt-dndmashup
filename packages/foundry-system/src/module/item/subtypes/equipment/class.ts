@@ -1,16 +1,16 @@
-import { EquipmentData, EquipmentDocument } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { PossibleItemType } from 'dndmashup-react/src/module/item/item-data-types-template';
+import { EquipmentData, EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
-import { ItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
+import { ItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 
 export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 	extends MashupItem<'equipment'>
 	implements EquipmentDocument<TItemSlot>
 {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
+	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
 	override allGrantedBonuses(): FeatureBonus[] {
 		return [
 			// TODO: only if equipped and it requires an item slot

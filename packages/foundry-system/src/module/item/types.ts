@@ -1,5 +1,5 @@
-import { TypedData } from 'dndmashup-react/src/types/types';
-import { ItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
+import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { ItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import {
 	ItemDataBaseProperties,
 	ItemDataConstructorData,
@@ -7,12 +7,8 @@ import {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { BaseItem } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
-import { EquipmentData } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
-import {
-	ItemDataByType,
-	PossibleItemSourceData,
-	PossibleItemType,
-} from 'dndmashup-react/src/module/item/item-data-types-template';
+import { EquipmentData } from '@foundryvtt-dndmashup/mashup-react';
+import { ItemDataByType, PossibleItemSourceData, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 
 export { PossibleItemType };
 

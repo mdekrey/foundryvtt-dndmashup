@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash/fp';
-import { FeatureBonusWithContext } from 'dndmashup-react/src/module/bonuses';
+import { FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);

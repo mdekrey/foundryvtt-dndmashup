@@ -1,5 +1,5 @@
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { ParagonPathDocument } from 'dndmashup-react/src/module/item/subtypes/paragonPath/dataSourceData';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { ParagonPathDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
 

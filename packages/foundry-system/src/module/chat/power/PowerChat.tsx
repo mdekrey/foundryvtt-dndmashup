@@ -1,14 +1,14 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
-import { Select, SelectItem } from 'dndmashup-react/src/components/form-input/select';
-import { SpecificActor } from 'src/module/actor/mashup-actor';
-import { isEquipment } from 'dndmashup-react/src/module/item/subtypes/equipment/isEquipment';
-import { EquippedItemSlot } from 'dndmashup-react/src/module/item/subtypes/equipment/item-slots';
-import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
+import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { SpecificActor } from '../../../module/actor/mashup-actor';
+import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';
+import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
+import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDialog } from './PowerDialog';
-import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
-import { EquipmentDocument } from 'dndmashup-react/src/module/item/subtypes/equipment/dataSourceData';
-import { ItemDocument } from 'dndmashup-react/src/module/item';
+import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 
 export function PowerChat({ item, actor }: { item: PowerDocument; actor: SpecificActor }) {
 	return (
@@ -88,5 +88,5 @@ function ItemSelector<T extends ItemDocument>({
 			),
 		})
 	);
-	return <Select value={item} options={options} onChange={onChange} className="h-9 pb-1" />;
+	return <FormInput.Select value={item} options={options} onChange={onChange} className="h-9 pb-1" />;
 }

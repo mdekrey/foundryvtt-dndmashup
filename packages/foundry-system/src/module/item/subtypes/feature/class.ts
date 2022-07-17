@@ -1,5 +1,5 @@
-import { FeatureBonus } from 'dndmashup-react/src/module/bonuses';
-import { FeatureDocument } from 'dndmashup-react/src/module/item/subtypes/feature/dataSourceData';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 
 export class MashupItemFeature extends MashupItem<'feature'> implements FeatureDocument {

@@ -1,16 +1,16 @@
 import { MashupItemBase } from './mashup-item';
 import { PossibleItemData, PossibleItemType } from './types';
-import { ClassSheet } from 'dndmashup-react/src/module/item/subtypes/class/ClassSheet';
-import { EquipmentSheet } from 'dndmashup-react/src/module/item/subtypes/equipment/EquipmentSheet';
-import { RaceSheet } from 'dndmashup-react/src/module/item/subtypes/race/RaceSheet';
-import { FeatureSheet } from 'dndmashup-react/src/module/item/subtypes/feature/FeatureSheet';
-import { ReactApplicationMixin } from 'src/core/react';
+import { ClassSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { EquipmentSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { RaceSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { ReactApplicationMixin } from '../../core/react';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
-import { EpicDestinySheet } from 'dndmashup-react/src/module/item/subtypes/epicDestiny/EpicDestinySheet';
-import { ParagonPathSheet } from 'dndmashup-react/src/module/item/subtypes/paragonPath/ParagonPathSheet';
-import { PowerSheet } from 'dndmashup-react/src/module/item/subtypes/power/PowerSheet';
-import { ItemDocumentByType } from 'dndmashup-react/src/module/item/item-data-types-template';
-import { documentAsState } from 'dndmashup-react/src/components/form-input/hooks/useDocumentAsState';
+import { EpicDestinySheet } from '@foundryvtt-dndmashup/mashup-react';
+import { ParagonPathSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { PowerSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { ItemDocumentByType } from '@foundryvtt-dndmashup/mashup-react';
+import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] }> } = {
 	class: ({ item }) => <ClassSheet items={item.items.contents} {...documentAsState(item)} />,
@@ -63,7 +63,7 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 		if (!item) return;
 		const itemData = item.toObject() as never as PossibleItemData;
 
-		if (item.parent?.id && item.parent?.id == this.item.parent?.id) return this._onSortItem(event, itemData);
+		if (item.parent?.id && item.parent?.id === this.item.parent?.id) return this._onSortItem(event, itemData);
 
 		return this._onDropItemCreate(itemData);
 	}

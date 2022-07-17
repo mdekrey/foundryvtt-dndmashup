@@ -1,7 +1,4 @@
-import {
-	RichTextEditorContextProvider,
-	RichTextEditorContext,
-} from 'dndmashup-react/src/components/form-input/rich-text/context';
+import { RichTextEditorContextProvider, RichTextEditorContext } from '@foundryvtt-dndmashup/components';
 
 const richTextEditorContextValue: RichTextEditorContext = {
 	sanitizeHtml(input, options) {

@@ -1,10 +1,11 @@
-import { renderReactToHtml } from 'src/core/react';
-import { PowerPreview } from 'dndmashup-react/src/module/item/subtypes/power/components/PowerPreview';
-import { fromMashupId, toMashupId } from 'src/core/foundry';
+import { renderReactToHtml } from '../../../core/react';
+import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
+import { fromMashupId } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
-import { ActorDocument } from 'dndmashup-react/src/module/actor/documentType';
-import { PowerDocument } from 'dndmashup-react/src/module/item/subtypes/power/dataSourceData';
+import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 
 export async function powerChatMessage(actor: ActorDocument, item: PowerDocument) {
 	if (!('user' in game) || !game.user) return;
@@ -27,7 +28,7 @@ export async function powerChatMessage(actor: ActorDocument, item: PowerDocument
 	});
 }
 
-chatAttachments.power = PowerChatRef;
+chatAttachments['power'] = PowerChatRef;
 
 function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: ChatMessageProps) {
 	if (!('actors' in game)) {

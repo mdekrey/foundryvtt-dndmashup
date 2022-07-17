@@ -41,7 +41,7 @@ export class MashupItemData<TItem extends PossibleItemData>
 	/* ---------------------------------------- */
 
 	/** @inheritdoc */
-	_initializeSource(data: ItemDataConstructorData) {
+	override _initializeSource(data: ItemDataConstructorData) {
 		const source = super._initializeSource(data);
 		const model = deepClone((game as Game).system.model.Item[data.type]);
 		source.data = mergeObject(model || {}, data.data || {});

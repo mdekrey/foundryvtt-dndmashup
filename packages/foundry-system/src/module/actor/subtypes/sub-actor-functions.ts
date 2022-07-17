@@ -1,4 +1,4 @@
-import { ActorDerivedData } from 'dndmashup-react/src/module/actor/derivedDataType';
+import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { PossibleActorData } from '../types';
 

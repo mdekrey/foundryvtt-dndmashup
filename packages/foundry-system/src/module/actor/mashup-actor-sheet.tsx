@@ -1,5 +1,5 @@
 import { ActorSheetJsx } from './templates/sheet';
-import { ReactApplicationMixin } from 'src/core/react';
+import { ReactApplicationMixin } from '../../core/react';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
