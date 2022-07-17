@@ -1,18 +1,7 @@
 const fs = require('fs-extra');
-const gulp = require('gulp');
-const sourcemaps = require('gulp-sourcemaps');
-const typescript = require('gulp-typescript');
-const postcss = require('gulp-postcss');
 const path = require('node:path');
-const buffer = require('vinyl-buffer');
-const source = require('vinyl-source-stream');
 const yargs = require('yargs');
 const { hideBin } = require('yargs/helpers');
-const merge = require('merge2');
-
-const rollupStream = require('@rollup/stream');
-
-const rollupConfig = require('./foundry/rollup.config.cjs');
 
 /********************/
 /*  CONFIGURATION   */
@@ -21,144 +10,6 @@ const rollupConfig = require('./foundry/rollup.config.cjs');
 const name = 'foundryvtt-dndmashup';
 const sourceDirectory = './foundry/src';
 const distDirectory = './dist';
-const reactSourceDirectory = './react/src';
-const reactOutput = './react/out/src';
-const stylesDirectory = `./src/styles`;
-const stylesExtension = 'css';
-const staticFiles = [
-	'assets/**/*',
-	'fonts/**/*',
-	'lang/**/*',
-	'packs/**/*',
-	'**/*.html',
-	'system.json',
-	'template.json',
-];
-const sourceFiles = [`**/*.js`, `**/*.ts`, `**/*.tsx`];
-
-/********************/
-/*      BUILD       */
-/********************/
-
-let cache;
-
-/**
- * Build the shared TS code
- */
-const sharedProject = typescript.createProject(`./react/tsconfig.json`);
-function buildSharedCode() {
-	return function buildSharedCode() {
-		const tsResult = sharedProject.src().pipe(sharedProject());
-		return merge([tsResult.dts.pipe(gulp.dest(reactOutput)), tsResult.js.pipe(gulp.dest(reactOutput))]);
-	};
-}
-
-/**
- * Build the distributable JavaScript code
- */
-function buildCode(isProduction) {
-	return function buildCode() {
-		return rollupStream({ ...rollupConfig(isProduction), cache })
-			.on('bundle', (bundle) => {
-				cache = bundle;
-			})
-			.pipe(source(`${name}.js`))
-			.pipe(buffer())
-			.pipe(sourcemaps.init({ loadMaps: true }))
-			.pipe(sourcemaps.write('.'))
-			.pipe(gulp.dest(`${distDirectory}/module`));
-	};
-}
-
-/**
- * Build style sheets
- */
-function buildStyles() {
-	const tailwindcss = require('tailwindcss');
-
-	return gulp
-		.src(`${stylesDirectory}/${name}.${stylesExtension}`)
-		.pipe(
-			postcss([
-				require('postcss-import'),
-				require('tailwindcss/nesting'),
-				tailwindcss('./tailwind.config.cjs'),
-				require('autoprefixer'),
-			])
-		)
-		.pipe(gulp.dest(`${distDirectory}/styles`));
-}
-
-/**
- * Copy static files
- */
-async function copyFiles() {
-	gulp
-		.src(
-			staticFiles.map((file) => `${sourceDirectory}/${file}`),
-			{ base: sourceDirectory }
-		)
-		.pipe(gulp.dest(distDirectory));
-}
-
-/**
- * Watch for changes for each build step
- */
-function watch() {
-	gulp.watch(
-		sourceFiles.map((file) => `${reactSourceDirectory}/${file}`),
-		{ ignoreInitial: false },
-		buildSharedCode()
-	);
-	gulp.watch(
-		[
-			sourceFiles.map((file) => `${sourceDirectory}/${file}`),
-			sourceFiles.map((file) => `${reactOutput}/${file}`),
-		].flat(),
-		{ ignoreInitial: false },
-		buildCode(false)
-	);
-	gulp.watch(
-		[
-			`${stylesDirectory}/**/*.${stylesExtension}`,
-			...sourceFiles.map((file) => `${sourceDirectory}/${file}`),
-			...sourceFiles.map((file) => `${reactOutput}/${file}`),
-			`./tailwind.config.cjs`,
-			...staticFiles.map((file) => `${sourceDirectory}/${file}`),
-		],
-		{ ignoreInitial: false },
-		buildStyles
-	);
-	gulp.watch(
-		staticFiles.map((file) => `${sourceDirectory}/${file}`),
-		{ ignoreInitial: false },
-		copyFiles
-	);
-}
-
-const build = gulp.series(clean, buildSharedCode(), gulp.parallel(buildCode(true), buildStyles, copyFiles));
-
-/********************/
-/*      CLEAN       */
-/********************/
-
-/**
- * Remove built files from `dist` folder while ignoring source files
- */
-async function clean() {
-	const files = [...staticFiles, 'module', reactOutput];
-
-	if (fs.existsSync(`${stylesDirectory}/${name}.${stylesExtension}`)) {
-		files.push('styles');
-	}
-
-	console.log(' ', 'Files to clean:');
-	console.log('   ', files.join('\n    '));
-
-	for (const filePath of files) {
-		await fs.remove(`${distDirectory}/${filePath}`);
-	}
-}
 
 /********************/
 /*       LINK       */
@@ -213,9 +64,5 @@ async function link() {
 }
 
 module.exports = {
-	buildSharedCode: buildSharedCode(),
-	watch,
-	build,
-	clean,
 	link,
 };
