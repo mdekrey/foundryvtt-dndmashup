@@ -18,6 +18,12 @@
 	"[html]": {
 		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
 	},
+	"[json]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+	},
 	"eslint.rules.customizations": [
 		{
 			"rule": "*",
