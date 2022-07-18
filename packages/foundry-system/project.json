@@ -17,8 +17,12 @@
 				"main": "packages/foundry-system/src/foundryvtt-dndmashup.ts",
 				"polyfills": "packages/foundry-system/src/polyfills.ts",
 				"tsConfig": "packages/foundry-system/tsconfig.app.json",
-				"assets": ["packages/foundry-system/src/system.json", "packages/foundry-system/src/template.json"],
-				"styles": ["packages/foundry-system/src/styles.css"],
+				"assets": [
+					"packages/foundry-system/src/system.json",
+					"packages/foundry-system/src/template.json",
+					"packages/foundry-system/src/lang/en.json"
+				],
+				"styles": ["packages/foundry-system/src/styles/foundryvtt-dndmashup.css"],
 				"scripts": [],
 				"webpackConfig": "packages/foundry-system/webpack-config.js"
 			},
@@ -31,7 +35,7 @@
 						}
 					],
 					"optimization": true,
-					"outputHashing": "all",
+					"outputHashing": "none",
 					"sourceMap": false,
 					"namedChunks": false,
 					"extractLicenses": true,

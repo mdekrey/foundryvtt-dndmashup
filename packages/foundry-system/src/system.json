@@ -14,8 +14,8 @@
 	"minimumCoreVersion": "9",
 	"compatibleCoreVersion": "9",
 	"scripts": [],
-	"esmodules": ["module/foundryvtt-dndmashup.js"],
-	"styles": ["styles/foundryvtt-dndmashup.css"],
+	"esmodules": ["polyfills.esm.js", "runtime.esm.js", "main.esm.js"],
+	"styles": ["styles.css"],
 	"packs": [],
 	"dependencies": [],
 	"languages": [

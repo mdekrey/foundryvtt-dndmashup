@@ -1,5 +1,7 @@
+const { createGlobPatternsForDependencies } = require('@nrwl/react/tailwind');
 const tailwindColors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
+const { join } = require('path');
 
 const colors = {
 	transparent: 'transparent',
@@ -66,7 +68,7 @@ const colors = {
 
 /** @type {import('tailwindcss/tailwind-config').TailwindConfig} */
 module.exports = {
-	content: ['./foundry/src/**/*.ts', './foundry/src/**/*.tsx', './foundry/src/**/*.html'],
+	content: [join(__dirname, 'src/**/*.{ts,tsx}'), ...createGlobPatternsForDependencies(__dirname)],
 	theme: {
 		colors,
 		extend: {
