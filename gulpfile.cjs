@@ -9,7 +9,7 @@ const { hideBin } = require('yargs/helpers');
 
 const name = 'foundryvtt-dndmashup';
 const sourceDirectory = './foundry/src';
-const distDirectory = './dist';
+const distDirectory = './dist/packages/foundry-system';
 
 /********************/
 /*       LINK       */
@@ -36,12 +36,7 @@ function getDataPath() {
  * Link build to User Data folder
  */
 async function link() {
-	let destinationDirectory;
-	if (fs.existsSync(path.resolve(sourceDirectory, 'system.json'))) {
-		destinationDirectory = 'systems';
-	} else {
-		throw new Error('Could not find system.json');
-	}
+	let destinationDirectory = 'systems';
 
 	const linkDirectory = path.resolve(getDataPath(), 'Data', destinationDirectory, name);
 
