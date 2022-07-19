@@ -11,6 +11,6 @@ interface Fixup {
 
 declare global {
 	namespace foundry {
-		export const fixup: Fixup;
+		export let fixup: Fixup;
 	}
 }

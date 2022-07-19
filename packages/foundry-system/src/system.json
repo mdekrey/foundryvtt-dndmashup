@@ -14,8 +14,8 @@
 	"minimumCoreVersion": "9",
 	"compatibleCoreVersion": "9",
 	"scripts": [],
-	"esmodules": ["polyfills.esm.js", "runtime.esm.js", "main.esm.js"],
-	"styles": ["styles.css"],
+	"esmodules": ["fixup.js", "polyfills.esm.js", "runtime.esm.js", "main.esm.js"],
+	"styles": [],
 	"packs": [],
 	"dependencies": [],
 	"languages": [

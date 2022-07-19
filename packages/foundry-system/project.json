@@ -18,11 +18,13 @@
 				"polyfills": "packages/foundry-system/src/polyfills.ts",
 				"tsConfig": "packages/foundry-system/tsconfig.app.json",
 				"assets": [
+					"packages/foundry-system/src/fixup.js",
 					"packages/foundry-system/src/system.json",
 					"packages/foundry-system/src/template.json",
 					"packages/foundry-system/src/lang/en.json"
 				],
-				"styles": ["packages/foundry-system/src/styles/foundryvtt-dndmashup.css"],
+				"styles": [],
+				"extractCss": false,
 				"scripts": [],
 				"webpackConfig": "packages/foundry-system/webpack-config.js"
 			},

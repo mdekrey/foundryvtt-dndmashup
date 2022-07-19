@@ -84,7 +84,7 @@ function PowerBody({ item, actor }: { item: PowerDocument; actor: ActorDocument 
 	);
 
 	async function shareToChat() {
-		dispatch.sendChatMessage('power', actor, { itemid: toMashupId(item) });
+		dispatch.sendChatMessage('power', actor, { item });
 	}
 }
 

@@ -1,4 +1,5 @@
 import { createRoot, Root } from 'react-dom/client';
+import { FoundryWrapper } from '../../components/foundry';
 
 const elementRoot = Symbol('ElementRoot');
 const reactRoot = Symbol('ReactRoot');
@@ -18,7 +19,7 @@ export function renderReact<T extends Application>(sheet: T & ReactSheet, sheetC
 		finalForm = result[0];
 		finalRoot = createRoot(result[0]);
 	}
-	finalRoot.render(sheetComponent);
+	finalRoot.render(<FoundryWrapper>{sheetComponent}</FoundryWrapper>);
 
 	if (sheet instanceof FormApplication) sheet.form = finalForm;
 	sheet[elementRoot] = finalForm;

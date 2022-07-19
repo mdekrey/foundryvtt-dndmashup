@@ -49,7 +49,11 @@ export class MashupItemBase extends Item implements ItemDocument {
 		return this._items ?? (this._items = this.createEmbeddedItemsCollection());
 	}
 	private createEmbeddedItemsCollection(): EmbeddedCollection<MashupItemBaseType, AnyDocumentData> {
-		return new foundry.fixup.EmbeddedCollection(this.data, this.data.data.items ?? [], CONFIG.Item.documentClass);
+		return new foundry.fixup.EmbeddedCollection(
+			this.data,
+			(this.data.data.items ?? []) as never as ItemDataConstructorData[],
+			CONFIG.Item.documentClass
+		);
 	}
 
 	override async createEmbeddedDocuments(embeddedName: any, data: any, context?: any): Promise<any> {

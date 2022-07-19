@@ -1,12 +1,12 @@
 import { renderReact, unmountReact } from './internals';
 
-export const ReactApplicationMixin = <T extends ConstructorOf<Application>>(
+export function ReactApplicationMixin<T extends ConstructorOf<Application>>(
 	Base: T
 ): Pick<T, keyof T> &
 	Pick<typeof ReactApplicationMixinPrototype, keyof typeof ReactApplicationMixinPrototype> & {
 		new (...args: ConstructorParameters<T>): InstanceType<T> & ReactApplicationMixinPrototype;
-	} =>
-	class ReactApplicationMixinClass extends Base {
+	} {
+	return class ReactApplicationMixinClass extends Base {
 		protected _getJsx() {
 			return <>JSX should be overridden by sheet</>;
 		}
@@ -33,6 +33,7 @@ export const ReactApplicationMixin = <T extends ConstructorOf<Application>>(
 			unmountReact(this);
 		}
 	} as never;
+}
 
 declare class ReactApplicationMixinPrototype {
 	protected _getJsx(): JSX.Element;

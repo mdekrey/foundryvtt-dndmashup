@@ -15,8 +15,10 @@
 import { registerSettings, registerCustomSheets } from './module/settings';
 import { systemName } from './module/constants';
 
-import './fixup';
 import { attachToChat } from './module/chat/attach';
+
+import './styles/foundryvtt-dndmashup.css';
+import './module/chat/power';
 
 // Initialize system
 Hooks.once('init', async () => {

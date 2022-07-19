@@ -1,5 +1,7 @@
+import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
+
 export type PowerChatMessage = {
-	itemid: string;
+	item: PowerDocument;
 };
 
 declare global {

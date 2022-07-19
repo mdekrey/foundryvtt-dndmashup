@@ -4,10 +4,13 @@ import { fromMashupId } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
 import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { chatMessageRegistry, PowerDocument, PowerChatMessage } from '@foundryvtt-dndmashup/mashup-react';
 import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 
-export async function powerChatMessage(actor: ActorDocument, item: PowerDocument) {
+chatMessageRegistry.power = powerChatMessage;
+chatAttachments['power'] = PowerChatRef;
+
+async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChatMessage) {
 	if (!('user' in game) || !game.user) return;
 
 	const html = await renderReactToHtml(<PowerPreview item={item} />);
@@ -20,15 +23,13 @@ export async function powerChatMessage(actor: ActorDocument, item: PowerDocument
 			'attach-component': 'power',
 			item: toMashupId(item),
 		},
-		speaker: {
+		speaker: actor && {
 			actor: actor.id,
 			token: actor.token?.id,
 			alias: actor.name,
 		},
 	});
 }
-
-chatAttachments['power'] = PowerChatRef;
 
 function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: ChatMessageProps) {
 	if (!('actors' in game)) {
