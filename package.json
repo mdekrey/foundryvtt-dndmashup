@@ -19,6 +19,8 @@
 	],
 	"type": "module",
 	"scripts": {
+		"lint": "nx run-many --all --target=lint",
+		"build": "nx build",
 		"link-project": "gulp link",
 		"clean:link": "gulp link --clean",
 		"postinstall": "husky install",
