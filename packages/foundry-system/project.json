@@ -1,0 +1,75 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"sourceRoot": "packages/foundry-system/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@nrwl/web:webpack",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"options": {
+				"outputPath": "dist/packages/foundry-system",
+				"compiler": "swc",
+				"generateIndexHtml": false,
+				"baseHref": "/",
+				"index": "",
+				"main": "packages/foundry-system/src/foundryvtt-dndmashup.ts",
+				"polyfills": "packages/foundry-system/src/polyfills.ts",
+				"tsConfig": "packages/foundry-system/tsconfig.app.json",
+				"assets": [
+					"packages/foundry-system/src/fixup.js",
+					"packages/foundry-system/src/system.json",
+					"packages/foundry-system/src/template.json",
+					"packages/foundry-system/src/lang/en.json"
+				],
+				"styles": [],
+				"extractCss": false,
+				"scripts": [],
+				"webpackConfig": "packages/foundry-system/webpack-config.js"
+			},
+			"configurations": {
+				"production": {
+					"fileReplacements": [
+						{
+							"replace": "packages/foundry-system/src/environments/environment.ts",
+							"with": "packages/foundry-system/src/environments/environment.prod.ts"
+						}
+					],
+					"optimization": true,
+					"outputHashing": "none",
+					"sourceMap": false,
+					"namedChunks": false,
+					"extractLicenses": true,
+					"vendorChunk": false
+				}
+			}
+		},
+		"serve": {
+			"executor": "@nrwl/web:dev-server",
+			"options": {
+				"buildTarget": "foundry-system:build"
+			},
+			"configurations": {
+				"production": {
+					"buildTarget": "foundry-system:build:production"
+				}
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/foundry-system/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/packages/foundry-system"],
+			"options": {
+				"jestConfig": "packages/foundry-system/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	}
+}

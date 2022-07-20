@@ -1,0 +1,50 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"npmScope": "foundryvtt-dndmashup",
+	"affected": {
+		"defaultBase": "main"
+	},
+	"implicitDependencies": {
+		"package.json": {
+			"dependencies": "*",
+			"devDependencies": "*"
+		},
+		".eslintrc.json": "*"
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "nx/tasks-runners/default",
+			"options": {
+				"cacheableOperations": ["build", "lint", "test", "e2e"]
+			}
+		}
+	},
+	"targetDefaults": {
+		"build": {
+			"dependsOn": ["^build"]
+		}
+	},
+	"workspaceLayout": {
+		"appsDir": "packages",
+		"libsDir": "packages"
+	},
+	"generators": {
+		"@nrwl/react": {
+			"application": {
+				"babel": false
+			}
+		},
+		"@nrwl/web:application": {
+			"style": "css",
+			"linter": "eslint",
+			"unitTestRunner": "jest",
+			"e2eTestRunner": "cypress"
+		},
+		"@nrwl/web:library": {
+			"style": "css",
+			"linter": "eslint",
+			"unitTestRunner": "jest"
+		}
+	},
+	"defaultProject": "foundry-system"
+}

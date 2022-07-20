@@ -1,0 +1,41 @@
+{
+	"name": "foundryvtt-dndmashup",
+	"title": "foundryvtt-dndmashup",
+	"description": "",
+	"version": "This is auto replaced",
+	"author": "Matt DeKrey",
+	"authors": [
+		{
+			"name": "Matt DeKrey",
+			"email": "matt.dekrey@gmail.com",
+			"discord": "DrinksDew#6095"
+		}
+	],
+	"minimumCoreVersion": "9",
+	"compatibleCoreVersion": "9",
+	"scripts": [],
+	"esmodules": ["fixup.js", "polyfills.esm.js", "runtime.esm.js", "main.esm.js"],
+	"styles": [],
+	"packs": [],
+	"dependencies": [],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json"
+		}
+	],
+	"socket": false,
+	"url": "This is auto replaced",
+	"manifest": "This is auto replaced",
+	"download": "This is auto replaced",
+	"license": "",
+	"readme": "",
+	"bugs": "",
+	"changelog": "",
+	"initiative": "",
+	"gridDistance": 1,
+	"gridUnits": "",
+	"primaryTokenAttribute": "",
+	"secondaryTokenAttribute": ""
+}

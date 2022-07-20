@@ -1,0 +1,11 @@
+{
+	"$schema": "./node_modules/nx/schemas/workspace-schema.json",
+	"version": 2,
+	"projects": {
+		"components": "packages/components",
+		"foundry-compat": "packages/foundry-compat",
+		"foundry-system": "packages/foundry-system",
+		"mashup-core": "packages/mashup-core",
+		"mashup-react": "packages/mashup-react"
+	}
+}
