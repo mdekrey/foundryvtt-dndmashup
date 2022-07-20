@@ -20,6 +20,7 @@
 	"type": "module",
 	"scripts": {
 		"lint": "nx run-many --all --target=lint",
+		"test": "nx run-many --all --target=test",
 		"build": "nx build",
 		"link-project": "gulp link",
 		"clean:link": "gulp link --clean",
