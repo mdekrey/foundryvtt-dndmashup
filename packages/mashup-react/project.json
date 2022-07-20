@@ -27,7 +27,8 @@
 			"executor": "@nrwl/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["packages/mashup-react/**/*.{ts,tsx}"]
+				"lintFilePatterns": ["packages/mashup-react/**/*.{ts,tsx}"],
+				"maxWarnings": 0
 			}
 		},
 		"test": {

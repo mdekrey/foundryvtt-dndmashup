@@ -1,5 +1,5 @@
 import { ImageButton } from '@foundryvtt-dndmashup/components';
-import { ItemTable, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
 import { useChatMessageDispatcher } from '../../chat';
 import { PowerPreview } from '../../item/subtypes/power/components/PowerPreview';
 import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
