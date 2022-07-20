@@ -4,7 +4,9 @@ Please add your description here.
 
 ## Installation
 
-Please add your installation instructions here.
+In Foundry, specify the manifest URL as:
+
+    https://github.com/mdekrey/foundryvtt-dndmashup/releases/latest/download/system.json
 
 ## Development
 
@@ -40,9 +42,6 @@ with the following content:
 }
 ```
 
-(if you are using Windows, make sure to use `\` as a path separator instead of
-`/`)
-
 Then run
 
 ```
@@ -60,8 +59,7 @@ nx generate @nrwl/react:library reactlib --compiler=swc --buildable
 
 ### Creating a release
 
-The workflow works basically the same as the workflow of the [League Basic JS Module Template], please follow the
-instructions given there.
+Create a tag and release in GitHub.
 
 ## Licensing
 
