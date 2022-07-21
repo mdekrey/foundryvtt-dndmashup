@@ -5,27 +5,15 @@ import {
 	ApplicableEffect,
 	AttackRoll,
 	DamageEffect,
-	EffectTypeAndRange,
 	HealingEffect,
 	PowerDocument,
 	PowerEffect,
 	PowerUsage,
 } from '../dataSourceData';
 import { Defense } from '../../../../../types/types';
-import {
-	MeleeIcon,
-	RangedIcon,
-	AreaIcon,
-	CloseIcon,
-	BasicMeleeIcon,
-	BasicRangedIcon,
-	D6_2Icon,
-	D6_3Icon,
-	D6_4Icon,
-	D6_5Icon,
-	D6_6Icon,
-} from './icons';
+import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
+import { AttackTypeInfo } from './AttackTypeInfo';
 
 export function PowerPreview({ item }: { item: PowerDocument }) {
 	const { name, data: itemData } = item.data;
@@ -66,13 +54,7 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 							<p className="font-bold w-40">{actionType(itemData.actionType)}</p>
 							{firstEffect && (
 								<p>
-									<AttackTypeIcon
-										attackType={firstEffect.typeAndRange.type}
-										isBasic={itemData.isBasic}
-										className="h-4 align-top inline-block"
-									/>{' '}
-									<span className="font-bold">{attackType(firstEffect.typeAndRange.type)}</span>
-									{/* TODO - range info not shown */}
+									<AttackTypeInfo typeAndRange={firstEffect.typeAndRange} isBasic={itemData.isBasic} />
 								</p>
 							)}
 						</div>
@@ -149,31 +131,6 @@ export function FlavorText({ children, className, ...props }: JSX.IntrinsicEleme
 			{children}
 		</p>
 	);
-}
-
-const iconMapping: Record<string, typeof MeleeIcon | undefined> = {
-	melee: MeleeIcon,
-	ranged: RangedIcon,
-	close: CloseIcon,
-	area: AreaIcon,
-};
-
-const basicIconMapping: Record<string, typeof MeleeIcon | undefined> = {
-	melee: BasicMeleeIcon,
-	ranged: BasicRangedIcon,
-};
-
-function AttackTypeIcon({
-	attackType,
-	isBasic,
-	...props
-}: {
-	attackType: EffectTypeAndRange['type'];
-	isBasic?: boolean;
-} & JSX.IntrinsicElements['svg']) {
-	const Icon = (isBasic ? basicIconMapping[attackType || ''] : null) ?? iconMapping[attackType || ''];
-	if (!Icon) return null;
-	return <Icon {...props} />;
 }
 
 export function RulesText({
@@ -285,24 +242,5 @@ function actionType(actionType: ActionType) {
 			return 'Opportunity action';
 		default:
 			return neverEver(actionType);
-	}
-}
-
-function attackType(type: EffectTypeAndRange['type']) {
-	switch (type) {
-		case 'melee':
-			return 'Melee';
-		case 'ranged':
-			return 'Ranged';
-		case 'close':
-			return 'Close';
-		case 'area':
-			return 'Area';
-		case 'personal':
-			return 'Personal';
-		case 'same-as-primary':
-			return null;
-		default:
-			return neverEver(type);
 	}
 }

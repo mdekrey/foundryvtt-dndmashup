@@ -43,10 +43,10 @@ export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' 
 export type EffectTypeAndRange =
 	| MeleeEffectTypeAndRange
 	| RangedEffectTypeAndRange
+	| WithinEffectTypeAndRange
 	| CloseEffectTypeAndRange
 	| AreaEffectTypeAndRange
-	| PersonalEffectTypeAndRange
-	| PrimaryEffectTypeAndRange;
+	| PersonalEffectTypeAndRange;
 export type MeleeEffectTypeAndRange = { type: 'melee'; range: 'weapon' | 1 | 'touch' };
 export type RangedEffectTypeAndRange = { type: 'ranged'; range: 'weapon' | number | 'sight' };
 /** 'within' isn't a by-the-book type, as evidenced by things like Righteous Brand and Lance of Faith, but is really a close burst type effect that can have a range of sight. */
@@ -54,7 +54,6 @@ export type WithinEffectTypeAndRange = { type: 'within'; size: number | 'sight' 
 export type CloseEffectTypeAndRange = { type: 'close'; shape: 'burst' | 'blast'; size: number };
 export type AreaEffectTypeAndRange = { type: 'area'; shape: 'burst' | 'wall'; size: number; within: number };
 export type PersonalEffectTypeAndRange = { type: 'personal' };
-export type PrimaryEffectTypeAndRange = { type: 'same-as-primary' };
 
 export type AttackRoll = {
 	attack: string;
