@@ -151,11 +151,7 @@
 			"usage": "At-Will",
 			"keywords": [],
 			"actionType": "standard",
-			"effect": {
-				"typeAndRange": { "type": "melee", "range": "weapon " },
-				"target": "One creature",
-				"effects": []
-			},
+			"effects": [],
 			"special": "",
 			"displayOverride": "",
 			"isBasic": false

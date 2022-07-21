@@ -1,45 +1,27 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
-import { AttackEffectFields } from './AttackEffectFields';
+import { attackRollLens, HitAndMissFields, targetLens, typeAndRangeLens } from './AttackEffectFields';
 import { AttackRollFields } from './AttackRollFields';
 import { TypeAndRange } from './TypeAndRange';
 import { usageOptions } from './usageOptions';
 import { actionTypeOptions } from './actionTypeOptions';
 import {
-	attackEffectLens,
-	attackEffectRequiredLens,
-	attackRollLens,
-	canHaveSecondaryAttack,
-	effectTextLens,
 	keywordsLens,
-	powerEffectLens,
-	secondaryAttackLens,
-	secondaryTargetLens,
-	typeAndRangeLens,
-	targetTextLens,
-	canHaveTertiaryAttack,
-	tertiaryTargetLens,
-	tertiaryAttackLens,
 	nameLens,
 	powerTypeLens,
 	powerFlavorTextLens,
 	powerUsageLens,
 	powerActionTypeLens,
-	powerEffectTargetLens,
 	powerRequirementLens,
 	powerPrerequisiteLens,
 	imageLens,
+	firstEffectLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerDocument } from '../dataSourceData';
 
 export function PowerEditor({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
-
-	const attackEffectState = attackEffectLens.apply(documentState);
-	const effectTextState = effectTextLens.apply(documentState);
-	const secondaryAttackState = powerEffectLens.combine(secondaryAttackLens).apply(documentState);
-	const tertiaryAttackState = powerEffectLens.combine(tertiaryAttackLens).apply(documentState);
 
 	return (
 		<>
@@ -79,16 +61,16 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 						<FormInput.Label>Action Type</FormInput.Label>
 					</FormInput>
 					<div className="col-span-8">
-						<TypeAndRange {...typeAndRangeLens.apply(documentState)} />
+						<TypeAndRange {...firstEffectLens.combine(typeAndRangeLens).apply(documentState)} />
 					</div>
 				</div>
 
 				<FormInput>
-					<FormInput.TextField {...powerEffectTargetLens.apply(documentState)} />
+					<FormInput.TextField {...firstEffectLens.combine(targetLens).apply(documentState)} />
 					<FormInput.Label>Target</FormInput.Label>
 				</FormInput>
 
-				<AttackRollFields {...attackRollLens.apply(attackEffectState)} />
+				<AttackRollFields {...firstEffectLens.combine(attackRollLens).apply(documentState)} />
 
 				<FormInput
 					className={classNames({
@@ -105,44 +87,10 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 					<FormInput.TextField {...powerPrerequisiteLens.apply(documentState)} />
 					<FormInput.Label>Prerequisite</FormInput.Label>
 				</FormInput>
-				{attackEffectState.value ? <AttackEffectFields {...attackEffectRequiredLens.apply(attackEffectState)} /> : null}
-				<FormInput
-					className={classNames({
-						'opacity-50 focus-within:opacity-100': !effectTextState.value,
-					})}>
-					<FormInput.TextField {...effectTextState} />
-					<FormInput.Label>Effect</FormInput.Label>
-				</FormInput>
-				{canHaveSecondaryAttack(item.data.data.effect) ? (
-					<>
-						<FormInput>
-							<FormInput.TextField
-								{...targetTextLens.apply(powerEffectLens.combine(secondaryTargetLens).apply(documentState))}
-							/>
-							<FormInput.Label>Secondary Target</FormInput.Label>
-						</FormInput>
 
-						<AttackRollFields {...attackRollLens.apply(secondaryAttackState)} />
-						{secondaryAttackState.value ? (
-							<AttackEffectFields {...attackEffectRequiredLens.apply(secondaryAttackState)} />
-						) : null}
-					</>
-				) : null}
-				{canHaveTertiaryAttack(item.data.data.effect) ? (
-					<>
-						<FormInput>
-							<FormInput.TextField
-								{...powerEffectLens.combine(tertiaryTargetLens).combine(targetTextLens).apply(documentState)}
-							/>
-							<FormInput.Label>Tertiary Target</FormInput.Label>
-						</FormInput>
+				<HitAndMissFields {...firstEffectLens.apply(documentState)} />
 
-						<AttackRollFields {...attackRollLens.apply(tertiaryAttackState)} />
-						{tertiaryAttackState.value ? (
-							<AttackEffectFields {...attackEffectRequiredLens.apply(tertiaryAttackState)} />
-						) : null}
-					</>
-				) : null}
+				{/* TODO: effects list */}
 			</div>
 		</>
 	);

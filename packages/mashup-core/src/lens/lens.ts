@@ -99,26 +99,37 @@ export class Lens<TSource, TValue> {
 		);
 	}
 
-	static fromProp<TSource, P extends keyof TSource>(prop: P): Lens<TSource, TSource[P]> {
-		type TValue = TSource[P];
-		function produce(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
-		function produce(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
-		function produce(...params: [Draft<TSource>, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
-			if (params.length === 1) {
-				const [mutator] = params;
-				return (draft: Draft<TSource>) => {
-					draft[prop as keyof Draft<TSource>] = (mutator(draft[prop as keyof Draft<TSource>] as Draft<TValue>) ??
-						draft[prop as keyof Draft<TSource>]) as Draft<TSource>[keyof Draft<TSource>];
-				};
-			} else {
-				const [source, mutator] = params;
-				source[prop as keyof Draft<TSource>] = (mutator(source[prop as keyof Draft<TSource>] as Draft<TValue>) ??
-					source[prop as keyof Draft<TSource>]) as Draft<TSource>[keyof Draft<TSource>];
-				return;
+	static fromProp<TSource>(): <P extends keyof TSource>(prop: P) => Lens<TSource, TSource[P]>;
+	static fromProp<TSource, P extends keyof TSource>(prop: P): Lens<TSource, TSource[P]>;
+	static fromProp<TSource, P extends keyof TSource>(
+		prop?: P
+	): ((prop: P) => Lens<TSource, TSource[P]>) | Lens<TSource, TSource[P]> {
+		function buildLens(prop: P): Lens<TSource, TSource[P]> {
+			type TValue = TSource[P];
+			function produce(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
+			function produce(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
+			function produce(...params: [Draft<TSource>, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
+				if (params.length === 1) {
+					const [mutator] = params;
+					return (draft: Draft<TSource>) => {
+						draft[prop as keyof Draft<TSource>] = immerMutatorToMutator(mutator)(
+							draft[prop as keyof Draft<TSource>] as Draft<TValue>
+						) as Draft<TSource>[keyof Draft<TSource>];
+					};
+				} else {
+					const [source, mutator] = params;
+					source[prop as keyof Draft<TSource>] = immerMutatorToMutator(mutator)(
+						source[prop as keyof Draft<TSource>] as Draft<TValue>
+					) as Draft<TSource>[keyof Draft<TSource>];
+					return;
+				}
 			}
+
+			return new Lens<TSource, TValue>((source) => source[prop], produce);
 		}
 
-		return new Lens<TSource, TValue>((source) => source[prop], produce);
+		if (prop === undefined) return (prop: P) => buildLens(prop);
+		return buildLens(prop);
 	}
 
 	apply(state: Stateful<TSource>): Stateful<TValue> {

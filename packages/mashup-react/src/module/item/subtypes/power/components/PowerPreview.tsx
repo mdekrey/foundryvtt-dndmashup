@@ -1,14 +1,16 @@
 import classNames from 'classnames';
-import { pipeJsx, recurse, mergeStyles, neverEver, or } from '@foundryvtt-dndmashup/mashup-core';
+import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	ActionType,
 	ApplicableEffect,
 	AttackRoll,
+	DamageEffect,
 	EffectTypeAndRange,
+	HealingEffect,
 	PowerDocument,
+	PowerEffect,
 	PowerUsage,
 } from '../dataSourceData';
-import { isAttackEffect, isTargetEffect } from './sheetLenses';
 import { Defense } from '../../../../../types/types';
 import {
 	MeleeIcon,
@@ -27,12 +29,10 @@ import capitalize from 'lodash/fp/capitalize';
 
 export function PowerPreview({ item }: { item: PowerDocument }) {
 	const { name, data: itemData } = item.data;
-	const primaryAttack = itemData.effect.effects.find(isAttackEffect);
-	const rulesText = itemData.effect.effects
-		.flatMap((effect, index) =>
-			effectToRules(effect, itemData.effect.effects.slice(0, index).filter(or(isAttackEffect, isTargetEffect)).length)
-		)
+	const rulesText = itemData.effects
+		.flatMap((effect, index) => effectToRules(effect))
 		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);
+	const firstEffect: PowerEffect | null = itemData.effects[0] ?? null;
 	return (
 		<section className="bg-white">
 			<header
@@ -64,18 +64,23 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 						</p>
 						<div className="flex">
 							<p className="font-bold w-40">{actionType(itemData.actionType)}</p>
-							<p>
-								<AttackTypeIcon
-									attackType={itemData.effect.typeAndRange.type}
-									isBasic={itemData.isBasic}
-									className="h-4 align-top inline-block"
-								/>{' '}
-								<span className="font-bold">{attackType(itemData.effect.typeAndRange.type)}</span>
-							</p>
+							{firstEffect && (
+								<p>
+									<AttackTypeIcon
+										attackType={firstEffect.typeAndRange.type}
+										isBasic={itemData.isBasic}
+										className="h-4 align-top inline-block"
+									/>{' '}
+									<span className="font-bold">{attackType(firstEffect.typeAndRange.type)}</span>
+									{/* TODO - range info not shown */}
+								</p>
+							)}
 						</div>
 						{itemData.trigger && <RulesText label="Trigger">{itemData.trigger}</RulesText>}
-						{itemData.effect.target && <RulesText label="Target">{itemData.effect.target}</RulesText>}
-						{primaryAttack && <RulesText label="Attack">{toAttackRollText(primaryAttack.attackRoll)}</RulesText>}
+						{firstEffect?.target && <RulesText label="Target">{firstEffect.target}</RulesText>}
+						{firstEffect?.attackRoll && (
+							<RulesText label="Attack">{toAttackRollText(firstEffect.attackRoll)}</RulesText>
+						)}
 						{itemData.prerequisite && <RulesText label="Prerequisite">{itemData.prerequisite}</RulesText>}
 						{itemData.requirement && <RulesText label="Requirement">{itemData.requirement}</RulesText>}
 					</div>
@@ -93,66 +98,45 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 
 type RuleEntry = { label?: string | null; text: React.ReactNode };
 
-function effectToRules(effect: ApplicableEffect, attackIndex: number): Array<null | RuleEntry> {
-	const attackName = toIndexName(attackIndex);
+function effectToRules(effect: PowerEffect): Array<null | RuleEntry> {
+	const attackName = effect.name;
 	const prefix = attackName ? `${attackName} ` : '';
-	switch (effect.type) {
-		case 'attack':
-			const [hit, hitEffects] = toNestedEffects(effect.hit, attackIndex + 1);
-			const [miss] = toNestedEffects(effect.miss);
-			console.log(hit, hitEffects, miss);
-			return [
-				attackIndex === 0 ? null : { label: `${prefix}Attack`, text: toAttackRollText(effect.attackRoll) },
-				hit ? { label: 'Hit', text: hit } : null,
-				...hitEffects,
-				miss ? { label: 'Miss', text: miss } : null,
-			];
-		case 'text':
-			return [{ label: 'Effect', text: effect.text }];
-		case 'target':
-			return [
-				{ label: `${prefix}Target`, text: effect.target },
-				...effect.effects.flatMap((e) => effectToRules(e, attackIndex)),
-				// TODO: typeAndRange
-			];
-		case 'damage':
-		case 'healing':
-		case 'half-damage':
-			return [];
-		default:
-			return neverEver(effect);
-	}
-}
 
-function toNestedEffects(effects: ApplicableEffect[], attackIndex?: number): [string, Array<null | RuleEntry>] {
-	const results = effects.map((effect) => {
-		switch (effect.type) {
-			case 'damage':
-				return [effect.damage, oxfordComma(effect.damageTypes ?? []), 'damage.'].filter(Boolean).join(' ');
-			case 'half-damage':
-				return 'Half damage.';
-			case 'healing':
-				return [];
-			case 'text':
-				return effect.text;
-			default:
-				return attackIndex === undefined ? [] : effectToRules(effect, attackIndex);
-		}
-	});
+	const target = effect.target;
+	const attackRoll = effect.attackRoll && toAttackRollText(effect.attackRoll);
+	const hit = toNestedEffects(effect.hit);
+	const miss = effect.attackRoll && effect.miss ? toNestedEffects(effect.miss) : '';
 
 	return [
-		results.filter((e): e is string => typeof e === 'string').join(' '),
-		results.flatMap((e) => (typeof e === 'string' ? [] : e)),
+		{ label: `${prefix}Attack`, text: attackRoll },
+		{ label: `${prefix}Target`, text: target },
+		hit ? { label: 'Hit', text: hit } : null,
+		miss ? { label: 'Miss', text: miss } : null,
 	];
+}
+
+function toNestedEffects(effect: ApplicableEffect): string {
+	return [
+		effect.damage && damageEffectText(effect.damage),
+		effect.healing && healingEffectText(effect.healing),
+		effect.text,
+	]
+		.filter(Boolean)
+		.join(' ');
+}
+
+function damageEffectText(effect: DamageEffect) {
+	return [effect.damage, oxfordComma(effect.damageTypes ?? []), 'damage.'].filter(Boolean).join(' ');
+}
+
+function healingEffectText(effect: HealingEffect) {
+	// TODO
+	return '';
 }
 
 function oxfordComma(parts: string[]) {
 	if (parts.length <= 2) return parts.join(' and ');
 	return `${parts.slice(parts.length - 1).join(', ')}, and ${parts[parts.length - 1]}`;
-}
-
-function toIndexName(index: number) {
-	return index === 1 ? 'Secondary' : index === 2 ? 'Tertiary' : null;
 }
 
 function toAttackRollText(attackRoll: AttackRoll) {

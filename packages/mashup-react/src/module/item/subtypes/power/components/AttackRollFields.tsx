@@ -1,6 +1,7 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import classNames from 'classnames';
 import { Defense, Defenses } from '../../../../../types/types';
 import { AttackRoll } from '../dataSourceData';
 
@@ -13,7 +14,7 @@ const abilityLens = Lens.from<AttackRoll | null, string>(
 			draft.attack = attackRoll;
 			return draft;
 		} else {
-			return attackRoll === '' ? undefined : { attack: attackRoll, defense: 'ac' };
+			return attackRoll === '' ? null : { attack: attackRoll, defense: 'ac' };
 		}
 	}
 );
@@ -43,17 +44,11 @@ export function AttackRollFields(props: Stateful<AttackRoll | null>) {
 				<FormInput.TextField {...abilityState} />
 				<FormInput.Label>Attack Ability</FormInput.Label>
 			</FormInput>
-			{!props.value ? (
-				<></>
-			) : (
-				<>
-					<div className="justify-self-center">vs.</div>
-					<FormInput className="col-span-3">
-						<FormInput.Select {...defenseLens.apply(props)} options={defenseOptions} />
-						<FormInput.Label>Defense</FormInput.Label>
-					</FormInput>
-				</>
-			)}
+			<div className="justify-self-center">vs.</div>
+			<FormInput className={classNames('col-span-3', { 'opacity-50': !props.value })}>
+				<FormInput.Select {...defenseLens.apply(props)} options={props.value ? defenseOptions : []} />
+				<FormInput.Label>Defense</FormInput.Label>
+			</FormInput>
 		</div>
 	);
 }

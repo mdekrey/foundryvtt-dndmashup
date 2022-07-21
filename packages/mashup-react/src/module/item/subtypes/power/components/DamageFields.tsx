@@ -19,12 +19,12 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 	(e) => e?.damage ?? '',
 	(mutator) => (damageDraft) => {
 		const damage = mutator(damageDraft?.damage ?? '');
-		console.log('new damage', damage, damageDraft, mutator);
+		console.log({ message: 'new damage', damage, damageDraft, mutator });
 		if (!damage) return null;
 		if (damageDraft) {
 			damageDraft.damage = damage;
 			return damageDraft;
-		} else return { type: 'damage', damage: damage, damageTypes: [] };
+		} else return { damage: damage, damageTypes: [] };
 	}
 );
 export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
@@ -39,7 +39,7 @@ export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 		if (damageDraft) {
 			damageDraft.damageTypes = damageTypes;
 			return damageDraft;
-		} else return { type: 'damage', damage: '1[W]', damageTypes };
+		} else return { damage: '1[W]', damageTypes };
 	}
 );
 
@@ -53,7 +53,7 @@ export function DamageFields({ prefix, ...props }: { prefix?: string } & Statefu
 				<FormInput.Label>{prefix} Damage Dice</FormInput.Label>
 			</FormInput>
 			<FormInput className={classNames('col-span-5', { 'opacity-50': !damageState.value })}>
-				<FormInput.MultiSelect {...damageTypeState} options={damageTypeOptions} />
+				<FormInput.MultiSelect {...damageTypeState} options={damageState.value ? damageTypeOptions : []} />
 				<FormInput.Label>Damage Type</FormInput.Label>
 			</FormInput>
 			<div className={classNames('col-span-2', { 'opacity-50': !damageState.value })}>damage</div>
