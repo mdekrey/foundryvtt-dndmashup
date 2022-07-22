@@ -21,17 +21,15 @@ export const powerUsageLens = powerSourceDataLens.toField('usage');
 export const powerActionTypeLens = powerSourceDataLens.toField('actionType');
 export const powerRequirementLens = powerSourceDataLens.toField('requirement').combine(undefinedString);
 export const powerPrerequisiteLens = powerSourceDataLens.toField('prerequisite').combine(undefinedString);
-export const firstEffectLens = powerSourceDataLens
-	.toField('effects')
-	.toField(0)
-	.default({
-		name: 'Primary',
-		target: 'One creature',
-		typeAndRange: { type: 'melee', range: 'weapon' },
-		attackRoll: { attack: 'STR', defense: 'ac' },
-		hit: { text: '', healing: null, damage: null },
-		miss: null,
-	});
+export const effectsLens = powerSourceDataLens.toField('effects');
+export const firstEffectLens = effectsLens.toField(0).default({
+	name: 'Primary',
+	target: 'One creature',
+	typeAndRange: { type: 'melee', range: 'weapon' },
+	attackRoll: { attack: 'STR', defense: 'ac' },
+	hit: { text: '', healing: null, damage: null },
+	miss: null,
+});
 
 export const keywordsLens = Lens.from<SimpleDocumentData<PowerData>, string>(
 	(power) => power.data.keywords.map(capitalize).join(', '),

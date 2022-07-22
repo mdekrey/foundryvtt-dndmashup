@@ -90,9 +90,9 @@ function effectToRules(effect: PowerEffect): Array<null | RuleEntry> {
 	const miss = effect.attackRoll && effect.miss ? toNestedEffects(effect.miss) : '';
 
 	return [
-		{ label: `${prefix}Attack`, text: attackRoll },
-		{ label: `${prefix}Target`, text: target },
-		hit ? { label: 'Hit', text: hit } : null,
+		attackRoll ? { label: `${prefix}Attack`, text: attackRoll } : null,
+		target ? { label: `${prefix}Target`, text: target } : null,
+		hit ? { label: attackRoll ? 'Hit' : 'Effect', text: hit } : null,
 		miss ? { label: 'Miss', text: miss } : null,
 	];
 }

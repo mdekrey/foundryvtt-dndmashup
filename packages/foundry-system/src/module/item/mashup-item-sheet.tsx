@@ -34,7 +34,7 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 		return mergeObject(super.defaultOptions, {
 			classes: [],
 			width: 585,
-			height: 420,
+			height: 720,
 			dragDrop: [{ dragSelector: null, dropSelector: null }],
 		});
 	}
