@@ -11,7 +11,9 @@ import {
 } from '../dataSourceData';
 import { setWith } from '@foundryvtt-dndmashup/foundry-compat';
 
-const effectTypeOptions = (['melee', 'ranged', 'close', 'area', 'personal'] as EffectTypeAndRange['type'][]).map(
+const effectTypeOptions = (
+	['melee', 'ranged', 'close', 'area', 'personal', 'within'] as EffectTypeAndRange['type'][]
+).map(
 	(value): SelectItem<EffectTypeAndRange['type']> => ({
 		value,
 		key: value,
@@ -100,7 +102,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<Effect
 	return (
 		<div
 			className={classNames('grid gap-1', {
-				'grid-cols-2': value?.type === 'melee' || value?.type === 'ranged',
+				'grid-cols-2': value?.type === 'melee' || value?.type === 'ranged' || value?.type === 'within',
 				'grid-cols-3': value?.type === 'close',
 				'grid-cols-5': value?.type === 'area',
 				'grid-cols-1': value?.type === undefined || value?.type === 'personal',
@@ -161,8 +163,17 @@ export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<Effect
 						<FormInput.Label>Range</FormInput.Label>
 					</FormInput>
 				</>
-			) : (
+			) : value?.type === 'personal' ? (
 				<></>
+			) : value?.type === 'within' ? (
+				<>
+					<FormInput className="self-end">
+						<FormInput.TextField value={`${value.size}`} onChange={(ev) => changeWithinRange(ev.currentTarget.value)} />
+						<FormInput.Label>Range</FormInput.Label>
+					</FormInput>
+				</>
+			) : (
+				neverEver(value)
 			)}
 		</div>
 	);
@@ -206,6 +217,16 @@ export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<Effect
 		setValue((target) => {
 			if (target.type === 'ranged') {
 				target.range = range;
+			}
+		});
+	}
+
+	function changeWithinRange(value: string) {
+		const range = value === 'sight' ? value : Number(value);
+		if (typeof range === 'number' && isNaN(range)) return;
+		setValue((target) => {
+			if (target.type === 'within') {
+				target.size = range;
 			}
 		});
 	}

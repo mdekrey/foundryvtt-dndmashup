@@ -1,4 +1,4 @@
-import { Draft } from 'immer';
+import produce, { Draft } from 'immer';
 import { ImmerMutator, Mutator, Stateful } from './types';
 
 function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
@@ -54,7 +54,7 @@ export class Lens<TSource, TValue> {
 			Lens.from<TValue, NonNullable<TValue>>(
 				(source) => (source ?? value) as NonNullable<TValue>,
 				(mutator) => (draft) => {
-					return mutator((draft ?? value) as any) as any;
+					return draft === null || draft === undefined ? produce(value, mutator as any) : mutator(draft as any);
 				}
 			)
 		);

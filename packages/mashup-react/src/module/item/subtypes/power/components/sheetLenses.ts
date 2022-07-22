@@ -1,7 +1,7 @@
 import capitalize from 'lodash/fp/capitalize';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens } from '@foundryvtt-dndmashup/mashup-core';
-import { PowerData } from '../dataSourceData';
+import { PowerData, PowerEffect } from '../dataSourceData';
 
 export const isNull = (e: any): e is null => e === null;
 
@@ -30,6 +30,20 @@ export const firstEffectLens = effectsLens.toField(0).default({
 	hit: { text: '', healing: null, damage: null },
 	miss: null,
 });
+const defaultNewEffect: PowerEffect = Object.freeze({
+	name: 'Another',
+	target: 'One ally',
+	typeAndRange: { type: 'within', size: 'sight' },
+	attackRoll: null,
+	hit: { text: '', healing: null, damage: null },
+	miss: null,
+});
+export const newEffectLens = Lens.from<PowerEffect[], PowerEffect>(
+	() => defaultNewEffect,
+	(mutator) => (data) => {
+		data[data.length] = mutator(data[data.length]);
+	}
+).default(defaultNewEffect);
 
 export const keywordsLens = Lens.from<SimpleDocumentData<PowerData>, string>(
 	(power) => power.data.keywords.map(capitalize).join(', '),

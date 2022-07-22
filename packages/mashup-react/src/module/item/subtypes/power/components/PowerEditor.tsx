@@ -23,12 +23,13 @@ import {
 	imageLens,
 	firstEffectLens,
 	effectsLens,
+	newEffectLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerDocument, PowerEffect } from '../dataSourceData';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { AttackTypeInfo } from './AttackTypeInfo';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function PowerEditor({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -108,6 +109,8 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 
 function EffectsTable(props: Stateful<PowerEffect[]>) {
 	const effects = props.value;
+	const indexes = [...effects.map((_, idx) => idx), effects.length];
+	indexes.unshift(); // remove the 0 index
 
 	const toIndex = Lens.fromProp<PowerEffect[]>();
 
@@ -117,29 +120,18 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 				<tr>
 					<th className="py-1">Additional Effects</th>
 					<th className="py-1" />
-					<th className="py-1">
-						<IconButton iconClassName="fa fa-plus" text="Add" onClick={onAdd} />
-					</th>
+					<th className="py-1" />
 				</tr>
 			</thead>
-			{effects.map((value, idx) =>
-				idx === 0 ? null : <EffectRow key={idx} onRemove={onRemove(idx)} {...toIndex(idx).apply(props)} />
+			{indexes.map((idx) =>
+				idx === effects.length ? (
+					<EffectRow key={idx} onRemove={onRemove(idx)} {...newEffectLens.apply(props)} isNew />
+				) : (
+					<EffectRow key={idx} onRemove={onRemove(idx)} {...toIndex(idx).apply(props)} />
+				)
 			)}
 		</table>
 	);
-
-	function onAdd() {
-		props.onChangeValue((effects) => {
-			effects.push({
-				name: 'Another',
-				typeAndRange: { type: 'melee', range: 'weapon' },
-				hit: { text: '', damage: null, healing: null },
-				attackRoll: null,
-				miss: null,
-				target: 'Same target',
-			});
-		});
-	}
 
 	function onRemove(index: number) {
 		return () => {
@@ -150,27 +142,40 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 	}
 }
 
-function EffectRow({ onRemove, ...props }: { onRemove: () => void } & Stateful<PowerEffect>) {
+function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?: boolean } & Stateful<PowerEffect>) {
 	const detailRef = useRef<HTMLDivElement | null>(null);
 	const { value } = props;
+
+	useEffect(() => {
+		if (isNew) {
+			toggle();
+		}
+	});
+
 	return (
 		<tbody className="even:bg-gradient-to-r from-transparent to-white odd:bg-transparent">
-			<tr className="border-b-2 border-transparent">
-				<td>
-					<button type="button" className="focus:ring-blue-bright-600 focus:ring-1 p-2" onClick={toggle}>
-						{value.name}
-					</button>
-				</td>
-				<td>
-					<AttackTypeInfo typeAndRange={value.typeAndRange} isBasic={false} />
-				</td>
-				<td>
-					<IconButton iconClassName="fa fa-minus" text="Remove" onClick={onRemove} />
-				</td>
-			</tr>
-			<tr>
+			{isNew ? null : (
+				<tr key="header" className="border-b-2 border-transparent">
+					<td>
+						<button type="button" className="focus:ring-blue-bright-600 focus:ring-1 p-2" onClick={toggle}>
+							{value.name}
+						</button>
+					</td>
+					<td>
+						<AttackTypeInfo typeAndRange={value.typeAndRange} isBasic={false} />
+					</td>
+					<td>
+						<IconButton iconClassName="fa fa-minus" text="Remove" onClick={onRemove} />
+					</td>
+				</tr>
+			)}
+			<tr key="editor">
 				<td colSpan={3}>
-					<div ref={detailRef} className="overflow-hidden max-h-0 transition-all duration-300">
+					<div
+						ref={detailRef}
+						className={classNames({
+							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
+						})}>
 						<div className="p-2">
 							<PowerEffectFields {...props} />
 						</div>
