@@ -30,7 +30,7 @@ import classNames from 'classnames';
 import { PowerDocument, PowerEffect } from '../dataSourceData';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { AttackTypeInfo } from './AttackTypeInfo';
-import { useEffect, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 
 export function PowerEditor({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -115,7 +115,6 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 function EffectsTable(props: Stateful<PowerEffect[]>) {
 	const effects = props.value;
 	const indexes = [...effects.map((_, idx) => idx), effects.length];
-	indexes.shift(); // remove the 0 index
 
 	const toIndex = Lens.fromProp<PowerEffect[]>();
 
@@ -123,18 +122,19 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 		<table className="w-full border-collapse">
 			<thead className="bg-theme text-white">
 				<tr>
-					<th className="py-1">Additional Effects</th>
+					<th className="py-1">All Effects</th>
 					<th className="py-1" />
 					<th className="py-1" />
 				</tr>
 			</thead>
-			{indexes.map((idx) =>
-				idx === effects.length ? (
-					<EffectRow key={idx} onRemove={onRemove(idx)} {...newEffectLens.apply(props)} isNew />
-				) : (
-					<EffectRow key={idx} onRemove={onRemove(idx)} {...toIndex(idx).apply(props)} />
-				)
-			)}
+			{indexes.map((idx) => (
+				<EffectRow
+					key={idx}
+					onRemove={onRemove(idx)}
+					{...(idx === effects.length ? newEffectLens : toIndex(idx)).apply(props)}
+					isNew={idx === effects.length}
+				/>
+			))}
 		</table>
 	);
 
@@ -147,26 +147,28 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 	}
 }
 
-function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?: boolean } & Stateful<PowerEffect>) {
+function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew: boolean } & Stateful<PowerEffect>) {
+	const [isExpanded, toggle] = useReducer((prev) => !prev, isNew ?? false);
+	const [height, setHeight] = useState<number>();
 	const detailRef = useRef<HTMLDivElement | null>(null);
 	const { value } = props;
 
 	useEffect(() => {
-		if (isNew) {
-			toggle();
-		}
-	});
+		setHeight(detailRef.current?.scrollHeight);
+	}, [isNew]);
 
 	return (
 		<tbody
-			className={classNames('even:bg-gradient-to-r from-transparent to-white odd:bg-transparent', {
+			key="effect-body"
+			className={classNames({
 				'border-t border-black': isNew,
+				'even:bg-gradient-to-r from-tan-fading to-white odd:bg-white': !isNew,
 			})}>
 			{isNew ? null : (
 				<tr key="header" className="border-b-2 border-transparent">
 					<td>
 						<button type="button" className="focus:ring-blue-bright-600 focus:ring-1 p-2" onClick={toggle}>
-							{value.name}
+							{value.name || '<Unnamed>'}
 						</button>
 					</td>
 					<td>
@@ -181,6 +183,9 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?
 				<td colSpan={3}>
 					<div
 						ref={detailRef}
+						style={{
+							maxHeight: isExpanded ? height : undefined,
+						}}
 						className={classNames({
 							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
 						})}>
@@ -192,10 +197,4 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?
 			</tr>
 		</tbody>
 	);
-
-	function toggle() {
-		if (!detailRef.current) return;
-		if (detailRef.current.style.maxHeight) detailRef.current.style.maxHeight = '';
-		else detailRef.current.style.maxHeight = `${detailRef.current.scrollHeight}px`;
-	}
 }

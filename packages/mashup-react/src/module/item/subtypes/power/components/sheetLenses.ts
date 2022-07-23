@@ -24,7 +24,9 @@ export const powerRequirementLens = powerSourceDataLens.toField('requirement').c
 export const powerPrerequisiteLens = powerSourceDataLens.toField('prerequisite').combine(undefinedString);
 export const effectsLens = powerSourceDataLens.toField('effects');
 export const firstEffectLens = effectsLens.toField(0).default({
-	name: 'Primary',
+	name: '',
+	note: '',
+	noteLabel: '',
 	target: 'One creature',
 	typeAndRange: { type: 'melee', range: 'weapon' },
 	attackRoll: null,
@@ -32,8 +34,10 @@ export const firstEffectLens = effectsLens.toField(0).default({
 	miss: null,
 });
 const defaultNewEffect: PowerEffect = Object.freeze({
-	name: 'Another',
-	target: 'One ally',
+	name: '',
+	note: '',
+	noteLabel: '',
+	target: '',
 	typeAndRange: { type: 'within', size: 'sight' },
 	attackRoll: null,
 	hit: { text: '', healing: null, damage: null },

@@ -23,6 +23,8 @@ export type PowerData = TypedData<'power', PowerDataSourceData>;
 
 export type PowerEffect = {
 	name: string;
+	noteLabel: string;
+	note: string;
 	target: string;
 	typeAndRange: EffectTypeAndRange;
 	attackRoll: AttackRoll | null;

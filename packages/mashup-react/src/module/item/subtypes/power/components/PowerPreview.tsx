@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/mashup-core';
+import { ExternalLinkIcon } from '@heroicons/react/solid';
 import {
 	ActionType,
 	ApplicableEffect,
@@ -18,7 +19,7 @@ import { AttackTypeInfo } from './AttackTypeInfo';
 export function PowerPreview({ item }: { item: PowerDocument }) {
 	const { name, data: itemData } = item.data;
 	const rulesText = itemData.effects
-		.flatMap((effect, index) => effectToRules(effect))
+		.flatMap((effect, index) => effectToRules(effect, index === 0))
 		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);
 	const firstEffect: PowerEffect | null = itemData.effects[0] ?? null;
 	return (
@@ -74,13 +75,23 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 				</>,
 				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info leading-snug" />))
 			)}
+			{itemData.sourceId ? (
+				<a
+					className="px-2 py-1 block"
+					href={`https://4e.dekrey.net/legacy/rule/${itemData.sourceId}`}
+					target="_blank"
+					rel="noreferrer">
+					Source
+					<ExternalLinkIcon className="h-4 w-4 inline-block align-bottom" aria-hidden="true" />
+				</a>
+			) : null}
 		</section>
 	);
 }
 
 type RuleEntry = { label?: string | null; text: React.ReactNode };
 
-function effectToRules(effect: PowerEffect): Array<null | RuleEntry> {
+function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | RuleEntry> {
 	const attackName = effect.name;
 	const prefix = attackName ? `${attackName} ` : '';
 
@@ -90,10 +101,11 @@ function effectToRules(effect: PowerEffect): Array<null | RuleEntry> {
 	const miss = effect.attackRoll && effect.miss ? toNestedEffects(effect.miss) : '';
 
 	return [
-		attackRoll ? { label: `${prefix}Attack`, text: attackRoll } : null,
-		target ? { label: `${prefix}Target`, text: target } : null,
-		hit ? { label: attackRoll ? 'Hit' : 'Effect', text: hit } : null,
-		miss ? { label: 'Miss', text: miss } : null,
+		!isFirst && attackRoll ? { label: `${prefix}Attack`, text: attackRoll } : null,
+		!isFirst && target ? { label: `${prefix}Target`, text: target } : null,
+		effect.note ? { label: `${prefix}${effect.noteLabel}`, text: effect.note } : null,
+		hit ? { label: attackRoll ? `${prefix}Hit` : `${prefix}Effect`, text: hit } : null,
+		miss ? { label: `${prefix}Miss`, text: miss } : null,
 	];
 }
 

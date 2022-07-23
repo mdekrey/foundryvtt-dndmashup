@@ -8,6 +8,8 @@ import { TypeAndRange } from './TypeAndRange';
 const powerEffectFieldLens = Lens.fromProp<PowerEffect>();
 
 const nameLens = powerEffectFieldLens('name');
+const noteLens = powerEffectFieldLens('note');
+const noteLabelLens = powerEffectFieldLens('noteLabel');
 export const targetLens = powerEffectFieldLens('target');
 export const typeAndRangeLens = powerEffectFieldLens('typeAndRange');
 const hitEffectLens = powerEffectFieldLens('hit');
@@ -39,6 +41,14 @@ export function PowerEffectFields(props: Stateful<PowerEffect>) {
 			<FormInput>
 				<FormInput.TextField {...nameLens.apply(props)} />
 				<FormInput.Label>Name</FormInput.Label>
+			</FormInput>
+			<FormInput className="col-span-3">
+				<FormInput.TextField {...noteLabelLens.apply(props)} />
+				<FormInput.Label>Note Label</FormInput.Label>
+			</FormInput>
+			<FormInput className="col-span-9">
+				<FormInput.TextField {...noteLens.apply(props)} />
+				<FormInput.Label>Note</FormInput.Label>
 			</FormInput>
 			<FormInput>
 				<FormInput.TextField {...targetLens.apply(props)} />
