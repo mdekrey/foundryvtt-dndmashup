@@ -72,7 +72,7 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 						</RulesText>
 					))}
 				</>,
-				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info" />))
+				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info leading-snug" />))
 			)}
 		</section>
 	);

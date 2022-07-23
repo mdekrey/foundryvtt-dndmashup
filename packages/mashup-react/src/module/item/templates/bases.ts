@@ -2,6 +2,7 @@ import { FeatureBonus } from '../../bonuses';
 import { PossibleItemSourceData } from '../item-data-types-template';
 
 export type BaseItemTemplateDataSourceData = {
+	sourceId: string;
 	grantedBonuses: FeatureBonus[];
 	items: PossibleItemSourceData[];
 };

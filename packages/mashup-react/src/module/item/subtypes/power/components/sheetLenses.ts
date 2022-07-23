@@ -15,6 +15,7 @@ const undefinedString = Lens.from<string | undefined, string>(
 export const imageLens = baseLens.toField('img');
 export const nameLens = baseLens.toField('name');
 export const powerSourceDataLens = baseLens.toField('data');
+export const sourceIdLens = powerSourceDataLens.toField('sourceId');
 export const powerTypeLens = powerSourceDataLens.toField('type');
 export const powerFlavorTextLens = powerSourceDataLens.toField('flavorText');
 export const powerUsageLens = powerSourceDataLens.toField('usage');
@@ -26,7 +27,7 @@ export const firstEffectLens = effectsLens.toField(0).default({
 	name: 'Primary',
 	target: 'One creature',
 	typeAndRange: { type: 'melee', range: 'weapon' },
-	attackRoll: { attack: 'STR', defense: 'ac' },
+	attackRoll: null,
 	hit: { text: '', healing: null, damage: null },
 	miss: null,
 });

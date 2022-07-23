@@ -24,6 +24,7 @@ import {
 	firstEffectLens,
 	effectsLens,
 	newEffectLens,
+	sourceIdLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerDocument, PowerEffect } from '../dataSourceData';
@@ -44,13 +45,17 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 						className="w-24 h-24 border-2 border-black p-px"
 					/>
 					<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
-						<FormInput className="col-span-8">
+						<FormInput className="col-span-6">
 							<FormInput.TextField {...nameLens.apply(documentState)} className="text-lg" />
 							<FormInput.Label>Power Name</FormInput.Label>
 						</FormInput>
-						<FormInput className="col-span-4">
-							<FormInput.TextField {...powerTypeLens.apply(documentState)} className="text-lg" />
+						<FormInput className="col-span-3">
+							<FormInput.TextField {...powerTypeLens.apply(documentState)} />
 							<FormInput.Label>Power Type</FormInput.Label>
+						</FormInput>
+						<FormInput className="col-span-3">
+							<FormInput.TextField {...sourceIdLens.apply(documentState)} />
+							<FormInput.Label>Source ID</FormInput.Label>
 						</FormInput>
 						<FormInput className="col-span-12">
 							<FormInput.TextField {...powerFlavorTextLens.apply(documentState)} />
