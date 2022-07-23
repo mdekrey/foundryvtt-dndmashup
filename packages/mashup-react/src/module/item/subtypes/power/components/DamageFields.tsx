@@ -52,11 +52,13 @@ export function DamageFields({ prefix, ...props }: { prefix?: string } & Statefu
 				<FormInput.TextField {...damageState} />
 				<FormInput.Label>{prefix} Damage Dice</FormInput.Label>
 			</FormInput>
-			<FormInput className={classNames('col-span-5', { 'opacity-50': !damageState.value })}>
+			<FormInput className={classNames('col-span-5', { 'opacity-50 focus-within:opacity-100': !damageState.value })}>
 				<FormInput.MultiSelect {...damageTypeState} options={damageState.value ? damageTypeOptions : []} />
 				<FormInput.Label>Damage Type</FormInput.Label>
 			</FormInput>
-			<div className={classNames('col-span-2', { 'opacity-50': !damageState.value })}>damage</div>
+			<div className={classNames('col-span-2', { 'opacity-50 focus-within:opacity-100': !damageState.value })}>
+				damage
+			</div>
 		</div>
 	);
 }

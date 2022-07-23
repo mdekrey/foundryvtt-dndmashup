@@ -110,7 +110,7 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 function EffectsTable(props: Stateful<PowerEffect[]>) {
 	const effects = props.value;
 	const indexes = [...effects.map((_, idx) => idx), effects.length];
-	indexes.unshift(); // remove the 0 index
+	indexes.shift(); // remove the 0 index
 
 	const toIndex = Lens.fromProp<PowerEffect[]>();
 
@@ -153,7 +153,10 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?
 	});
 
 	return (
-		<tbody className="even:bg-gradient-to-r from-transparent to-white odd:bg-transparent">
+		<tbody
+			className={classNames('even:bg-gradient-to-r from-transparent to-white odd:bg-transparent', {
+				'border-t border-black': isNew,
+			})}>
 			{isNew ? null : (
 				<tr key="header" className="border-b-2 border-transparent">
 					<td>
@@ -169,14 +172,14 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew?
 					</td>
 				</tr>
 			)}
-			<tr key="editor">
+			<tr key="editor" className="bg-transparent">
 				<td colSpan={3}>
 					<div
 						ref={detailRef}
 						className={classNames({
 							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
 						})}>
-						<div className="p-2">
+						<div className={classNames({ 'px-4 pb-4': !isNew, 'p-4 focus-within:opacity-100 opacity-75': isNew })}>
 							<PowerEffectFields {...props} />
 						</div>
 					</div>

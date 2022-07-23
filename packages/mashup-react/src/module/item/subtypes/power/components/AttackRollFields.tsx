@@ -45,7 +45,7 @@ export function AttackRollFields(props: Stateful<AttackRoll | null>) {
 				<FormInput.Label>Attack Ability</FormInput.Label>
 			</FormInput>
 			<div className="justify-self-center">vs.</div>
-			<FormInput className={classNames('col-span-3', { 'opacity-50': !props.value })}>
+			<FormInput className={classNames('col-span-3', { 'opacity-50 focus-within:opacity-100': !props.value })}>
 				<FormInput.Select {...defenseLens.apply(props)} options={props.value ? defenseOptions : []} />
 				<FormInput.Label>Defense</FormInput.Label>
 			</FormInput>
