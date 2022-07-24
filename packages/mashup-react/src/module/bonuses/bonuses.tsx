@@ -1,11 +1,12 @@
 import classNames from 'classnames';
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { FeatureBonus } from './types';
-import { BonusTarget, ConditionRule } from './constants';
+import { BonusTarget, ConditionRule, ConditionRuleType } from './constants';
 import { targets } from './bonus-sheet-utils';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { conditionsRegistry } from './registry';
+import produce from 'immer';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
@@ -13,16 +14,38 @@ const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	label,
 	typeaheadLabel: label,
 }));
-const selectConditions = Object.entries(conditionsRegistry).map(
-	([key, { label }]): SelectItem<ConditionRule | ''> => ({
-		key,
-		value: key === '' ? '' : (key as ConditionRule),
-		label,
-		typeaheadLabel: label,
-	})
-);
+const selectConditions = [
+	{ key: '', value: '', label: '(always)', typeaheadLabel: '(always)' },
+	...Object.entries(conditionsRegistry).map(
+		([key, { label }]): SelectItem<ConditionRuleType | ''> => ({
+			key,
+			value: key as ConditionRuleType,
+			label,
+			typeaheadLabel: label,
+		})
+	),
+];
 
 const baseLens = Lens.identity<FeatureBonus[]>();
+
+const ruleLens = Lens.from<string | ConditionRule | null, ConditionRule | null>(
+	(rule) => (typeof rule === 'string' ? (rule === '' ? null : { rule: rule as ConditionRuleType }) : rule),
+	(mutator) =>
+		(draft): any => {
+			let result: ConditionRule | null;
+			if (typeof draft === 'string') {
+				result = produce(draft === 'string' ? null : { rule: draft as ConditionRuleType }, mutator);
+			} else {
+				result = mutator(draft);
+			}
+			if (!result?.rule) return null;
+			return result;
+		}
+);
+const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
+	.combine(ruleLens)
+	.default({ rule: '' })
+	.toField('rule');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
 	function onAdd() {
@@ -106,7 +129,7 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 							</td>
 							<td className="px-1">
 								<FormInput.Select
-									{...baseLens.toField(idx).toField('condition').apply(bonuses)}
+									{...baseLens.toField(idx).combine(conditionRuleLens).apply(bonuses)}
 									options={selectConditions}
 									className="text-center"
 								/>

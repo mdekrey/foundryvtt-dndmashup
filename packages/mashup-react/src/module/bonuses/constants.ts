@@ -33,7 +33,10 @@ export function defenseForBonus(bonusTarget: DefenseBonus): Defense {
 
 export const bonusTypes = ['enhancement', 'ability', 'armor', 'class', 'feat', 'power', 'proficiency', 'shield'];
 
-export type ConditionRule = keyof ConditionRules | '';
+export type ConditionRuleType = keyof ConditionRules;
+export type ConditionRule = {
+	rule: ConditionRuleType;
+};
 // export type ConditionRuleContext = { actor: MashupActor; item: MashupItemBase };
 export type ConditionRuleContext = {
 	actor: ActorDocument;

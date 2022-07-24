@@ -49,6 +49,8 @@ export class Lens<TSource, TValue> {
 		return this.combine(makeFieldLens<TValue, TProp>(field));
 	}
 
+	default(value: NonNullable<TValue>): Lens<TSource, NonNullable<TValue>>;
+	default<TOther>(value: TOther): Lens<TSource, NonNullable<TValue> | TOther>;
 	default(value: NonNullable<TValue>) {
 		return this.combine(
 			Lens.from<TValue, NonNullable<TValue>>(
