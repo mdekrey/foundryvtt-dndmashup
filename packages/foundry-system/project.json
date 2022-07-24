@@ -21,7 +21,16 @@
 					"packages/foundry-system/src/fixup.js",
 					"packages/foundry-system/src/system.json",
 					"packages/foundry-system/src/template.json",
-					"packages/foundry-system/src/lang/en.json"
+					{
+						"glob": "lang/*.json",
+						"input": "packages/foundry-system/src",
+						"output": ""
+					},
+					{
+						"glob": "status-effects/icons/*.svg",
+						"input": "packages/foundry-system/src",
+						"output": ""
+					}
 				],
 				"styles": [],
 				"extractCss": false,

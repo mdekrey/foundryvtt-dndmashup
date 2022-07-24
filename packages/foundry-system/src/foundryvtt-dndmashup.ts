@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /// <reference types="@league-of-foundry-developers/foundry-vtt-types" />
 /**
  * This is your TypeScript entry file for Foundry VTT.
@@ -13,12 +14,24 @@
 
 // Import TypeScript modules
 import { registerSettings, registerCustomSheets } from './module/settings';
-import { systemName } from './module/constants';
+import { systemName, rootPath } from './module/constants';
 
 import { attachToChat } from './module/chat/attach';
 
 import './styles/foundryvtt-dndmashup.css';
 import './module/chat/power';
+
+const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
+const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
+const dominatedIcon = `${rootPath}/status-effects/icons/psychic-waves.svg`;
+const dyingIcon = `${rootPath}/status-effects/icons/pummeled.svg`;
+const immobilizedIcon = `${rootPath}/status-effects/icons/nailed-foot.svg`;
+const helplessIcon = `${rootPath}/status-effects/icons/despair.svg`;
+const petrifiedIcon = `${rootPath}/status-effects/icons/stone-bust.svg`;
+const stunnedIcon = `${rootPath}/status-effects/icons/knockout.svg`;
+const slowedIcon = `${rootPath}/status-effects/icons/snail.svg`;
+const surprisedIcon = `${rootPath}/status-effects/icons/surprised.svg`;
+const weakenedIcon = `${rootPath}/status-effects/icons/back-pain.svg`;
 
 // Initialize system
 Hooks.once('init', async () => {
@@ -32,6 +45,30 @@ Hooks.once('init', async () => {
 
 	// Set an id so styles work better
 	document.body.setAttribute('id', 'foundry-tailwind-hack');
+
+	CONFIG.statusEffects = [
+		// These are foundry statuses, but aren't really "statuses" in 4e
+		CONFIG.statusEffects.find((se) => se.id === 'dead')!,
+		{ id: 'bloodied', label: 'Bloodied', icon: bloodiedIcon },
+
+		// The following are actual statuses in 4e:
+		{ id: 'blinded', label: 'Blinded', icon: CONFIG.statusEffects.find((se) => se.id === 'blind')!.icon },
+		{ id: 'dazed', label: 'Dazed', icon: dazedIcon },
+		{ id: 'deafened', label: 'Deafened', icon: CONFIG.statusEffects.find((se) => se.id === 'deaf')!.icon },
+		{ id: 'dominated', label: 'Dominated', icon: dominatedIcon },
+		{ id: 'dying', label: 'Dying', icon: dyingIcon },
+		{ id: 'helpless', label: 'Helpless', icon: helplessIcon },
+		{ id: 'immobilized', label: 'Immobilized', icon: immobilizedIcon },
+		// marked is a different effect since it needs the marking character id
+		{ id: 'petrified', label: 'Petrified', icon: petrifiedIcon },
+		{ id: 'prone', label: 'Prone', icon: CONFIG.statusEffects.find((se) => se.id === 'prone')!.icon },
+		{ id: 'restrained', label: 'Restrained', icon: CONFIG.statusEffects.find((se) => se.id === 'restrain')!.icon },
+		{ id: 'slowed', label: 'Slowed', icon: slowedIcon },
+		{ id: 'stunned', label: 'Stunned', icon: stunnedIcon },
+		{ id: 'surprised', label: 'Surprised', icon: surprisedIcon },
+		CONFIG.statusEffects.find((se) => se.id === 'unconscious')!,
+		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon },
+	];
 });
 
 // Setup system
