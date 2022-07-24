@@ -36,8 +36,8 @@ export const bonusTypes = ['enhancement', 'ability', 'armor', 'class', 'feat', '
 export type ConditionRuleType = keyof ConditionRules;
 export type ConditionRule = {
 	rule: ConditionRuleType;
+	parameter: Record<string, string>;
 };
-// export type ConditionRuleContext = { actor: MashupActor; item: MashupItemBase };
 export type ConditionRuleContext = {
 	actor: ActorDocument;
 	item: ItemDocument;

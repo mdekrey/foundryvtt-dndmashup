@@ -13,7 +13,7 @@ const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	label,
 	typeaheadLabel: label,
 }));
-const selectConditions = [
+const selectConditions: SelectItem<ConditionRuleType | ''>[] = [
 	{ key: '', value: '', label: '(always)', typeaheadLabel: '(always)' },
 	...Object.entries(conditionsRegistry).map(
 		([key, { label }]): SelectItem<ConditionRuleType | ''> => ({
@@ -36,9 +36,10 @@ const ruleLens = Lens.from<ConditionRule | null, ConditionRule | null>(
 			return result;
 		}
 );
+type NoRule = { rule: '' } & Partial<Omit<ConditionRule, 'rule'>>;
 const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.combine(ruleLens)
-	.default({ rule: '' }, (r): r is { rule: '' } => r.rule === '')
+	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '')
 	.toField('rule');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
