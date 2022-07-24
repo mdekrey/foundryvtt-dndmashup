@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext, ConditionRuleType } from '../../bonuses';
+import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext } from '../../bonuses';
 import { ActorDataSource } from '../types';
 
 const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
@@ -23,12 +23,7 @@ export function Effects({
 				</thead>
 				<tbody>
 					{bonusList.map((bonus, idx) => {
-						const rule =
-							typeof bonus.condition === 'string'
-								? bonus.condition === ''
-									? null
-									: (bonus.condition as ConditionRuleType)
-								: bonus.condition?.rule;
+						const rule = bonus.condition?.rule;
 						return (
 							<tr
 								key={idx}

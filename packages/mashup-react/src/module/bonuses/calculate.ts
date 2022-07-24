@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash/fp';
-import { BonusTarget, ConditionRuleContext, ConditionRuleType } from './constants';
+import { BonusTarget, ConditionRuleContext } from './constants';
 import { conditionsRegistry } from './registry';
 import { FeatureBonusWithContext } from './types';
 
@@ -14,12 +14,7 @@ export function byTarget(
 export function filterBonuses(bonusesWithContext: FeatureBonusWithContext[]) {
 	return bonusesWithContext
 		.filter((bonus) => {
-			const rule =
-				typeof bonus.condition === 'string'
-					? bonus.condition === ''
-						? null
-						: (bonus.condition as ConditionRuleType)
-					: bonus.condition?.rule;
+			const rule = bonus.condition?.rule;
 			return !rule || conditionsRegistry[rule].rule(bonus.context as ConditionRuleContext);
 		})
 		.filter((bonus) => !bonus.disabled);

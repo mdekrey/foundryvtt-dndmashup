@@ -13,13 +13,13 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 				target: 'maxHp',
 				amount: `${this.data.data.hpBase} + ${this.data.data.hpPerLevel} * @actor.extraLevels`,
 				type: 'class',
-				condition: '',
+				condition: null,
 			},
 			{
 				target: 'surges-max',
 				amount: this.data.data.healingSurgesBase,
 				type: 'class',
-				condition: '',
+				condition: null,
 			},
 			...this.data.data.grantedBonuses,
 		];

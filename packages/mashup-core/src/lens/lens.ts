@@ -50,13 +50,24 @@ export class Lens<TSource, TValue> {
 	}
 
 	default(value: NonNullable<TValue>): Lens<TSource, NonNullable<TValue>>;
-	default<TOther>(value: TOther): Lens<TSource, NonNullable<TValue> | TOther>;
-	default(value: NonNullable<TValue>) {
+	default<TOther>(
+		value: TOther,
+		predicate: (value: NonNullable<TValue> | TOther) => value is TOther
+	): Lens<TSource, NonNullable<TValue> | TOther>;
+	default<TOther>(
+		value: TOther | NonNullable<TValue>,
+		predicate?: (value: NonNullable<TValue> | TOther) => value is TOther
+	): Lens<TSource, NonNullable<TValue> | TOther> {
 		return this.combine(
-			Lens.from<TValue, NonNullable<TValue>>(
-				(source) => (source ?? value) as NonNullable<TValue>,
+			Lens.from<TValue, NonNullable<TValue> | TOther>(
+				(source) => (source ?? value) as NonNullable<TValue> | TOther,
 				(mutator) => (draft) => {
-					return draft === null || draft === undefined ? produce(value, mutator as any) : mutator(draft as any);
+					const result = (
+						draft === null || draft === undefined ? produce(value, mutator as any) : mutator(draft as any)
+					) as NonNullable<TValue> | TOther;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					if (predicate!(result)) return null as never as TValue;
+					return result;
 				}
 			)
 		);

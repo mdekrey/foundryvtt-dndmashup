@@ -13,7 +13,7 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 				target: 'speed',
 				amount: this.data.data.baseSpeed,
 				type: 'racial',
-				condition: '',
+				condition: null,
 			},
 			...this.data.data.grantedBonuses,
 		];

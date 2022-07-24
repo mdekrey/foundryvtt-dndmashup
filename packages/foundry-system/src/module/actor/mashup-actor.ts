@@ -36,7 +36,7 @@ const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isEpicDestinySource,
 ];
 
-const base = { condition: '' } as const;
+const base = { condition: null } as const;
 const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
 	{ ...base, target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },

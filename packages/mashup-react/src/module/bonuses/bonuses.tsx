@@ -6,7 +6,6 @@ import { targets } from './bonus-sheet-utils';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { conditionsRegistry } from './registry';
-import produce from 'immer';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
@@ -28,23 +27,18 @@ const selectConditions = [
 
 const baseLens = Lens.identity<FeatureBonus[]>();
 
-const ruleLens = Lens.from<string | ConditionRule | null, ConditionRule | null>(
-	(rule) => (typeof rule === 'string' ? (rule === '' ? null : { rule: rule as ConditionRuleType }) : rule),
+const ruleLens = Lens.from<ConditionRule | null, ConditionRule | null>(
+	(rule) => rule,
 	(mutator) =>
 		(draft): any => {
-			let result: ConditionRule | null;
-			if (typeof draft === 'string') {
-				result = produce(draft === 'string' ? null : { rule: draft as ConditionRuleType }, mutator);
-			} else {
-				result = mutator(draft);
-			}
+			const result = mutator(draft);
 			if (!result?.rule) return null;
 			return result;
 		}
 );
 const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.combine(ruleLens)
-	.default({ rule: '' })
+	.default({ rule: '' }, (r): r is { rule: '' } => r.rule === '')
 	.toField('rule');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
