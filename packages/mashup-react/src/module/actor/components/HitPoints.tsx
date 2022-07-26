@@ -10,7 +10,10 @@ export function HitPoints({ healthState, maxHp }: { healthState: Stateful<Health
 			<h2 className="text-lg">Hit Points</h2>
 			<div className="flex justify-start items-center gap-1 text-lg">
 				<FormInput className="w-16">
-					<FormInput.NumberField {...healthLens.toField('currentHp').apply(healthState)} className="text-center" />
+					<FormInput.NumberField
+						{...healthLens.toField('hp').toField('value').apply(healthState)}
+						className="text-center"
+					/>
 					<FormInput.Label>Current</FormInput.Label>
 				</FormInput>
 				<span className="text-lg pb-4">/ {maxHp}</span>

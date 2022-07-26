@@ -22,9 +22,9 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	// TODO: derived data doesn't need to go to actor.data
 	const data = actor.derivedData;
 	const defenses = data.defenses;
-	const maxHp = data.health.maxHp;
-	const healingSurgeValue = data.health.surges.value;
-	const healingSurgesPerDay = data.health.surges.max;
+	const maxHp = data.health.hp.max;
+	const healingSurgeValue = data.health.surgesValue;
+	const healingSurgesPerDay = data.health.surgesRemaining.max;
 	const getFinalScore = (ability: Ability) => data.abilities[ability].total;
 
 	return (

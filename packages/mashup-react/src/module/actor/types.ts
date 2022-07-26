@@ -12,14 +12,13 @@ export type ActorDetails = {
 };
 
 export type Health = {
-	currentHp: number;
+	hp: { value: number };
 	temporaryHp: number;
 	secondWindUsed: boolean;
 	deathSavesRemaining: number;
-	surges: {
-		remaining: number;
+	surgesRemaining: {
+		value: number;
 	};
-	surgesRemaining: number;
 };
 
 export type ActionPoints = {

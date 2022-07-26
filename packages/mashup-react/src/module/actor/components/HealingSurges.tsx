@@ -27,7 +27,7 @@ export function HealingSurges({
 			<div className="flex justify-start items-center gap-1 flex-grow">
 				<FormInput className="w-16 inline-block">
 					<FormInput.NumberField
-						{...healthLens.toField('surges').toField('remaining').apply(healthState)}
+						{...healthLens.toField('surgesRemaining').toField('value').apply(healthState)}
 						className="text-lg text-center"
 					/>
 					<FormInput.Label>Remaining</FormInput.Label>

@@ -28,11 +28,11 @@
 					}
 				},
 				"health": {
-					"currentHp": 10,
+					"hp": { "value": 10 },
 					"temporaryHp": 0,
 					"secondWindUsed": false,
 					"deathSavesRemaining": 3,
-					"surges": { "remaining": 0 }
+					"surgesRemaining": { "value": 0 }
 				},
 
 				"actionPoints": {

@@ -5,12 +5,12 @@ export type CommonDerivedDataProperties = {
 		[ability in Ability]: { total: number };
 	};
 	health: {
-		maxHp: number;
+		hp: { max: number };
 		bloodied: number;
-		surges: {
-			value: number;
+		surgesRemaining: {
 			max: number;
 		};
+		surgesValue: number;
 	};
 	defenses: {
 		[defense in Defense]: number;

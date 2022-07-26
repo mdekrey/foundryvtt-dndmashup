@@ -71,15 +71,15 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	'defense-fort': (data, value) => (data.defenses.fort = value),
 	'defense-refl': (data, value) => (data.defenses.refl = value),
 	'defense-will': (data, value) => (data.defenses.will = value),
-	maxHp: (data, value) => (data.health.maxHp = value),
-	'surges-max': (data, value) => (data.health.surges.max = value),
-	'surges-value': (data, value) => (data.health.surges.value = value),
+	maxHp: (data, value) => (data.health.hp.max = value),
+	'surges-max': (data, value) => (data.health.surgesRemaining.max = value),
+	'surges-value': (data, value) => (data.health.surgesValue = value),
 	speed: (data, value) => (data.speed = value),
 	initiative: (data, value) => (data.initiative = value),
 };
 
 export class MashupActor extends Actor implements ActorDocument {
-	override data!: PossibleActorData;
+	override data!: PossibleActorData & { data: ActorDerivedData };
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
 	A few more methods:
@@ -178,9 +178,9 @@ export class MashupActor extends Actor implements ActorDocument {
 		};
 
 		const calculated = this.calculateDerivedData();
-		const shouldBeDead = this.data.data.health.currentHp <= 0 && this.data.type === 'monster';
+		const shouldBeDead = this.data.data.health.hp.value <= 0 && this.data.type === 'monster';
 		// const shouldBeDying = this.data.data.health.currentHp <= 0 && this.data.type === 'pc';
-		const shouldBeBloodied = !shouldBeDead && calculated.health.bloodied > this.data.data.health.currentHp;
+		const shouldBeBloodied = !shouldBeDead && calculated.health.bloodied > this.data.data.health.hp.value;
 
 		const isBloodied = this.isStatus('bloodied');
 		const isDead = this.isStatus('dead');
@@ -216,12 +216,12 @@ export class MashupActor extends Actor implements ActorDocument {
 				cha: { total: 0 },
 			},
 			health: {
-				maxHp: 0,
+				hp: { max: 0 },
 				bloodied: 0,
-				surges: {
-					value: 0,
+				surgesRemaining: {
 					max: 0,
 				},
+				surgesValue: 0,
 			},
 			defenses: {
 				ac: 0,
@@ -243,8 +243,8 @@ export class MashupActor extends Actor implements ActorDocument {
 
 		this.subActorFunctions.prepare(resultData, this);
 
-		resultData.health.bloodied = Math.floor(resultData.health.maxHp / 2);
-		resultData.health.surges.value = Math.floor(resultData.health.maxHp / 4);
+		resultData.health.bloodied = Math.floor(resultData.health.hp.max / 2);
+		resultData.health.surgesValue = Math.floor(resultData.health.hp.max / 4);
 
 		return resultData;
 	}
