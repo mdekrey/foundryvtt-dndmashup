@@ -1,11 +1,10 @@
-import { Draft } from 'immer';
 import { cloneDeep } from 'lodash/fp';
 import { ImmerMutator, Mutator, Stateful } from './types';
 
 function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
 	return (draft) => {
 		const result = m(draft);
-		return (result === undefined ? draft : result) as T | Draft<T>;
+		return result === undefined ? draft : result;
 	};
 }
 
@@ -13,20 +12,16 @@ export class Lens<TSource, TValue> {
 	constructor(
 		public readonly getValue: (source: TSource) => TValue,
 		public readonly produce: {
-			(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
+			(source: TSource, mutator: ImmerMutator<TValue>): void;
 			(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
 		}
 	) {}
 
-	getDraft(source: Draft<TSource>): Draft<TValue> {
-		return this.getValue(source as never) as Draft<TValue>;
-	}
-
 	combine<TFinalValue>(second: Lens<TValue, TFinalValue>): Lens<TSource, TFinalValue> {
 		const thisProduce = this.produce;
-		function produce(source: Draft<TSource>, mutator: ImmerMutator<TFinalValue>): void;
+		function produce(source: TSource, mutator: ImmerMutator<TFinalValue>): void;
 		function produce(mutator: ImmerMutator<TFinalValue>): ImmerMutator<TSource>;
-		function produce(...params: [Draft<TSource>, ImmerMutator<TFinalValue>] | [ImmerMutator<TFinalValue>]) {
+		function produce(...params: [TSource, ImmerMutator<TFinalValue>] | [ImmerMutator<TFinalValue>]) {
 			if (params.length === 1) {
 				const [mutator] = params;
 				return thisProduce(second.produce(mutator));
@@ -61,11 +56,10 @@ export class Lens<TSource, TValue> {
 	): Lens<TSource, NonNullable<TValue> | TOther> {
 		return this.combine(
 			Lens.from<TValue, NonNullable<TValue> | TOther>(
-				(source) => (source ?? value) as NonNullable<TValue> | TOther,
+				(source) => source ?? value,
 				(mutator) => (draft) => {
-					const result = (
-						draft === null || draft === undefined ? mutator(cloneDeep(draft) as any) : mutator(draft as any)
-					) as NonNullable<TValue> | TOther;
+					const result =
+						draft === null || draft === undefined ? mutator(cloneDeep(draft) as any) : mutator(draft as any);
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					if (predicate!(result)) return null as never as TValue;
 					return result;
@@ -87,9 +81,9 @@ export class Lens<TSource, TValue> {
 		getValue: Lens<TSource, TValue>['getValue'],
 		setValue: (mutator: Mutator<TValue>) => ImmerMutator<TSource>
 	): Lens<TSource, TValue> {
-		function produce(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
+		function produce(source: TSource, mutator: ImmerMutator<TValue>): void;
 		function produce(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
-		function produce(...params: [Draft<TSource>, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
+		function produce(...params: [TSource, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
 			if (params.length === 1) {
 				const [mutator] = params;
 				return setValue(immerMutatorToMutator(mutator));
@@ -120,21 +114,17 @@ export class Lens<TSource, TValue> {
 	): ((prop: P) => Lens<TSource, TSource[P]>) | Lens<TSource, TSource[P]> {
 		function buildLens(prop: P): Lens<TSource, TSource[P]> {
 			type TValue = TSource[P];
-			function produce(source: Draft<TSource>, mutator: ImmerMutator<TValue>): void;
+			function produce(source: TSource, mutator: ImmerMutator<TValue>): void;
 			function produce(mutator: ImmerMutator<TValue>): ImmerMutator<TSource>;
-			function produce(...params: [Draft<TSource>, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
+			function produce(...params: [TSource, ImmerMutator<TValue>] | [ImmerMutator<TValue>]) {
 				if (params.length === 1) {
 					const [mutator] = params;
-					return (draft: Draft<TSource>) => {
-						draft[prop as keyof Draft<TSource>] = immerMutatorToMutator(mutator)(
-							draft[prop as keyof Draft<TSource>] as Draft<TValue>
-						) as Draft<TSource>[keyof Draft<TSource>];
+					return (draft: TSource) => {
+						draft[prop] = immerMutatorToMutator(mutator)(draft[prop]);
 					};
 				} else {
 					const [source, mutator] = params;
-					source[prop as keyof Draft<TSource>] = immerMutatorToMutator(mutator)(
-						source[prop as keyof Draft<TSource>] as Draft<TValue>
-					) as Draft<TSource>[keyof Draft<TSource>];
+					source[prop] = immerMutatorToMutator(mutator)(source[prop]);
 					return;
 				}
 			}
@@ -161,7 +151,7 @@ export function makeFieldLens<TTarget, TProp extends keyof TTarget>(field: TProp
 	return Lens.from<TTarget, TTarget[TProp]>(
 		(data) => data[field],
 		(mutator) => (data) => {
-			(data as any)[field] = mutator((data as any)[field]);
+			data[field] = mutator(data[field]);
 		}
 	);
 }
