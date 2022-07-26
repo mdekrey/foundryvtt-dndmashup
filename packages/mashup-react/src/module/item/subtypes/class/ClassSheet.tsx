@@ -1,5 +1,5 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { Abilities, Ability } from '../../../../types/types';
+import { abilities, Ability } from '../../../../types/types';
 import { Bonuses } from '../../../bonuses';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
@@ -12,7 +12,7 @@ const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
 	(v): SelectItem<string> => ({ value: v, key: v, label: v, typeaheadLabel: v })
 );
-const abilities = Abilities.map(
+const abilitiesOptions = abilities.map(
 	(v): SelectItem<Ability> => ({ value: v, key: v, label: v.toUpperCase(), typeaheadLabel: v.toUpperCase() })
 );
 
@@ -56,7 +56,7 @@ export function ClassSheet({
 						<FormInput className="col-span-3" key={a}>
 							<FormInput.Select
 								{...dataLens.toField('keyAbilities').toField(a).apply(documentState)}
-								options={abilities}
+								options={abilitiesOptions}
 							/>
 							<FormInput.Label>Key Ability</FormInput.Label>
 						</FormInput>

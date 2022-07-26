@@ -1,13 +1,13 @@
-export const Abilities = ['str', 'con', 'dex', 'int', 'wis', 'cha'] as const;
-export type Ability = typeof Abilities[number];
+export const abilities = ['str', 'con', 'dex', 'int', 'wis', 'cha'] as const;
+export type Ability = typeof abilities[number];
 
-export const Defenses = ['ac', 'fort', 'refl', 'will'] as const;
-export type Defense = typeof Defenses[number];
+export const defenses = ['ac', 'fort', 'refl', 'will'] as const;
+export type Defense = typeof defenses[number];
 
-export const Currencies = ['ad', 'pp', 'gp', 'sp', 'cp'] as const;
-export type Currency = typeof Currencies[number];
+export const currencies = ['ad', 'pp', 'gp', 'sp', 'cp'] as const;
+export type Currency = typeof currencies[number];
 
-export const DamageTypes = [
+export const damageTypes = [
 	'acid',
 	'cold',
 	'fire',
@@ -19,4 +19,4 @@ export const DamageTypes = [
 	'radiant',
 	'thunder',
 ] as const;
-export type DamageType = typeof DamageTypes[number];
+export type DamageType = typeof damageTypes[number];

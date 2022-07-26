@@ -1,10 +1,10 @@
-import { Abilities, Ability, Defense, Defenses } from '../../types/types';
+import { abilities, Ability, Defense, defenses } from '../../types/types';
 import { ActorDocument } from '../actor/documentType';
 import { ItemDocument } from '../item';
 
 export const bonusTargets = [
-	...Abilities.map((ability) => `ability-${ability}` as const),
-	...Defenses.map((defense) => `defense-${defense}` as const),
+	...abilities.map((ability) => `ability-${ability}` as const),
+	...defenses.map((defense) => `defense-${defense}` as const),
 	`maxHp` as const,
 	`surges-value` as const,
 	`surges-max` as const,

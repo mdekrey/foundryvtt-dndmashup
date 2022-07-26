@@ -2,7 +2,7 @@ import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import classNames from 'classnames';
-import { Defense, Defenses } from '../../../../../types/types';
+import { Defense, defenses } from '../../../../../types/types';
 import { AttackRoll } from '../dataSourceData';
 
 const abilityLens = Lens.from<AttackRoll | null, string>(
@@ -26,7 +26,7 @@ const defenseLens = Lens.from<AttackRoll | null, Defense>(
 	}
 );
 
-const defenseOptions = Defenses.map(
+const defenseOptions = defenses.map(
 	(ability): SelectItem<Defense> => ({
 		key: ability,
 		value: ability,

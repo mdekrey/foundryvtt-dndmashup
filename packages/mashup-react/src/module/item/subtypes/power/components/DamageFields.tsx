@@ -1,12 +1,12 @@
 import capitalize from 'lodash/fp/capitalize';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { DamageTypes, DamageType } from '../../../../../types/types';
+import { damageTypes, DamageType } from '../../../../../types/types';
 import { DamageEffect } from '../dataSourceData';
 import classNames from 'classnames';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
 
-const damageTypeOptions = DamageTypes.map(
+const damageTypeOptions = damageTypes.map(
 	(dt): SelectItem<DamageType> => ({
 		value: dt,
 		key: dt,
