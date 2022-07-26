@@ -142,6 +142,9 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	override prepareDerivedData() {
 		this._derivedData = null;
+		if (this.isOwner) {
+			this.updateBloodied();
+		}
 	}
 
 	async updateBloodied() {
@@ -166,7 +169,6 @@ export class MashupActor extends Actor implements ActorDocument {
 					},
 				},
 			};
-			console.log('create', effect, this);
 			await ActiveEffect.create(effect, { parent: this });
 		};
 
@@ -180,8 +182,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		// const currentDyingId = findEffectId('dying');
 
 		if (isDead) return;
-
-		console.log({ shouldBeBloodied, currentBloodiedId: isBloodied, shouldBeDead, currentDeadId: isDead });
 
 		if (shouldBeBloodied && !isBloodied) await setIfNotPresent('bloodied');
 		if (!shouldBeBloodied && isBloodied)
