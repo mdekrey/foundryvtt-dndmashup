@@ -60,9 +60,8 @@ export class Lens<TSource, TValue> {
 				(mutator) => (draft) => {
 					const result =
 						draft === null || draft === undefined ? mutator(cloneDeep(draft) as any) : mutator(draft as any);
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					if (predicate!(result)) return null as never as TValue;
-					return result;
+					if (predicate?.(result)) return null as never as TValue;
+					return result === undefined ? draft : (result as never);
 				}
 			)
 		);
@@ -72,7 +71,7 @@ export class Lens<TSource, TValue> {
 		return Lens.from<T, T>(
 			(p) => p,
 			(mutator) => (p) => {
-				mutator(p);
+				return mutator(p);
 			}
 		);
 	}
