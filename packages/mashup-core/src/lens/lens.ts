@@ -1,4 +1,5 @@
-import produce, { Draft } from 'immer';
+import { Draft } from 'immer';
+import { cloneDeep } from 'lodash/fp';
 import { ImmerMutator, Mutator, Stateful } from './types';
 
 function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
@@ -63,7 +64,7 @@ export class Lens<TSource, TValue> {
 				(source) => (source ?? value) as NonNullable<TValue> | TOther,
 				(mutator) => (draft) => {
 					const result = (
-						draft === null || draft === undefined ? produce(value, mutator as any) : mutator(draft as any)
+						draft === null || draft === undefined ? mutator(cloneDeep(draft) as any) : mutator(draft as any)
 					) as NonNullable<TValue> | TOther;
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					if (predicate!(result)) return null as never as TValue;

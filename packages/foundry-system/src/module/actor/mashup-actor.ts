@@ -144,6 +144,59 @@ export class MashupActor extends Actor implements ActorDocument {
 		this._derivedData = null;
 	}
 
+	async updateBloodied() {
+		const findEffectId = (statusToCheck: string) => {
+			return this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck)?.id ?? null;
+		};
+		const setIfNotPresent = async (statusToCheck: string) => {
+			const existingEffect = this.effects.find((x) => x.data.flags.core?.statusId === statusToCheck);
+			if (existingEffect) return;
+
+			const status = CONFIG.statusEffects.find((x) => x.id === statusToCheck);
+			if (!status) return;
+
+			const { _id, id, ...params } = status;
+
+			const effect = {
+				...params,
+				label: status.label && (game as Game).i18n.localize(status.label),
+				flags: {
+					core: {
+						statusId: statusToCheck,
+					},
+				},
+			};
+			console.log('create', effect, this);
+			await ActiveEffect.create(effect, { parent: this });
+		};
+
+		const calculated = this.calculateDerivedData();
+		const shouldBeDead = this.data.data.health.currentHp <= 0 && this.data.type === 'monster';
+		// const shouldBeDying = this.data.data.health.currentHp <= 0 && this.data.type === 'pc';
+		const shouldBeBloodied = !shouldBeDead && calculated.health.bloodied > this.data.data.health.currentHp;
+
+		const isBloodied = this.isStatus('bloodied');
+		const isDead = this.isStatus('dead');
+		// const currentDyingId = findEffectId('dying');
+
+		if (isDead) return;
+
+		console.log({ shouldBeBloodied, currentBloodiedId: isBloodied, shouldBeDead, currentDeadId: isDead });
+
+		if (shouldBeBloodied && !isBloodied) await setIfNotPresent('bloodied');
+		if (!shouldBeBloodied && isBloodied)
+			await this.deleteEmbeddedDocuments(
+				'ActiveEffect',
+				[findEffectId('bloodied')].filter((v): v is string => !!v)
+			);
+
+		if (shouldBeDead && !isDead) await setIfNotPresent('dead');
+	}
+
+	isStatus(statusToCheck: string): boolean {
+		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
+	}
+
 	private calculateDerivedData(): ActorDerivedData {
 		// TODO: this would be better as a proxy object
 		const allBonuses = this.allBonuses;
