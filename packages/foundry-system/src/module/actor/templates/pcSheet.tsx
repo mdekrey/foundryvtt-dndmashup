@@ -25,7 +25,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 	const maxHp = data.health.maxHp;
 	const healingSurgeValue = data.health.surges.value;
 	const healingSurgesPerDay = data.health.surges.max;
-	const getFinalScore = (ability: Ability) => data.abilities[ability];
+	const getFinalScore = (ability: Ability) => data.abilities[ability].total;
 
 	return (
 		<>

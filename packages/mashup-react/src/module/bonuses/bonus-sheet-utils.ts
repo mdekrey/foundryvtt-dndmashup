@@ -15,4 +15,5 @@ export const targets: Record<BonusTarget, { label: string }> = {
 	'surges-value': { label: 'HP per Surge' },
 	maxHp: { label: 'Maximum HP' },
 	speed: { label: 'Speed' },
+	initiative: { label: 'Initiative' },
 };

@@ -2,7 +2,7 @@ import { Ability, Defense } from '../../types/types';
 
 export type CommonDerivedDataProperties = {
 	abilities: {
-		[ability in Ability]: number;
+		[ability in Ability]: { total: number };
 	};
 	health: {
 		maxHp: number;
@@ -16,6 +16,7 @@ export type CommonDerivedDataProperties = {
 		[defense in Defense]: number;
 	};
 	speed: number;
+	initiative: number;
 };
 
 export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {

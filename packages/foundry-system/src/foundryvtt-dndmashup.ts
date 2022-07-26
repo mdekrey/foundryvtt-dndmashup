@@ -46,6 +46,8 @@ Hooks.once('init', async () => {
 	// Set an id so styles work better
 	document.body.setAttribute('id', 'foundry-tailwind-hack');
 
+	CONFIG.Combat.initiative.formula = '1d20 + @initiative + @initiative/100';
+
 	CONFIG.statusEffects = [
 		// These are foundry statuses, but aren't really "statuses" in 4e
 		CONFIG.statusEffects.find((se) => se.id === 'dead')!,

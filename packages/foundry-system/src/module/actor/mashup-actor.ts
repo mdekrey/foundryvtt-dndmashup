@@ -44,28 +44,29 @@ const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
 	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
 	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
-	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.derivedData.abilities.con`, type: 'base' },
-	{ ...base, target: 'surges-max', amount: '@actor.derivedData.abilities.con', type: 'ability' },
+	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.derivedData.abilities.con.total`, type: 'base' },
+	{ ...base, target: 'surges-max', amount: '@actor.derivedData.abilities.con.total', type: 'ability' },
 	{ ...base, target: 'defense-ac', amount: 10 },
-	{ ...base, target: 'defense-ac', amount: '@actor.derivedData.abilities.dex', type: 'ability' },
+	{ ...base, target: 'defense-ac', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
 	{ ...base, target: 'defense-fort', amount: 10 },
-	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.str', type: 'ability' },
-	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.con', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.str.total', type: 'ability' },
+	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.con.total', type: 'ability' },
 	{ ...base, target: 'defense-refl', amount: 10 },
-	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.dex', type: 'ability' },
-	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.int', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
+	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.int.total', type: 'ability' },
 	{ ...base, target: 'defense-will', amount: 10 },
-	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis', type: 'ability' },
-	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis.total', type: 'ability' },
+	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha.total', type: 'ability' },
+	{ ...base, target: 'initiative', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
 ];
 
 const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => void> = {
-	'ability-str': (data, value) => (data.abilities.str = value),
-	'ability-con': (data, value) => (data.abilities.con = value),
-	'ability-dex': (data, value) => (data.abilities.dex = value),
-	'ability-int': (data, value) => (data.abilities.int = value),
-	'ability-wis': (data, value) => (data.abilities.wis = value),
-	'ability-cha': (data, value) => (data.abilities.cha = value),
+	'ability-str': (data, value) => (data.abilities.str.total = value),
+	'ability-con': (data, value) => (data.abilities.con.total = value),
+	'ability-dex': (data, value) => (data.abilities.dex.total = value),
+	'ability-int': (data, value) => (data.abilities.int.total = value),
+	'ability-wis': (data, value) => (data.abilities.wis.total = value),
+	'ability-cha': (data, value) => (data.abilities.cha.total = value),
 	'defense-ac': (data, value) => (data.defenses.ac = value),
 	'defense-fort': (data, value) => (data.defenses.fort = value),
 	'defense-refl': (data, value) => (data.defenses.refl = value),
@@ -74,6 +75,7 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	'surges-max': (data, value) => (data.health.surges.max = value),
 	'surges-value': (data, value) => (data.health.surges.value = value),
 	speed: (data, value) => (data.speed = value),
+	initiative: (data, value) => (data.initiative = value),
 };
 
 export class MashupActor extends Actor implements ActorDocument {
@@ -142,6 +144,9 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	override prepareDerivedData() {
 		this._derivedData = null;
+		const derived = this.calculateDerivedData();
+		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
+		console.log(derived, this.data);
 		if (this.isOwner) {
 			this.updateBloodied();
 		}
@@ -203,12 +208,12 @@ export class MashupActor extends Actor implements ActorDocument {
 
 		const resultData: ActorDerivedData = {
 			abilities: {
-				str: 0,
-				con: 0,
-				dex: 0,
-				int: 0,
-				wis: 0,
-				cha: 0,
+				str: { total: 0 },
+				con: { total: 0 },
+				dex: { total: 0 },
+				int: { total: 0 },
+				wis: { total: 0 },
+				cha: { total: 0 },
 			},
 			health: {
 				maxHp: 0,
@@ -225,6 +230,7 @@ export class MashupActor extends Actor implements ActorDocument {
 				will: 0,
 			},
 			speed: 0,
+			initiative: 0,
 		};
 		this._derivedData = resultData;
 		const groupedByTarget = byTarget(allBonuses);

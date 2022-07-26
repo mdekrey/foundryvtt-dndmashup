@@ -9,6 +9,7 @@ export const bonusTargets = [
 	`surges-value` as const,
 	`surges-max` as const,
 	`speed` as const,
+	`initiative` as const,
 	// TODO: add support for attacks, damage, saving throws
 	// TODO: add conditional bonuses
 	// TODO: add resistance/vulnerability
