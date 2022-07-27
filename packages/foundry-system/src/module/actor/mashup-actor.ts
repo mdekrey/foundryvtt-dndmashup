@@ -168,7 +168,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		this._derivedData = null;
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
-		console.log(derived, this.data);
 		if (this.isOwner) {
 			this.updateBloodied();
 		}
