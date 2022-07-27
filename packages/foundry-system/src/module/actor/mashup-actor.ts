@@ -3,13 +3,20 @@ import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import {
+	abilities,
+	AbilityBonus,
 	BonusTarget,
 	bonusTargets,
 	byTarget,
+	damageTypes,
+	defenses,
+	DefenseBonus,
 	FeatureBonus,
 	FeatureBonusWithContext,
 	filterBonuses,
+	Resistance,
 	sumFinalBonuses,
+	Vulnerability,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
@@ -28,6 +35,7 @@ import { EquipmentData } from '@foundryvtt-dndmashup/mashup-react';
 import { getEquipmentProperties } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
+import { toObject } from '@foundryvtt-dndmashup/mashup-core';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -61,16 +69,26 @@ const standardBonuses: FeatureBonus[] = [
 ];
 
 const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => void> = {
-	'ability-str': (data, value) => (data.abilities.str.total = value),
-	'ability-con': (data, value) => (data.abilities.con.total = value),
-	'ability-dex': (data, value) => (data.abilities.dex.total = value),
-	'ability-int': (data, value) => (data.abilities.int.total = value),
-	'ability-wis': (data, value) => (data.abilities.wis.total = value),
-	'ability-cha': (data, value) => (data.abilities.cha.total = value),
-	'defense-ac': (data, value) => (data.defenses.ac = value),
-	'defense-fort': (data, value) => (data.defenses.fort = value),
-	'defense-refl': (data, value) => (data.defenses.refl = value),
-	'defense-will': (data, value) => (data.defenses.will = value),
+	...toObject(
+		abilities,
+		(abil): AbilityBonus => `ability-${abil}`,
+		(abil) => (data, value) => (data.abilities[abil].total = value)
+	),
+	...toObject(
+		defenses,
+		(def): DefenseBonus => `defense-${def}`,
+		(def) => (data, value) => (data.defenses[def] = value)
+	),
+	...toObject(
+		damageTypes,
+		(dmg): Resistance => `${dmg}-resistance`,
+		(dmg) => (data, value) => (data.damageTypes[dmg].resistance = value)
+	),
+	...toObject(
+		damageTypes,
+		(dmg): Vulnerability => `${dmg}-vulnerability`,
+		(dmg) => (data, value) => (data.damageTypes[dmg].vulnerability = value)
+	),
 	maxHp: (data, value) => (data.health.hp.max = value),
 	'surges-max': (data, value) => (data.health.surgesRemaining.max = value),
 	'surges-value': (data, value) => (data.health.surgesValue = value),
@@ -207,14 +225,11 @@ export class MashupActor extends Actor implements ActorDocument {
 		const allBonuses = this.allBonuses;
 
 		const resultData: ActorDerivedData = {
-			abilities: {
-				str: { total: 0 },
-				con: { total: 0 },
-				dex: { total: 0 },
-				int: { total: 0 },
-				wis: { total: 0 },
-				cha: { total: 0 },
-			},
+			abilities: toObject(
+				abilities,
+				(abil) => abil,
+				() => ({ total: 0 })
+			),
 			health: {
 				hp: { max: 0 },
 				bloodied: 0,
@@ -223,12 +238,16 @@ export class MashupActor extends Actor implements ActorDocument {
 				},
 				surgesValue: 0,
 			},
-			defenses: {
-				ac: 0,
-				fort: 0,
-				refl: 0,
-				will: 0,
-			},
+			defenses: toObject(
+				defenses,
+				(def) => def,
+				() => 0
+			),
+			damageTypes: toObject(
+				damageTypes,
+				(dmg) => dmg,
+				() => ({ resistance: 0, vulnerability: 0 })
+			),
 			speed: 0,
 			initiative: 0,
 		};

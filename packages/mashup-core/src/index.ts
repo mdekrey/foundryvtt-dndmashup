@@ -3,3 +3,4 @@ export * from './lens';
 export * from './functions';
 export * from './neverEver';
 export * from './primitive';
+export * from './to-object';

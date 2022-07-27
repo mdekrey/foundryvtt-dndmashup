@@ -1,22 +1,24 @@
-import { abilities, Ability, Defense, defenses } from '../../types/types';
+import { abilities, Ability, Defense, defenses, DamageType, damageTypes } from '../../types/types';
 import { ActorDocument } from '../actor/documentType';
 import { ItemDocument } from '../item';
 
 export const bonusTargets = [
 	...abilities.map((ability) => `ability-${ability}` as const),
 	...defenses.map((defense) => `defense-${defense}` as const),
+	...damageTypes.map((damageType) => `${damageType}-resistance` as const),
+	...damageTypes.map((damageType) => `${damageType}-vulnerability` as const),
 	`maxHp` as const,
 	`surges-value` as const,
 	`surges-max` as const,
 	`speed` as const,
 	`initiative` as const,
 	// TODO: add support for attacks, damage, saving throws
-	// TODO: add conditional bonuses
-	// TODO: add resistance/vulnerability
 ];
 
 export type AbilityBonus = `ability-${Ability}`;
 export type DefenseBonus = `defense-${Defense}`;
+export type Resistance = `${DamageType}-resistance`;
+export type Vulnerability = `${DamageType}-vulnerability`;
 export type BonusTarget = typeof bonusTargets[number];
 
 export function isAbilityBonus(bonusTarget: BonusTarget): bonusTarget is AbilityBonus {
