@@ -52,9 +52,9 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 							{itemData.keywords.length ? <> ✦ {itemData.keywords.map(capitalize).join(', ')}</> : null}
 						</p>
 						<div className="flex">
-							<p className="font-bold w-40">{actionType(itemData.actionType)}</p>
+							<p className="font-bold flex-grow">{actionType(itemData.actionType)}</p>
 							{firstEffect && (
-								<p>
+								<p className="flex-grow">
 									<AttackTypeInfo typeAndRange={firstEffect.typeAndRange} isBasic={itemData.isBasic} />
 								</p>
 							)}

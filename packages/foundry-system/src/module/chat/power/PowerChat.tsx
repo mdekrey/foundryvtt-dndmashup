@@ -1,14 +1,16 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
-import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { ChatButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { SpecificActor } from '../../../module/actor/mashup-actor';
-import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';
+import { isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
 import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDialog } from './PowerDialog';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
+import classNames from 'classnames';
+import { PowerEffectTemplate } from '../../power-effect-template';
 
 export function PowerChat({ item, actor }: { item: PowerDocument; actor: SpecificActor }) {
 	return (
@@ -38,10 +40,15 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
 		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
 
+	console.log(power.data.data.effects);
+
 	return (
 		<>
 			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
-			<button onClick={onRoll}>Roll me</button>
+			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
+				<PowerEffectOptions key={index} effect={effect} />
+			))}
+			<button onClick={onRoll}>Dialog</button>
 			<button onClick={onDemo}>Demo</button>
 		</>
 	);
@@ -64,6 +71,46 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 		const json = roll.toJSON();
 		console.log(roll, json);
 		await roll.toMessage();
+	}
+}
+
+function hasEffectInfo(effect: PowerEffect): boolean {
+	return Boolean(
+		effect.attackRoll ||
+			effect.hit.damage ||
+			effect.hit.healing ||
+			effect.miss?.damage ||
+			effect.miss?.healing ||
+			effect.typeAndRange.type === 'close' ||
+			effect.typeAndRange.type === 'area' ||
+			effect.typeAndRange.type === 'within'
+	);
+}
+function PowerEffectOptions({ effect }: { effect: PowerEffect }) {
+	return (
+		<div
+			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
+				'pt-1': effect.name,
+			})}>
+			{effect.name && <p className="bg-theme text-white px-2 font-bold text-center py-1">{effect.name}</p>}
+
+			{PowerEffectTemplate.canCreate(effect.typeAndRange) ? (
+				<ChatButton className="mx-2" onClick={createEffect}>
+					Place Template
+				</ChatButton>
+			) : null}
+			{effect.attackRoll && <ChatButton className="mx-2">Roll Attack</ChatButton>}
+			{effect.hit.damage && <ChatButton className="mx-2">Hit Damage</ChatButton>}
+			{effect.hit.healing && <ChatButton className="mx-2">Hit Healing</ChatButton>}
+			{effect.miss?.damage && <ChatButton className="mx-2">Miss Damage</ChatButton>}
+			{effect.miss?.healing && <ChatButton className="mx-2">Miss Healing</ChatButton>}
+		</div>
+	);
+
+	function createEffect() {
+		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange);
+		if (template) template.drawPreview();
+		// if ( this.owner && this.owner.sheet ) this.owner.sheet.minimize();
 	}
 }
 
