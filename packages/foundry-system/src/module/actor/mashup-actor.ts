@@ -94,6 +94,10 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	'surges-value': (data, value) => (data.health.surgesValue = value),
 	speed: (data, value) => (data.speed = value),
 	initiative: (data, value) => (data.initiative = value),
+
+	'attack-roll': (data, value) => (data.combatBonuses.attackRoll = value),
+	damage: (data, value) => (data.combatBonuses.damage = value),
+	'saving-throw': (data, value) => (data.combatBonuses.savingThrow = value),
 };
 
 export class MashupActor extends Actor implements ActorDocument {
@@ -250,6 +254,11 @@ export class MashupActor extends Actor implements ActorDocument {
 			),
 			speed: 0,
 			initiative: 0,
+			combatBonuses: {
+				attackRoll: 0,
+				damage: 0,
+				savingThrow: 0,
+			},
 		};
 		this._derivedData = resultData;
 		const groupedByTarget = byTarget(allBonuses);

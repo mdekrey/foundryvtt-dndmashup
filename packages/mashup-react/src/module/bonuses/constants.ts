@@ -12,7 +12,9 @@ export const bonusTargets = [
 	`surges-max` as const,
 	`speed` as const,
 	`initiative` as const,
-	// TODO: add support for attacks, damage, saving throws
+	`attack-roll` as const,
+	`damage` as const,
+	`saving-throw` as const,
 ];
 
 export type AbilityBonus = `ability-${Ability}`;

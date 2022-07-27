@@ -19,6 +19,9 @@ export const targets: Record<BonusTarget, { label: string }> = {
 	maxHp: { label: 'Maximum HP' },
 	speed: { label: 'Speed' },
 	initiative: { label: 'Initiative' },
+	'attack-roll': { label: 'Attack Roll' },
+	damage: { label: 'Damage' },
+	'saving-throw': { label: 'Saving Throws' },
 
 	...toObject(
 		damageTypes,
