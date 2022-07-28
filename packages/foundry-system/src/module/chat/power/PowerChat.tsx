@@ -109,8 +109,11 @@ function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: Spe
 
 	function createEffect() {
 		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange, actor.data.data.size);
-		if (template) template.drawPreview();
-		// if ( this.owner && this.owner.sheet ) this.owner.sheet.minimize();
+		if (actor && actor.sheet) actor.sheet.minimize();
+		if (template)
+			template.drawPreview(() => {
+				if (actor && actor.sheet) actor.sheet.maximize();
+			});
 	}
 }
 

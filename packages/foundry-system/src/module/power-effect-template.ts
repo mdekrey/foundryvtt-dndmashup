@@ -9,6 +9,7 @@ type MeasuredTemplateFactory<T extends EffectTypeAndRange['type'] = EffectTypeAn
 type MeasuredTemplateSystemFlags = {
 	rotate?: number;
 	closeBurst?: Size;
+	text?: string;
 };
 
 const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactory<K> } = {
@@ -20,7 +21,9 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 						// distance + direction is the angle of the rectangle
 						distance: effect.size * Math.SQRT2,
 						direction: -45,
-						flags: { [systemName]: { rotate: 90, closeBurst: undefined } },
+						flags: {
+							[systemName]: { rotate: 90, closeBurst: undefined, text: `Close Blast ${effect.size.toFixed(0)}` },
+						},
 				  }
 				: {
 						t: 'circle',
@@ -45,6 +48,8 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 };
 
 export class PowerEffectTemplate extends MeasuredTemplate {
+	static onCancel: undefined | (() => void);
+
 	static canCreate(typeAndRange: EffectTypeAndRange) {
 		return (byEffectType[typeAndRange.type] as MeasuredTemplateFactory | undefined)?.create(typeAndRange, 'medium')
 			? true
@@ -72,26 +77,32 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		const cls = CONFIG.MeasuredTemplate.documentClass;
 		const template = new cls({ ...partialData, ...constructorData }, { parent: canvas?.scene ?? undefined });
 
-		const object = new this(template);
-		return object;
+		return new this(template);
 	}
 
-	drawPreview() {
+	drawPreview(cleanup?: () => void) {
+		PowerEffectTemplate.onCancel?.();
+
 		const initialLayer = canvas?.activeLayer;
 		if (!initialLayer) return;
 		this.layer.activate();
 		this.draw();
-		if (!this.layer.preview) return;
-		this.layer.preview.addChild(this);
-		this.activatePreviewListeners(initialLayer, this.layer.preview);
+		const previewLayer = this.layer.preview;
+		if (!previewLayer) return;
+		previewLayer.addChild(this);
+		this.activatePreviewListeners(() => {
+			previewLayer.removeChild(this);
+			initialLayer.activate();
+			cleanup?.();
+		});
 	}
 
-	activatePreviewListeners(initialLayer: CanvasLayer, previewLayer: PIXI.Container) {
+	activatePreviewListeners(cleanup?: () => void) {
 		const handlers: {
 			mouseMove?: (event: MouseEvent) => void;
 			mouseWheel?: (event: WheelEvent) => void;
 			leftClick?: (event: MouseEvent) => void;
-			rightClick?: (event: MouseEvent) => void;
+			rightClick?: () => void;
 		} = {};
 		let moveTime = 0;
 
@@ -116,19 +127,19 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		};
 
 		// Cancel the workflow (right-click)
-		handlers.rightClick = (event) => {
-			previewLayer.removeChild(this);
+		handlers.rightClick = () => {
+			PowerEffectTemplate.onCancel = undefined;
 			this.destroy();
 			stage.off('mousemove', handlers.mouseMove);
 			stage.off('mousedown', handlers.leftClick);
 			app.view.oncontextmenu = null;
 			app.view.onwheel = null;
-			initialLayer.activate();
+			cleanup?.();
 		};
 
 		// Confirm the workflow (left-click)
 		handlers.leftClick = (event) => {
-			handlers.rightClick?.(event);
+			handlers.rightClick?.();
 			const destination = grid.getSnappedPosition(this.data.x, this.data.y, snapSize);
 			this.data.update(destination);
 			scene.createEmbeddedDocuments('MeasuredTemplate', [this.data as never]);
@@ -151,6 +162,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		stage.on('mousedown', handlers.leftClick);
 		app.view.oncontextmenu = handlers.rightClick;
 		app.view.onwheel = handlers.mouseWheel;
+		PowerEffectTemplate.onCancel = handlers.rightClick;
 	}
 
 	static _getCircleSquareShape(
@@ -190,6 +202,10 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			if (this.hud.ruler) {
 				this.hud.ruler.text = text;
 				// this.hud.ruler.position.set(this.ray.dx + 10, this.ray.dy + 5);
+			}
+		} else if ((this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.text) {
+			if (this.hud.ruler) {
+				this.hud.ruler.text = (this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.text as string;
 			}
 		} else {
 			return wrapper();
