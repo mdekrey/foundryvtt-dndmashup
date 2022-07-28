@@ -59,7 +59,7 @@ export class Lens<TSource, TValue> {
 				(source) => source ?? value,
 				(mutator) => (draft) => {
 					const result =
-						draft === null || draft === undefined ? mutator(cloneDeep(draft) as any) : mutator(draft as any);
+						draft === null || draft === undefined ? mutator(cloneDeep(value) as any) : mutator(draft as any);
 					if (predicate?.(result)) return null as never as TValue;
 					return result === undefined ? draft : (result as never);
 				}

@@ -31,13 +31,13 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 		},
 	},
 	area: {
-		create(effect, actorSize) {
+		create(effect) {
 			return effect.shape === 'burst'
 				? {
 						t: 'circle',
-						distance: effect.size + sizeToTokenSize[actorSize] / 2,
+						distance: effect.size + 0.5,
 						direction: 0,
-						flags: { [systemName]: { rotate: undefined, closeBurst: actorSize } },
+						flags: { [systemName]: { rotate: undefined } },
 				  }
 				: null;
 		},
@@ -174,10 +174,10 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			let d;
 			let text;
 
-			const closeBurst = (this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.closeBurst ?? 'not-burst';
+			const closeBurst = (this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.closeBurst ?? 'not-close';
 
 			switch (closeBurst) {
-				case 'not-burst':
+				case 'not-close':
 					d = Math.max(Math.round((this.data.distance - 0.5) * 10) / 10, 0);
 					text = `Burst ${d}`;
 					break;
