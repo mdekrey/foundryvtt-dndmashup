@@ -1,4 +1,4 @@
-import { Ability, DamageType, Defense } from '../../types/types';
+import { Ability, DamageType, Defense, Size } from '../../types/types';
 
 export type CommonDerivedDataProperties = {
 	abilities: {
@@ -20,6 +20,7 @@ export type CommonDerivedDataProperties = {
 	};
 	speed: number;
 	initiative: number;
+	size: Size;
 	combatBonuses: {
 		attackRoll: number;
 		damage: number;

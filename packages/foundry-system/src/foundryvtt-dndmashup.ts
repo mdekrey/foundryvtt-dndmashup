@@ -20,6 +20,8 @@ import { attachToChat } from './module/chat/attach';
 
 import './styles/foundryvtt-dndmashup.css';
 import './module/chat/power';
+import { libWrapper } from './libwrapper-shim';
+import { PowerEffectTemplate } from './module/power-effect-template';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -71,6 +73,36 @@ Hooks.once('init', async () => {
 		CONFIG.statusEffects.find((se) => se.id === 'unconscious')!,
 		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon },
 	];
+
+	libWrapper.register(
+		systemName,
+		'MeasuredTemplate.prototype._getCircleShape',
+		PowerEffectTemplate._getCircleSquareShape
+	);
+
+	libWrapper.register(
+		systemName,
+		'MeasuredTemplate.prototype._refreshRulerText',
+		PowerEffectTemplate._refreshRulerBurst
+	);
+});
+
+Hooks.on('getSceneControlButtons', function (controls) {
+	//create addtioanl button in measure templates for burst
+	const measureControls = controls.find((ctrl) => ctrl.name === 'measure');
+	if (measureControls) {
+		let index = measureControls.tools.findIndex((tool) => tool.name === 'cone');
+		if (index !== -1) measureControls.tools.splice(index, 1);
+		// index = measureControls.tools.findIndex((tool) => tool.name === 'ray');
+		// if (index !== -1) measureControls.tools.splice(index, 1);
+		index = measureControls.tools.findIndex((tool) => tool.name === 'clear');
+		if (index === -1) index = measureControls.tools.length;
+		measureControls.tools.splice(index, 0, {
+			name: 'rectCenter',
+			title: 'Square Template from the Center',
+			icon: 'fas fa-external-link-square-alt',
+		});
+	}
 });
 
 // Setup system

@@ -253,6 +253,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			),
 			speed: 0,
 			initiative: 0,
+			size: this.appliedRace?.data.data.size ?? 'medium',
 			combatBonuses: {
 				attackRoll: 0,
 				damage: 0,

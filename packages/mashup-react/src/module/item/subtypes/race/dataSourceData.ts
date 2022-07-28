@@ -1,9 +1,11 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { Size } from '../../../../types/types';
 import { ItemDocument } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
 	baseSpeed: number;
+	size: Size;
 };
 
 export type RaceData = TypedData<'race', RaceDataSourceData>;

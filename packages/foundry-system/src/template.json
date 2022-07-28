@@ -124,7 +124,8 @@
 		},
 		"race": {
 			"templates": ["base"],
-			"baseSpeed": 6
+			"baseSpeed": 6,
+			"size": "medium"
 		},
 		"equipment": {
 			"templates": ["base", "itemDescription", "carriedItem"],

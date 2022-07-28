@@ -20,3 +20,14 @@ export const damageTypes = [
 	'thunder',
 ] as const;
 export type DamageType = typeof damageTypes[number];
+
+export const sizes = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'] as const;
+export type Size = typeof sizes[number];
+export const sizeToTokenSize: Record<Size, number> = {
+	tiny: 1,
+	small: 1,
+	medium: 1,
+	large: 2,
+	huge: 3,
+	gargantuan: 4,
+};

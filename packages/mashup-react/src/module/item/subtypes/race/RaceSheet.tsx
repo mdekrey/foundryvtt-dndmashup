@@ -1,14 +1,18 @@
-import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
+import { FormInput, SelectItem, Tabs } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { Bonuses } from '../../../bonuses';
 import { FeaturesList } from '../../components/FeaturesList';
 import { RaceData } from './dataSourceData';
+import { sizes, Size } from '../../../../types/types';
+import { capitalize } from 'lodash/fp';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
+
+const sizeOptions = sizes.map((v): SelectItem<Size> => ({ value: v, key: v, label: capitalize(v), typeaheadLabel: v }));
 
 export function RaceSheet({
 	items,
@@ -28,7 +32,7 @@ export function RaceSheet({
 						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
 						<FormInput.Label>Race Name</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-2">
+					<FormInput className="col-span-4">
 						<FormInput.Structured>
 							<FormInput.Structured.Main>
 								<FormInput.NumberField plain {...baseLens.toField('data').toField('baseSpeed').apply(documentState)} />
@@ -36,6 +40,13 @@ export function RaceSheet({
 							</FormInput.Structured.Main>
 						</FormInput.Structured>
 						<FormInput.Label>Base Speed</FormInput.Label>
+					</FormInput>
+					<FormInput className="col-span-4">
+						<FormInput.Select
+							options={sizeOptions}
+							{...baseLens.toField('data').toField('size').apply(documentState)}
+						/>
+						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>
 				</div>
 			</div>

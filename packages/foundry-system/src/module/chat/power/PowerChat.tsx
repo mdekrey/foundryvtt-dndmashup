@@ -46,7 +46,7 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 		<>
 			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
-				<PowerEffectOptions key={index} effect={effect} />
+				<PowerEffectOptions key={index} effect={effect} actor={actor} />
 			))}
 			<button onClick={onRoll}>Dialog</button>
 			<button onClick={onDemo}>Demo</button>
@@ -86,7 +86,7 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 			effect.typeAndRange.type === 'within'
 	);
 }
-function PowerEffectOptions({ effect }: { effect: PowerEffect }) {
+function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: SpecificActor }) {
 	return (
 		<div
 			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
@@ -108,7 +108,7 @@ function PowerEffectOptions({ effect }: { effect: PowerEffect }) {
 	);
 
 	function createEffect() {
-		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange);
+		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange, actor.data.data.size);
 		if (template) template.drawPreview();
 		// if ( this.owner && this.owner.sheet ) this.owner.sheet.minimize();
 	}
