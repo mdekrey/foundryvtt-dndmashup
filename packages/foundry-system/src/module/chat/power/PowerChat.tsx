@@ -1,22 +1,20 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
 import { ChatButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { SpecificActor } from '../../../module/actor/mashup-actor';
-import { isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDocument, isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
 import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerDialog } from './PowerDialog';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import classNames from 'classnames';
 import { PowerEffectTemplate } from '../../power-effect-template';
 
-export function PowerChat({ item, actor }: { item: PowerDocument; actor: SpecificActor }) {
+export function PowerChat({ item, actor }: { item: PowerDocument; actor: ActorDocument }) {
 	return (
 		<div className="flex flex-col items-center">
 			<div className="max-w-sm mx-auto border-4 border-white">
-				<PowerPreview item={item} />
+				<PowerPreview item={item} simple />
 			</div>
 			{actor.isOwner ? (
 				<>
@@ -30,7 +28,7 @@ export function PowerChat({ item, actor }: { item: PowerDocument; actor: Specifi
 
 const toolKeywords = ['weapon', 'implement'] as const;
 const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
-function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificActor }) {
+function PowerOptions({ power, actor }: { power: PowerDocument; actor: ActorDocument }) {
 	const toolType =
 		(intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined) ?? null;
 	const usesTool = toolType !== null;
@@ -48,14 +46,9 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: SpecificA
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
 				<PowerEffectOptions key={index} effect={effect} actor={actor} />
 			))}
-			<button onClick={onRoll}>Dialog</button>
 			<button onClick={onDemo}>Demo</button>
 		</>
 	);
-
-	function onRoll() {
-		PowerDialog.create(power, actor).catch();
-	}
 
 	async function onDemo() {
 		const roll = Roll.fromTerms([
@@ -86,7 +79,7 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 			effect.typeAndRange.type === 'within'
 	);
 }
-function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: SpecificActor }) {
+function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: ActorDocument }) {
 	return (
 		<div
 			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
@@ -108,7 +101,7 @@ function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: Spe
 	);
 
 	function createEffect() {
-		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange, actor.data.data.size);
+		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange, actor.derivedData.size);
 		if (actor && actor.sheet) actor.sheet.minimize();
 		if (template)
 			template.drawPreview(() => {

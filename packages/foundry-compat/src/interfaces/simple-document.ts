@@ -1,3 +1,5 @@
+import { SimpleApplication } from './simple-application';
+
 /** See @type ItemDataBaseProperties */
 export type StandardData = {
 	_id: string | null;
@@ -15,6 +17,8 @@ export type BaseDocument = {
 	isOwner: boolean;
 	collectionName: string;
 	readonly parent?: BaseDocument | null;
+
+	sheet: SimpleApplication | null;
 
 	update(newData: unknown, options: { overwrite?: boolean; diff?: boolean; recursive?: boolean }): void;
 	delete(): void;

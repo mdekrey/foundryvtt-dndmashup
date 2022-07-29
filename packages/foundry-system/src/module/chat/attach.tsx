@@ -1,5 +1,6 @@
 import { ToObjectFalseType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { createRoot } from 'react-dom/client';
+import { FoundryWrapper } from '../../components/foundry';
 
 export type ChatMessageProps = ToObjectFalseType<ChatMessage>;
 
@@ -21,7 +22,7 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 
 	try {
 		const jsx = Component(data.message);
-		createRoot(content[0]).render(jsx);
+		createRoot(content[0]).render(<FoundryWrapper>{jsx}</FoundryWrapper>);
 	} catch (ex) {
 		console.error(ex);
 	}

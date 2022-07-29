@@ -12,18 +12,24 @@ import {
 	PowerUsage,
 } from '../dataSourceData';
 import { Defense } from '../../../../../types/types';
+import { useApplicationDispatcher } from '../../../../../module/applications';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';
 
-export function PowerPreview({ item }: { item: PowerDocument }) {
+export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: boolean }) {
+	const applications = useApplicationDispatcher();
 	const { name, data: itemData } = item.data;
 	const rulesText = itemData.effects
 		.flatMap((effect, index) => effectToRules(effect, index === 0))
 		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);
 	const firstEffect: PowerEffect | null = itemData.effects[0] ?? null;
+	const flavorText = itemData.flavorText ? <FlavorText>{itemData.flavorText}</FlavorText> : null;
+	function onDetails() {
+		applications.launchApplication('powerDetails', { power: item });
+	}
 	return (
-		<section className="bg-white">
+		<section className={classNames('bg-white', { 'cursor-pointer': simple })} onClick={simple ? onDetails : undefined}>
 			<header
 				className={classNames(
 					{
@@ -44,38 +50,42 @@ export function PowerPreview({ item }: { item: PowerDocument }) {
 				<span className="text-sm leading-tight">{itemData.type}</span>
 			</header>
 			{pipeJsx(
-				<>
-					{itemData.flavorText && <FlavorText>{itemData.flavorText}</FlavorText>}
-					<div>
-						<p className="font-bold">
-							{powerUsage(itemData.usage)}
-							{itemData.keywords.length ? <> ✦ {itemData.keywords.map(capitalize).join(', ')}</> : null}
-						</p>
-						<div className="flex">
-							<p className="font-bold flex-grow">{actionType(itemData.actionType)}</p>
-							{firstEffect && (
-								<p className="flex-grow">
-									<AttackTypeInfo typeAndRange={firstEffect.typeAndRange} isBasic={itemData.isBasic} />
-								</p>
+				simple ? (
+					flavorText ?? <></>
+				) : (
+					<>
+						{flavorText}
+						<div>
+							<p className="font-bold">
+								{powerUsage(itemData.usage)}
+								{itemData.keywords.length ? <> ✦ {itemData.keywords.map(capitalize).join(', ')}</> : null}
+							</p>
+							<div className="flex">
+								<p className="font-bold flex-grow">{actionType(itemData.actionType)}</p>
+								{firstEffect && (
+									<p className="flex-grow">
+										<AttackTypeInfo typeAndRange={firstEffect.typeAndRange} isBasic={itemData.isBasic} />
+									</p>
+								)}
+							</div>
+							{itemData.trigger && <RulesText label="Trigger">{itemData.trigger}</RulesText>}
+							{firstEffect?.target && <RulesText label="Target">{firstEffect.target}</RulesText>}
+							{firstEffect?.attackRoll && (
+								<RulesText label="Attack">{toAttackRollText(firstEffect.attackRoll)}</RulesText>
 							)}
+							{itemData.prerequisite && <RulesText label="Prerequisite">{itemData.prerequisite}</RulesText>}
+							{itemData.requirement && <RulesText label="Requirement">{itemData.requirement}</RulesText>}
 						</div>
-						{itemData.trigger && <RulesText label="Trigger">{itemData.trigger}</RulesText>}
-						{firstEffect?.target && <RulesText label="Target">{firstEffect.target}</RulesText>}
-						{firstEffect?.attackRoll && (
-							<RulesText label="Attack">{toAttackRollText(firstEffect.attackRoll)}</RulesText>
-						)}
-						{itemData.prerequisite && <RulesText label="Prerequisite">{itemData.prerequisite}</RulesText>}
-						{itemData.requirement && <RulesText label="Requirement">{itemData.requirement}</RulesText>}
-					</div>
-					{rulesText.map(({ label, text }, index) => (
-						<RulesText key={index} label={label || undefined}>
-							{text}
-						</RulesText>
-					))}
-				</>,
+						{rulesText.map(({ label, text }, index) => (
+							<RulesText key={index} label={label || undefined}>
+								{text}
+							</RulesText>
+						))}
+					</>
+				),
 				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info leading-snug" />))
 			)}
-			{itemData.sourceId ? (
+			{!simple && itemData.sourceId ? (
 				<a
 					className="px-2 py-1 block"
 					href={`https://4e.dekrey.net/legacy/rule/${itemData.sourceId}`}
