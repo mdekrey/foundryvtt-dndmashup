@@ -1,5 +1,6 @@
 import { EffectTypeAndRange, Size, sizeToTokenSize } from '@foundryvtt-dndmashup/mashup-react';
 import { MeasuredTemplateDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/measuredTemplateData';
+import { isGame } from '../core/foundry';
 import { systemName } from './constants';
 
 type MeasuredTemplateFactory<T extends EffectTypeAndRange['type'] = EffectTypeAndRange['type']> = {
@@ -57,7 +58,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 	}
 
 	static fromTypeAndRange(typeAndRange: EffectTypeAndRange, actorSize: Size) {
-		const user = (game as Game).user ?? null;
+		const user = (isGame(game) && game.user) || null;
 
 		if (!user) return null;
 

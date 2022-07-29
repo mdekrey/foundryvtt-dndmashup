@@ -7,6 +7,7 @@ import {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import { PossibleItemData } from './types';
+import { isGame } from '../../core/foundry';
 
 export class MashupItemData<TItem extends PossibleItemData>
 	extends foundry.abstract.DocumentData<
@@ -43,7 +44,8 @@ export class MashupItemData<TItem extends PossibleItemData>
 	/** @inheritdoc */
 	override _initializeSource(data: ItemDataConstructorData) {
 		const source = super._initializeSource(data);
-		const model = deepClone((game as Game).system.model.Item[data.type]);
+		if (!isGame(game)) return source;
+		const model = deepClone(game.system.model.Item[data.type]);
 		source.data = mergeObject(model || {}, data.data || {});
 		return source;
 	}

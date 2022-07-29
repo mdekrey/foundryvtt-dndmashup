@@ -1,19 +1,20 @@
 import { renderReactToHtml } from '../../../core/react';
-import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
-import { fromMashupId } from '../../../core/foundry';
+import { fromMashupId, isGame } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
 import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { chatMessageRegistry, PowerDocument, PowerChatMessage } from '@foundryvtt-dndmashup/mashup-react';
 import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { SpecificActor } from '../../actor/mashup-actor';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;
 
 async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChatMessage) {
-	if (!('user' in game) || !game.user) return;
+	if (!isGame(game) || !game.user) return;
+	if (!actor) return;
 
-	const html = await renderReactToHtml(<PowerPreview item={item} />);
+	const html = await renderReactToHtml(<PowerChat item={item} actor={actor as SpecificActor} />);
 
 	ChatMessage.create({
 		user: game.user.id,
@@ -32,7 +33,7 @@ async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChat
 }
 
 function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: ChatMessageProps) {
-	if (!('actors' in game)) {
+	if (!isGame(game)) {
 		console.error('no game', game);
 		throw new Error('Could not attach');
 	}

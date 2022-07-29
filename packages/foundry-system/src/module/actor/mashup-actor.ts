@@ -36,6 +36,7 @@ import { getEquipmentProperties } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
 import { toObject } from '@foundryvtt-dndmashup/mashup-core';
+import { isGame } from '../../core/foundry';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -178,6 +179,8 @@ export class MashupActor extends Actor implements ActorDocument {
 			return this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck)?.id ?? null;
 		};
 		const setIfNotPresent = async (statusToCheck: string) => {
+			if (!isGame(game)) return;
+
 			const existingEffect = this.effects.find((x) => x.data.flags.core?.statusId === statusToCheck);
 			if (existingEffect) return;
 
@@ -188,7 +191,7 @@ export class MashupActor extends Actor implements ActorDocument {
 
 			const effect = {
 				...params,
-				label: status.label && (game as Game).i18n.localize(status.label),
+				label: status.label && game.i18n.localize(status.label),
 				flags: {
 					core: {
 						statusId: statusToCheck,
