@@ -1,16 +1,24 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
 import { ChatButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { ActorDocument, isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDocument, EffectTypeAndRange, isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
 import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import classNames from 'classnames';
-import { PowerEffectTemplate } from '../../power-effect-template';
 
-export function PowerChat({ item, actor }: { item: PowerDocument; actor: ActorDocument }) {
+type PowerEffectTemplateProps = {
+	canCreateEffect: (typeAndRange: EffectTypeAndRange) => boolean;
+	createEffect: (typeAndRange: EffectTypeAndRange) => void;
+};
+
+export function PowerChat({
+	item,
+	actor,
+	...effectProps
+}: { item: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
 	return (
 		<div className="flex flex-col items-center">
 			<div className="max-w-sm mx-auto border-4 border-white">
@@ -19,7 +27,7 @@ export function PowerChat({ item, actor }: { item: PowerDocument; actor: ActorDo
 			{actor.isOwner ? (
 				<>
 					<hr className="border-b border-black w-full my-1" />
-					<PowerOptions power={item} actor={actor} />
+					<PowerOptions power={item} actor={actor} {...effectProps} />
 				</>
 			) : null}
 		</div>
@@ -28,7 +36,11 @@ export function PowerChat({ item, actor }: { item: PowerDocument; actor: ActorDo
 
 const toolKeywords = ['weapon', 'implement'] as const;
 const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
-function PowerOptions({ power, actor }: { power: PowerDocument; actor: ActorDocument }) {
+function PowerOptions({
+	power,
+	actor,
+	...effectProps
+}: { power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
 	const toolType =
 		(intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined) ?? null;
 	const usesTool = toolType !== null;
@@ -44,7 +56,7 @@ function PowerOptions({ power, actor }: { power: PowerDocument; actor: ActorDocu
 		<>
 			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
-				<PowerEffectOptions key={index} effect={effect} actor={actor} />
+				<PowerEffectOptions key={index} effect={effect} {...effectProps} />
 			))}
 			<button onClick={onDemo}>Demo</button>
 		</>
@@ -79,7 +91,11 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 			effect.typeAndRange.type === 'within'
 	);
 }
-function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: ActorDocument }) {
+function PowerEffectOptions({
+	effect,
+	canCreateEffect: canCreate,
+	createEffect,
+}: { effect: PowerEffect } & PowerEffectTemplateProps) {
 	return (
 		<div
 			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
@@ -87,8 +103,8 @@ function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: Act
 			})}>
 			{effect.name && <p className="bg-theme text-white px-2 font-bold text-center py-1">{effect.name}</p>}
 
-			{PowerEffectTemplate.canCreate(effect.typeAndRange) ? (
-				<ChatButton className="mx-2" onClick={createEffect}>
+			{canCreate(effect.typeAndRange) ? (
+				<ChatButton className="mx-2" onClick={() => createEffect(effect.typeAndRange)}>
 					Place Template
 				</ChatButton>
 			) : null}
@@ -99,15 +115,6 @@ function PowerEffectOptions({ effect, actor }: { effect: PowerEffect; actor: Act
 			{effect.miss?.healing && <ChatButton className="mx-2">Miss Healing</ChatButton>}
 		</div>
 	);
-
-	function createEffect() {
-		const template = PowerEffectTemplate.fromTypeAndRange(effect.typeAndRange, actor.derivedData.size);
-		if (actor && actor.sheet) actor.sheet.minimize();
-		if (template)
-			template.drawPreview(() => {
-				if (actor && actor.sheet) actor.sheet.maximize();
-			});
-	}
 }
 
 function ItemSelector<T extends ItemDocument>({

@@ -2,10 +2,10 @@ import { renderReactToHtml } from '../../../core/react';
 import { fromMashupId, isGame } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
-import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDocument, EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
 import { chatMessageRegistry, PowerDocument, PowerChatMessage } from '@foundryvtt-dndmashup/mashup-react';
 import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
-import { SpecificActor } from '../../actor/mashup-actor';
+import { PowerEffectTemplate } from '../../power-effect-template';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;
@@ -14,7 +14,7 @@ async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChat
 	if (!isGame(game) || !game.user) return;
 	if (!actor) return;
 
-	const html = await renderReactToHtml(<PowerChat item={item} actor={actor as SpecificActor} />);
+	const html = await renderReactToHtml(<RenderPowerChat item={item} actor={actor} />);
 
 	ChatMessage.create({
 		user: game.user.id,
@@ -45,5 +45,20 @@ function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: 
 		throw new Error('Could not attach');
 	}
 
-	return <PowerChat item={item as unknown as PowerDocument} actor={actor} />;
+	return <RenderPowerChat item={item as unknown as PowerDocument} actor={actor} />;
+}
+
+function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDocument }) {
+	return (
+		<PowerChat item={item} actor={actor} canCreateEffect={PowerEffectTemplate.canCreate} createEffect={createEffect} />
+	);
+
+	function createEffect(typeAndRange: EffectTypeAndRange) {
+		const template = PowerEffectTemplate.fromTypeAndRange(typeAndRange, actor.derivedData.size);
+		if (actor && actor.sheet) actor.sheet.minimize();
+		if (template)
+			template.drawPreview(() => {
+				if (actor && actor.sheet) actor.sheet.maximize();
+			});
+	}
 }
