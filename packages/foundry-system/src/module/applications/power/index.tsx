@@ -1,4 +1,3 @@
-import { applicationRegistry } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerDialog } from './PowerDialog';
+import { applicationRegistry, PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 
-applicationRegistry.powerDetails = ({ power }) => PowerDialog.create(power);
+applicationRegistry.powerDetails = ({ power }) => [<PowerPreview item={power} />, `Use Power: ${power.name}`];

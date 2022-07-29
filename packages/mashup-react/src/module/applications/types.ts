@@ -1,5 +1,3 @@
-import { SimpleApplication } from '@foundryvtt-dndmashup/foundry-compat';
-
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface MashupApplication {}
@@ -11,5 +9,7 @@ declare global {
 export type MashupApplicationType = keyof MashupApplication;
 
 export type ApplicationRegistryEntry<T extends keyof MashupApplication> = (
-	properties: MashupApplication[T]
-) => T extends keyof MashupApplicationResult ? MashupApplicationResult[T] : SimpleApplication;
+	properties: MashupApplication[T],
+	resolve: (result: T extends keyof MashupApplicationResult ? MashupApplicationResult[T] : null) => void,
+	reject: () => void
+) => [content: JSX.Element, title: string];
