@@ -23,15 +23,10 @@ export function PowerChat({
 }: { item: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
 	return (
 		<div className="flex flex-col items-center">
-			<div className="max-w-sm mx-auto border-4 border-white">
+			<div className="w-full border-4 border-white">
 				<PowerPreview item={item} simple />
 			</div>
-			{actor.isOwner ? (
-				<>
-					<hr className="border-b border-black w-full my-1" />
-					<PowerOptions power={item} actor={actor} {...effectProps} />
-				</>
-			) : null}
+			{actor.isOwner ? <PowerOptions power={item} actor={actor} {...effectProps} /> : null}
 		</div>
 	);
 }

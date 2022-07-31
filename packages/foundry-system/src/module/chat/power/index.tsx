@@ -1,5 +1,6 @@
 import { renderReactToHtml } from '../../../core/react';
 import { fromMashupId, isGame } from '../../../core/foundry';
+import { FoundryWrapper } from '../../../components/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
 import { ActorDocument, EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
@@ -14,7 +15,11 @@ async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChat
 	if (!isGame(game) || !game.user) return;
 	if (!actor) return;
 
-	const html = await renderReactToHtml(<RenderPowerChat item={item} actor={actor} />);
+	const html = await renderReactToHtml(
+		<FoundryWrapper>
+			<RenderPowerChat item={item} actor={actor} />
+		</FoundryWrapper>
+	);
 
 	ChatMessage.create({
 		user: game.user.id,

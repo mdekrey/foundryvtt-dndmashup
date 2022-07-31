@@ -21,8 +21,11 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 	console.log('attach chat message', content, Component, data.message);
 
 	try {
-		const jsx = Component(data.message);
-		createRoot(content[0]).render(<FoundryWrapper>{jsx}</FoundryWrapper>);
+		createRoot(content[0]).render(
+			<FoundryWrapper>
+				<Component {...data.message} />
+			</FoundryWrapper>
+		);
 	} catch (ex) {
 		console.error(ex);
 	}
