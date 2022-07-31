@@ -5,7 +5,7 @@ export type ChatMessageDispatcherContext = {
 	sendChatMessage<T extends MashupChatMessageType>(
 		messageType: T,
 		...params: Parameters<ChatMessageRegistryEntry<T>>
-	): ReturnType<ChatMessageRegistryEntry<T>>;
+	): Promise<unknown>;
 };
 
 const chatMessageDispatcherContext = createContext<ChatMessageDispatcherContext | null>(null);

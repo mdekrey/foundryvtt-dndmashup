@@ -10,4 +10,4 @@ export type MashupChatMessageType = keyof MashupChatMessage;
 export type ChatMessageRegistryEntry<T extends keyof MashupChatMessage> = (
 	speaker: ActorDocument | null,
 	properties: MashupChatMessage[T]
-) => void;
+) => Promise<Record<string, unknown> | undefined>;

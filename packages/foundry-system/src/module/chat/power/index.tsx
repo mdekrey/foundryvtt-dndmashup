@@ -1,6 +1,4 @@
-import { renderReactToHtml } from '../../../core/react';
 import { fromMashupId, isGame } from '../../../core/foundry';
-import { FoundryWrapper } from '../../../components/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
 import { ActorDocument, EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
@@ -12,29 +10,13 @@ chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;
 
 async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChatMessage) {
-	if (!isGame(game) || !game.user) return;
 	if (!actor) return;
 
-	const html = await renderReactToHtml(
-		<FoundryWrapper>
-			<RenderPowerChat item={item} actor={actor} />
-		</FoundryWrapper>
-	);
-
-	ChatMessage.create({
-		user: game.user.id,
-		type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-		content: html,
+	return {
 		flags: {
-			'attach-component': 'power',
 			item: toMashupId(item),
 		},
-		speaker: actor && {
-			actor: actor.id,
-			token: actor.token?.id,
-			alias: actor.name,
-		},
-	});
+	};
 }
 
 function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: ChatMessageProps) {
