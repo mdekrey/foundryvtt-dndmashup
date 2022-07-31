@@ -1,1 +1,2 @@
+import './diceRoll';
 import './power';

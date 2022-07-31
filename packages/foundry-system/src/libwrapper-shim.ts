@@ -10,6 +10,13 @@ export const VERSIONS = [1, 12, 1];
 export const TGT_SPLIT_RE = new RegExp('([^.[]+|\\[(\'([^\'\\\\]|\\\\.)+?\'|"([^"\\\\]|\\\\.)+?")\\])', 'g');
 export const TGT_CLEANUP_RE = new RegExp('(^\\[\'|\'\\]$|^\\["|"\\]$)', 'g');
 
+declare global {
+	export type LibWrapperWrapperFunction<T extends (...args: any[]) => any> = (
+		original: T,
+		...params: Parameters<T>
+	) => ReturnType<T>;
+}
+
 class LibWrapperShim {
 	static get is_fallback() {
 		return true;
@@ -25,10 +32,10 @@ class LibWrapperShim {
 		return 'OVERRIDE';
 	}
 
-	static register(
+	static register<T extends (...args: any[]) => any>(
 		package_id: string,
 		target: string,
-		fn: Function,
+		fn: LibWrapperWrapperFunction<T>,
 		type = 'MIXED',
 		{ chain = undefined, bind = [] } = {}
 	) {
@@ -63,10 +70,10 @@ class LibWrapperShim {
 		const wrapper =
 			chain ?? (type.toUpperCase?.() != 'OVERRIDE' && Number(type) != 3)
 				? function (this: any, ...args: any[]) {
-						return fn.call(this, (original as Function).bind(this), ...bind, ...args);
+						return (fn as Function).call(this, (original as Function).bind(this), ...bind, ...args);
 				  }
 				: function (this: any, ...args: any[]) {
-						return fn.call(this, ...bind, ...args);
+						return (fn as Function).call(this, ...bind, ...args);
 				  };
 		if (!is_setter) {
 			if (descriptor.value) {

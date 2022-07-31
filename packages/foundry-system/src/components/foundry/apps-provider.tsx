@@ -3,33 +3,35 @@ import {
 	ApplicationDispatcherContextProvider,
 	ApplicationDispatcherContext,
 	applicationRegistry,
+	MashupApplicationResultType,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupApplicationType } from '@foundryvtt-dndmashup/mashup-react';
 import { ReactApplicationMixin } from '../../core/react';
-
-type ResultType<T extends MashupApplicationType> = T extends keyof MashupApplicationResult
-	? MashupApplicationResult[T]
-	: null;
 
 const applicationDispatcherContextValue: ApplicationDispatcherContext = {
 	launchApplication<T extends MashupApplicationType>(
 		messageType: T,
 		param: MashupApplication[T]
-	): [SimpleApplication, Promise<ResultType<T>>] {
-		let tempResolve: ((value: ResultType<T>) => void) | undefined = undefined;
-		let tempReject: ((value: ResultType<T>) => void) | undefined = undefined;
+	): [SimpleApplication, Promise<MashupApplicationResultType<T>>] {
+		let tempResolve: ((value: MashupApplicationResultType<T>) => void) | undefined = undefined;
+		let tempReject: ((reason?: any) => void) | undefined = undefined;
 
-		const resultPromise = new Promise<ResultType<T>>((resolve, reject) => {
+		const resultPromise = new Promise<MashupApplicationResultType<T>>((resolve, reject) => {
 			tempResolve = resolve;
 			tempReject = reject;
 		});
 		if (!tempResolve || !tempReject) throw new Error(`Promise didn't provide callbacks.`);
 
 		const [jsx, title] = applicationRegistry[messageType](param, tempResolve, tempReject);
-		const dialog = new JsxDialog(jsx, { title });
+		const dialog = new JsxDialog(jsx, { title, close: () => tempReject?.() });
 		dialog.render(true);
 
-		return [dialog, resultPromise.finally(() => dialog.close())];
+		return [
+			dialog,
+			resultPromise.finally(() => {
+				dialog.close();
+			}),
+		];
 	},
 };
 

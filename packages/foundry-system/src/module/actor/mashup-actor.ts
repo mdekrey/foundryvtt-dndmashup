@@ -174,6 +174,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		}
 	}
 
+	override getRollData() {
+		return {
+			actor: this,
+		};
+	}
+
 	async updateBloodied() {
 		const findEffectId = (statusToCheck: string) => {
 			return this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck)?.id ?? null;

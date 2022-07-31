@@ -23,6 +23,7 @@ import './styles/foundryvtt-dndmashup.css';
 import './module/chat/power';
 import { libWrapper } from './libwrapper-shim';
 import { PowerEffectTemplate } from './module/power-effect-template';
+import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -50,6 +51,9 @@ Hooks.once('init', async () => {
 	document.body.setAttribute('id', 'foundry-tailwind-hack');
 
 	CONFIG.Combat.initiative.formula = '1d20 + @initiative + @initiative/100';
+
+	CONFIG.Dice.termTypes['WeaponTerm'] = WeaponTerm;
+	CONFIG.Dice.termTypes['AbilityTerm'] = AbilityTerm;
 
 	CONFIG.statusEffects = [
 		// These are foundry statuses, but aren't really "statuses" in 4e
@@ -86,6 +90,8 @@ Hooks.once('init', async () => {
 		'MeasuredTemplate.prototype._refreshRulerText',
 		PowerEffectTemplate._refreshRulerBurst
 	);
+
+	libWrapper.register(systemName, 'Roll.parse', parseWrapper);
 });
 
 Hooks.on('getSceneControlButtons', function (controls) {

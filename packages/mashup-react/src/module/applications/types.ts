@@ -7,9 +7,12 @@ declare global {
 }
 
 export type MashupApplicationType = keyof MashupApplication;
+export type MashupApplicationResultType<T extends keyof MashupApplication> = T extends keyof MashupApplicationResult
+	? MashupApplicationResult[T]
+	: null;
 
 export type ApplicationRegistryEntry<T extends keyof MashupApplication> = (
 	properties: MashupApplication[T],
-	resolve: (result: T extends keyof MashupApplicationResult ? MashupApplicationResult[T] : null) => void,
+	resolve: (result: MashupApplicationResultType<T>) => void,
 	reject: () => void
 ) => [content: JSX.Element, title: string];

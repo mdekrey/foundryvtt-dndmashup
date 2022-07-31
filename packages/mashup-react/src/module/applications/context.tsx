@@ -1,12 +1,12 @@
 import { SimpleApplication } from '@foundryvtt-dndmashup/foundry-compat';
 import { createContext, useContext } from 'react';
-import { MashupApplicationType } from './types';
+import { MashupApplicationResultType, MashupApplicationType } from './types';
 
 export type ApplicationDispatcherContext = {
 	launchApplication<T extends MashupApplicationType>(
 		messageType: T,
 		param: MashupApplication[T]
-	): [SimpleApplication, Promise<T extends keyof MashupApplicationResult ? MashupApplicationResult[T] : null>];
+	): [SimpleApplication, Promise<MashupApplicationResultType<T>>];
 };
 
 const applicationDispatcherContext = createContext<ApplicationDispatcherContext | null>(null);

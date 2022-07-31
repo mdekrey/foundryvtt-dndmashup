@@ -1,7 +1,15 @@
 import { intersection } from 'lodash/fp';
 import { useState } from 'react';
 import { ChatButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { ActorDocument, EffectTypeAndRange, isEquipment, PowerEffect } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	ActorDocument,
+	AttackRoll,
+	DamageEffect,
+	EffectTypeAndRange,
+	isEquipment,
+	PowerEffect,
+	useApplicationDispatcher,
+} from '@foundryvtt-dndmashup/mashup-react';
 import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
@@ -50,8 +58,6 @@ function PowerOptions({
 		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
 		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
 
-	console.log(power.data.data.effects);
-
 	return (
 		<>
 			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
@@ -72,6 +78,7 @@ function PowerOptions({
 			new OperatorTerm({ operator: '+' }),
 			new NumericTerm({ number: 2, options: { flavor: 'bonus' } }),
 		]);
+		console.log(roll.formula);
 		await roll.evaluate();
 		const json = roll.toJSON();
 		console.log(roll, json);
@@ -96,6 +103,7 @@ function PowerEffectOptions({
 	canCreateEffect: canCreate,
 	createEffect,
 }: { effect: PowerEffect } & PowerEffectTemplateProps) {
+	const applications = useApplicationDispatcher();
 	return (
 		<div
 			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
@@ -108,13 +116,53 @@ function PowerEffectOptions({
 					Place Template
 				</ChatButton>
 			) : null}
-			{effect.attackRoll && <ChatButton className="mx-2">Roll Attack</ChatButton>}
-			{effect.hit.damage && <ChatButton className="mx-2">Hit Damage</ChatButton>}
+			{effect.attackRoll && (
+				<ChatButton className="mx-2" onClick={attackRoll(effect.attackRoll)}>
+					Roll Attack
+				</ChatButton>
+			)}
+			{effect.hit.damage && (
+				<ChatButton className="mx-2" onClick={damageRoll(effect.hit.damage, 'Hit')}>
+					Hit Damage
+				</ChatButton>
+			)}
 			{effect.hit.healing && <ChatButton className="mx-2">Hit Healing</ChatButton>}
-			{effect.miss?.damage && <ChatButton className="mx-2">Miss Damage</ChatButton>}
+			{effect.miss?.damage && (
+				<ChatButton className="mx-2" onClick={damageRoll(effect.miss.damage, 'Miss')}>
+					Miss Damage
+				</ChatButton>
+			)}
 			{effect.miss?.healing && <ChatButton className="mx-2">Miss Healing</ChatButton>}
 		</div>
 	);
+
+	function attackRoll(attackRoll: AttackRoll) {
+		return async () => {
+			const [, result] = applications.launchApplication('diceRoll', {
+				baseDice: `1d20 + ${attackRoll.attack}`,
+				title: effect.name ? `${effect.name} Attack` : `Attack`,
+			});
+			try {
+				console.log(await result);
+			} catch (ex) {
+				// result could throw - just cancel the die roll
+			}
+		};
+	}
+
+	function damageRoll(damage: DamageEffect, mode: 'Hit' | 'Miss') {
+		return async () => {
+			const [, result] = applications.launchApplication('diceRoll', {
+				baseDice: damage.damage,
+				title: effect.name ? `${effect.name} ${mode} Damage` : `${mode} Damage`,
+			});
+			try {
+				console.log(await result);
+			} catch (ex) {
+				// result could throw - just cancel the die roll
+			}
+		};
+	}
 }
 
 function ItemSelector<T extends ItemDocument>({
