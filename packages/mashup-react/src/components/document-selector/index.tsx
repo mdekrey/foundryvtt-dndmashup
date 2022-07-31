@@ -51,7 +51,7 @@ export function DocumentSelector<T extends SimpleDocument | null>({
 			options={options}
 			onChange={onChange}
 			onChangeValue={onChangeValue}
-			className="h-9 pb-1"
+			className="h-9"
 		/>
 	);
 }

@@ -85,7 +85,13 @@ export function Select<TValue extends Primitive | object>({
 
 	const inner = (
 		<div className={classNames('relative', className)}>
-			<div className={classNames('group', 'relative w-full h-full text-left', 'cursor-default overflow-hidden')}>
+			<div
+				className={classNames(
+					'group',
+					'relative w-full h-full text-left',
+					'cursor-default overflow-hidden',
+					'flex items-center'
+				)}>
 				<span className="group-focus-within:hidden absolute inset-y-0 pl-1 flex items-center pointer-events-none">
 					{options.find((opt) => opt.value === value)?.label ?? null}
 				</span>

@@ -21,7 +21,11 @@ export function DiceRoller({ baseDice, possibleTools, onRoll }: DiceRollerProps)
 	return (
 		<>
 			<p>{baseDice}</p>
-			{possibleTools ? <DocumentSelector documents={possibleTools} value={tool} onChangeValue={() => setTool} /> : null}
+			<div className="text-lg">
+				{possibleTools ? (
+					<DocumentSelector documents={possibleTools} value={tool} onChangeValue={() => setTool} />
+				) : null}
+			</div>
 			<button onClick={() => onRoll({ dice: baseDice, tool: tool ?? undefined })}>Roll</button>
 		</>
 	);
