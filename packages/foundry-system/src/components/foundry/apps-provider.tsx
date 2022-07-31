@@ -22,8 +22,8 @@ const applicationDispatcherContextValue: ApplicationDispatcherContext = {
 		});
 		if (!tempResolve || !tempReject) throw new Error(`Promise didn't provide callbacks.`);
 
-		const [jsx, title] = applicationRegistry[messageType](param, tempResolve, tempReject);
-		const dialog = new JsxDialog(jsx, { title, close: () => tempReject?.() });
+		const [jsx, title, options] = applicationRegistry[messageType](param, tempResolve, tempReject);
+		const dialog = new JsxDialog(jsx, { title, close: () => tempReject?.() }, options);
 		dialog.render(true);
 
 		return [

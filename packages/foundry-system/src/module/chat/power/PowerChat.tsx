@@ -1,20 +1,14 @@
-import { intersection } from 'lodash/fp';
-import { useState } from 'react';
-import { ChatButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { ChatButton } from '@foundryvtt-dndmashup/components';
 import {
 	ActorDocument,
 	AttackRoll,
 	DamageEffect,
 	EffectTypeAndRange,
-	isEquipment,
 	PowerEffect,
 	useApplicationDispatcher,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { EquippedItemSlot } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import classNames from 'classnames';
 
 type PowerEffectTemplateProps = {
@@ -42,27 +36,15 @@ export function PowerChat({
 	);
 }
 
-const toolKeywords = ['weapon', 'implement'] as const;
-const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
 function PowerOptions({
 	power,
 	actor,
 	...effectProps
 }: { power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
-	const toolType =
-		(intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined) ?? null;
-	const usesTool = toolType !== null;
-	const [tool, setTool] = useState<EquipmentDocument<'weapon' | 'implement'> | null>(null);
-	const possibleTools = (actor.items.contents as ItemDocument[])
-		.filter(isEquipment)
-		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
-		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
-
 	return (
 		<>
-			{usesTool ? <ItemSelector items={possibleTools} item={tool ?? possibleTools[0]} onChange={setTool} /> : null}
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
-				<PowerEffectOptions key={index} effect={effect} {...effectProps} />
+				<PowerEffectOptions key={index} effect={effect} {...effectProps} actor={actor} power={power} />
 			))}
 			<button onClick={onDemo}>Demo</button>
 		</>
@@ -99,10 +81,12 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 	);
 }
 function PowerEffectOptions({
+	actor,
+	power,
 	effect,
 	canCreateEffect: canCreate,
 	createEffect,
-}: { effect: PowerEffect } & PowerEffectTemplateProps) {
+}: { effect: PowerEffect; power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
 	const applications = useApplicationDispatcher();
 	return (
 		<div
@@ -141,6 +125,8 @@ function PowerEffectOptions({
 			const [, result] = applications.launchApplication('diceRoll', {
 				baseDice: `1d20 + ${attackRoll.attack}`,
 				title: effect.name ? `${effect.name} Attack` : `Attack`,
+				actor,
+				relatedPower: power,
 			});
 			try {
 				console.log(await result);
@@ -155,6 +141,8 @@ function PowerEffectOptions({
 			const [, result] = applications.launchApplication('diceRoll', {
 				baseDice: damage.damage,
 				title: effect.name ? `${effect.name} ${mode} Damage` : `${mode} Damage`,
+				actor,
+				relatedPower: power,
 			});
 			try {
 				console.log(await result);
@@ -163,28 +151,4 @@ function PowerEffectOptions({
 			}
 		};
 	}
-}
-
-function ItemSelector<T extends ItemDocument>({
-	items,
-	item,
-	onChange,
-}: {
-	items: T[];
-	item: T;
-	onChange: (selectedItem: T) => void;
-}) {
-	const options = items.map(
-		(item): SelectItem<T> => ({
-			key: item.id ?? '',
-			typeaheadLabel: item.name ?? '',
-			value: item,
-			label: (
-				<>
-					{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null} {item.name}
-				</>
-			),
-		})
-	);
-	return <FormInput.Select value={item} options={options} onChange={onChange} className="h-9 pb-1" />;
 }

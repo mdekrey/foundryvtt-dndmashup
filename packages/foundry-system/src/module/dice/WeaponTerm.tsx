@@ -12,7 +12,7 @@ export class WeaponTerm extends ParentheticalTerm {
 	private _total: RollTerm['total'];
 	static override SERIALIZE_ATTRIBUTES = ['number', 'weaponCode', 'weaponDice', '_total'];
 
-	override isIntermediate = false;
+	override isIntermediate = true;
 
 	constructor({
 		number,

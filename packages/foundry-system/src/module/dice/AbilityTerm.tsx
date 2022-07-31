@@ -6,6 +6,8 @@ export class AbilityTerm extends NumericTerm {
 	private ability: Ability;
 	static override SERIALIZE_ATTRIBUTES = ['number', 'ability'];
 
+	override isIntermediate = true;
+
 	constructor({ ability, ...props }: ConstructorParameters<ConstructorOf<typeof NumericTerm>> & { ability: Ability }) {
 		super(props);
 		this.ability = ability;
@@ -13,6 +15,19 @@ export class AbilityTerm extends NumericTerm {
 
 	override get expression() {
 		return this.ability.toUpperCase();
+	}
+
+	get dice() {
+		return [this];
+	}
+
+	getTooltipData() {
+		return {
+			formula: this.expression,
+			total: this.total,
+			flavor: this.flavor,
+			rolls: [],
+		};
 	}
 
 	static override fromMatch(match: RegExpMatchArray, data?: MashupDiceContext) {

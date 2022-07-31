@@ -1,11 +1,41 @@
-import { applicationRegistry, DiceRoller } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	applicationRegistry,
+	DiceRoller,
+	EquipmentDocument,
+	EquippedItemSlot,
+	isEquipment,
+	ItemDocument,
+} from '@foundryvtt-dndmashup/mashup-react';
+import { intersection } from 'lodash/fp';
+import { MashupDiceContext } from '../../dice/MashupDiceContext';
 
-applicationRegistry.diceRoll = ({ baseDice, title }, resolve) => {
-	return [<DiceRoller baseDice={baseDice} onRoll={onRoll} />, `Roll: ${title}`];
+const toolKeywords = ['weapon', 'implement'] as const;
+const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
 
-	async function onRoll(dice: string) {
+applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower }, resolve) => {
+	const toolType =
+		(relatedPower
+			? (intersection(toolKeywords, relatedPower.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
+			: null) ?? null;
+	const usesTool = toolType !== null;
+	const possibleTools = (actor.items.contents as ItemDocument[])
+		.filter(isEquipment)
+		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
+		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
+
+	return [
+		<DiceRoller baseDice={baseDice} onRoll={onRoll} possibleTools={usesTool ? possibleTools : undefined} />,
+		`Roll: ${title}`,
+		{ resizable: true },
+	];
+
+	async function onRoll({ dice, tool }: { dice: string; tool?: EquipmentDocument<'weapon' | 'implement'> }) {
 		// Example full formula: 1d20 + 2[ability bonus] + 4[power bonus] + 2[bonus]
-		const roll = Roll.create(dice);
+		const rollData: MashupDiceContext = {
+			actor: actor,
+			item: tool,
+		};
+		const roll = Roll.create(dice, rollData);
 		console.log(roll.formula);
 		await roll.evaluate();
 		const json = roll.toJSON();

@@ -7,6 +7,7 @@ export const parseWrapper: LibWrapperWrapperFunction<(formula: string, data: unk
 	data
 ) => {
 	const result = wrapper(formula, data);
+	// TODO - recurse parameters
 	return result.map((term) =>
 		(term instanceof StringTerm || term instanceof NumericTerm) && isMashupDiceContext(data)
 			? reparse(term, data)
