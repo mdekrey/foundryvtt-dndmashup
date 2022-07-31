@@ -9,7 +9,8 @@ export const parseWrapper: LibWrapperWrapperFunction<(formula: string, data: unk
 	const result = wrapper(formula, data);
 	// TODO - recurse parameters
 	return result.map((term) =>
-		(term instanceof StringTerm || term instanceof NumericTerm) && isMashupDiceContext(data)
+		(term instanceof StringTerm || term instanceof NumericTerm || term instanceof ParentheticalTerm) &&
+		isMashupDiceContext(data)
 			? reparse(term, data)
 			: term
 	);

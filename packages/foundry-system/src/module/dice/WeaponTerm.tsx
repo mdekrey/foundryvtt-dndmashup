@@ -55,7 +55,7 @@ export class WeaponTerm extends ParentheticalTerm {
 		return !isNil(this.number) ? `${this.number}[${this.weaponCode}]` : `[${this.weaponCode}]`;
 	}
 
-	static fromMatch(match: RegExpMatchArray, data?: MashupDiceContext) {
+	static fromMatch(match: RegExpMatchArray, data: MashupDiceContext) {
 		const [number, weaponCode, flavor] = match.slice(1);
 
 		// TODO: look up weaponcode using data

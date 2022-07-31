@@ -2,7 +2,11 @@ import { AbilityTerm } from './AbilityTerm';
 import { MashupDiceContext } from './MashupDiceContext';
 import { WeaponTerm } from './WeaponTerm';
 
-export function reparse(term: StringTerm | NumericTerm, data: MashupDiceContext): RollTerm {
+export function reparse(term: StringTerm | NumericTerm | ParentheticalTerm, data: MashupDiceContext): RollTerm {
+	if (term instanceof ParentheticalTerm) {
+		if (term.roll || term instanceof WeaponTerm) return term;
+		return new ParentheticalTerm({ term: term.term, roll: Roll.create(term.term, data), options: term.options });
+	}
 	const result = tryParse(WeaponTerm) ?? tryParse(AbilityTerm) ?? term;
 	return result;
 
