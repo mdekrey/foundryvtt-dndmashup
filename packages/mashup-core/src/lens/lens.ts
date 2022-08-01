@@ -1,12 +1,6 @@
 import { cloneDeep } from 'lodash/fp';
+import { immerMutatorToMutator } from './immerMutatorToMutator';
 import { ImmerMutator, Mutator, Stateful } from './types';
-
-function immerMutatorToMutator<T>(m: ImmerMutator<T>): Mutator<T> {
-	return (draft) => {
-		const result = m(draft);
-		return result === undefined ? draft : result;
-	};
-}
 
 export class Lens<TSource, TValue> {
 	constructor(
