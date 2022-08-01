@@ -122,6 +122,7 @@ function PowerEffectOptions({
 				title: effect.name ? `${effect.name} Attack` : `Attack`,
 				actor,
 				relatedPower: power,
+				rollType: 'attack-roll',
 			});
 			try {
 				console.log(await result);
@@ -138,6 +139,7 @@ function PowerEffectOptions({
 				title: effect.name ? `${effect.name} ${mode} Damage` : `${mode} Damage`,
 				actor,
 				relatedPower: power,
+				rollType: 'damage',
 			});
 			try {
 				console.log(await result);

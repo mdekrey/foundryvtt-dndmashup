@@ -12,7 +12,7 @@ import { MashupDiceContext } from '../../dice/MashupDiceContext';
 const toolKeywords = ['weapon', 'implement'] as const;
 const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
 
-applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower }, resolve) => {
+applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower, rollType }, resolve) => {
 	const toolType =
 		(relatedPower
 			? (intersection(toolKeywords, relatedPower.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
@@ -24,7 +24,13 @@ applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower }, resolv
 		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
 
 	return [
-		<DiceRoller baseDice={baseDice} onRoll={onRoll} possibleTools={usesTool ? possibleTools : undefined} />,
+		<DiceRoller
+			actor={actor}
+			rollType={rollType}
+			baseDice={baseDice}
+			onRoll={onRoll}
+			possibleTools={usesTool ? possibleTools : undefined}
+		/>,
 		`Roll: ${title}`,
 		{ resizable: true },
 	];

@@ -166,6 +166,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	override prepareDerivedData() {
+		this._allBonuses = null;
 		this._derivedData = null;
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });

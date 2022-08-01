@@ -1,4 +1,5 @@
 import { ActorDocument } from '../../actor';
+import { BonusTarget } from '../../bonuses';
 import { PowerDocument } from '../../item';
 
 export * from './DiceRoller';
@@ -8,6 +9,7 @@ export type DiceRollApplicationParameters = {
 	title: string;
 	actor: ActorDocument;
 	relatedPower?: PowerDocument;
+	rollType: BonusTarget;
 };
 
 declare global {
