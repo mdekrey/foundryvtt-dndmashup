@@ -1,3 +1,4 @@
+import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { isNil } from 'lodash/fp';
 import { MashupDiceContext } from './MashupDiceContext';
 
@@ -58,11 +59,15 @@ export class WeaponTerm extends ParentheticalTerm {
 	static fromMatch(match: RegExpMatchArray, data: MashupDiceContext) {
 		const [number, weaponCode, flavor] = match.slice(1);
 
-		// TODO: look up weaponcode using data
-		const weaponDice = weaponCode === 'W' ? '1d8' : '1d10';
-		// if (!data?.item) {
-		// 	return null;
-		// }
+		let weaponDice = '1d4'; // default for unarmed
+		if (weaponCode === 'W' && data.item && data.item.data.data.itemSlot === 'weapon') {
+			const weapon = data.item as EquipmentDocument<'weapon'>;
+			if (weapon.data.data.equipmentProperties) {
+				weaponDice = weapon.data.data.equipmentProperties.damage;
+			}
+		} else {
+			// TODO: beast?
+		}
 		return new WeaponTerm({
 			number: number ? Number(number) : undefined,
 			weaponDice,
