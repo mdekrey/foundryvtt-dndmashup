@@ -17,6 +17,7 @@ import {
 	Resistance,
 	sumFinalBonuses,
 	Vulnerability,
+	ruleResultIndeterminate,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
@@ -37,6 +38,7 @@ import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
 import { toObject } from '@foundryvtt-dndmashup/mashup-core';
 import { isGame } from '../../core/foundry';
+import { noop } from 'lodash/fp';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -96,9 +98,9 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	speed: (data, value) => (data.speed = value),
 	initiative: (data, value) => (data.initiative = value),
 
-	'attack-roll': (data, value) => (data.combatBonuses.attackRoll = value),
-	damage: (data, value) => (data.combatBonuses.damage = value),
-	'saving-throw': (data, value) => (data.combatBonuses.savingThrow = value),
+	'attack-roll': noop,
+	damage: noop,
+	'saving-throw': noop,
 };
 
 export class MashupActor extends Actor implements ActorDocument {
@@ -165,9 +167,24 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
+	private _appliedBonuses: FeatureBonusWithContext[] | null = null;
+	get appliedBonuses(): FeatureBonusWithContext[] {
+		if (!this._appliedBonuses) this.calculateDerivedData();
+		if (!this._appliedBonuses) throw new Error('Cannot access applied bonuses before loading is finished');
+		return this._appliedBonuses;
+	}
+	private _indeterminateBonuses: FeatureBonusWithContext[] | null = null;
+	get indeterminateBonuses(): FeatureBonusWithContext[] {
+		if (!this._indeterminateBonuses) this.calculateDerivedData();
+		if (!this._indeterminateBonuses) throw new Error('Cannot access indeterminate bonuses before loading is finished');
+		return this._indeterminateBonuses;
+	}
+
 	override prepareDerivedData() {
 		this._allBonuses = null;
 		this._derivedData = null;
+		this._appliedBonuses = null;
+		this._indeterminateBonuses = null;
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
 		if (this.isOwner) {
@@ -264,17 +281,21 @@ export class MashupActor extends Actor implements ActorDocument {
 			speed: 0,
 			initiative: 0,
 			size: this.appliedRace?.data.data.size ?? 'medium',
-			combatBonuses: {
-				attackRoll: 0,
-				damage: 0,
-				savingThrow: 0,
-			},
 		};
 		this._derivedData = resultData;
 		const groupedByTarget = byTarget(allBonuses);
+		const appliedBonuses: FeatureBonusWithContext[] = [];
+		const indeterminateBonuses: FeatureBonusWithContext[] = [];
+		this._appliedBonuses = appliedBonuses;
+		this._indeterminateBonuses = indeterminateBonuses;
 		bonusTargets.forEach((target) => {
-			const filtered = filterBonuses(groupedByTarget[target] ?? []);
-			const evaluatedBonuses = evaluateAndRoll(filtered);
+			const filtered = filterBonuses(groupedByTarget[target] ?? [], {}, true);
+			indeterminateBonuses.push(
+				...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)
+			);
+			const applicable = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
+			appliedBonuses.push(...applicable);
+			const evaluatedBonuses = evaluateAndRoll(applicable);
 			const final = sumFinalBonuses(evaluatedBonuses);
 			setters[target](resultData, final);
 		});

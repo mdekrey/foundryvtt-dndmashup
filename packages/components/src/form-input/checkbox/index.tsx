@@ -8,7 +8,10 @@ export function Checkbox({
 	const onChangeProps = onChangeValue
 		? {
 				onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-					if (ev.currentTarget.checked !== value) onChangeValue(() => ev.currentTarget.checked);
+					const newValue = ev.currentTarget.checked;
+					if (newValue !== value) {
+						onChangeValue(() => newValue);
+					}
 				},
 		  }
 		: {};

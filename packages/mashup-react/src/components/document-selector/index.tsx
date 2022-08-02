@@ -26,7 +26,7 @@ export function DocumentSelector<T extends SimpleDocument | null>({
 						value: null as T,
 						label: (
 							<>
-								<img src="icons/svg/cancel.svg" alt="" className="w-8 h-8 inline-block" /> &lt;None&gt;
+								<img src="icons/svg/cancel.svg" alt="" className="w-8 h-8 inline-block mr-1" /> &lt;None&gt;
 							</>
 						),
 					},
@@ -39,7 +39,7 @@ export function DocumentSelector<T extends SimpleDocument | null>({
 				value: item,
 				label: (
 					<>
-						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null} {item.name}
+						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block mr-1" /> : null} {item.name}
 					</>
 				),
 			})

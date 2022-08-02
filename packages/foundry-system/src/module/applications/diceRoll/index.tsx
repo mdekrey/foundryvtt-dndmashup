@@ -7,6 +7,7 @@ import {
 	ItemDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { intersection } from 'lodash/fp';
+import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
 import { MashupDiceContext } from '../../dice/MashupDiceContext';
 
 const toolKeywords = ['weapon', 'implement'] as const;
@@ -29,6 +30,7 @@ applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower, rollType
 			rollType={rollType}
 			baseDice={baseDice}
 			onRoll={onRoll}
+			evaluateBonuses={evaluateAndRoll}
 			possibleTools={usesTool ? possibleTools : undefined}
 		/>,
 		`Roll: ${title}`,

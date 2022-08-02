@@ -11,13 +11,27 @@ export function byTarget(
 	return groupBy((e) => e.target, bonusesWithContext) as Record<BonusTarget, FeatureBonusWithContext[]>;
 }
 
-export function filterBonuses(bonusesWithContext: FeatureBonusWithContext[]) {
+export function filterBonuses(
+	bonusesWithContext: FeatureBonusWithContext[],
+	runtimeParameters: Partial<ConditionRulesRuntimeParameters>,
+	includeIndeterminate: boolean
+) {
 	return bonusesWithContext
-		.filter((bonus) => {
+		.filter((bonus) => !bonus.disabled)
+		.map((bonus) => {
 			const rule = bonus.condition?.rule;
-			return !rule || conditionsRegistry[rule].rule(bonus.context as ConditionRuleContext);
+			const result = !rule
+				? true
+				: conditionsRegistry[rule].rule(
+						bonus.context as ConditionRuleContext,
+						bonus.condition?.parameter as never,
+						runtimeParameters
+				  );
+			return [bonus, result] as const;
 		})
-		.filter((bonus) => !bonus.disabled);
+		.filter(([, result]) => {
+			return includeIndeterminate ? result !== false : result === true;
+		});
 }
 
 export function sumFinalBonuses(finalBonuses: Record<string, number>): number {

@@ -8,6 +8,7 @@ import { MashupChatMessageType } from '@foundryvtt-dndmashup/mashup-react';
 import { ChatMessageDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/chatMessageData';
 import { isGame } from '../../core/foundry';
 import { renderReactToHtml } from '../../core/react';
+import { chatAttachments, ChatMessageProps } from '../../module/chat';
 import { FoundryWrapper } from './foundry-wrapper';
 
 async function sendChatMessage<T extends MashupChatMessageType>(
@@ -21,14 +22,11 @@ async function sendChatMessage<T extends MashupChatMessageType>(
 		properties
 	)) as ChatMessageDataConstructorData & Record<string, unknown>;
 
-	const html = await renderReactToHtml(<FoundryWrapper></FoundryWrapper>);
-
-	return ChatMessage.create({
+	const messageInfo = {
 		user: game.user.id,
 		type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-		content: html,
 		flags: {
-			'attach-component': 'power',
+			'attach-component': messageType,
 			...flags,
 		},
 		speaker: speaker && {
@@ -37,6 +35,18 @@ async function sendChatMessage<T extends MashupChatMessageType>(
 			alias: speaker.name,
 		},
 		...result,
+	} as ChatMessageProps;
+
+	const Component = chatAttachments[messageType];
+	const html = await renderReactToHtml(
+		<FoundryWrapper>
+			<Component {...messageInfo} />
+		</FoundryWrapper>
+	);
+
+	return ChatMessage.create({
+		...messageInfo,
+		content: html,
 	});
 }
 

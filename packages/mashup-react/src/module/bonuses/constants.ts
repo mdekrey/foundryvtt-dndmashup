@@ -39,16 +39,16 @@ export function defenseForBonus(bonusTarget: DefenseBonus): Defense {
 export const bonusTypes = ['enhancement', 'ability', 'armor', 'class', 'feat', 'power', 'proficiency', 'shield'];
 
 export type ConditionRuleType = keyof ConditionRules;
-export type ConditionRule = {
-	rule: ConditionRuleType;
-	parameter: Record<string, string>;
-};
+export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> = {
+	[K in TType]: {
+		rule: K;
+		parameter: ConditionRules[K];
+	};
+}[TType];
 export type ConditionRuleContext = {
 	actor: ActorDocument;
 	item: ItemDocument;
 };
-export type ConditionRuleFunction = {
-	label: string;
-	display: string;
-	rule: (input: ConditionRuleContext) => boolean;
-};
+
+export const ruleResultIndeterminate = Symbol('indeterminate');
+export type ConditionRuleIndeterminateResult = typeof ruleResultIndeterminate;

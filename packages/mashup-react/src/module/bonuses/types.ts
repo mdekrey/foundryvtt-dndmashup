@@ -11,3 +11,6 @@ export type FeatureBonus = {
 export type FeatureBonusWithContext = FeatureBonus & {
 	context: Partial<ConditionRuleContext>;
 };
+export type BonusByType = {
+	[k: string]: number;
+};

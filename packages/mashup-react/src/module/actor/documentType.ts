@@ -15,6 +15,8 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	readonly token: null | TokenDocument;
 
 	get allBonuses(): FeatureBonusWithContext[];
+	get appliedBonuses(): FeatureBonusWithContext[];
+	get indeterminateBonuses(): FeatureBonusWithContext[];
 
 	allPowers(): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;

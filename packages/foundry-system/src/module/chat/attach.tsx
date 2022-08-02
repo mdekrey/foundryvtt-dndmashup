@@ -2,7 +2,7 @@ import { ToObjectFalseType } from '@league-of-foundry-developers/foundry-vtt-typ
 import { createRoot } from 'react-dom/client';
 import { FoundryWrapper } from '../../components/foundry';
 
-export type ChatMessageProps = ToObjectFalseType<ChatMessage>;
+export type ChatMessageProps = ToObjectFalseType<ChatMessage>; // ChatMessageDataProperties;
 
 export const chatAttachments: Record<string, React.FC<ChatMessageProps>> = {};
 

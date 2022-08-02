@@ -15,14 +15,16 @@ const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 }));
 const selectConditions: SelectItem<ConditionRuleType | ''>[] = [
 	{ key: '', value: '', label: '(always)', typeaheadLabel: '(always)' },
-	...Object.entries(conditionsRegistry).map(
-		([key, { label }]): SelectItem<ConditionRuleType | ''> => ({
+	...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<ConditionRuleType | ''> => {
+		const text = ruleText();
+		const label = `when ${text}`;
+		return {
 			key,
 			value: key as ConditionRuleType,
 			label,
 			typeaheadLabel: label,
-		})
-	),
+		};
+	}),
 ];
 
 const baseLens = Lens.identity<FeatureBonus[]>();

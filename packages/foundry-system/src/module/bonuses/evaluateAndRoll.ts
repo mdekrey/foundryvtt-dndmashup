@@ -1,10 +1,10 @@
 import { groupBy } from 'lodash/fp';
-import { FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-react';
+import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
 
-export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]) {
+export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]): BonusByType {
 	const applicableBonuses = bonusesWithContext.map(({ type, amount, context }) => ({
 		type: type || '',
 		amount: typeof amount === 'number' ? new Roll(`${amount}`) : new Roll(amount, context),

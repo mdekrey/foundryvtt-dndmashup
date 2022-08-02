@@ -21,11 +21,6 @@ export type CommonDerivedDataProperties = {
 	speed: number;
 	initiative: number;
 	size: Size;
-	combatBonuses: {
-		attackRoll: number;
-		damage: number;
-		savingThrow: number;
-	};
 };
 
 export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {

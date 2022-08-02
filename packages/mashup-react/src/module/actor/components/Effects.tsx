@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { Bonuses, targets, conditionsRegistry, FeatureBonusWithContext } from '../../bonuses';
+import { Bonuses, targets, FeatureBonusWithContext, getRuleText } from '../../bonuses';
 import { ActorDataSource } from '../types';
 
 const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
@@ -23,7 +23,8 @@ export function Effects({
 				</thead>
 				<tbody>
 					{bonusList.map((bonus, idx) => {
-						const rule = bonus.condition?.rule;
+						const condition = bonus.condition;
+						const conditionText = condition ? getRuleText(condition) : null;
 						return (
 							<tr
 								key={idx}
@@ -33,9 +34,8 @@ export function Effects({
 									{ 'opacity-75': bonus.disabled }
 								)}>
 								<td className="px-1">
-									{bonus.amount} {bonus.type} bonus to {targets[bonus.target].label}{' '}
-									{rule ? conditionsRegistry[rule].display : null}
-									{/* TODO - better display */}
+									{bonus.amount} {bonus.type} bonus to {targets[bonus.target].label} {conditionText}
+									{/* TODO - better editor that includes condition parameters */}
 								</td>
 								<td>
 									{bonus.context.item ? (

@@ -18,7 +18,10 @@ export function TextField({
 	const onChangeProps = onChangeValue
 		? {
 				onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-					if (ev.currentTarget.value !== value) onChangeValue(() => ev.currentTarget.value);
+					const newValue = ev.currentTarget.value;
+					if (newValue !== value) {
+						onChangeValue(() => newValue);
+					}
 				},
 		  }
 		: {};

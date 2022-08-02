@@ -18,7 +18,10 @@ export function NumberField({
 	const onChangeProps = onChangeValue
 		? {
 				onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-					if (Number(ev.currentTarget.value) !== value) onChangeValue(() => Number(ev.currentTarget.value));
+					const newValue = Number(ev.currentTarget.value);
+					if (newValue !== value) {
+						onChangeValue(() => newValue);
+					}
 				},
 		  }
 		: {};
