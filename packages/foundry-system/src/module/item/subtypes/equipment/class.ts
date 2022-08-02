@@ -11,7 +11,8 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
-	override allGrantedBonuses(): FeatureBonus[] {
+	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonus[] {
+		if ((this.data.data.itemSlot === 'weapon' || this.data.data.itemSlot === 'implement') && !isForPowerUse) return [];
 		if (!this.data.data.equipped?.length && this.data.data.itemSlot) return [];
 		// TODO: if it is a weapon or implement, only apply when used in an attack
 		return [...this.data.data.grantedBonuses];

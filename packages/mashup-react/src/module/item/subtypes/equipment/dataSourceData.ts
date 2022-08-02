@@ -6,6 +6,7 @@ import {
 } from '../../templates/bases';
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ItemDocument } from '../../item-data-types-template';
+import { FeatureBonus } from '../../../bonuses';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData &
@@ -21,4 +22,6 @@ export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
 	EquipmentDataSourceData<TItemSlot>
 >;
 
-export type EquipmentDocument<TItemSlot extends ItemSlot = ItemSlot> = ItemDocument<EquipmentData<TItemSlot>>;
+export type EquipmentDocument<TItemSlot extends ItemSlot = ItemSlot> = ItemDocument<EquipmentData<TItemSlot>> & {
+	allGrantedBonuses(isForPowerUse?: boolean): FeatureBonus[];
+};

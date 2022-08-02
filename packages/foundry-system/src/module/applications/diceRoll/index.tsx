@@ -30,6 +30,11 @@ applicationRegistry.diceRoll = ({ baseDice, title, actor, relatedPower, rollType
 			rollType={rollType}
 			baseDice={baseDice}
 			onRoll={onRoll}
+			runtimeBonusParameters={
+				{
+					/* TODO */
+				}
+			}
 			evaluateBonuses={evaluateAndRoll}
 			possibleTools={usesTool ? possibleTools : undefined}
 		/>,

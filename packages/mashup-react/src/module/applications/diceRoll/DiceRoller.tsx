@@ -3,7 +3,14 @@ import { AppButton, FormInput } from '@foundryvtt-dndmashup/components';
 import { DocumentSelector } from '../../../components';
 import { EquipmentDocument } from '../../item';
 import { immerMutatorToMutator, Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { BonusByType, BonusTarget, FeatureBonusWithContext, getRuleText } from '../../bonuses';
+import {
+	BonusByType,
+	BonusTarget,
+	FeatureBonusWithContext,
+	filterBonuses,
+	getRuleText,
+	ruleResultIndeterminate,
+} from '../../bonuses';
 import { ActorDocument } from '../../actor';
 import { cloneDeep } from 'lodash/fp';
 
@@ -17,6 +24,7 @@ export type DiceRollerProps = {
 	rollType: BonusTarget;
 	baseDice: string;
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
+	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
 
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: RollDetails): void;
@@ -37,22 +45,44 @@ function lensFromState<S>([value, setValue]: [S, React.Dispatch<React.SetStateAc
 
 const showBonusType = false;
 
-export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateBonuses, onRoll }: DiceRollerProps) {
+export function DiceRoller({
+	actor,
+	baseDice,
+	possibleTools,
+	rollType,
+	runtimeBonusParameters,
+	evaluateBonuses,
+	onRoll,
+}: DiceRollerProps) {
 	const [tool, setTool] = useState<EquipmentDocument<'weapon' | 'implement'> | null>(
 		(possibleTools && possibleTools[0]) || null
 	);
 	const selectedBonusesState = lensFromState(useState<boolean[]>([]));
 	const additionalModifiersState = lensFromState(useState(''));
 
-	const bonuses = useMemo(
-		() => actor.indeterminateBonuses.filter((b) => b.target === rollType),
-		[actor.indeterminateBonuses]
+	const toolBonuses = useMemo(() => {
+		if (tool === null) return { indeterminate: [], applied: [] };
+		const allToolBonuses = tool.allGrantedBonuses(true);
+		const filtered = filterBonuses(
+			allToolBonuses.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor, item: tool } })),
+			runtimeBonusParameters,
+			true
+		);
+		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
+		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
+		return { indeterminate, applied };
+	}, [tool]);
+
+	const indeterminateBonuses = useMemo(
+		() => [...actor.indeterminateBonuses.filter((b) => b.target === rollType), ...toolBonuses.indeterminate],
+		[actor.indeterminateBonuses, toolBonuses.indeterminate]
 	);
 
 	const checkboxBonusFormula = useMemo(() => {
-		const selectedIndeterminateBonuses = bonuses.filter((_, index) => selectedBonusesState.value[index]);
+		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
 		const selectedBonuses = [
 			...actor.appliedBonuses.filter((b) => b.target === rollType),
+			...toolBonuses.applied,
 			...selectedIndeterminateBonuses,
 		];
 		const result = evaluateBonuses(selectedBonuses);
@@ -68,7 +98,7 @@ export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateB
 		).join('');
 
 		return formula;
-	}, [selectedBonusesState.value, bonuses, actor.appliedBonuses]);
+	}, [selectedBonusesState.value, indeterminateBonuses, actor.appliedBonuses, toolBonuses.applied]);
 
 	const currentRoll = `${baseDice}${
 		additionalModifiersState.value ? ` + ${additionalModifiersState.value.trim().replace(/^\++/g, '').trim()}` : ''
@@ -82,7 +112,7 @@ export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateB
 					<DocumentSelector documents={possibleTools} value={tool} onChange={setTool} allowNull={true} />
 				</div>
 			) : null}
-			{bonuses.map((b, index) => (
+			{indeterminateBonuses.map((b, index) => (
 				<FormInput.Inline key={index}>
 					<FormInput.Checkbox
 						{...Lens.fromProp<boolean[]>()(index).apply(selectedBonusesState)}
