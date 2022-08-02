@@ -18,6 +18,7 @@ import {
 	sumFinalBonuses,
 	Vulnerability,
 	ruleResultIndeterminate,
+	ConditionRule,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
@@ -47,6 +48,10 @@ const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isEpicDestinySource,
 ];
 
+function condition(text: string): { condition: ConditionRule } {
+	return { condition: { rule: 'manual', parameter: { conditionText: text } } };
+}
+
 const base = { condition: null } as const;
 const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
@@ -69,6 +74,18 @@ const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis.total', type: 'ability' },
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha.total', type: 'ability' },
 	{ ...base, target: 'initiative', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
+
+	{ ...condition('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
+	{ ...condition('you are charging'), target: 'attack-roll', amount: 1 },
+	{ ...condition('the target has concealment from you'), target: 'attack-roll', amount: -2 },
+	{ ...condition('the target has total concealment from you'), target: 'attack-roll', amount: -5 },
+	{ ...condition('the target has cover from you'), target: 'attack-roll', amount: -2 },
+	{ ...condition('the target has superior cover from you'), target: 'attack-roll', amount: -5 },
+	{ ...condition('the target is long range from you'), target: 'attack-roll', amount: -2 },
+	{ ...condition('you are prone'), target: 'attack-roll', amount: -2 }, // TODO: automate
+	{ ...condition('you are restrained'), target: 'attack-roll', amount: -2 }, // TODO: automate
+	{ ...condition('you are running'), target: 'attack-roll', amount: -5 },
+	{ ...condition('you are squeezing'), target: 'attack-roll', amount: -5 },
 ];
 
 const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => void> = {

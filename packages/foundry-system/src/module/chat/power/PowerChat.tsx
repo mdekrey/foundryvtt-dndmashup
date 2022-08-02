@@ -41,26 +41,8 @@ function PowerOptions({
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
 				<PowerEffectOptions key={index} effect={effect} {...effectProps} actor={actor} power={power} />
 			))}
-			<button onClick={onDemo}>Demo</button>
 		</>
 	);
-
-	async function onDemo() {
-		const roll = Roll.fromTerms([
-			new Die({ number: 1, faces: 20 }),
-			new OperatorTerm({ operator: '+' }),
-			new NumericTerm({ number: 2, options: { flavor: 'ability bonus' } }),
-			new OperatorTerm({ operator: '+' }),
-			new NumericTerm({ number: 4, options: { flavor: 'power bonus' } }),
-			new OperatorTerm({ operator: '+' }),
-			new NumericTerm({ number: 2, options: { flavor: 'bonus' } }),
-		]);
-		console.log(roll.formula);
-		await roll.evaluate();
-		const json = roll.toJSON();
-		console.log(roll, json);
-		await roll.toMessage();
-	}
 }
 
 function hasEffectInfo(effect: PowerEffect): boolean {

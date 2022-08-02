@@ -64,7 +64,7 @@ export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateB
 						.map((k) => `${result[k] < 0 ? ' - ' : ' + '}${Math.abs(result[k])}${k ? `[${k}]` : ''}`)
 				: Object.keys(result)
 						.reduce((a, k) => [a[0] + result[k]], [0])
-						.map((v) => (v === 0 ? '' : `${v > 0 ? ' + ' : ' - '}${v}`))
+						.map((v) => (v === 0 ? '' : `${v > 0 ? ' + ' : ' - '}${Math.abs(v)}`))
 		).join('');
 
 		return formula;
@@ -89,7 +89,7 @@ export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateB
 						className="self-center"
 					/>
 					<span>
-						{b.amount} {b.amount < 0 ? 'penalty' : `${b.type} bonus`.trim()} if{' '}
+						{b.amount} {b.amount < 0 ? 'penalty' : `${b.type ? `${b.type} ` : ''}bonus`.trim()} if{' '}
 						{b.condition ? getRuleText(b.condition) : '...?'}
 					</span>
 				</FormInput.Inline>
