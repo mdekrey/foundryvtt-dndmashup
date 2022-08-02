@@ -12,14 +12,12 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
 	override allGrantedBonuses(): FeatureBonus[] {
-		return [
-			// TODO: only if equipped and it requires an item slot
-			...this.data.data.grantedBonuses,
-		];
+		if (!this.data.data.equipped?.length && this.data.data.itemSlot) return [];
+		// TODO: if it is a weapon or implement, only apply when used in an attack
+		return [...this.data.data.grantedBonuses];
 	}
 
 	override canEmbedItem(type: PossibleItemType): boolean {
-		// TODO - conly contain other equipment if it is a "container"
-		return type === 'equipment' || type === 'power';
+		return (this.data.data.container && type === 'equipment') || type === 'power';
 	}
 }

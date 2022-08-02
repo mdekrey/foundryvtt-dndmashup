@@ -79,7 +79,7 @@ export function DiceRoller({ actor, baseDice, possibleTools, rollType, evaluateB
 			<p className="bg-theme text-white px-2 font-bold text-center py-1">{baseDice}</p>
 			{possibleTools ? (
 				<div className="text-lg">
-					<DocumentSelector documents={possibleTools} value={tool} onChangeValue={() => setTool} allowNull={true} />
+					<DocumentSelector documents={possibleTools} value={tool} onChange={setTool} allowNull={true} />
 				</div>
 			) : null}
 			{bonuses.map((b, index) => (
