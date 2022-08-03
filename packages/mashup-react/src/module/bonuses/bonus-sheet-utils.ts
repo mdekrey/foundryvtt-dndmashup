@@ -21,6 +21,7 @@ export const targets: Record<BonusTarget, { label: string }> = {
 	initiative: { label: 'Initiative' },
 	'attack-roll': { label: 'Attack Roll' },
 	damage: { label: 'Damage' },
+	healing: { label: 'Healing' },
 	'saving-throw': { label: 'Saving Throws' },
 
 	...toObject(

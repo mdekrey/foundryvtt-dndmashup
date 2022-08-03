@@ -15,6 +15,7 @@ export const bonusTargets = [
 	`attack-roll` as const,
 	`damage` as const,
 	`saving-throw` as const,
+	`healing` as const,
 ];
 
 export type AbilityBonus = `ability-${Ability}`;

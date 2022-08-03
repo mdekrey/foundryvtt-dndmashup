@@ -1,6 +1,7 @@
-import { ChatButton } from '@foundryvtt-dndmashup/components';
+import { IconButton, ImageButton } from '@foundryvtt-dndmashup/components';
 import {
 	ActorDocument,
+	ApplicableEffect,
 	AttackRoll,
 	DamageEffect,
 	EffectTypeAndRange,
@@ -10,6 +11,7 @@ import {
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import classNames from 'classnames';
+import { ReactComponent as DropIcon } from './drop.svg';
 
 type PowerEffectTemplateProps = {
 	canCreateEffect: (typeAndRange: EffectTypeAndRange) => boolean;
@@ -59,43 +61,55 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 }
 function PowerEffectOptions({
 	actor,
-	power,
+	power: relatedPower,
 	effect,
 	canCreateEffect: canCreate,
 	createEffect,
 }: { effect: PowerEffect; power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
 	const applications = useApplicationDispatcher();
-	return (
-		<div
-			className={classNames('grid grid-cols-1 w-full gap-1 mt-1', {
-				'pt-1': effect.name,
-			})}>
-			{effect.name && <p className="bg-theme text-white px-2 font-bold text-center py-1">{effect.name}</p>}
 
-			{canCreate(effect.typeAndRange) ? (
-				<ChatButton className="mx-2" onClick={() => createEffect(effect.typeAndRange)}>
-					Place Template
-				</ChatButton>
-			) : null}
-			{effect.attackRoll && (
-				<ChatButton className="mx-2" onClick={attackRoll(effect.attackRoll)}>
-					Roll Attack
-				</ChatButton>
-			)}
-			{effect.hit.damage && (
-				<ChatButton className="mx-2" onClick={damageRoll(effect.hit.damage, 'Hit')}>
-					Hit Damage
-				</ChatButton>
-			)}
-			{effect.hit.healing && <ChatButton className="mx-2">Hit Healing</ChatButton>}
-			{effect.miss?.damage && (
-				<ChatButton className="mx-2" onClick={damageRoll(effect.miss.damage, 'Miss')}>
-					Miss Damage
-				</ChatButton>
-			)}
-			{effect.miss?.healing && <ChatButton className="mx-2">Miss Healing</ChatButton>}
+	const effectProps = { prefix: effect.name, actor, relatedPower };
+
+	return (
+		<div className={classNames('grid grid-cols-1 w-full')}>
+			<div className="flex flex-row items-center bg-gradient-to-r from-transparent to-white text-black h-7">
+				<span className="flex-1 font-bold pl-1">{effect.name}</span>
+
+				{canCreate(effect.typeAndRange) && (
+					<IconButton
+						className="text-lg"
+						iconClassName="fas fa-ruler-combined"
+						title="Place Template"
+						onClick={() => createEffect(effect.typeAndRange)}
+					/>
+				)}
+				{effect.attackRoll && (
+					<IconButton
+						className="text-lg"
+						iconClassName="fas fa-dice-d20"
+						title="Roll Attack"
+						onClick={attackRoll(effect.attackRoll)}
+					/>
+				)}
+			</div>
+			<div className="text-gray-800">
+				{applicableEffectSection(effect.hit, effect.attackRoll ? 'Hit' : 'Effect')}
+				{effect.miss && (effect.miss.damage || effect.miss.healing)
+					? applicableEffectSection(effect.miss, 'Miss')
+					: null}
+			</div>
 		</div>
 	);
+
+	function applicableEffectSection(apEffect: ApplicableEffect, mode: string) {
+		return (
+			<div className="flex flex-row items-center pl-2">
+				<span className="flex-1">{mode}</span>
+
+				<ApplicableEffectOptions effect={apEffect} mode={mode} {...effectProps} />
+			</div>
+		);
+	}
 
 	function attackRoll(attackRoll: AttackRoll) {
 		return async () => {
@@ -103,7 +117,7 @@ function PowerEffectOptions({
 				baseDice: `1d20 + ${attackRoll.attack}`,
 				title: effect.name ? `${effect.name} Attack` : `Attack`,
 				actor,
-				relatedPower: power,
+				relatedPower: relatedPower,
 				rollType: 'attack-roll',
 			});
 			try {
@@ -113,14 +127,47 @@ function PowerEffectOptions({
 			}
 		};
 	}
+}
 
-	function damageRoll(damage: DamageEffect, mode: 'Hit' | 'Miss') {
+function ApplicableEffectOptions({
+	effect,
+	prefix,
+	mode,
+	actor,
+	relatedPower,
+}: {
+	effect: ApplicableEffect;
+	prefix?: string;
+	mode: string;
+	actor: ActorDocument;
+	relatedPower: PowerDocument;
+}) {
+	const applications = useApplicationDispatcher();
+	return (
+		<>
+			{effect.damage && (
+				<button
+					className={classNames('p-1', 'focus:ring-blue-bright-600 focus:ring-1')}
+					title={`${mode} Damage`}
+					onClick={damageRoll(effect.damage)}
+					type="button">
+					<DropIcon className="w-5 h-5" />
+				</button>
+			)}
+			{/* TODO: healing */}
+			{effect.healing && <IconButton className="text-lg" iconClassName="fas fa-heart" title={`${mode} Healing`} />}
+			{/* TODO: effect */}
+			{false && <IconButton className="text-lg" iconClassName="fas fa-bullseye" title={`Apply ${mode} Effects`} />}
+		</>
+	);
+
+	function damageRoll(damageEffect: DamageEffect) {
 		return async () => {
 			const [, result] = applications.launchApplication('diceRoll', {
-				baseDice: damage.damage,
-				title: effect.name ? `${effect.name} ${mode} Damage` : `${mode} Damage`,
+				baseDice: damageEffect.damage,
+				title: prefix ? `${prefix} ${mode} Damage` : `${mode} Damage`,
 				actor,
-				relatedPower: power,
+				relatedPower,
 				rollType: 'damage',
 			});
 			try {

@@ -79,7 +79,7 @@ function PowerBody({ item, actor }: { item: PowerDocument; actor: ActorDocument 
 
 	return (
 		<td className="text-right">
-			<ImageButton src="/icons/svg/d20-black.svg" onClick={shareToChat} />
+			<ImageButton src="/icons/svg/d20-black.svg" className="mr-1" onClick={shareToChat} />
 		</td>
 	);
 
