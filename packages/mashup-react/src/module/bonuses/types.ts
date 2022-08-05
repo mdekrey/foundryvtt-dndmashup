@@ -11,6 +11,8 @@ export type FeatureBonus = {
 export type FeatureBonusWithContext = FeatureBonus & {
 	context: Partial<ConditionRuleContext>;
 };
+export const untypedBonus = Symbol('untyped');
 export type BonusByType = {
+	[untypedBonus]?: string;
 	[k: string]: number;
 };

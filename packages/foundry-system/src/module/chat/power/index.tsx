@@ -1,7 +1,12 @@
 import { fromMashupId, isGame } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
-import { ActorDocument, EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	ActorDocument,
+	AttackRoll,
+	EffectTypeAndRange,
+	useApplicationDispatcher,
+} from '@foundryvtt-dndmashup/mashup-react';
 import { chatMessageRegistry, PowerDocument, PowerChatMessage } from '@foundryvtt-dndmashup/mashup-react';
 import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 import { PowerEffectTemplate } from '../../power-effect-template';
@@ -36,8 +41,16 @@ function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: 
 }
 
 function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDocument }) {
+	const applications = useApplicationDispatcher();
+
 	return (
-		<PowerChat item={item} actor={actor} canCreateEffect={PowerEffectTemplate.canCreate} createEffect={createEffect} />
+		<PowerChat
+			item={item}
+			actor={actor}
+			canCreateEffect={PowerEffectTemplate.canCreate}
+			createEffect={createEffect}
+			rollAttack={rollAttack}
+		/>
 	);
 
 	function createEffect(typeAndRange: EffectTypeAndRange) {
@@ -47,5 +60,23 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			template.drawPreview(() => {
 				if (actor && actor.sheet) actor.sheet.maximize();
 			});
+	}
+
+	function rollAttack(attackRoll: AttackRoll, title: string) {
+		if (!isGame(game)) return;
+		if (!game.user) return;
+		const targets = Array.from(game.user.targets)
+			.map((token) => token.actor)
+			.filter((v): v is Exclude<typeof v, null> => !!v) as ActorDocument[];
+		const [, result] = applications.launchApplication('attackRoll', {
+			baseDice: `1d20 + ${attackRoll.attack}`,
+			title,
+			actor,
+			relatedPower: item,
+			rollType: 'attack-roll',
+			targets,
+			defense: attackRoll.defense,
+		});
+		result.catch();
 	}
 }

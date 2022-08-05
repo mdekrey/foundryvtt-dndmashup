@@ -1,27 +1,39 @@
 import { groupBy } from 'lodash/fp';
-import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-react';
+import { BonusByType, FeatureBonusWithContext, untypedBonus } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
-const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
 
 export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]): BonusByType {
-	const applicableBonuses = bonusesWithContext.map(({ type, amount, context }) => ({
-		type: type || '',
-		amount: typeof amount === 'number' ? new Roll(`${amount}`) : new Roll(amount, context),
-		original: amount,
-		context,
-	}));
-	// TODO - allow non-deterministic formulas for damage, attack rolls, etc. - should not use Roll until then.
-	const deterministicBonuses = applicableBonuses.filter(({ amount }) => amount.isDeterministic);
-	const byType = groupBy((e) => e.type, deterministicBonuses);
+	const byType = groupBy((e) => e.type, bonusesWithContext);
 
+	console.log(bonusesWithContext);
 	const finalBonuses = Object.fromEntries(
-		Object.entries(byType).map(([k, v]) => {
-			const mapped = v.map(({ amount }) => amount.roll({ async: false })._total);
-			const formula = k === '' ? sum : max;
-			const value = formula(mapped);
-			return [k, value];
-		})
+		Object.entries(byType)
+			.map(([k, v]) => {
+				if (k === '') {
+					const byType = groupBy((e) => typeof e.amount, v);
+					const indeterminateBonuses = (byType['string'] ?? [])
+						.map(({ amount }) => amount as string)
+						.map((amount) => amount.trim().replace(/^\+/, ''))
+						.join(' + ');
+					const determinateBonuses = (byType['number'] ?? [])
+						.map(({ amount }) => amount as number)
+						.reduce((a, b) => a + b, 0);
+
+					return [
+						['', determinateBonuses],
+						[untypedBonus, indeterminateBonuses],
+					];
+				}
+				// console.log([k, v]);
+				const value = max(
+					v.map(({ amount, context }) =>
+						typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total
+					)
+				);
+				return [[k, value]];
+			})
+			.flat()
 	);
 
 	return finalBonuses;

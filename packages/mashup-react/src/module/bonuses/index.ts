@@ -7,3 +7,4 @@ export * from './calculate';
 export * from './bonus-sheet-utils';
 export * from './registry';
 export * from './registry-helpers';
+export * from './fromBonusesToFormula';

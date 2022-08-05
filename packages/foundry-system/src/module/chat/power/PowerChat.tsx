@@ -1,4 +1,4 @@
-import { IconButton, ImageButton } from '@foundryvtt-dndmashup/components';
+import { IconButton } from '@foundryvtt-dndmashup/components';
 import {
 	ActorDocument,
 	ApplicableEffect,
@@ -22,7 +22,11 @@ export function PowerChat({
 	item,
 	actor,
 	...effectProps
-}: { item: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
+}: {
+	item: PowerDocument;
+	actor: ActorDocument;
+	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+} & PowerEffectTemplateProps) {
 	return (
 		<div className="flex flex-col items-center">
 			<div className="w-full border-4 border-white">
@@ -37,7 +41,11 @@ function PowerOptions({
 	power,
 	actor,
 	...effectProps
-}: { power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
+}: {
+	power: PowerDocument;
+	actor: ActorDocument;
+	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+} & PowerEffectTemplateProps) {
 	return (
 		<>
 			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
@@ -65,9 +73,13 @@ function PowerEffectOptions({
 	effect,
 	canCreateEffect: canCreate,
 	createEffect,
-}: { effect: PowerEffect; power: PowerDocument; actor: ActorDocument } & PowerEffectTemplateProps) {
-	const applications = useApplicationDispatcher();
-
+	rollAttack,
+}: {
+	effect: PowerEffect;
+	power: PowerDocument;
+	actor: ActorDocument;
+	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+} & PowerEffectTemplateProps) {
 	const effectProps = { prefix: effect.name, actor, relatedPower };
 
 	return (
@@ -112,20 +124,7 @@ function PowerEffectOptions({
 	}
 
 	function attackRoll(attackRoll: AttackRoll) {
-		return async () => {
-			const [, result] = applications.launchApplication('diceRoll', {
-				baseDice: `1d20 + ${attackRoll.attack}`,
-				title: effect.name ? `${effect.name} Attack` : `Attack`,
-				actor,
-				relatedPower: relatedPower,
-				rollType: 'attack-roll',
-			});
-			try {
-				console.log(await result);
-			} catch (ex) {
-				// result could throw - just cancel the die roll
-			}
-		};
+		return async () => rollAttack(attackRoll, effect.name || '');
 	}
 }
 
@@ -162,19 +161,15 @@ function ApplicableEffectOptions({
 	);
 
 	function damageRoll(damageEffect: DamageEffect) {
-		return async () => {
-			const [, result] = applications.launchApplication('diceRoll', {
+		return () => {
+			const [, result] = applications.launchApplication('damage', {
 				baseDice: damageEffect.damage,
-				title: prefix ? `${prefix} ${mode} Damage` : `${mode} Damage`,
+				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
 				relatedPower,
 				rollType: 'damage',
 			});
-			try {
-				console.log(await result);
-			} catch (ex) {
-				// result could throw - just cancel the die roll
-			}
+			result.catch();
 		};
 	}
 }

@@ -13,9 +13,11 @@ import {
 } from '../../bonuses';
 import { ActorDocument } from '../../actor';
 import { cloneDeep } from 'lodash/fp';
+import { combineRollComponents, fromBonusesToFormula } from '../../bonuses/fromBonusesToFormula';
 
 export type RollDetails = {
-	dice: string;
+	baseDice: string;
+	resultBonusesByType: BonusByType;
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
@@ -42,8 +44,6 @@ function lensFromState<S>([value, setValue]: [S, React.Dispatch<React.SetStateAc
 		},
 	};
 }
-
-const showBonusType = false;
 
 export function DiceRoller({
 	actor,
@@ -78,31 +78,21 @@ export function DiceRoller({
 		[actor.indeterminateBonuses, toolBonuses.indeterminate]
 	);
 
-	const checkboxBonusFormula = useMemo(() => {
+	const { checkboxBonusFormula, bonusByType } = useMemo(() => {
 		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
 		const selectedBonuses = [
 			...actor.appliedBonuses.filter((b) => b.target === rollType),
 			...toolBonuses.applied,
 			...selectedIndeterminateBonuses,
 		];
-		const result = evaluateBonuses(selectedBonuses);
-
-		const formula = (
-			showBonusType
-				? Object.keys(result)
-						.filter((k) => result[k])
-						.map((k) => `${result[k] < 0 ? ' - ' : ' + '}${Math.abs(result[k])}${k ? `[${k}]` : ''}`)
-				: Object.keys(result)
-						.reduce((a, k) => [a[0] + result[k]], [0])
-						.map((v) => (v === 0 ? '' : `${v > 0 ? ' + ' : ' - '}${Math.abs(v)}`))
-		).join('');
-
-		return formula;
+		const bonusByType = evaluateBonuses(selectedBonuses);
+		return { checkboxBonusFormula: fromBonusesToFormula(bonusByType), bonusByType };
 	}, [selectedBonusesState.value, indeterminateBonuses, actor.appliedBonuses, toolBonuses.applied]);
 
-	const currentRoll = `${baseDice}${
-		additionalModifiersState.value ? ` + ${additionalModifiersState.value.trim().replace(/^\++/g, '').trim()}` : ''
-	}${checkboxBonusFormula}`;
+	const currentRoll = combineRollComponents(
+		combineRollComponents(baseDice, checkboxBonusFormula),
+		additionalModifiersState.value
+	);
 
 	return (
 		<div className="grid grid-cols-1 w-full gap-1 mt-1 pt-1">
@@ -132,7 +122,8 @@ export function DiceRoller({
 			<AppButton
 				onClick={() =>
 					onRoll({
-						dice: currentRoll,
+						baseDice: baseDice,
+						resultBonusesByType: bonusByType,
 						tool: tool ?? undefined,
 					})
 				}>
