@@ -20,7 +20,6 @@ export function MultiSelect<TValue extends Primitive>({
 	const [query, setQuery] = useState('');
 	const comboboxOnChange = useCallback<React.Dispatch<React.SetStateAction<TValue[]>>>(
 		(param) => {
-			console.log(param);
 			if (onChangeValue)
 				onChangeValue(
 					(oldValue) => {

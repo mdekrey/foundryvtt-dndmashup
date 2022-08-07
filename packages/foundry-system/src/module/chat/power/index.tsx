@@ -63,18 +63,12 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 	}
 
 	function rollAttack(attackRoll: AttackRoll, title: string) {
-		if (!isGame(game)) return;
-		if (!game.user) return;
-		const targets = Array.from(game.user.targets)
-			.map((token) => token.actor)
-			.filter((v): v is Exclude<typeof v, null> => !!v) as ActorDocument[];
 		const [, result] = applications.launchApplication('attackRoll', {
 			baseDice: `1d20 + ${attackRoll.attack}`,
 			title,
 			actor,
 			relatedPower: item,
 			rollType: 'attack-roll',
-			targets,
 			defense: attackRoll.defense,
 		});
 		result.catch();

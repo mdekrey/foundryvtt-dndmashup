@@ -19,7 +19,6 @@ export const damageDiceLens = Lens.from<DamageEffect | null, string>(
 	(e) => e?.damage ?? '',
 	(mutator) => (damageDraft) => {
 		const damage = mutator(damageDraft?.damage ?? '');
-		console.log({ message: 'new damage', damage, damageDraft, mutator });
 		if (!damage) return null;
 		if (damageDraft) {
 			damageDraft.damage = damage;

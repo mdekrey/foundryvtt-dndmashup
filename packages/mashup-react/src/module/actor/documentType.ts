@@ -8,6 +8,7 @@ import { PossibleActorType, ActorDataSource } from './types';
 
 export type TokenDocument = {
 	id: string | null;
+	name: string | null;
 };
 
 export type ActorDocument<T extends PossibleActorType = PossibleActorType> = SimpleDocument<ActorDataSource<T>> & {

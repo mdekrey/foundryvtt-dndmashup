@@ -6,7 +6,6 @@ const max = (v: number[]) => Math.max(...v);
 export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]): BonusByType {
 	const byType = groupBy((e) => e.type, bonusesWithContext);
 
-	console.log(bonusesWithContext);
 	const finalBonuses = Object.fromEntries(
 		Object.entries(byType)
 			.map(([k, v]) => {
@@ -25,7 +24,6 @@ export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]): 
 						[untypedBonus, indeterminateBonuses],
 					];
 				}
-				// console.log([k, v]);
 				const value = max(
 					v.map(({ amount, context }) =>
 						typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total

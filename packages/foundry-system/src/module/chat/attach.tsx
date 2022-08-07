@@ -18,8 +18,6 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 	const content = html.children('div.message-content');
 	content.addClass('foundry-reset').addClass('dndmashup');
 
-	console.log('attach chat message', content, Component, data.message);
-
 	try {
 		createRoot(content[0]).render(
 			<FoundryWrapper>

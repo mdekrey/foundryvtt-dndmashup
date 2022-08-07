@@ -20,7 +20,6 @@ export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & 
 export type AttackRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'attack-roll';
 	defense: Defense;
-	targets: ActorDocument[];
 };
 
 export type DamageRollApplicationParameters = DiceRollApplicationParametersBase & {
