@@ -96,7 +96,7 @@ applicationRegistry.attackRoll = ({ defense, ...baseParams }, resolve) => {
 			const targetRolls = await Promise.all(
 				targets.map(async (target) => {
 					const rollResult = await roll(dice, { actor: baseParams.actor, item: tool });
-					return { target, roll: rollResult.toJSON() };
+					return { target, roll: rollResult.toJSON() as never };
 				})
 			);
 			await sendChatMessage('attackResult', baseParams.actor, {
