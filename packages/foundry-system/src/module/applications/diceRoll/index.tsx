@@ -90,26 +90,24 @@ applicationRegistry.attackRoll = ({ defense, ...baseParams }, resolve) => {
 		// TODO: check each target for extra bonuses/penalties, like combat advantage?
 
 		const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
-		if (targets.length === 0) {
-			await roll(dice, { actor: baseParams.actor, item: tool }, baseParams.actor);
-			resolve(null);
-		} else {
-			const targetRolls = await Promise.all(
-				targets.map(async (target) => {
-					const rollResult = await roll(dice, { actor: baseParams.actor, item: tool });
-					return { target, roll: rollResult.toJSON() as never };
-				})
-			);
-			await sendChatMessage('attackResult', baseParams.actor, {
-				results: targetRolls,
-				defense,
-				powerId: toMashupId(baseParams.relatedPower),
-				flavor: `${baseParams.relatedPower.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
-					tool ? ` using ${tool.name}` : ''
-				}`,
-			});
-			resolve(null);
-		}
+		const targetRolls =
+			targets.length === 0
+				? [{ roll: (await roll(dice, { actor: baseParams.actor, item: tool })).toJSON() as never }]
+				: await Promise.all(
+						targets.map(async (target) => {
+							const rollResult = await roll(dice, { actor: baseParams.actor, item: tool });
+							return { target, roll: rollResult.toJSON() as never };
+						})
+				  );
+		await sendChatMessage('attackResult', baseParams.actor, {
+			results: targetRolls,
+			defense,
+			powerId: toMashupId(baseParams.relatedPower),
+			flavor: `${baseParams.relatedPower.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
+				tool ? ` using ${tool.name}` : ''
+			}`,
+		});
+		resolve(null);
 	}
 };
 

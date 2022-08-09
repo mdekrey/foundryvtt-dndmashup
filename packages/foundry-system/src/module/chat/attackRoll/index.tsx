@@ -20,10 +20,10 @@ chatMessageRegistry.attackResult = async (actor, properties) => {
 	console.log('rolling', properties.results);
 	const results = properties.results.map(
 		({ target, roll }): ResultEntry => ({
-			tokenId: target.id,
-			tokenName: target.name,
+			tokenId: target?.id ?? null,
+			tokenName: target?.name ?? null,
 			roll: roll,
-			rollResult: toResult(roll as never as ReturnType<Roll['toJSON']>, target.id, properties.defense),
+			rollResult: toResult(roll as never as ReturnType<Roll['toJSON']>, target?.id ?? null, properties.defense),
 		})
 	);
 	return { flags: { results, powerId: properties.powerId }, flavor: properties.flavor, sound: 'sounds/dice.wav' };

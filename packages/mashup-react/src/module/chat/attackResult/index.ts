@@ -8,7 +8,7 @@ export type AttackResultChatMessage = {
 	powerId: undefined | string;
 	flavor: string;
 	defense: Defense;
-	results: { target: TokenDocument; roll: RollJson }[];
+	results: { target?: TokenDocument; roll: RollJson }[];
 };
 
 declare global {
