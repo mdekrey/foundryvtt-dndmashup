@@ -1,6 +1,6 @@
 import { AnyDocument } from './types';
 
-export function fromMashupId(id: string): AnyDocument {
+export function fromMashupId(id: string): AnyDocument | undefined {
 	const steps = id.split(':');
 	const result = steps.reduce((prev: any, next, index) => {
 		const [collectionName, id] = next.split('.');

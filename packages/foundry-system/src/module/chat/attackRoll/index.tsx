@@ -1,11 +1,18 @@
 import { chatAttachments } from '../attach';
-import { chatMessageRegistry, RollJson, Defense, AttackResult, RollResult } from '@foundryvtt-dndmashup/mashup-react';
-import { isGame } from '../../../core/foundry';
+import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import {
+	chatMessageRegistry,
+	Defense,
+	AttackResult,
+	AttackRollResult,
+	PowerDocument,
+} from '@foundryvtt-dndmashup/mashup-react';
+import { fromMashupId, isGame } from '../../../core/foundry';
 
 type ResultEntry = {
 	tokenId: string | null;
 	tokenName: string | null;
-	rollResult: RollResult | null;
+	rollResult: AttackRollResult | null;
 	roll: RollJson;
 };
 
@@ -19,14 +26,16 @@ chatMessageRegistry.attackResult = async (actor, properties) => {
 			rollResult: toResult(roll as never as ReturnType<Roll['toJSON']>, target.id, properties.defense),
 		})
 	);
-	return { flags: { results }, sound: 'sounds/dice.wav' };
+	return { flags: { results, powerId: properties.powerId }, flavor: properties.flavor, sound: 'sounds/dice.wav' };
 };
-chatAttachments['attackResult'] = ({ flags: { results } }) => {
+chatAttachments['attackResult'] = ({ flags: { results, powerId } }) => {
 	const myGame = game;
 	if (!isGame(myGame)) {
 		console.error('no game', myGame);
 		throw new Error('Could not attach');
 	}
+
+	const power = powerId ? (fromMashupId(powerId as string) as never as PowerDocument) : undefined;
 
 	const props = (results as ResultEntry[]).map((entry) => ({
 		tokenId: entry.tokenId,
@@ -37,12 +46,10 @@ chatAttachments['attackResult'] = ({ flags: { results } }) => {
 		content: Roll.fromJSON(JSON.stringify(entry.roll)).getTooltip(),
 	}));
 
-	console.log('TODO: attaching attackResult chat', props);
-
-	return <AttackResult summary="TODO" entries={props} lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)} />;
+	return <AttackResult entries={props} lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)} power={power} />;
 };
 
-function toResult(roll: ReturnType<Roll['toJSON']>, tokenId: string | null, defense: Defense): RollResult | null {
+function toResult(roll: ReturnType<Roll['toJSON']>, tokenId: string | null, defense: Defense): AttackRollResult | null {
 	const token = (isGame(game) && tokenId ? game.canvas.tokens?.get(tokenId) : null) ?? null;
 
 	const d20Term = roll.terms.find((t: any): t is DiceTerm => t.faces === 20 && t.number === 1);

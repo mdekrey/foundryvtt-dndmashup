@@ -1,10 +1,12 @@
+import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { Defense } from '../../../types/types';
 import { TokenDocument } from '../../actor';
-import { RollJson } from '../../roll/roll-json';
 
 export * from './AttackResult';
 
 export type AttackResultChatMessage = {
+	powerId: undefined | string;
+	flavor: string;
 	defense: Defense;
 	results: { target: TokenDocument; roll: RollJson }[];
 };

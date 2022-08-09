@@ -19,6 +19,7 @@ export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & 
 
 export type AttackRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'attack-roll';
+	relatedPower: PowerDocument;
 	defense: Defense;
 };
 

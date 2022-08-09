@@ -1,28 +1,25 @@
-import classNames from 'classnames';
 import React, { useRef } from 'react';
+import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { TokenDocument } from '../../actor';
-import { RollJson } from '../../roll';
-
-export type RollResult = 'hit' | 'miss' | 'critical-miss' | 'maybe-critical-hit' | 'critical-hit';
+import { AttackRollResult, RollInfo } from '../../../components';
+import { PowerDocument } from '../../item';
 
 export type AttackResultEntryProps = {
 	tokenId: string | null;
 	tokenName: string | null;
-	rollResult: RollResult | null;
+	rollResult: AttackRollResult | null;
 	rollData: RollJson;
 };
 
 export const AttackResult = ({
-	summary,
 	entries,
 	lookupToken,
 }: {
-	summary: string;
 	entries: AttackResultEntryProps[];
 	lookupToken: (tokenId: string) => TokenDocument | undefined;
+	power?: PowerDocument;
 }) => (
 	<div>
-		<p>{summary}</p>
 		{entries.map((entry, index) => (
 			<AttackResultEntry
 				{...entry}
@@ -82,55 +79,7 @@ function AttackResultEntry({
 				<p>Probable miss!</p>
 			) : null}
 
-			<div className="dice-result">
-				<div className="dice-formula border border-gray-300">{rollData.formula}</div>
-
-				<div className="dice-tooltip">
-					{rollData.terms
-						.filter(
-							(
-								term
-							): term is {
-								class: 'Die';
-								formula: string;
-								faces: number;
-								number: number;
-								results: { result: number; active: boolean }[];
-							} => term.class === 'Die'
-						)
-						.map((term, index) => (
-							<section className="tooltip-part" key={index}>
-								<div className="dice">
-									<header className="part-header flexrow border-b-2 border-gray-300">
-										<span className="part-formula font-bold">
-											{term.number}d{term.faces}
-										</span>
-
-										<span className="part-total">
-											{term.results.filter(({ active }) => active).reduce((a, b) => a + b.result, 0)}
-										</span>
-									</header>
-									{term.results ? (
-										<ol className="dice-rolls my-2">
-											{term.results.map((result, index) => (
-												<li key={index} className={`roll die d${term.faces}`}>
-													{result.result}
-												</li>
-											))}
-										</ol>
-									) : null}
-								</div>
-							</section>
-						))}
-				</div>
-				<h4
-					className={classNames('dice-total border border-gray-300', 'font-bold text-lg', {
-						'text-green-dark': rollResult === 'critical-hit' || rollResult === 'maybe-critical-hit',
-						'text-red-dark': rollResult === 'critical-miss',
-					})}>
-					{rollData.total}
-				</h4>
-			</div>
+			<RollInfo roll={rollData} rollResult={rollResult ?? undefined} />
 		</div>
 	);
 }

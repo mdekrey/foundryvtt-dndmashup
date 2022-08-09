@@ -1,3 +1,4 @@
+import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	applicationRegistry,
 	BonusByType,
@@ -102,6 +103,10 @@ applicationRegistry.attackRoll = ({ defense, ...baseParams }, resolve) => {
 			await sendChatMessage('attackResult', baseParams.actor, {
 				results: targetRolls,
 				defense,
+				powerId: toMashupId(baseParams.relatedPower),
+				flavor: `${baseParams.relatedPower.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
+					tool ? ` using ${tool.name}` : ''
+				}`,
 			});
 			resolve(null);
 		}
@@ -122,7 +127,7 @@ applicationRegistry.damage = ({ ...baseParams }, resolve) => {
 	}) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
-		await roll(dice, { actor: baseParams.actor, item: tool }, baseParams.actor);
+		await roll(dice, { actor: baseParams.actor, item: tool }, baseParams.actor, { hitTypeDamage: true } as any);
 		resolve(null);
 	}
 };
