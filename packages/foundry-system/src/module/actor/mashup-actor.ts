@@ -121,7 +121,16 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 	'saving-throw': noop,
 };
 
+const tokenHpColors = {
+	damage: 0xff0000,
+	healing: 0x00ff00,
+	temp: 0x66ccff,
+	tempmax: 0x440066,
+	negmax: 0x550000,
+};
+
 export class MashupActor extends Actor implements ActorDocument {
+	private prevHealth: number | undefined;
 	override data!: PossibleActorData & { data: ActorDerivedData };
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
 	/*
@@ -139,6 +148,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	override prepareData(): void {
 		this.subActorFunctions = actorSubtypeConfig[this.data.type] as typeof this.subActorFunctions;
 		super.prepareData();
+		this.handleHealthUpdate();
 	}
 
 	get appliedClass() {
@@ -208,6 +218,31 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (this.isOwner) {
 			this.updateBloodied();
 		}
+	}
+
+	private handleHealthUpdate() {
+		const newHealth = this.data.data.health.hp.value + this.data.data.health.temporaryHp;
+		if (this.prevHealth !== undefined) {
+			const dhp = newHealth - this.prevHealth;
+			if (dhp !== 0) {
+				const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
+				for (const t of tokens) {
+					const hud: ObjectHUD | undefined = (t as any)?.hud;
+					if (!hud?.createScrollingText) continue; // This is undefined prior to v9-p2
+					const pct = Math.clamped(Math.abs(dhp) / this.data.data.health.hp.max, 0, 1);
+					hud.createScrollingText(dhp.signedString(), {
+						anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
+						fontSize: 16 + 32 * pct, // Range between [16, 48]
+						fill: tokenHpColors[dhp < 0 ? 'damage' : 'healing'],
+						stroke: 0x000000,
+						strokeThickness: 4,
+						jitter: 0.25,
+					});
+				}
+			}
+		}
+
+		this.prevHealth = newHealth;
 	}
 
 	override getRollData() {

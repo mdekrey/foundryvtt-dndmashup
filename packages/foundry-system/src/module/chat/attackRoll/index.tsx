@@ -17,7 +17,6 @@ type ResultEntry = {
 };
 
 chatMessageRegistry.attackResult = async (actor, properties) => {
-	console.log('rolling', properties.results);
 	const results = properties.results.map(
 		({ target, roll }): ResultEntry => ({
 			tokenId: target?.id ?? null,
@@ -37,14 +36,16 @@ chatAttachments['attackResult'] = ({ flags: { results, powerId } }) => {
 
 	const power = powerId ? (fromMashupId(powerId as string) as never as PowerDocument) : undefined;
 
-	const props = (results as ResultEntry[]).map((entry) => ({
-		tokenId: entry.tokenId,
-		tokenName: entry.tokenName,
-		rollResult: entry.rollResult,
-		rollData: entry.roll,
-		roll: Roll.fromJSON(JSON.stringify(entry.roll)),
-		content: Roll.fromJSON(JSON.stringify(entry.roll)).getTooltip(),
-	}));
+	const props = (results as ResultEntry[]).map((entry) => {
+		const roll = Roll.fromJSON(JSON.stringify(entry.roll));
+		return {
+			tokenId: entry.tokenId,
+			tokenName: entry.tokenName,
+			rollResult: entry.rollResult,
+			rollData: entry.roll,
+			roll: roll,
+		};
+	});
 
 	return <AttackResult entries={props} lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)} power={power} />;
 };

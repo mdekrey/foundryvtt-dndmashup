@@ -168,6 +168,7 @@ function ApplicableEffectOptions({
 				actor,
 				relatedPower,
 				rollType: 'damage',
+				damageTypes: damageEffect.damageTypes,
 			});
 			result.catch();
 		};

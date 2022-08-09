@@ -1,4 +1,4 @@
-import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { RollJson, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	applicationRegistry,
 	BonusByType,
@@ -111,7 +111,7 @@ applicationRegistry.attackRoll = ({ defense, ...baseParams }, resolve) => {
 	}
 };
 
-applicationRegistry.damage = ({ ...baseParams }, resolve) => {
+applicationRegistry.damage = ({ damageTypes, ...baseParams }, resolve) => {
 	return [displayDialog(baseParams, onRoll), `${baseParams.title} Damage`, { resizable: true }];
 
 	async function onRoll({
@@ -125,7 +125,16 @@ applicationRegistry.damage = ({ ...baseParams }, resolve) => {
 	}) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
-		await roll(dice, { actor: baseParams.actor, item: tool }, baseParams.actor, { hitTypeDamage: true } as any);
+		const resultRoll = await roll(dice, { actor: baseParams.actor, item: tool });
+
+		const result = resultRoll.toJSON() as never as RollJson;
+
+		await sendChatMessage('damageResult', baseParams.actor, {
+			result,
+			damageTypes,
+			powerId: toMashupId(baseParams.relatedPower),
+			flavor: `${baseParams.relatedPower.name} ${baseParams.title} Damage${tool ? ` using ${tool.name}` : ''}`,
+		});
 		resolve(null);
 	}
 };

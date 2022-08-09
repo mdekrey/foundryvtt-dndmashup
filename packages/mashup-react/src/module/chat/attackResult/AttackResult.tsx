@@ -44,6 +44,7 @@ function AttackResultEntry({
 		onMouseLeave(event);
 		hovered.current = lookupToken();
 		if (hovered.current) {
+			// FIXME: this is using internal methods
 			const temp: any = hovered.current;
 			if (temp._onHoverIn) {
 				temp._onHoverIn(event.nativeEvent);
@@ -52,6 +53,7 @@ function AttackResultEntry({
 	}
 	function onMouseLeave(event: React.MouseEvent) {
 		if (hovered.current) {
+			// FIXME: this is using internal methods
 			const temp: any = hovered.current;
 			if (temp._onHoverOut) {
 				temp._onHoverOut(event.nativeEvent);
@@ -60,26 +62,37 @@ function AttackResultEntry({
 		}
 	}
 
+	function onClick(event: React.MouseEvent) {
+		const releaseOthers = !event.shiftKey;
+		if (hovered.current) {
+			hovered.current.control?.({ releaseOthers });
+		}
+	}
+
 	return (
 		// TODO: the following styles are a blantant rip-off from Foundry 9. If they break, I'll need to rebuild them somehow.
-		<div className="dice-roll block" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-			<p>
-				<span className="font-bold">Target: </span>
-				{tokenName ?? 'Unknown'}
-			</p>
-			{rollResult === 'critical-hit' ? (
-				<p className="text-green-dark">Probable critical hit!</p>
-			) : rollResult === 'maybe-critical-hit' ? (
-				<p className="text-green-dark">Guaranteed hit!</p>
-			) : rollResult === 'critical-miss' ? (
-				<p className="text-red-dark">Critical miss!</p>
-			) : rollResult === 'hit' ? (
-				<p>Probable hit!</p>
-			) : rollResult === 'miss' ? (
-				<p>Probable miss!</p>
-			) : null}
+		<div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+			<div onClick={onClick}>
+				<p>
+					<span className="font-bold">Target: </span>
+					{tokenName ?? 'Unknown'}
+				</p>
+				{rollResult === 'critical-hit' ? (
+					<p className="text-green-dark">Probable critical hit!</p>
+				) : rollResult === 'maybe-critical-hit' ? (
+					<p className="text-green-dark">Guaranteed hit!</p>
+				) : rollResult === 'critical-miss' ? (
+					<p className="text-red-dark">Critical miss!</p>
+				) : rollResult === 'hit' ? (
+					<p>Probable hit!</p>
+				) : rollResult === 'miss' ? (
+					<p>Probable miss!</p>
+				) : null}
+			</div>
 
-			<RollInfo roll={rollData} rollResult={rollResult ?? undefined} />
+			<div className="dice-roll block">
+				<RollInfo roll={rollData} rollResult={rollResult ?? undefined} />
+			</div>
 		</div>
 	);
 }

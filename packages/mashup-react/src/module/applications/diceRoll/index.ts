@@ -1,4 +1,4 @@
-import { Defense } from '../../../types/types';
+import { DamageType, Defense } from '../../../types/types';
 import { ActorDocument } from '../../actor';
 import { BonusTarget } from '../../bonuses';
 import { PowerDocument } from '../../item';
@@ -9,7 +9,7 @@ export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
 	actor: ActorDocument;
-	relatedPower?: PowerDocument;
+	relatedPower: PowerDocument;
 	rollType: BonusTarget;
 };
 
@@ -19,12 +19,12 @@ export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & 
 
 export type AttackRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'attack-roll';
-	relatedPower: PowerDocument;
 	defense: Defense;
 };
 
 export type DamageRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'damage';
+	damageTypes: DamageType[];
 	// TODO: is crit?
 };
 

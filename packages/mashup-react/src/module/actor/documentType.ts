@@ -9,6 +9,9 @@ import { PossibleActorType, ActorDataSource } from './types';
 export type TokenDocument = {
 	id: string | null;
 	name: string | null;
+
+	readonly isOwner: boolean;
+	control?(options?: { releaseOthers?: boolean }): boolean;
 };
 
 export type ActorDocument<T extends PossibleActorType = PossibleActorType> = SimpleDocument<ActorDataSource<T>> & {

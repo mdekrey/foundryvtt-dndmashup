@@ -8,7 +8,7 @@ export function RollInfo({ roll, rollResult }: { roll: RollJson; rollResult?: At
 			<div className="dice-formula border border-gray-300">{roll.formula}</div>
 
 			<div className="dice-tooltip">
-				{roll.terms
+				{[...roll.dice, ...roll.terms]
 					.filter(
 						(
 							term
