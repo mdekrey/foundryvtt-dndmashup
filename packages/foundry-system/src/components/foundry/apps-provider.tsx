@@ -7,7 +7,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupApplicationType } from '@foundryvtt-dndmashup/mashup-react';
 import { noop } from 'lodash/fp';
-import { ReactApplicationMixin } from '../../core/react';
+import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 
 export const applicationDispatcher: ApplicationDispatcherContext = {
 	async launchApplication<T extends MashupApplicationType>(

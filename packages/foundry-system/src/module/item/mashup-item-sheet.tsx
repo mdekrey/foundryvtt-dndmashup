@@ -4,7 +4,7 @@ import { ClassSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { RaceSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { FeatureSheet } from '@foundryvtt-dndmashup/mashup-react';
-import { ReactApplicationMixin } from '../../core/react';
+import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
 import { EpicDestinySheet } from '@foundryvtt-dndmashup/mashup-react';
 import { ParagonPathSheet } from '@foundryvtt-dndmashup/mashup-react';

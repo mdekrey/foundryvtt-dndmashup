@@ -2,7 +2,7 @@ import { chatMessageRegistry, ActorDocument } from '@foundryvtt-dndmashup/mashup
 import { MashupChatMessageType } from '@foundryvtt-dndmashup/mashup-react';
 import { ChatMessageDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/chatMessageData';
 import { isGame } from '../../core/foundry';
-import { renderReactToHtml } from '../../core/react';
+import { renderReactToHtml } from '../../core/react/renderReactToHtml';
 import { chatAttachments, ChatMessageProps } from '.';
 import { FoundryWrapper } from '../../components/foundry/foundry-wrapper';
 

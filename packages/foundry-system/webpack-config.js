@@ -26,5 +26,8 @@ module.exports = (config) => {
 		},
 	});
 
+	result.output.filename = '[name].js';
+	result.output.chunkFilename = '[name].js';
+
 	return result;
 };
