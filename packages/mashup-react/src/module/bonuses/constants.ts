@@ -14,6 +14,7 @@ export const bonusTargets = [
 	`initiative` as const,
 	`attack-roll` as const,
 	`damage` as const,
+	`critical-damage` as const,
 	`saving-throw` as const,
 	`healing` as const,
 ];

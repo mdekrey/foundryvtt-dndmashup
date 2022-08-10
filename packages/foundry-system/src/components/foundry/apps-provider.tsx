@@ -6,13 +6,14 @@ import {
 	MashupApplicationResultType,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupApplicationType } from '@foundryvtt-dndmashup/mashup-react';
+import { noop } from 'lodash/fp';
 import { ReactApplicationMixin } from '../../core/react';
 
-const applicationDispatcherContextValue: ApplicationDispatcherContext = {
-	launchApplication<T extends MashupApplicationType>(
+export const applicationDispatcher: ApplicationDispatcherContext = {
+	async launchApplication<T extends MashupApplicationType>(
 		messageType: T,
 		param: MashupApplication[T]
-	): [SimpleApplication, Promise<MashupApplicationResultType<T>>] {
+	): Promise<{ dialog: SimpleApplication; result: Promise<MashupApplicationResultType<T>> }> {
 		let tempResolve: ((value: MashupApplicationResultType<T>) => void) | undefined = undefined;
 		let tempReject: ((reason?: any) => void) | undefined = undefined;
 
@@ -22,22 +23,27 @@ const applicationDispatcherContextValue: ApplicationDispatcherContext = {
 		});
 		if (!tempResolve || !tempReject) throw new Error(`Promise didn't provide callbacks.`);
 
-		const [jsx, title, options] = applicationRegistry[messageType](param, tempResolve, tempReject);
-		const dialog = new JsxDialog(jsx, { title, close: () => tempReject?.() }, options);
+		const { content, title, options } = await applicationRegistry[messageType](param, tempResolve, tempReject);
+		const dialog = new JsxDialog(content, { title, close: () => tempReject?.() }, options);
 		dialog.render(true);
 
-		return [
-			dialog,
-			resultPromise.finally(() => {
+		resultPromise
+			.finally(() => {
 				dialog.close();
-			}),
-		];
+			})
+			// eats the error from the console without actually losing the error for anything looking at the result
+			.catch(noop);
+
+		return {
+			dialog,
+			result: resultPromise,
+		};
 	},
 };
 
 export function WrapApplicationDispatcher({ children }: { children?: React.ReactNode }) {
 	return (
-		<ApplicationDispatcherContextProvider value={applicationDispatcherContextValue}>
+		<ApplicationDispatcherContextProvider value={applicationDispatcher}>
 			{children}
 		</ApplicationDispatcherContextProvider>
 	);

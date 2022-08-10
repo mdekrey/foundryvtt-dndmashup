@@ -63,7 +63,7 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 	}
 
 	function rollAttack(attackRoll: AttackRoll, title: string) {
-		const [, result] = applications.launchApplication('attackRoll', {
+		applications.launchApplication('attackRoll', {
 			baseDice: `1d20 + ${attackRoll.attack}`,
 			title,
 			actor,
@@ -71,6 +71,5 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			rollType: 'attack-roll',
 			defense: attackRoll.defense,
 		});
-		result.catch();
 	}
 }

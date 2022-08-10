@@ -36,4 +36,4 @@ export type ApplicationRegistryEntry<T extends keyof MashupApplication> = (
 	properties: MashupApplication[T],
 	resolve: (result: MashupApplicationResultType<T>) => void,
 	reject: () => void
-) => [content: JSX.Element, title: string, options?: Partial<ApplicationOptions>];
+) => Promise<{ content: JSX.Element; title: string; options?: Partial<ApplicationOptions> }>;

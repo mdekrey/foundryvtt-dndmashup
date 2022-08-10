@@ -6,7 +6,7 @@ export type ApplicationDispatcherContext = {
 	launchApplication<T extends MashupApplicationType>(
 		messageType: T,
 		param: MashupApplication[T]
-	): [SimpleApplication, Promise<MashupApplicationResultType<T>>];
+	): Promise<{ dialog: SimpleApplication; result: Promise<MashupApplicationResultType<T>> }>;
 };
 
 const applicationDispatcherContext = createContext<ApplicationDispatcherContext | null>(null);

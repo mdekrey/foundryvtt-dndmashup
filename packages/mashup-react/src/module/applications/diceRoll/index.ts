@@ -1,7 +1,7 @@
 import { DamageType, Defense } from '../../../types/types';
 import { ActorDocument } from '../../actor';
 import { BonusTarget } from '../../bonuses';
-import { PowerDocument } from '../../item';
+import { EquipmentDocument, PowerDocument } from '../../item';
 
 export * from './DiceRoller';
 
@@ -25,7 +25,12 @@ export type AttackRollApplicationParameters = DiceRollApplicationParametersBase 
 export type DamageRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'damage';
 	damageTypes: DamageType[];
-	// TODO: is crit?
+};
+
+export type CriticalDamageRollApplicationParameters = DiceRollApplicationParametersBase & {
+	rollType: 'critical-damage';
+	damageTypes: DamageType[];
+	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
 export type HealingRollApplicationParameters = DiceRollApplicationParametersBase & {
@@ -36,6 +41,7 @@ declare global {
 	interface MashupApplication {
 		attackRoll: AttackRollApplicationParameters;
 		damage: DamageRollApplicationParameters;
+		criticalDamage: CriticalDamageRollApplicationParameters;
 		healing: HealingRollApplicationParameters;
 		diceRoll: DiceRollApplicationParameters;
 	}

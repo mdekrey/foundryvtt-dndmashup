@@ -117,6 +117,7 @@ const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => vo
 
 	'attack-roll': noop,
 	damage: noop,
+	'critical-damage': noop,
 	healing: noop,
 	'saving-throw': noop,
 };

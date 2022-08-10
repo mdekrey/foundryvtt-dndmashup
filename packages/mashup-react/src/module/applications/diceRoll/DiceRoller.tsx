@@ -20,7 +20,7 @@ export type RollDetails = {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
-export type DiceRollerProps = {
+export type DiceRollerRequiredProps = {
 	actor: ActorDocument;
 	rollType: BonusTarget;
 	baseDice: string;
@@ -31,7 +31,19 @@ export type DiceRollerProps = {
 	onRoll(rollDetails: RollDetails): void;
 };
 
-export function DiceRoller({
+export type DiceRollerOptionalProps<T extends string> = string extends T
+	? {
+			otherActions?: undefined;
+			onOtherAction?: undefined;
+	  }
+	: {
+			otherActions: Record<T, { content: string }>;
+			onOtherAction(otherAction: T, rollDetails: RollDetails): void;
+	  };
+
+export type DiceRollerProps<T extends string> = DiceRollerRequiredProps & DiceRollerOptionalProps<T>;
+
+export function DiceRoller<T extends string = string>({
 	actor,
 	baseDice,
 	possibleTools,
@@ -39,7 +51,9 @@ export function DiceRoller({
 	runtimeBonusParameters,
 	evaluateBonuses,
 	onRoll,
-}: DiceRollerProps) {
+	otherActions,
+	onOtherAction,
+}: DiceRollerProps<T>) {
 	const [tool, setTool] = useState<EquipmentDocument<'weapon' | 'implement'> | null>(
 		(possibleTools && possibleTools[0]) || null
 	);
@@ -50,7 +64,9 @@ export function DiceRoller({
 		if (tool === null) return { indeterminate: [], applied: [] };
 		const allToolBonuses = tool.allGrantedBonuses(true);
 		const filtered = filterBonuses(
-			allToolBonuses.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor, item: tool } })),
+			allToolBonuses
+				.filter((b) => b.target === rollType)
+				.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor, item: tool } })),
 			runtimeBonusParameters,
 			true
 		);
@@ -74,6 +90,7 @@ export function DiceRoller({
 		const bonusByType = evaluateBonuses(selectedBonuses);
 		return { checkboxBonusFormula: fromBonusesToFormula(bonusByType), bonusByType };
 	}, [selectedBonusesState.value, indeterminateBonuses, actor.appliedBonuses, toolBonuses.applied]);
+	console.log(checkboxBonusFormula, bonusByType);
 
 	const currentRoll = combineRollComponents(
 		combineRollComponents(baseDice, checkboxBonusFormula),
@@ -105,16 +122,36 @@ export function DiceRoller({
 				<FormInput.Label>Other Modifiers</FormInput.Label>
 			</FormInput>
 
-			<AppButton
-				onClick={() =>
-					onRoll({
-						baseDice: baseDice,
-						resultBonusesByType: bonusByType,
-						tool: tool ?? undefined,
-					})
-				}>
-				Roll {currentRoll}
-			</AppButton>
+			<div className="flex flex-row gap-1">
+				<AppButton
+					className="flex-1"
+					onClick={() =>
+						onRoll({
+							baseDice: baseDice,
+							resultBonusesByType: bonusByType,
+							tool: tool ?? undefined,
+						})
+					}>
+					Roll {currentRoll}
+				</AppButton>
+				{onOtherAction &&
+					Object.keys(otherActions ?? {})
+						.map((k) => k as T)
+						.map((key) => (
+							<AppButton
+								className="flex-1"
+								key={key}
+								onClick={() =>
+									onOtherAction(key, {
+										baseDice: baseDice,
+										resultBonusesByType: bonusByType,
+										tool: tool ?? undefined,
+									})
+								}>
+								{otherActions && otherActions[key].content}
+							</AppButton>
+						))}
+			</div>
 		</div>
 	);
 }

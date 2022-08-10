@@ -162,7 +162,7 @@ function ApplicableEffectOptions({
 
 	function damageRoll(damageEffect: DamageEffect) {
 		return () => {
-			const [, result] = applications.launchApplication('damage', {
+			applications.launchApplication('damage', {
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
@@ -170,7 +170,6 @@ function ApplicableEffectOptions({
 				rollType: 'damage',
 				damageTypes: damageEffect.damageTypes,
 			});
-			result.catch();
 		};
 	}
 }
