@@ -35,7 +35,12 @@ export function RollInfo({ roll, rollResult }: { roll: RollJson; rollResult?: At
 								{term.results ? (
 									<ol className="dice-rolls my-2">
 										{term.results.map((result, index) => (
-											<li key={index} className={`roll die d${term.faces}`}>
+											<li
+												key={index}
+												className={classNames(`roll die d${term.faces}`, {
+													min: result.result === 1,
+													max: result.result === term.faces,
+												})}>
 												{result.result}
 											</li>
 										))}
