@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { AppButton, FormInput } from '@foundryvtt-dndmashup/components';
 import { DocumentSelector } from '../../../components';
 import { EquipmentDocument } from '../../item';
-import { immerMutatorToMutator, Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { lensFromState, Lens } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	BonusByType,
 	BonusTarget,
@@ -12,7 +12,6 @@ import {
 	ruleResultIndeterminate,
 } from '../../bonuses';
 import { ActorDocument } from '../../actor';
-import { cloneDeep } from 'lodash/fp';
 import { combineRollComponents, fromBonusesToFormula } from '../../bonuses/fromBonusesToFormula';
 
 export type RollDetails = {
@@ -31,19 +30,6 @@ export type DiceRollerProps = {
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: RollDetails): void;
 };
-
-function lensFromState<S>([value, setValue]: [S, React.Dispatch<React.SetStateAction<S>>]): Stateful<S> {
-	return {
-		value,
-		onChangeValue: (mutator) => {
-			return setValue((p) => {
-				const cloned = cloneDeep(p);
-				immerMutatorToMutator(mutator)(cloned);
-				return cloned;
-			});
-		},
-	};
-}
 
 export function DiceRoller({
 	actor,
