@@ -71,7 +71,9 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 
 	function onDelete(index: number) {
 		return () => {
-			return bonuses.onChangeValue((draft) => draft.splice(index, 1));
+			return bonuses.onChangeValue((draft) => {
+				draft.splice(index, 1);
+			});
 		};
 	}
 
