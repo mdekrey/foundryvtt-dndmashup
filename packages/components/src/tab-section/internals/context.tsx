@@ -1,9 +1,5 @@
 import { createContext, useContext } from 'react';
-
-export type TabContext = {
-	activeTab: string;
-	setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-};
+import { TabContext } from '../type';
 
 const tabContext = createContext<TabContext | null>(null);
 

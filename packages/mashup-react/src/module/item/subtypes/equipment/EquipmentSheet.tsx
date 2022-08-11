@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { FormInput } from '@foundryvtt-dndmashup/components';
+import { FormInput, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { Bonuses } from '../../../bonuses';
 import { Description } from '../../components/Description';
 import { getItemSlotInfo, ItemSlot, itemSlots } from './item-slots';
-import { Tabs } from '@foundryvtt-dndmashup/components';
 import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
-import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/mashup-core';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
@@ -39,13 +37,10 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 	}
 
 	return (
-		<div className="h-full flex flex-col gap-1">
-			<div className="flex flex-row gap-1">
-				<FormInput.ImageEditor
-					{...imageLens.apply(documentState)}
-					title={item.name}
-					className="w-24 h-24 border-2 border-black p-px"
-				/>
+		<TabbedSheet
+			img={imageLens.apply(documentState)}
+			name={item.name}
+			headerSection={
 				<div className="grid grid-cols-12 gap-x-1 items-end flex-grow">
 					<FormInput className="col-span-9 text-lg">
 						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
@@ -60,50 +55,33 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						/>
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>
-					<p className="col-span-12">
-						<FormInput.Inline>
-							<FormInput.Checkbox {...baseLens.toField('data').toField('container').apply(documentState)} />
-							Is Container?
-						</FormInput.Inline>
-					</p>
+					<FormInput.Inline className="col-span-12">
+						<FormInput.Checkbox {...baseLens.toField('data').toField('container').apply(documentState)} />
+						Is Container?
+					</FormInput.Inline>
 
 					<p className="col-span-12 text-xs">
 						<Summary equipmentProperties={getEquipmentProperties<T>(item.data)} />
 					</p>
 				</div>
-			</div>
-			<div className="border-b border-black"></div>
-			<Tabs.Controlled activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tabs.Nav>
-					<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
-					<Tabs.NavButton tabName="description">Description</Tabs.NavButton>
-					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
-					{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
-						<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
-					) : null}
-					{item.data.data.container ? <Tabs.NavButton tabName="contents">Contents</Tabs.NavButton> : null}
-				</Tabs.Nav>
-
-				<section className="flex-grow">
-					<Tabs.Tab tabName="details">
-						<div className="grid grid-cols-12 gap-x-1 items-end">
-							<Details itemState={documentState} />
-						</div>
-					</Tabs.Tab>
-					<Tabs.Tab tabName="description">
-						<Description {...dataLens.toField('description').apply(documentState)} isEditor={item.isOwner} />
-					</Tabs.Tab>
-					<Tabs.Tab tabName="bonuses">
-						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
-					</Tabs.Tab>
-					<Tabs.Tab tabName="features">
-						<FeaturesList items={item.items.contents} />
-					</Tabs.Tab>
-					<Tabs.Tab tabName="contents">
-						<Contents item={item} />
-					</Tabs.Tab>
-				</section>
-			</Tabs.Controlled>
-		</div>
+			}
+			tabState={{ activeTab, setActiveTab }}>
+			<TabbedSheet.Tab name="details" label="Details">
+				<div className="grid grid-cols-12 gap-x-1 items-end">
+					<Details itemState={documentState} />
+				</div>
+			</TabbedSheet.Tab>
+			<TabbedSheet.Tab name="description" label="Description">
+				<Description {...dataLens.toField('description').apply(documentState)} isEditor={item.isOwner} />
+			</TabbedSheet.Tab>
+			<TabbedSheet.Tab name="bonuses" label="Bonuses">
+				<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+			</TabbedSheet.Tab>
+			{item.data.data.container ? (
+				<TabbedSheet.Tab name="contents" label="Contents">
+					<Contents item={item} />
+				</TabbedSheet.Tab>
+			) : null}
+		</TabbedSheet>
 	);
 }

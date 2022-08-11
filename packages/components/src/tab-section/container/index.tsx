@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { TabContextProvider, TabContext } from '../internals/context';
+import { TabContextProvider } from '../internals/context';
+import { TabContext } from '../internals/TabContext';
 
 export function Container({ defaultActiveTab, children }: { defaultActiveTab: string; children?: React.ReactNode }) {
 	const [activeTab, setActiveTab] = useState(defaultActiveTab);

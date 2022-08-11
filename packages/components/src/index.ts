@@ -5,3 +5,4 @@ export * from './icon-button';
 export * from './image-button';
 export * from './tab-section';
 export * from './text-placeholder';
+export * from './tabbed-sheet';
