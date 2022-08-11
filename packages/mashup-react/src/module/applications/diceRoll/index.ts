@@ -9,7 +9,7 @@ export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
 	actor: ActorDocument;
-	relatedPower: PowerDocument;
+	relatedPower?: PowerDocument;
 	rollType: BonusTarget;
 };
 

@@ -126,10 +126,10 @@ applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => 
 		await sendChatMessage('attackResult', baseParams.actor, {
 			results: targetRolls,
 			defense,
-			powerId: toMashupId(baseParams.relatedPower),
-			flavor: `${baseParams.relatedPower.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
+			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
+			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
 				tool ? ` using ${tool.name}` : ''
-			}`,
+			}`.trim(),
 		});
 		resolve(null);
 	}
@@ -163,8 +163,8 @@ applicationRegistry.damage = async ({ damageTypes, ...baseParams }, resolve, rej
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: toMashupId(baseParams.relatedPower),
-			flavor: `${baseParams.relatedPower.name} ${baseParams.title} Damage${tool ? ` using ${tool.name}` : ''}`,
+			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
+			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Damage${tool ? ` using ${tool.name}` : ''}`.trim(),
 		});
 		resolve(null);
 	}
@@ -222,8 +222,10 @@ applicationRegistry.criticalDamage = async ({ damageTypes, ...baseParams }, reso
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: toMashupId(baseParams.relatedPower),
-			flavor: `${baseParams.relatedPower.name} ${baseParams.title} Critical Damage${tool ? ` using ${tool.name}` : ''}`,
+			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
+			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Critical Damage${
+				tool ? ` using ${tool.name}` : ''
+			}`.trim(),
 		});
 		resolve(null);
 	}

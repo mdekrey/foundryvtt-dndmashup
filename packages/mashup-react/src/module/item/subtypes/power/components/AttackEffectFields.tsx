@@ -1,8 +1,8 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { ApplicableEffect, AttackRoll, PowerEffect } from '../dataSourceData';
+import { ApplicableEffect, ApplicableEffectFields } from '../../../../../effects';
+import { AttackRoll, PowerEffect } from '../dataSourceData';
 import { AttackRollFields } from './AttackRollFields';
-import { DamageFields } from './DamageFields';
 import { TypeAndRange } from './TypeAndRange';
 
 const powerEffectFieldLens = Lens.fromProp<PowerEffect>();
@@ -68,25 +68,6 @@ export function HitAndMissFields(props: Stateful<PowerEffect>) {
 		<>
 			<ApplicableEffectFields prefix={props.value.miss === null ? 'Effect' : 'Hit'} {...hitEffectLens.apply(props)} />
 			{props.value.miss === null ? null : <ApplicableEffectFields prefix="Miss" {...missEffectLens.apply(props)} />}
-		</>
-	);
-}
-
-const applicableEffectFieldLens = Lens.fromProp<ApplicableEffect>();
-
-const damageEffectLens = applicableEffectFieldLens('damage');
-const effectTextLens = applicableEffectFieldLens('text');
-// const healingEffectLens = applicableEffectFieldLens('healing');
-
-export function ApplicableEffectFields({ prefix, ...props }: { prefix?: string } & Stateful<ApplicableEffect>) {
-	return (
-		<>
-			<DamageFields prefix={prefix} {...damageEffectLens.apply(props)} />
-			{/* TODO: Healing */}
-			<FormInput>
-				<FormInput.TextField {...effectTextLens.apply(props)} />
-				<FormInput.Label>{prefix}</FormInput.Label>
-			</FormInput>
 		</>
 	);
 }

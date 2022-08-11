@@ -1,3 +1,5 @@
+import { ApplicableEffect } from '../../../../../../effects';
+
 export type WeaponCategory = 'simple' | 'military' | 'superior';
 export type WeaponGroup =
 	| 'axe'
@@ -32,4 +34,8 @@ export type WeaponItemSlotTemplate = {
 	properties: WeaponProperty[];
 	category: WeaponCategory;
 	hands: 1 | 2;
+
+	additionalEffects: Partial<Record<EffectTrigger, ApplicableEffect>>;
 };
+
+type EffectTrigger = 'hit' | 'critical-hit';

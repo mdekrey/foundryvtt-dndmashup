@@ -1,5 +1,6 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { DamageType, Defense } from '../../../../types/types';
+import { ApplicableEffect } from '../../../../effects';
+import { Defense } from '../../../../types/types';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
@@ -32,13 +33,6 @@ export type PowerEffect = {
 	miss: ApplicableEffect | null;
 };
 
-export type ApplicableEffect = {
-	text: string;
-	healing: HealingEffect | null;
-	damage: DamageEffect | null;
-	// TODO: effect template to drag/drop to apply ongoing effects
-};
-
 export type PowerUsage = 'at-will' | 'encounter' | 'daily' | 'item' | 'other' | `recharge-${2 | 3 | 4 | 5 | 6}`;
 export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate';
 
@@ -60,17 +54,6 @@ export type PersonalEffectTypeAndRange = { type: 'personal' };
 export type AttackRoll = {
 	attack: string;
 	defense: Defense;
-};
-
-export type DamageEffect = {
-	damage: string;
-	damageTypes: DamageType[];
-};
-
-export type HealingEffect = {
-	healing: string;
-	healingSurge: boolean;
-	isTemporary: boolean;
 };
 
 export type PowerDocument = SimpleDocument<PowerData> & CommonItemDocumentProperties;

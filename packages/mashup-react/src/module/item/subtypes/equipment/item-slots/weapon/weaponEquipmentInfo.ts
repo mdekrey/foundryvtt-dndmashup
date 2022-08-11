@@ -8,4 +8,6 @@ export const defaultEquipmentInfo: WeaponItemSlotTemplate = {
 	group: 'heavy-blade',
 	category: 'military',
 	hands: 1,
+
+	additionalEffects: {},
 };

@@ -1,8 +1,8 @@
 import capitalize from 'lodash/fp/capitalize';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { damageTypes, DamageType } from '../../../../../types/types';
-import { DamageEffect } from '../dataSourceData';
+import { damageTypes, DamageType } from '../types/types';
+import { DamageEffect } from './types';
 import classNames from 'classnames';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
 
