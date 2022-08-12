@@ -1,8 +1,6 @@
-import { OtherDetails } from './details';
-
 export const ItemSlotDefaults = {
 	defaultEquipmentInfo: {},
-	details: OtherDetails,
+	details: () => <></>,
 	bonuses: () => [],
 	buildSummary: () => <></>,
 	inventoryTableHeader: () => <></>,

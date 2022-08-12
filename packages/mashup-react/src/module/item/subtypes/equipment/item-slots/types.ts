@@ -1,7 +1,5 @@
 import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureBonus } from '../../../../bonuses';
-import { EquipmentData } from '../dataSourceData';
 import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';
 import { WeaponItemSlotTemplate } from './weapon/types';
@@ -44,7 +42,7 @@ export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
 }[T];
 
 export type MutableItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
-	itemState: Stateful<SimpleDocumentData<EquipmentData<T>>>;
+	itemState: Stateful<ItemSlotTemplate<T>>;
 }>;
 
 export type ItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{

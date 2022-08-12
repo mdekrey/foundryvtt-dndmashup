@@ -12,8 +12,10 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Bas
 	ItemDescriptionItemTemplateDataSourceData &
 	CarriedItemItemTemplateDataSourceData & {
 		itemSlot: TItemSlot;
+		equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates
+			? ItemSlotTemplates[TItemSlot]
+			: Record<string, never>;
 		equipped: EquippedItemSlot[];
-		equipmentProperties?: TItemSlot extends keyof ItemSlotTemplates ? ItemSlotTemplates[TItemSlot] : null;
 		container: boolean;
 	};
 

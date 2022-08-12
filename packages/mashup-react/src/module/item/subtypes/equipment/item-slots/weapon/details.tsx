@@ -1,36 +1,30 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { WeaponProperty } from './types';
-import { OtherDetails } from '../other/details';
-import { toNumericSelectItems, toSelectItems } from '../toSelectItems';
+import { WeaponItemSlotTemplate, WeaponProperty } from './types';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { defaultEquipmentInfo } from './weaponEquipmentInfo';
-import { EquipmentData } from '../../dataSourceData';
-import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 
-const allWeaponCategories = toSelectItems(weaponCategories);
-const allWeaponHands = toNumericSelectItems(weaponHands);
-const allWeaponGroups = toSelectItems(weaponGroups);
-const allWeaponProperties = toSelectItems(weaponProperties);
+const allWeaponCategories = FormInput.Select.recordToSelectItems(weaponCategories);
+const allWeaponHands = FormInput.Select.numericRecordToSelectItems(weaponHands);
+const allWeaponGroups = FormInput.Select.recordToSelectItems(weaponGroups);
+const allWeaponProperties = FormInput.Select.recordToSelectItems(weaponProperties);
 
-const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<'weapon'>>>();
-const equipmentPropertiesLens = baseLens.toField('data').toField('equipmentProperties').default(defaultEquipmentInfo);
+const equipmentPropertiesLens = Lens.identity<WeaponItemSlotTemplate>();
 
-export function WeaponDetails({ itemState }: { itemState: Stateful<SimpleDocumentData<EquipmentData<'weapon'>>> }) {
-	const checkedProperties = itemState.value.data.equipmentProperties?.properties ?? [];
+export function WeaponDetails({ itemState }: { itemState: Stateful<WeaponItemSlotTemplate> }) {
+	const checkedProperties = itemState.value.properties ?? [];
 	function setChecked(value: WeaponProperty, isChecked: boolean) {
 		if (isChecked) {
 			if (checkedProperties.includes(value)) return;
 			itemState.onChangeValue((draft) => {
-				draft.data.equipmentProperties?.properties.push(value);
+				if (draft) {
+					draft.properties.push(value);
+				}
 			});
 		} else {
 			if (!checkedProperties.includes(value)) return;
 			itemState.onChangeValue((draft) => {
-				if (draft.data.equipmentProperties) {
-					draft.data.equipmentProperties.properties = draft.data.equipmentProperties.properties.filter(
-						(p) => p !== value
-					);
+				if (draft) {
+					draft.properties = draft.properties.filter((p) => p !== value);
 				}
 			});
 		}
@@ -83,8 +77,6 @@ export function WeaponDetails({ itemState }: { itemState: Stateful<SimpleDocumen
 				/>
 				<FormInput.Label>Group</FormInput.Label>
 			</FormInput>
-
-			<OtherDetails itemState={itemState} />
 
 			<div className="col-span-12 text-sm grid grid-cols-4">
 				{allWeaponProperties.map(({ value, key, label }) => (

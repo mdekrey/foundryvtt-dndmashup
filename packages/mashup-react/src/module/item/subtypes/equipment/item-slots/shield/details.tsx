@@ -1,18 +1,13 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { EquipmentData } from '../../dataSourceData';
-import { OtherDetails } from '../other/details';
-import { toSelectItems } from '../toSelectItems';
 import { allShieldTypes } from './config';
-import { defaultEquipmentInfo } from './sheildEquipmentInfo';
+import { ShieldItemSlotTemplate } from './types';
 
-const shieldTypes = toSelectItems(allShieldTypes);
+const shieldTypes = FormInput.Select.recordToSelectItems(allShieldTypes);
 
-const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<'shield'>>>();
-const equipmentPropertiesLens = baseLens.toField('data').toField('equipmentProperties').default(defaultEquipmentInfo);
+const equipmentPropertiesLens = Lens.identity<ShieldItemSlotTemplate>();
 
-export function ShieldDetails({ itemState }: { itemState: Stateful<SimpleDocumentData<EquipmentData<'shield'>>> }) {
+export function ShieldDetails({ itemState }: { itemState: Stateful<ShieldItemSlotTemplate> }) {
 	return (
 		<>
 			<FormInput className="col-span-6">
@@ -37,8 +32,6 @@ export function ShieldDetails({ itemState }: { itemState: Stateful<SimpleDocumen
 				/>
 				<FormInput.Label>Check</FormInput.Label>
 			</FormInput>
-
-			<OtherDetails itemState={itemState} />
 		</>
 	);
 }

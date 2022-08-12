@@ -13,41 +13,27 @@ export type SelectItem<TValue> = {
 	typeaheadLabel: string;
 };
 
-export function SelectOld<TValue extends Primitive>({
-	value,
-	plain,
-	options,
-	onChangeValue,
-	...selectProps
-}: {
-	value: TValue;
-	plain?: boolean;
-	options: SelectItem<TValue>[];
-	onChangeValue?: ImmutableMutator<TValue>;
-} & Omit<JSX.IntrinsicElements['select'], 'value'>) {
-	const currentEntry = options.find((k) => k.value === value) ?? options[0];
-	const onChangeProps = onChangeValue
-		? {
-				onChange(ev: React.ChangeEvent<HTMLSelectElement>) {
-					const newEntry = options.find((k) => k.key === ev.currentTarget.value);
-					const newValue = newEntry ? newEntry.value : options[0].value;
-					if (newEntry !== currentEntry) onChangeValue(() => newValue);
-				},
-		  }
-		: {};
-	const input = (
-		<select value={currentEntry.key} {...selectProps} {...onChangeProps}>
-			{options.map(({ key, label }) => (
-				<option key={key} value={key}>
-					{label}
-				</option>
-			))}
-		</select>
-	);
-	return plain ? input : <Field>{input}</Field>;
+export function recordToSelectItems<TKey extends React.Key & string>(record: Record<TKey, string>): SelectItem<TKey>[] {
+	return Object.entries(record).map(([value, label]) => ({
+		value: value as TKey,
+		key: value,
+		label: label as React.ReactNode,
+		typeaheadLabel: label as string,
+	}));
 }
 
-export function Select<TValue extends Primitive | object>({
+export function numericRecordToSelectItems<TKey extends React.Key & number>(
+	record: Record<TKey, string>
+): SelectItem<TKey>[] {
+	return Object.entries(record).map(([value, label]) => ({
+		value: Number(value) as TKey,
+		key: value,
+		label: label as React.ReactNode,
+		typeaheadLabel: label as string,
+	}));
+}
+
+function SelectComponent<TValue extends Primitive | object>({
 	value,
 	plain,
 	options,
@@ -147,3 +133,8 @@ export function Select<TValue extends Primitive | object>({
 		</Combobox>
 	);
 }
+
+export const Select = Object.assign(SelectComponent, {
+	recordToSelectItems,
+	numericRecordToSelectItems,
+});
