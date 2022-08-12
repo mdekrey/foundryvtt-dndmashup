@@ -1,4 +1,4 @@
-import { ApplicableEffect } from '../../../../../../effects';
+import { AttackEffectTrigger, ApplicableEffect } from '../../../../../../effects';
 
 export type WeaponCategory = 'simple' | 'military' | 'superior';
 export type WeaponGroup =
@@ -35,7 +35,5 @@ export type WeaponItemSlotTemplate = {
 	category: WeaponCategory;
 	hands: 1 | 2;
 
-	additionalEffects: Partial<Record<EffectTrigger, ApplicableEffect>>;
+	additionalEffects: Partial<Record<AttackEffectTrigger, ApplicableEffect>>;
 };
-
-type EffectTrigger = 'hit' | 'critical-hit';

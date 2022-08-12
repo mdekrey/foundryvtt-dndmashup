@@ -1,7 +1,13 @@
+import { TabbedSheet } from '@foundryvtt-dndmashup/components';
+import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { AttackEffects } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
 import { weaponGroups } from './config';
 import { WeaponDetails } from './details';
+import { WeaponItemSlotTemplate } from './types';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
+
+const additionalEffectsLens = Lens.fromProp<WeaponItemSlotTemplate>()('additionalEffects').default({});
 
 export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	display: 'Weapon',
@@ -37,4 +43,11 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 		</>
 	),
 	inventoryTableAddedCellCount: 3,
+	additionalTabs: (stateful) => (
+		<>
+			<TabbedSheet.Tab name="attackEffects" label="Attack Effects">
+				<AttackEffects {...additionalEffectsLens.apply(stateful)} />
+			</TabbedSheet.Tab>
+		</>
+	),
 };

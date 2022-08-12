@@ -1,8 +1,14 @@
 import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { Children } from 'react';
+import { Children, Fragment } from 'react';
 import { FormInput } from '../form-input';
 import { TabContext, Tabs } from '../tab-section';
 import { TabbedSheetTab, TabbedSheetTabProps } from './tabbed-sheet-tab';
+
+function flattenFragments(children: React.ReactNode): JSX.Element[] {
+	return Children.toArray(children)
+		.filter((v): v is JSX.Element => Boolean(v && typeof v === 'object' && 'props' in v))
+		.flatMap((v) => (v.type === Fragment ? flattenFragments(v.props.children) : v));
+}
 
 export function TabbedSheet({
 	img,
@@ -17,8 +23,7 @@ export function TabbedSheet({
 	tabState: TabContext;
 	children?: React.ReactNode;
 }) {
-	const tabs = Children.toArray(children)
-		.filter((v): v is JSX.Element => Boolean(v && typeof v === 'object' && 'props' in v))
+	const tabs = flattenFragments(children)
 		.filter((v) => v.type === TabbedSheetTab)
 		.map((v): TabbedSheetTabProps => v.props);
 	return (

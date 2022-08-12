@@ -19,7 +19,7 @@ const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: labe
 export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: EquipmentDocument<T> }) {
 	const documentState = documentAsState(item, { deleteData: true });
 	const [activeTab, setActiveTab] = useState('description');
-	const { buildSummary: Summary, details: Details } = getItemSlotInfo<T>(item.data.data.itemSlot);
+	const { buildSummary: Summary, details: Details, additionalTabs } = getItemSlotInfo<T>(item.data.data.itemSlot);
 
 	const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<T>>>();
 	const imageLens = baseLens.toField('img');
@@ -82,6 +82,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					<Contents item={item} />
 				</TabbedSheet.Tab>
 			) : null}
+			{additionalTabs?.(dataLens.toField('equipmentProperties').apply(documentState) as never)}
 		</TabbedSheet>
 	);
 }
