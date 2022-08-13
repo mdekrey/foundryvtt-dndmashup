@@ -43,8 +43,7 @@ const ruleLens = Lens.from<ConditionRule | null, ConditionRule | null>(
 type NoRule = { rule: '' } & Partial<Omit<ConditionRule, 'rule'>>;
 const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.combine(ruleLens)
-	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '')
-	.toField('rule');
+	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
 	const [count, setCount] = useState(0);
@@ -131,11 +130,7 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 								/>
 							</td>
 							<td className="px-1">
-								<FormInput.Select
-									{...baseLens.toField(idx).combine(conditionRuleLens).apply(bonuses)}
-									options={selectConditions}
-									className="text-center"
-								/>
+								<ConditionSelector {...baseLens.toField(idx).combine(conditionRuleLens).apply(bonuses)} />
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
 								{bonus.disabled ? (
@@ -171,4 +166,9 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 			</Modal>
 		</div>
 	);
+}
+
+const ruleTypeLens = Lens.fromProp<ConditionRule | NoRule>()('rule');
+function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
+	return <FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />;
 }
