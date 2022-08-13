@@ -97,7 +97,7 @@ export function DiceRoller<T extends string = string>({
 	);
 
 	return (
-		<div className="grid grid-cols-1 w-full gap-1 mt-1 pt-1">
+		<div className="grid grid-cols-1 w-full gap-1">
 			<p className="bg-theme text-white px-2 font-bold text-center py-1">{baseDice}</p>
 			{possibleTools ? (
 				<div className="text-lg">
