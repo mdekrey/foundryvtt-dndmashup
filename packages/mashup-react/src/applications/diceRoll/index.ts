@@ -1,8 +1,8 @@
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { DamageType, Defense } from '../../../types/types';
-import { ActorDocument } from '../../actor';
-import { BonusTarget } from '../../bonuses';
-import { EquipmentDocument, PowerDocument } from '../../item';
+import { DamageType, Defense } from '../../types/types';
+import { ActorDocument } from '../../module/actor';
+import { BonusTarget } from '../../module/bonuses';
+import { EquipmentDocument, PowerDocument } from '../../module/item';
 
 export * from './DiceRoller';
 

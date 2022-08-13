@@ -3,14 +3,12 @@ import {
 	ModalDispatcherContext,
 	ModalDispatcherContextProvider,
 	SimpleApplication,
-} from '@foundryvtt-dndmashup/foundry-compat';
-import {
 	ApplicationDispatcherContextProvider,
 	ApplicationDispatcherContext,
 	applicationRegistry,
 	MashupApplicationResultType,
-} from '@foundryvtt-dndmashup/mashup-react';
-import { MashupApplicationType } from '@foundryvtt-dndmashup/mashup-react';
+	MashupApplicationType,
+} from '@foundryvtt-dndmashup/foundry-compat';
 import { noop } from 'lodash/fp';
 import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 

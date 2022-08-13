@@ -1,4 +1,4 @@
-import { ApplicationSettings } from '@foundryvtt-dndmashup/foundry-compat';
+import { ApplicationSettings } from '../modal/types';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface

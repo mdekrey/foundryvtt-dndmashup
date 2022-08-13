@@ -1,4 +1,4 @@
-import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
+import { PowerDocument } from '../../module/item/subtypes/power/dataSourceData';
 
 export type PowerDetailsApplicationParameters = {
 	power: PowerDocument;

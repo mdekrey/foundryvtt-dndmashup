@@ -1,6 +1,5 @@
-import { RollJson, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { applicationRegistry, RollJson, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 import {
-	applicationRegistry,
 	BonusByType,
 	DiceRollApplicationParametersBase,
 	DiceRoller,

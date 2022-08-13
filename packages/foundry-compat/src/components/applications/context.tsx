@@ -1,5 +1,5 @@
-import { SimpleApplication } from '@foundryvtt-dndmashup/foundry-compat';
 import { createContext, useContext } from 'react';
+import { SimpleApplication } from '../../interfaces';
 import { MashupApplicationResultType, MashupApplicationType } from './types';
 
 export type ApplicationDispatcherContext = {

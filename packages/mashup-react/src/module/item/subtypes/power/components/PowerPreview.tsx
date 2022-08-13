@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/mashup-core';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
 import { ApplicableEffect, DamageEffect, HealingEffect } from '../../../../../effects';
 import { Defense } from '../../../../../types/types';
-import { useApplicationDispatcher } from '../../../../../module/applications';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';

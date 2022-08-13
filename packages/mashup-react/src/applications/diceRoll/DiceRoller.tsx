@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AppButton, FormInput } from '@foundryvtt-dndmashup/components';
-import { DocumentSelector } from '../../../components';
-import { EquipmentDocument } from '../../item';
+import { DocumentSelector } from '../../components';
+import { EquipmentDocument } from '../../module/item';
 import { lensFromState, Lens } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	BonusByType,
@@ -10,9 +10,9 @@ import {
 	filterBonuses,
 	getRuleText,
 	ruleResultIndeterminate,
-} from '../../bonuses';
-import { ActorDocument } from '../../actor';
-import { combineRollComponents, fromBonusesToFormula } from '../../bonuses/fromBonusesToFormula';
+} from '../../module/bonuses';
+import { ActorDocument } from '../../module/actor';
+import { combineRollComponents, fromBonusesToFormula } from '../../module/bonuses/fromBonusesToFormula';
 
 export type RollDetails = {
 	baseDice: string;

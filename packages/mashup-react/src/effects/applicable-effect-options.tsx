@@ -1,11 +1,10 @@
 import classNames from 'classnames';
+import { IconButton } from '@foundryvtt-dndmashup/components';
+import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
-import { useApplicationDispatcher } from '../module/applications/context';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import { ApplicableEffect, DamageEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
-import { IconButton } from '@foundryvtt-dndmashup/components';
-import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 
 export type ApplicableEffectOptionsProps = {
 	effect: ApplicableEffect;

@@ -1,3 +1,3 @@
 export * from './context';
-export * from './modal';
+export * from './registry';
 export * from './types';

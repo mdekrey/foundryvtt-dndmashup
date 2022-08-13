@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useModalDispatcher, ApplicationOptions, UpdatableModal } from './context';
+import { useModalDispatcher } from './context';
+import { ApplicationOptions, UpdatableModal } from './types';
 
 export type ModalProps = {
 	children?: React.ReactNode;
