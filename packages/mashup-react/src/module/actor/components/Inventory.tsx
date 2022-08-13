@@ -12,6 +12,7 @@ import { ActorDocument } from '../documentType';
 
 export const orderedItemSlots: ItemSlot[] = [
 	'weapon',
+	'implement',
 	'shield',
 	'armor',
 	'arms',

@@ -1,4 +1,5 @@
 import { ArmorInfo } from './armor/info';
+import { ImplementInfo } from './implement/info';
 import { OtherInfo, ItemSlotDefaults } from './other/info';
 import { ShieldInfo } from './shield/info';
 import { ItemSlot, ItemSlotInfo } from './types';
@@ -10,12 +11,7 @@ export const itemSlots: {
 	'': OtherInfo,
 	weapon: WeaponInfo,
 	shield: ShieldInfo,
-	implement: {
-		display: 'Implement',
-		optionLabel: 'Implement',
-		equippedSlots: ['primary-hand', 'off-hand'],
-		...ItemSlotDefaults,
-	},
+	implement: ImplementInfo,
 	armor: ArmorInfo,
 	arms: {
 		display: 'Arms',

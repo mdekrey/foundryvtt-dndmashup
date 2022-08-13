@@ -4,6 +4,7 @@ import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';
 import { WeaponItemSlotTemplate } from './weapon/types';
 import React from 'react';
+import { ImplementItemSlotTemplate } from './implement/types';
 
 export type ItemSlot =
 	| ''
@@ -35,6 +36,7 @@ export type ItemSlotTemplates = {
 	weapon: WeaponItemSlotTemplate;
 	armor: ArmorItemSlotTemplate;
 	shield: ShieldItemSlotTemplate;
+	implement: ImplementItemSlotTemplate;
 };
 
 export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
