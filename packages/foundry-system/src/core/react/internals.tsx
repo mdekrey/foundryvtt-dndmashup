@@ -24,7 +24,10 @@ export function renderReact<T extends Application>(sheet: T & ReactSheet, sheetC
 	if (sheet instanceof FormApplication) sheet.form = finalForm;
 	sheet[elementRoot] = finalForm;
 	sheet[reactRoot] = finalRoot;
-	return finalForm;
+	return {
+		element: finalForm,
+		rerender: (newContent: JSX.Element) => finalRoot?.render(<FoundryWrapper>{newContent}</FoundryWrapper>),
+	};
 }
 
 export function unmountReact<T extends Application>(sheet: T & ReactSheet) {

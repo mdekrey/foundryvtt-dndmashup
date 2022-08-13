@@ -4,15 +4,22 @@ export function ReactApplicationMixin<T extends ConstructorOf<Application>>(
 	Base: T
 ): Pick<T, keyof T> &
 	Pick<typeof ReactApplicationMixinPrototype, keyof typeof ReactApplicationMixinPrototype> & {
-		new (...args: ConstructorParameters<T>): InstanceType<T> & ReactApplicationMixinPrototype;
+		new (...args: ConstructorParameters<T>): InstanceType<T> & ReactApplicationMixinPrototype & { rerender(): void };
 	} {
 	return class ReactApplicationMixinClass extends Base {
+		private _rerender: ((newContent: JSX.Element) => void) | undefined = undefined;
+
+		rerender(): void {
+			this._rerender?.(this._getJsx());
+		}
+
 		protected _getJsx() {
 			return <>JSX should be overridden by sheet</>;
 		}
 
 		protected override async _renderInner(): Promise<JQuery<HTMLElement>> {
-			const rootElement = renderReact(this, this._getJsx());
+			const { element: rootElement, rerender } = renderReact(this, this._getJsx());
+			this._rerender = rerender;
 			return $(rootElement);
 		}
 

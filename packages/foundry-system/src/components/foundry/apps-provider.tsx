@@ -1,4 +1,9 @@
-import { SimpleApplication } from '@foundryvtt-dndmashup/foundry-compat';
+import {
+	ApplicationSettings,
+	ModalDispatcherContext,
+	ModalDispatcherContextProvider,
+	SimpleApplication,
+} from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	ApplicationDispatcherContextProvider,
 	ApplicationDispatcherContext,
@@ -41,17 +46,31 @@ export const applicationDispatcher: ApplicationDispatcherContext = {
 	},
 };
 
+export const modalDispatcher: ModalDispatcherContext = {
+	launchModal(settings: ApplicationSettings, onClose: () => void) {
+		const modal = new JsxDialog(settings.content, { title: settings.title, close: () => onClose() }, settings.options);
+
+		return {
+			modal,
+			updateContent: (content) => {
+				modal.jsx = content;
+				modal.rerender();
+			},
+		};
+	},
+};
+
 export function WrapApplicationDispatcher({ children }: { children?: React.ReactNode }) {
 	return (
 		<ApplicationDispatcherContextProvider value={applicationDispatcher}>
-			{children}
+			<ModalDispatcherContextProvider value={modalDispatcher}>{children}</ModalDispatcherContextProvider>
 		</ApplicationDispatcherContextProvider>
 	);
 }
 
 class JsxDialog extends ReactApplicationMixin(Dialog) {
 	constructor(
-		private jsx: JSX.Element,
+		public jsx: JSX.Element,
 		data: Omit<Dialog.Data, 'buttons' | 'default' | 'content'>,
 		options?: Partial<DialogOptions>
 	) {

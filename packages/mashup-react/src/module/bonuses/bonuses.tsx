@@ -6,6 +6,8 @@ import { targets } from './bonus-sheet-utils';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { conditionsRegistry } from './registry';
+import { Modal } from '@foundryvtt-dndmashup/foundry-compat';
+import { useState } from 'react';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
@@ -45,6 +47,8 @@ const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.toField('rule');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
+	const [count, setCount] = useState(0);
+	const [isOpen, setOpen] = useState(false);
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({
@@ -156,6 +160,15 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 					) : null}
 				</tbody>
 			</table>
+			{/* TODO: for testing only */}
+			<button type="button" onClick={() => setOpen((c) => !c)}>
+				Toggle
+			</button>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Counter">
+				<button type="button" onClick={() => setCount((c) => c + 1)}>
+					The count is {count}
+				</button>
+			</Modal>
 		</div>
 	);
 }
