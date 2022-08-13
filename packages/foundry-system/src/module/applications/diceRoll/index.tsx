@@ -127,6 +127,7 @@ applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => 
 			results: targetRolls,
 			defense,
 			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
+			toolId: tool ? toMashupId(tool) : undefined,
 			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
 				tool ? ` using ${tool.name}` : ''
 			}`.trim(),

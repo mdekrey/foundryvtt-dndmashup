@@ -6,19 +6,15 @@ import { ApplicableEffect, DamageEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 
-export function ApplicableEffectOptions({
-	effect,
-	prefix,
-	mode,
-	actor,
-	relatedPower,
-}: {
+export type ApplicableEffectOptionsProps = {
 	effect: ApplicableEffect;
 	prefix?: string;
 	mode: string;
 	actor: ActorDocument;
-	relatedPower: PowerDocument;
-}) {
+	relatedPower?: PowerDocument;
+};
+
+export function ApplicableEffectOptions({ effect, prefix, mode, actor, relatedPower }: ApplicableEffectOptionsProps) {
 	const applications = useApplicationDispatcher();
 	return (
 		<>

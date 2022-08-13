@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
-import { TokenDocument } from '../../actor';
+import { ActorDocument, TokenDocument } from '../../actor';
 import { AttackRollResult, RollInfo } from '../../../components';
-import { PowerDocument } from '../../item';
+import { EquipmentDocument, PowerDocument } from '../../item';
+import { ApplicableEffect, ApplicableEffectSection, AttackEffectTrigger } from '../../../effects';
 
 export type AttackResultEntryProps = {
 	tokenId: string | null;
@@ -14,21 +15,36 @@ export type AttackResultEntryProps = {
 export const AttackResult = ({
 	entries,
 	lookupToken,
+	actor,
+	power,
+	tool,
 }: {
 	entries: AttackResultEntryProps[];
 	lookupToken: (tokenId: string) => TokenDocument | undefined;
+	actor?: ActorDocument;
 	power?: PowerDocument;
-}) => (
-	<div>
-		{entries.map((entry, index) => (
-			<AttackResultEntry
-				{...entry}
-				lookupToken={() => (entry.tokenId ? lookupToken(entry.tokenId) : undefined)}
-				key={index}
-			/>
-		))}
-	</div>
-);
+	tool?: EquipmentDocument<'weapon' | 'implement'>;
+}) => {
+	console.log({ entries, lookupToken, actor, power, tool });
+	return (
+		<div>
+			{entries.map((entry, index) => (
+				<AttackResultEntry
+					{...entry}
+					lookupToken={() => (entry.tokenId ? lookupToken(entry.tokenId) : undefined)}
+					key={index}
+				/>
+			))}
+			{tool?.data.data.equipmentProperties?.additionalEffects && actor ? (
+				<ToolExtraEffects
+					additionalEffects={tool?.data.data.equipmentProperties?.additionalEffects}
+					actor={actor}
+					power={power}
+				/>
+			) : null}
+		</div>
+	);
+};
 
 function AttackResultEntry({
 	rollData,
@@ -95,4 +111,32 @@ function AttackResultEntry({
 			</div>
 		</div>
 	);
+}
+
+function ToolExtraEffects({
+	additionalEffects,
+	power,
+	actor,
+}: {
+	additionalEffects: Partial<Record<AttackEffectTrigger, ApplicableEffect>>;
+	power?: PowerDocument;
+	actor: ActorDocument;
+}) {
+	// TODO: Tool enhancement to damage double-dips here
+	return additionalEffects.hit || additionalEffects['critical-hit'] ? (
+		<>
+			<p>Additional effects:</p>
+			{additionalEffects.hit && (
+				<ApplicableEffectSection effect={additionalEffects.hit} mode="Hit" relatedPower={power} actor={actor} />
+			)}
+			{additionalEffects['critical-hit'] && (
+				<ApplicableEffectSection
+					effect={additionalEffects['critical-hit']}
+					mode="Critical Hit"
+					relatedPower={power}
+					actor={actor}
+				/>
+			)}
+		</>
+	) : null;
 }

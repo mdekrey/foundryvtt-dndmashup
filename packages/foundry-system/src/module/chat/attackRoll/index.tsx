@@ -6,6 +6,7 @@ import {
 	AttackResult,
 	AttackRollResult,
 	PowerDocument,
+	EquipmentDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { fromMashupId, isGame } from '../../../core/foundry';
 
@@ -25,16 +26,24 @@ chatMessageRegistry.attackResult = async (actor, properties) => {
 			rollResult: toResult(roll as never as ReturnType<Roll['toJSON']>, target?.id ?? null, properties.defense),
 		})
 	);
-	return { flags: { results, powerId: properties.powerId }, flavor: properties.flavor, sound: 'sounds/dice.wav' };
+	return {
+		flags: { results, powerId: properties.powerId, toolId: properties.toolId },
+		flavor: properties.flavor,
+		sound: 'sounds/dice.wav',
+	};
 };
-chatAttachments['attackResult'] = ({ flags: { results, powerId } }) => {
+chatAttachments['attackResult'] = ({ flags: { results, powerId, toolId }, speaker: { actor: actorId } }) => {
 	const myGame = game;
 	if (!isGame(myGame)) {
 		console.error('no game', myGame);
 		throw new Error('Could not attach');
 	}
 
+	const actor = (actorId ? myGame.actors?.get(actorId) : null) ?? undefined;
 	const power = powerId ? (fromMashupId(powerId as string) as never as PowerDocument) : undefined;
+	const tool = toolId
+		? (fromMashupId(toolId as string) as never as EquipmentDocument<'weapon' | 'implement'>)
+		: undefined;
 
 	const props = (results as ResultEntry[]).map((entry) => {
 		const roll = Roll.fromJSON(JSON.stringify(entry.roll));
@@ -47,7 +56,15 @@ chatAttachments['attackResult'] = ({ flags: { results, powerId } }) => {
 		};
 	});
 
-	return <AttackResult entries={props} lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)} power={power} />;
+	return (
+		<AttackResult
+			entries={props}
+			lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)}
+			actor={actor}
+			power={power}
+			tool={tool}
+		/>
+	);
 };
 
 function toResult(roll: ReturnType<Roll['toJSON']>, tokenId: string | null, defense: Defense): AttackRollResult | null {

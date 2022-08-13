@@ -1,8 +1,7 @@
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import {
 	ActorDocument,
-	ApplicableEffect,
-	ApplicableEffectOptions,
+	ApplicableEffectSection,
 	AttackRoll,
 	EffectTypeAndRange,
 	PowerEffect,
@@ -103,23 +102,13 @@ function PowerEffectOptions({
 				)}
 			</div>
 			<div className="text-gray-800">
-				{applicableEffectSection(effect.hit, effect.attackRoll ? 'Hit' : 'Effect')}
-				{effect.miss && (effect.miss.damage || effect.miss.healing)
-					? applicableEffectSection(effect.miss, 'Miss')
-					: null}
+				<ApplicableEffectSection effect={effect.hit} mode={effect.attackRoll ? 'Hit' : 'Effect'} {...effectProps} />
+				{effect.miss && (effect.miss.damage || effect.miss.healing) ? (
+					<ApplicableEffectSection effect={effect.miss} mode="Miss" {...effectProps} />
+				) : null}
 			</div>
 		</div>
 	);
-
-	function applicableEffectSection(apEffect: ApplicableEffect, mode: string) {
-		return (
-			<div className="flex flex-row items-center pl-2">
-				<span className="flex-1">{mode}</span>
-
-				<ApplicableEffectOptions effect={apEffect} mode={mode} {...effectProps} />
-			</div>
-		);
-	}
 
 	function attackRoll(attackRoll: AttackRoll) {
 		return async () => rollAttack(attackRoll, effect.name || '');
