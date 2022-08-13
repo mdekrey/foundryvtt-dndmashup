@@ -25,7 +25,6 @@ export const AttackResult = ({
 	power?: PowerDocument;
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 }) => {
-	console.log({ entries, lookupToken, actor, power, tool });
 	return (
 		<div>
 			{entries.map((entry, index) => (
@@ -37,6 +36,7 @@ export const AttackResult = ({
 			))}
 			{tool?.data.data.equipmentProperties?.additionalEffects && actor ? (
 				<ToolExtraEffects
+					tool={tool}
 					additionalEffects={tool?.data.data.equipmentProperties?.additionalEffects}
 					actor={actor}
 					power={power}
@@ -115,10 +115,12 @@ function AttackResultEntry({
 
 function ToolExtraEffects({
 	additionalEffects,
+	tool,
 	power,
 	actor,
 }: {
 	additionalEffects: Partial<Record<AttackEffectTrigger, ApplicableEffect>>;
+	tool: EquipmentDocument<'weapon' | 'implement'>;
 	power?: PowerDocument;
 	actor: ActorDocument;
 }) {
@@ -127,14 +129,25 @@ function ToolExtraEffects({
 		<>
 			<p>Additional effects:</p>
 			{additionalEffects.hit && (
-				<ApplicableEffectSection effect={additionalEffects.hit} mode="Hit" relatedPower={power} actor={actor} />
+				<ApplicableEffectSection
+					effect={additionalEffects.hit}
+					mode="Hit"
+					source={tool}
+					power={power}
+					actor={actor}
+					allowToolSelection={false}
+					allowCritical={false}
+				/>
 			)}
 			{additionalEffects['critical-hit'] && (
 				<ApplicableEffectSection
 					effect={additionalEffects['critical-hit']}
 					mode="Critical Hit"
-					relatedPower={power}
+					source={tool}
+					power={power}
 					actor={actor}
+					allowToolSelection={false}
+					allowCritical={false}
 				/>
 			)}
 		</>

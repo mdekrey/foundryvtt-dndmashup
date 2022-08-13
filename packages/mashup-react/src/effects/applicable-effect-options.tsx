@@ -5,16 +5,29 @@ import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import { ApplicableEffect, DamageEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { IconButton } from '@foundryvtt-dndmashup/components';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 
 export type ApplicableEffectOptionsProps = {
 	effect: ApplicableEffect;
 	prefix?: string;
 	mode: string;
 	actor: ActorDocument;
-	relatedPower?: PowerDocument;
+	source: SimpleDocument;
+	power?: PowerDocument;
+	allowToolSelection: boolean;
+	allowCritical: boolean;
 };
 
-export function ApplicableEffectOptions({ effect, prefix, mode, actor, relatedPower }: ApplicableEffectOptionsProps) {
+export function ApplicableEffectOptions({
+	effect,
+	prefix,
+	mode,
+	actor,
+	source,
+	power,
+	allowToolSelection,
+	allowCritical,
+}: ApplicableEffectOptionsProps) {
 	const applications = useApplicationDispatcher();
 	return (
 		<>
@@ -40,9 +53,12 @@ export function ApplicableEffectOptions({ effect, prefix, mode, actor, relatedPo
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
-				relatedPower,
+				source,
+				power,
 				rollType: 'damage',
 				damageTypes: damageEffect.damageTypes,
+				allowToolSelection,
+				allowCritical,
 			});
 		};
 	}

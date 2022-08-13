@@ -12,6 +12,8 @@ import {
 	combineRollComponents,
 	fromBonusesToFormula,
 	DiceRollerOptionalProps,
+	ActorDocument,
+	PowerDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { intersection } from 'lodash/fp';
 import { applicationDispatcher } from '../../../components/foundry/apps-provider';
@@ -27,6 +29,19 @@ type DisplayDialogProps = DiceRollApplicationParametersBase & {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
+function getToolsForPower(actor: ActorDocument, power: PowerDocument) {
+	const toolType =
+		(power
+			? (intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
+			: null) ?? null;
+	const usesTool = toolType !== null;
+	if (!usesTool) return undefined;
+	return (actor.items.contents as ItemDocument[])
+		.filter(isEquipment)
+		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
+		.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[];
+}
+
 function displayDialog<T extends string>(
 	props: DisplayDialogProps,
 	onComplete: (rollProps: RollDetails) => void,
@@ -34,21 +49,17 @@ function displayDialog<T extends string>(
 ): JSX.Element;
 function displayDialog(props: DisplayDialogProps, onComplete: (rollProps: RollDetails) => void): JSX.Element;
 function displayDialog<T extends string = string>(
-	{ baseDice, actor, relatedPower, rollType, tool }: DisplayDialogProps,
+	{ baseDice, actor, power, source, rollType, tool, allowToolSelection }: DisplayDialogProps,
 	onComplete: (rollProps: RollDetails) => void,
 	optionalProps?: DiceRollerOptionalProps<T>
 ) {
-	const toolType =
-		(relatedPower
-			? (intersection(toolKeywords, relatedPower.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
-			: null) ?? null;
-	const usesTool = toolType !== null;
-	const possibleTools = tool
+	const possibleTools = !allowToolSelection
+		? undefined
+		: tool
 		? [tool]
-		: ((actor.items.contents as ItemDocument[])
-				.filter(isEquipment)
-				.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
-				.filter((heldItem) => heldItem.data.data.itemSlot === toolType) as EquipmentDocument<'weapon' | 'implement'>[]);
+		: power
+		? getToolsForPower(actor, power)
+		: undefined;
 
 	return (
 		<DiceRoller
@@ -63,7 +74,7 @@ function displayDialog<T extends string = string>(
 				}
 			}
 			evaluateBonuses={evaluateAndRoll}
-			possibleTools={usesTool ? possibleTools : undefined}
+			possibleTools={possibleTools}
 		/>
 	);
 }
@@ -126,9 +137,9 @@ applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => 
 		await sendChatMessage('attackResult', baseParams.actor, {
 			results: targetRolls,
 			defense,
-			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
+			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
 			toolId: tool ? toMashupId(tool) : undefined,
-			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
+			flavor: `${baseParams.source.name} ${baseParams.title} Attack vs. ${defense.toUpperCase()}${
 				tool ? ` using ${tool.name}` : ''
 			}`.trim(),
 		});
@@ -136,12 +147,14 @@ applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => 
 	}
 };
 
-applicationRegistry.damage = async ({ damageTypes, ...baseParams }, resolve, reject) => {
+applicationRegistry.damage = async ({ damageTypes, allowCritical, ...baseParams }, resolve, reject) => {
 	return {
-		content: displayDialog(baseParams, onRoll, {
-			otherActions: { critical: { content: 'Critical!' } },
-			onOtherAction: onCritical,
-		}),
+		content: allowCritical
+			? displayDialog(baseParams, onRoll, {
+					otherActions: { critical: { content: 'Critical!' } },
+					onOtherAction: onCritical,
+			  })
+			: displayDialog(baseParams, onRoll),
 		title: `${baseParams.title} Critical Damage`,
 		options: { resizable: true },
 	};
@@ -164,8 +177,8 @@ applicationRegistry.damage = async ({ damageTypes, ...baseParams }, resolve, rej
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
-			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Damage${tool ? ` using ${tool.name}` : ''}`.trim(),
+			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
+			flavor: `${baseParams.source.name} ${baseParams.title} Damage${tool ? ` using ${tool.name}` : ''}`.trim(),
 		});
 		resolve(null);
 	}
@@ -198,7 +211,6 @@ applicationRegistry.damage = async ({ damageTypes, ...baseParams }, resolve, rej
 };
 
 applicationRegistry.criticalDamage = async ({ damageTypes, ...baseParams }, resolve) => {
-	console.log(baseParams);
 	return {
 		content: displayDialog(baseParams, onRoll),
 		title: `${baseParams.title} Critical Damage`,
@@ -223,8 +235,8 @@ applicationRegistry.criticalDamage = async ({ damageTypes, ...baseParams }, reso
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: baseParams.relatedPower ? toMashupId(baseParams.relatedPower) : undefined,
-			flavor: `${baseParams.relatedPower?.name} ${baseParams.title} Critical Damage${
+			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
+			flavor: `${baseParams.source.name} ${baseParams.title} Critical Damage${
 				tool ? ` using ${tool.name}` : ''
 			}`.trim(),
 		});

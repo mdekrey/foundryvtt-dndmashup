@@ -66,7 +66,7 @@ function hasEffectInfo(effect: PowerEffect): boolean {
 }
 function PowerEffectOptions({
 	actor,
-	power: relatedPower,
+	power,
 	effect,
 	canCreateEffect: canCreate,
 	createEffect,
@@ -77,7 +77,7 @@ function PowerEffectOptions({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string) => void;
 } & PowerEffectTemplateProps) {
-	const effectProps = { prefix: effect.name, actor, relatedPower };
+	const effectProps = { prefix: effect.name, actor, power, source: power };
 
 	return (
 		<div className={classNames('grid grid-cols-1 w-full')}>
@@ -102,9 +102,21 @@ function PowerEffectOptions({
 				)}
 			</div>
 			<div className="text-gray-800">
-				<ApplicableEffectSection effect={effect.hit} mode={effect.attackRoll ? 'Hit' : 'Effect'} {...effectProps} />
+				<ApplicableEffectSection
+					effect={effect.hit}
+					mode={effect.attackRoll ? 'Hit' : 'Effect'}
+					{...effectProps}
+					allowToolSelection={true}
+					allowCritical={true}
+				/>
 				{effect.miss && (effect.miss.damage || effect.miss.healing) ? (
-					<ApplicableEffectSection effect={effect.miss} mode="Miss" {...effectProps} />
+					<ApplicableEffectSection
+						effect={effect.miss}
+						mode="Miss"
+						{...effectProps}
+						allowToolSelection={true}
+						allowCritical={true}
+					/>
 				) : null}
 			</div>
 		</div>

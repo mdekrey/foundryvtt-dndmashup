@@ -90,7 +90,6 @@ export function DiceRoller<T extends string = string>({
 		const bonusByType = evaluateBonuses(selectedBonuses);
 		return { checkboxBonusFormula: fromBonusesToFormula(bonusByType), bonusByType };
 	}, [selectedBonusesState.value, indeterminateBonuses, actor.appliedBonuses, toolBonuses.applied]);
-	console.log(checkboxBonusFormula, bonusByType);
 
 	const currentRoll = combineRollComponents(
 		combineRollComponents(baseDice, checkboxBonusFormula),

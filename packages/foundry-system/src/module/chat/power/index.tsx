@@ -67,9 +67,11 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			baseDice: `1d20 + ${attackRoll.attack}`,
 			title,
 			actor,
-			relatedPower: item,
+			source: item,
+			power: item,
 			rollType: 'attack-roll',
 			defense: attackRoll.defense,
+			allowToolSelection: true,
 		});
 	}
 }

@@ -1,3 +1,4 @@
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { DamageType, Defense } from '../../../types/types';
 import { ActorDocument } from '../../actor';
 import { BonusTarget } from '../../bonuses';
@@ -9,8 +10,10 @@ export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
 	actor: ActorDocument;
-	relatedPower?: PowerDocument;
+	source: SimpleDocument;
+	power?: PowerDocument;
 	rollType: BonusTarget;
+	allowToolSelection: boolean;
 };
 
 export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & {
@@ -25,6 +28,7 @@ export type AttackRollApplicationParameters = DiceRollApplicationParametersBase 
 export type DamageRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'damage';
 	damageTypes: DamageType[];
+	allowCritical: boolean;
 };
 
 export type CriticalDamageRollApplicationParameters = DiceRollApplicationParametersBase & {
