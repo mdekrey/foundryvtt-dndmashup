@@ -7,7 +7,7 @@ type ModalContentsProps = {
 	onClose: () => void;
 };
 
-export function DetailsModal({
+export function DetailsModalButton({
 	className,
 	modalTitle,
 	buttonContents,
@@ -46,13 +46,15 @@ export function DetailsModal({
 				<div
 					onBlur={onClose}
 					ref={(container) => {
-						if (container) {
-							container
-								.querySelector<Element & HTMLOrSVGElement>(
-									'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-								)
-								?.focus();
-						}
+						setTimeout(() => {
+							if (container) {
+								container
+									.querySelector<Element & HTMLOrSVGElement>(
+										'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+									)
+									?.focus();
+							}
+						}, 100);
 					}}>
 					{typeof modalContents === 'function' ? modalContents({ onClose }) : modalContents}
 				</div>

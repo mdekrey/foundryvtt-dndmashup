@@ -1,11 +1,10 @@
 import { Combobox } from '@headlessui/react';
 import CheckIcon from '@heroicons/react/solid/CheckIcon';
-import SelectorIcon from '@heroicons/react/solid/SelectorIcon';
 import classNames from 'classnames';
-import { ReactNode, Key, useState, useCallback, useRef } from 'react';
+import { ReactNode, Key, useState } from 'react';
 import { ImmutableMutator, Primitive } from '@foundryvtt-dndmashup/mashup-core';
 import { Field } from '../field';
-import { Modal } from '../../modal';
+import { DetailsModalButton } from '../../details-modal-button';
 
 export type SelectItem<TValue> = {
 	value: TValue;
@@ -36,7 +35,6 @@ export function numericRecordToSelectItems<TKey extends React.Key & number>(
 
 function SelectComponent<TValue extends Primitive | object>({
 	value,
-	plain,
 	options,
 	onChange,
 	onChangeValue,
@@ -49,23 +47,7 @@ function SelectComponent<TValue extends Primitive | object>({
 	onChangeValue?: ImmutableMutator<TValue>;
 	className?: string;
 }) {
-	const buttonRef = useRef<HTMLButtonElement>(null);
-	const [isOpen, setOpen] = useState(false);
 	const [query, setQuery] = useState('');
-	const comboboxOnChange = useCallback<React.Dispatch<React.SetStateAction<TValue>>>(
-		(param) => {
-			if (onChangeValue)
-				onChangeValue((oldValue) => {
-					if (typeof param === 'function') return param(oldValue as TValue);
-					return param;
-				});
-			if (onChange) onChange(typeof param === 'function' ? param(value) : param);
-			setQuery('');
-			buttonRef.current?.focus();
-		},
-		[onChangeValue, onChange, value]
-	);
-
 	const filteredOptions =
 		query === ''
 			? options
@@ -73,40 +55,29 @@ function SelectComponent<TValue extends Primitive | object>({
 					return option.typeaheadLabel.toLowerCase().includes(query.toLowerCase());
 			  });
 
-	const inner = (
-		<div className={classNames('relative', className)}>
-			<button
-				type="button"
-				className={classNames(
-					'relative w-full h-full text-left',
-					'cursor-default overflow-hidden',
-					'flex items-center'
-				)}
-				ref={buttonRef}
-				onClick={() => setOpen(true)}>
-				<span className="pl-1 flex items-center">{options.find((opt) => opt.value === value)?.label ?? null}</span>
-
-				<span className="absolute inset-y-0 right-0 flex items-center pr-1">
-					<SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-				</span>
-			</button>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Select...">
-				<div
-					onBlur={() => {
-						setOpen(false);
-						buttonRef.current?.focus();
-					}}>
+	return (
+		<DetailsModalButton
+			className={className}
+			modalTitle="Select..."
+			buttonContents={options.find((opt) => opt.value === value)?.label ?? null}
+			modalContents={({ onClose }) => {
+				const comboboxOnChange: React.Dispatch<React.SetStateAction<TValue>> = (param) => {
+					if (onChangeValue)
+						onChangeValue((oldValue) => {
+							if (typeof param === 'function') return param(oldValue as TValue);
+							return param;
+						});
+					if (onChange) onChange(typeof param === 'function' ? param(value) : param);
+					setQuery('');
+					onClose();
+				};
+				return (
 					<Combobox value={value} onChange={comboboxOnChange}>
 						<Field>
 							<Combobox.Input
 								className="w-full pl-1"
 								displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
 								onChange={(event) => setQuery(event.target.value)}
-								autoFocus
-								ref={(input: HTMLInputElement | null) => {
-									console.log(input);
-									setTimeout(() => input?.focus(), 100);
-								}}
 							/>
 						</Field>
 
@@ -144,12 +115,10 @@ function SelectComponent<TValue extends Primitive | object>({
 							)}
 						</div>
 					</Combobox>
-				</div>
-			</Modal>
-		</div>
+				);
+			}}
+		/>
 	);
-
-	return plain ? inner : <Field>{inner}</Field>;
 }
 
 export const Select = Object.assign(SelectComponent, {
