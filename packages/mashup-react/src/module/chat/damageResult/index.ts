@@ -1,5 +1,5 @@
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
-import { DamageType } from '../../../types/types';
+import { DamageType } from '@foundryvtt-dndmashup/mashup-rules';
 
 export * from './DamageResult';
 

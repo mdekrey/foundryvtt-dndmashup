@@ -1,6 +1,6 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';

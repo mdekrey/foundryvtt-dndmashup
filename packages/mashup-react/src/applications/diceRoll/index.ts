@@ -1,7 +1,7 @@
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { DamageType, Defense } from '../../types/types';
+import { DamageType, Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
-import { NumericBonusTarget } from '../../bonuses';
+import { NumericBonusTarget } from '@foundryvtt-dndmashup/mashup-rules';
 import { EquipmentDocument, PowerDocument } from '../../module/item';
 
 export * from './DiceRoller';

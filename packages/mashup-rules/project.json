@@ -1,0 +1,43 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/mashup-rules/src",
+	"projectType": "library",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@nrwl/web:rollup",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/packages/mashup-rules",
+				"tsConfig": "packages/mashup-rules/tsconfig.lib.json",
+				"project": "packages/mashup-rules/package.json",
+				"entryFile": "packages/mashup-rules/src/index.ts",
+				"external": ["react/jsx-runtime"],
+				"rollupConfig": ["@nrwl/react/plugins/bundle-rollup", "packages/mashup-rules/bundle-rollup.cjs"],
+				"compiler": "swc",
+				"assets": [
+					{
+						"glob": "packages/mashup-rules/*.md",
+						"input": ".",
+						"output": "."
+					}
+				]
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/mashup-rules/**/*.{ts,tsx,js,jsx}"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/packages/mashup-rules"],
+			"options": {
+				"jestConfig": "packages/mashup-rules/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	}
+}

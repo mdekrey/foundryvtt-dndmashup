@@ -1,12 +1,10 @@
-import { Tabs } from '@foundryvtt-dndmashup/components';
-import { SpecificActor } from '../mashup-actor';
-import { ActorComponents } from '@foundryvtt-dndmashup/mashup-react';
-import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { Ability } from '@foundryvtt-dndmashup/mashup-react';
+import { Tabs } from '@foundryvtt-dndmashup/components';
+import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { Ability } from '@foundryvtt-dndmashup/mashup-rules';
+import { ActorComponents, ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';
+import { SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
-import { ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';
-import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { PossibleItemData } from '../../item/types';
 
 const baseLens = Lens.identity<SpecificActorData<'pc'>>();

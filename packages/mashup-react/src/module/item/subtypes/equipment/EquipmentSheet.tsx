@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormInput, TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { Bonuses } from '../../../../bonuses';
+import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
 import { Description } from '../../components/Description';
 import { getItemSlotInfo, ItemSlot, itemSlots, ItemSlotTemplate } from './item-slots';
 import { getEquipmentProperties } from './getEquipmentProperties';

@@ -1,4 +1,4 @@
-import { FeatureBonus } from '../../../bonuses';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { PossibleItemSourceData } from '../item-data-types-template';
 
 export type BaseItemTemplateDataSourceData = {

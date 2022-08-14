@@ -4,7 +4,7 @@ import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
 import { ApplicableEffect, DamageEffect, HealingEffect } from '../../../../../effects';
-import { Defense } from '../../../../../types/types';
+import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';

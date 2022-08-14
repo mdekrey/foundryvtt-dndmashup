@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Defense } from '../../../types/types';
+import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 
 export function Defenses({ defenses }: { defenses: Record<Defense, number> }) {
 	return (

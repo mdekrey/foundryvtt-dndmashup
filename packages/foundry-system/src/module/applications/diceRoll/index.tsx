@@ -1,6 +1,6 @@
 import { applicationRegistry, RollJson, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { BonusByType, combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
 import {
-	BonusByType,
 	DiceRollApplicationParametersBase,
 	DiceRoller,
 	EquipmentDocument,
@@ -8,8 +8,6 @@ import {
 	isEquipment,
 	ItemDocument,
 	RollDetails,
-	combineRollComponents,
-	fromBonusesToFormula,
 	DiceRollerOptionalProps,
 	ActorDocument,
 	PowerDocument,

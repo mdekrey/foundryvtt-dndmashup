@@ -4,12 +4,12 @@ import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-ty
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import {
 	abilities,
+	damageTypes,
+	defenses,
 	AbilityBonus,
 	NumericBonusTarget,
 	numericBonusTargets,
 	byTarget,
-	damageTypes,
-	defenses,
 	DefenseBonus,
 	FeatureBonus,
 	FeatureBonusWithContext,
@@ -19,7 +19,7 @@ import {
 	Vulnerability,
 	ruleResultIndeterminate,
 	ConditionRule,
-} from '@foundryvtt-dndmashup/mashup-react';
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
 import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';

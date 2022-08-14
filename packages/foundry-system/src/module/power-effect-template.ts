@@ -1,4 +1,5 @@
-import { EffectTypeAndRange, Size, sizeToTokenSize } from '@foundryvtt-dndmashup/mashup-react';
+import { Size, sizeToTokenSize } from '@foundryvtt-dndmashup/mashup-rules';
+import { EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
 import { MeasuredTemplateDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/measuredTemplateData';
 import { isGame } from '../core/foundry';
 import { systemName } from './constants';

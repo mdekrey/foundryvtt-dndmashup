@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { abilities, Ability } from '../../../types/types';
+import { abilities, Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AbilityScores } from '../types';
 

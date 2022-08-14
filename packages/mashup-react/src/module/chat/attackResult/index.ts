@@ -1,5 +1,5 @@
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
-import { Defense } from '../../../types/types';
+import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { TokenDocument } from '../../actor';
 
 export * from './AttackResult';

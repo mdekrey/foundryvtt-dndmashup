@@ -31,7 +31,10 @@
 	"generators": {
 		"@nrwl/react": {
 			"application": {
-				"babel": false
+				"babel": true
+			},
+			"library": {
+				"compiler": "swc"
 			}
 		},
 		"@nrwl/web:application": {

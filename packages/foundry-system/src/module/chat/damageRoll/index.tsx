@@ -1,6 +1,7 @@
 import { chatAttachments } from '../attach';
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
-import { chatMessageRegistry, DamageResult, DamageType, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { DamageType } from '@foundryvtt-dndmashup/mashup-rules';
+import { chatMessageRegistry, DamageResult, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { fromMashupId, isGame } from '../../../core/foundry';
 import { MashupActor } from '../../actor/mashup-actor';
 

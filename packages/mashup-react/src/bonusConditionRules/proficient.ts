@@ -1,4 +1,4 @@
-import { ConditionRuleContext, conditionsRegistry } from '../bonuses';
+import { ConditionRuleContext, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../module/actor/documentType';
 import { ItemDocument } from '../module/item';
 

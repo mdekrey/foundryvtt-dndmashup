@@ -3,9 +3,10 @@
 	"version": 2,
 	"projects": {
 		"components": "packages/components",
+		"core": "packages/core",
 		"foundry-compat": "packages/foundry-compat",
 		"foundry-system": "packages/foundry-system",
-		"core": "packages/core",
-		"mashup-react": "packages/mashup-react"
+		"mashup-react": "packages/mashup-react",
+		"mashup-rules": "packages/mashup-rules"
 	}
 }

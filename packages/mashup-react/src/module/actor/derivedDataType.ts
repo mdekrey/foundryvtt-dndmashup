@@ -1,4 +1,4 @@
-import { Ability, DamageType, Defense, Size } from '../../types/types';
+import { Ability, DamageType, Defense, Size } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type CommonDerivedDataProperties = {
 	abilities: {

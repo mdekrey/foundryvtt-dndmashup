@@ -1,5 +1,5 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability } from '../../../../types/types';
+import { Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 import { ItemDocument } from '../../item-data-types-template';
 

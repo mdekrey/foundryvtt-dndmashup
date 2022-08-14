@@ -1,10 +1,10 @@
 import { FormInput, SelectItem, Tabs } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Bonuses } from '../../../../bonuses';
+import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeaturesList } from '../../components/FeaturesList';
 import { RaceData } from './dataSourceData';
-import { sizes, Size } from '../../../../types/types';
+import { sizes, Size } from '@foundryvtt-dndmashup/mashup-rules';
 import { capitalize } from 'lodash/fp';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();

@@ -1,6 +1,6 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ApplicableEffect } from '../../../../effects';
-import { Defense } from '../../../../types/types';
+import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 

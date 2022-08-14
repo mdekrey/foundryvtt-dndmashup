@@ -1,4 +1,4 @@
-import { DamageType } from '../types/types';
+import { DamageType } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type ApplicableEffect = {
 	text: string;

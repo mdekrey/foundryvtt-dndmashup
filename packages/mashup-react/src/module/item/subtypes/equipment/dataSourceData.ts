@@ -6,7 +6,7 @@ import {
 } from '../../templates/bases';
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ItemDocument } from '../../item-data-types-template';
-import { FeatureBonus } from '../../../../bonuses';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData &

@@ -1,6 +1,5 @@
-import { EquipmentData, EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
-import { PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { EquipmentData, EquipmentDocument, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
 import { ItemSlot } from '@foundryvtt-dndmashup/mashup-react';

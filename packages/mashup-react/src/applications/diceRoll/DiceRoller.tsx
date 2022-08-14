@@ -12,7 +12,7 @@ import {
 	ruleResultIndeterminate,
 	combineRollComponents,
 	fromBonusesToFormula,
-} from '../../bonuses';
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 
 export type RollDetails = {

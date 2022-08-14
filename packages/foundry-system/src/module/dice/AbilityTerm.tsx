@@ -1,4 +1,4 @@
-import { abilities, Ability } from '../../core/foundry';
+import { abilities, Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { MashupDiceContext } from './MashupDiceContext';
 
 export class AbilityTerm extends NumericTerm {

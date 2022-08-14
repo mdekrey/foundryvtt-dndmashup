@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash/fp';
-import { BonusByType, FeatureBonusWithContext, untypedBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { BonusByType, FeatureBonusWithContext, untypedBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 const max = (v: number[]) => Math.max(...v);
 

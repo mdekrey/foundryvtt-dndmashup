@@ -1,6 +1,6 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability, Currency } from '../../types/types';
-import { FeatureBonus } from '../../bonuses';
+import { Ability, Currency } from '@foundryvtt-dndmashup/mashup-rules';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type AbilityScores = {
 	[ability in Ability]: { base: number };

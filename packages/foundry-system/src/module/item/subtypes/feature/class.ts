@@ -1,4 +1,4 @@
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeatureDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 

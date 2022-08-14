@@ -2,7 +2,7 @@ import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import classNames from 'classnames';
-import { Defense, defenses } from '../../../../../types/types';
+import { Defense, defenses } from '@foundryvtt-dndmashup/mashup-rules';
 import { AttackRoll } from '../dataSourceData';
 
 const abilityLens = Lens.from<AttackRoll | null, string>(
