@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/mashup-core';
+import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';

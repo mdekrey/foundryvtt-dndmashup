@@ -1,5 +1,5 @@
 import { TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens } from '@foundryvtt-dndmashup/core';
 import { AttackEffects } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
 import { ImplementItemSlotTemplate } from './types';

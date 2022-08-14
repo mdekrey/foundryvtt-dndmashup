@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 import { useRichTextEditor } from './context';
 
 export { RichTextEditorContextProvider } from './context';

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { Bonuses, targets, FeatureBonusWithContext, getRuleText } from '../../../bonuses';
 import { ActorDataSource } from '../types';
 

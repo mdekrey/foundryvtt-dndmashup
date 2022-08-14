@@ -1,5 +1,5 @@
 import { Field } from '../field';
-import { ImmutableMutator } from '@foundryvtt-dndmashup/mashup-core';
+import { ImmutableMutator } from '@foundryvtt-dndmashup/core';
 import { useKeyValueWhenBlur } from '../hooks/useKeyValueWhenBlur';
 
 export function NumberField({

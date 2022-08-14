@@ -5,7 +5,7 @@
 		"components": "packages/components",
 		"foundry-compat": "packages/foundry-compat",
 		"foundry-system": "packages/foundry-system",
-		"mashup-core": "packages/mashup-core",
+		"core": "packages/core",
 		"mashup-react": "packages/mashup-react"
 	}
 }

@@ -2,7 +2,7 @@ import capitalize from 'lodash/fp/capitalize';
 import classNames from 'classnames';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful, neverEver } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful, neverEver } from '@foundryvtt-dndmashup/core';
 import {
 	AreaEffectTypeAndRange,
 	CloseEffectTypeAndRange,

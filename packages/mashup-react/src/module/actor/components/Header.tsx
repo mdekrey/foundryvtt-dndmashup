@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { PcDetails } from '../types';
 import { RaceDocument } from '../../item/subtypes/race/dataSourceData';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';

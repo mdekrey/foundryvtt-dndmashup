@@ -1,5 +1,5 @@
 import { SimpleDocument, SimpleDocumentData } from './interfaces';
-import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { cloneDeep } from 'lodash/fp';
 
 function documentDataSource<TData>(document: SimpleDocument<TData>): SimpleDocumentData<TData> {

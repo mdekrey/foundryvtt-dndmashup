@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { ApplicableEffect, ApplicableEffectFields } from '../../../../../effects';
 import { AttackRoll, PowerEffect } from '../dataSourceData';
 import { AttackRollFields } from './AttackRollFields';

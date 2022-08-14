@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { AppButton, FormInput } from '@foundryvtt-dndmashup/components';
 import { DocumentSelector } from '../../components';
 import { EquipmentDocument } from '../../module/item';
-import { lensFromState, Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { lensFromState, Lens } from '@foundryvtt-dndmashup/core';
 import {
 	BonusByType,
 	NumericBonusTarget,

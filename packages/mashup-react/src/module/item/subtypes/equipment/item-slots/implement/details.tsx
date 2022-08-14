@@ -1,7 +1,7 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { ImplementItemSlotTemplate } from './types';
 import { implementGroups } from './config';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 
 const allImplementGroups = FormInput.Select.recordToSelectItems(implementGroups);
 

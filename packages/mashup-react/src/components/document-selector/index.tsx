@@ -1,6 +1,6 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { ImmutableMutator } from '@foundryvtt-dndmashup/mashup-core';
+import { ImmutableMutator } from '@foundryvtt-dndmashup/core';
 
 export type DocumentSelectorProps<T extends SimpleDocument | null> = {
 	documents: Exclude<T, null>[];

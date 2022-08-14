@@ -1,5 +1,5 @@
 import { FormInput, SelectItem, Tabs } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { Bonuses } from '../../../../bonuses';
 import { FeaturesList } from '../../components/FeaturesList';

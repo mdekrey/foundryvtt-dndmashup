@@ -37,7 +37,7 @@ import { EquipmentData } from '@foundryvtt-dndmashup/mashup-react';
 import { getEquipmentProperties } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
-import { toObject } from '@foundryvtt-dndmashup/mashup-core';
+import { toObject } from '@foundryvtt-dndmashup/core';
 import { isGame } from '../../core/foundry';
 import { noop } from 'lodash/fp';
 

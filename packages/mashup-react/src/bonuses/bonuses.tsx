@@ -4,7 +4,7 @@ import { FeatureBonus } from './types';
 import { NumericBonusTarget, ConditionRule, ConditionRuleType } from './constants';
 import { targets } from './bonus-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { conditionsRegistry } from './registry';
 import { useState } from 'react';
 

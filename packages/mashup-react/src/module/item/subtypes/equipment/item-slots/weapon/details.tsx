@@ -1,7 +1,7 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { WeaponItemSlotTemplate, WeaponProperty } from './types';
 import { weaponCategories, weaponGroups, weaponHands, weaponProperties } from './config';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 
 const allWeaponCategories = FormInput.Select.recordToSelectItems(weaponCategories);
 const allWeaponHands = FormInput.Select.numericRecordToSelectItems(weaponHands);

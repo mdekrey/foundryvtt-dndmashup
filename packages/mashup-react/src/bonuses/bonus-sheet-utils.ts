@@ -1,4 +1,4 @@
-import { toObject } from '@foundryvtt-dndmashup/mashup-core';
+import { toObject } from '@foundryvtt-dndmashup/core';
 import { capitalize } from 'lodash/fp';
 import { abilities, defenses, damageTypes } from '../types/types';
 import { AbilityBonus, NumericBonusTarget, DefenseBonus, Resistance, Vulnerability } from './constants';

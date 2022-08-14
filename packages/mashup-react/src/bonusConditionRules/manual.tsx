@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens } from '@foundryvtt-dndmashup/core';
 import { ruleResultIndeterminate, conditionsRegistry } from '../bonuses';
 
 function manual(): typeof ruleResultIndeterminate {

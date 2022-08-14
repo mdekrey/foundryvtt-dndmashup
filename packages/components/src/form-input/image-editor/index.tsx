@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { useImageEditor } from './context';
 
 const defaultEmpty = Lens.identity<string | null>().default('');

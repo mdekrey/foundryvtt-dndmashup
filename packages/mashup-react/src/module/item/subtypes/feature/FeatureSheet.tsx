@@ -3,7 +3,7 @@ import { Bonuses } from '../../../../bonuses';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';
-import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens } from '@foundryvtt-dndmashup/core';
 import { FeatureDocument, FeatureData } from './dataSourceData';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 

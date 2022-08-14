@@ -1,4 +1,4 @@
-import { neverEver } from '@foundryvtt-dndmashup/mashup-core';
+import { neverEver } from '@foundryvtt-dndmashup/core';
 import { EffectTypeAndRange } from '../dataSourceData';
 import { AttackTypeIcon } from './AttackTypeIcon';
 

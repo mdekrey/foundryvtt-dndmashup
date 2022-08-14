@@ -5,7 +5,7 @@ import { Description } from '../../components/Description';
 import { getItemSlotInfo, ItemSlot, itemSlots, ItemSlotTemplate } from './item-slots';
 import { getEquipmentProperties } from './getEquipmentProperties';
 import { Contents } from '../../components/Contents';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { OtherDetails } from './item-slots/other/details';

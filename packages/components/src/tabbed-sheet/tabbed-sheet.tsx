@@ -1,4 +1,4 @@
-import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 import { Children, Fragment } from 'react';
 import { FormInput } from '../form-input';
 import { TabContext, Tabs } from '../tab-section';

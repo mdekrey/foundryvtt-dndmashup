@@ -28,7 +28,7 @@ import {
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerDocument, PowerEffect } from '../dataSourceData';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AttackTypeInfo } from './AttackTypeInfo';
 import { useEffect, useReducer, useRef, useState } from 'react';
 

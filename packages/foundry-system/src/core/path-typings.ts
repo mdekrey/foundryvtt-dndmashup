@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Primitive } from '@foundryvtt-dndmashup/mashup-core';
+import { Primitive } from '@foundryvtt-dndmashup/core';
 
 export { Primitive };
 

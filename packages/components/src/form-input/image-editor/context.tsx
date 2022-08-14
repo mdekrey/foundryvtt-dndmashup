@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 
 export type ImageEditorContext = (state: Stateful<string>) => void;
 

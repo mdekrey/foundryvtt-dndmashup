@@ -1,7 +1,7 @@
 import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
 import { Bonuses } from '../../../../bonuses';
 import { FeaturesList } from '../../components/FeaturesList';
-import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens } from '@foundryvtt-dndmashup/core';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 import { EpicDestinyData, EpicDestinyDocument } from './dataSourceData';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';

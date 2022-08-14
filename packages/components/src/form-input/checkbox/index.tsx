@@ -1,4 +1,4 @@
-import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 
 export function Checkbox({
 	value,

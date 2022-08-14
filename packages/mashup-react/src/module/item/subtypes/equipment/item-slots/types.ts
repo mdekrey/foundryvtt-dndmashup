@@ -1,4 +1,4 @@
-import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 import { FeatureBonus } from '../../../../../bonuses';
 import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { abilities, Ability } from '../../../types/types';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AbilityScores } from '../types';
 
 const baseLens = Lens.identity<AbilityScores>();

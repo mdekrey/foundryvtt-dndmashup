@@ -2,7 +2,7 @@ import { Tabs } from '@foundryvtt-dndmashup/components';
 import { SpecificActor } from '../mashup-actor';
 import { ActorComponents } from '@foundryvtt-dndmashup/mashup-react';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { Ability } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActorData } from '../types';
 import { ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';

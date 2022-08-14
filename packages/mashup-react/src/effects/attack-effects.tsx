@@ -1,4 +1,4 @@
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { ApplicableEffectFields } from './applicable-effect-fields';
 import { ApplicableEffect } from './types';
 

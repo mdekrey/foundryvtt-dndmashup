@@ -1,6 +1,6 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SelectItem } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import classNames from 'classnames';
 import { Defense, defenses } from '../../../../../types/types';
 import { AttackRoll } from '../dataSourceData';

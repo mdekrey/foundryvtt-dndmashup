@@ -1,6 +1,6 @@
 import capitalize from 'lodash/fp/capitalize';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Lens } from '@foundryvtt-dndmashup/mashup-core';
+import { Lens } from '@foundryvtt-dndmashup/core';
 import { PowerData, PowerEffect } from '../dataSourceData';
 
 export const isNull = (e: any): e is null => e === null;

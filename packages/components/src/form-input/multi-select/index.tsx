@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import { Combobox } from '@headlessui/react';
 import { CheckIcon, SearchIcon } from '@heroicons/react/solid';
 import { SelectItem } from '../select';
-import { ImmutableMutator, Primitive } from '@foundryvtt-dndmashup/mashup-core';
+import { ImmutableMutator, Primitive } from '@foundryvtt-dndmashup/core';
 import classNames from 'classnames';
 import { DetailsModalButton } from '../../details-modal-button';
 import { Container } from '../container';

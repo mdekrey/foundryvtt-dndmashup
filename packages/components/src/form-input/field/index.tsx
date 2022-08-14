@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
-import { mergeStyles, pipeJsxChildren } from '@foundryvtt-dndmashup/mashup-core';
+import { mergeStyles, pipeJsxChildren } from '@foundryvtt-dndmashup/core';
 
 export function Field({ className, children }: { className?: string; children?: ReactNode }) {
 	const result =
