@@ -18,6 +18,7 @@ export function DetailsModalButton({
 	buttonContents: React.ReactNode;
 	modalContents: React.ReactNode | ((p: ModalContentsProps) => React.ReactNode);
 }) {
+	const divRef = useRef<HTMLDivElement>();
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const [isOpen, setOpen] = useState(false);
 
@@ -44,8 +45,11 @@ export function DetailsModalButton({
 			</button>
 			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title={modalTitle}>
 				<div
-					onBlur={onClose}
+					onBlur={(ev) => {
+						if (!divRef.current?.contains(document.activeElement)) onClose();
+					}}
 					ref={(container) => {
+						divRef.current = container ?? undefined;
 						setTimeout(() => {
 							if (container) {
 								container

@@ -1,11 +1,13 @@
 import { Fragment, useState } from 'react';
 import { Combobox } from '@headlessui/react';
-import { CheckIcon } from '@heroicons/react/solid';
+import { CheckIcon, SearchIcon } from '@heroicons/react/solid';
 import { SelectItem } from '../select';
 import { ImmutableMutator, Primitive } from '@foundryvtt-dndmashup/mashup-core';
 import classNames from 'classnames';
 import { DetailsModalButton } from '../../details-modal-button';
-import { Field } from '../field';
+import { Container } from '../container';
+import { Structured } from '../structured-field';
+import { Label } from '../label';
 
 export function MultiSelect<TValue extends Primitive>({
 	value,
@@ -55,15 +57,21 @@ export function MultiSelect<TValue extends Primitive>({
 				};
 				return (
 					<Combobox value={value} onChange={comboboxOnChange} multiple>
-						<Field>
-							<Combobox.Input
-								className="w-full pl-1"
-								displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
-								onChange={(event) => setQuery(event.target.value)}
-							/>
-						</Field>
+						<Container>
+							<Structured>
+								<SearchIcon className="h-5 w-5" aria-hidden="true" />
+								<Structured.Main>
+									<Combobox.Input
+										className="w-full"
+										displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
+										onChange={(event) => setQuery(event.target.value)}
+									/>
+								</Structured.Main>
+							</Structured>
+							<Label>Search</Label>
+						</Container>
 
-						<div className="max-h-96 overflow-y-scroll">
+						<div className="max-h-96 overflow-y-auto">
 							{filteredOptions.length === 0 && query !== '' ? (
 								<div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
 							) : (

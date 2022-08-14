@@ -1,9 +1,10 @@
+import { twMerge } from 'tailwind-merge';
 import { Field } from '../field';
 
-export function StructuredField({ children }: { children?: React.ReactNode }) {
+export function StructuredField({ children, className }: { children?: React.ReactNode; className?: string }) {
 	return (
 		<Field>
-			<div className="w-full flex items-baseline">{children}</div>
+			<div className={twMerge('w-full flex items-baseline', className)}>{children}</div>
 		</Field>
 	);
 }
