@@ -1,5 +1,5 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { Bonuses } from '../../../bonuses';
+import { Bonuses } from '../../../../bonuses';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';

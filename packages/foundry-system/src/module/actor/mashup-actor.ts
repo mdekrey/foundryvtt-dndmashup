@@ -5,8 +5,8 @@ import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArray
 import {
 	abilities,
 	AbilityBonus,
-	BonusTarget,
-	bonusTargets,
+	NumericBonusTarget,
+	numericBonusTargets,
 	byTarget,
 	damageTypes,
 	defenses,
@@ -88,7 +88,7 @@ const standardBonuses: FeatureBonus[] = [
 	{ ...condition('you are squeezing'), target: 'attack-roll', amount: -5 },
 ];
 
-const setters: Record<BonusTarget, (data: ActorDerivedData, value: number) => void> = {
+const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number) => void> = {
 	...toObject(
 		abilities,
 		(abil): AbilityBonus => `ability-${abil}`,
@@ -342,7 +342,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		const indeterminateBonuses: FeatureBonusWithContext[] = [];
 		this._appliedBonuses = appliedBonuses;
 		this._indeterminateBonuses = indeterminateBonuses;
-		bonusTargets.forEach((target) => {
+		numericBonusTargets.forEach((target) => {
 			const filtered = filterBonuses(groupedByTarget[target] ?? [], {}, true);
 			indeterminateBonuses.push(
 				...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)

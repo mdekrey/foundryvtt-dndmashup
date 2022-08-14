@@ -1,5 +1,5 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { FeatureBonusWithContext } from '../bonuses';
+import { FeatureBonusWithContext } from '../../bonuses';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
 import { PowerDocument } from '../item/subtypes/power/dataSourceData';

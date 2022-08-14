@@ -1,4 +1,4 @@
-import { FeatureBonus } from '../../bonuses';
+import { FeatureBonus } from '../../../bonuses';
 import { PossibleItemSourceData } from '../item-data-types-template';
 
 export type BaseItemTemplateDataSourceData = {

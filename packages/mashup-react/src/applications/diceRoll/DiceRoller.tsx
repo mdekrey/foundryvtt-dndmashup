@@ -5,14 +5,15 @@ import { EquipmentDocument } from '../../module/item';
 import { lensFromState, Lens } from '@foundryvtt-dndmashup/mashup-core';
 import {
 	BonusByType,
-	BonusTarget,
+	NumericBonusTarget,
 	FeatureBonusWithContext,
 	filterBonuses,
 	getRuleText,
 	ruleResultIndeterminate,
-} from '../../module/bonuses';
+	combineRollComponents,
+	fromBonusesToFormula,
+} from '../../bonuses';
 import { ActorDocument } from '../../module/actor';
-import { combineRollComponents, fromBonusesToFormula } from '../../module/bonuses/fromBonusesToFormula';
 
 export type RollDetails = {
 	baseDice: string;
@@ -22,7 +23,7 @@ export type RollDetails = {
 
 export type DiceRollerRequiredProps = {
 	actor: ActorDocument;
-	rollType: BonusTarget;
+	rollType: NumericBonusTarget;
 	baseDice: string;
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;

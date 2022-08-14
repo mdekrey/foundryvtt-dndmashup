@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash/fp';
-import { BonusTarget, ConditionRuleContext } from './constants';
+import { NumericBonusTarget, ConditionRuleContext } from './constants';
 import { conditionsRegistry } from './registry';
 import { FeatureBonusWithContext } from './types';
 
@@ -7,8 +7,8 @@ const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
 
 export function byTarget(
 	bonusesWithContext: FeatureBonusWithContext[]
-): Record<BonusTarget, FeatureBonusWithContext[]> {
-	return groupBy((e) => e.target, bonusesWithContext) as Record<BonusTarget, FeatureBonusWithContext[]>;
+): Record<NumericBonusTarget, FeatureBonusWithContext[]> {
+	return groupBy((e) => e.target, bonusesWithContext) as Record<NumericBonusTarget, FeatureBonusWithContext[]>;
 }
 
 export function filterBonuses(

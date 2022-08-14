@@ -1,8 +1,11 @@
-import { abilities, Ability, Defense, defenses, DamageType, damageTypes } from '../../types/types';
-import { ActorDocument } from '../actor/documentType';
-import { ItemDocument } from '../item';
+import { abilities, Ability, Defense, defenses, DamageType, damageTypes } from '../types/types';
 
-export const bonusTargets = [
+declare global {
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	interface ConditionGrantingContext {}
+}
+
+export const numericBonusTargets = [
 	...abilities.map((ability) => `ability-${ability}` as const),
 	...defenses.map((defense) => `defense-${defense}` as const),
 	...damageTypes.map((damageType) => `${damageType}-resistance` as const),
@@ -23,15 +26,15 @@ export type AbilityBonus = `ability-${Ability}`;
 export type DefenseBonus = `defense-${Defense}`;
 export type Resistance = `${DamageType}-resistance`;
 export type Vulnerability = `${DamageType}-vulnerability`;
-export type BonusTarget = typeof bonusTargets[number];
+export type NumericBonusTarget = typeof numericBonusTargets[number];
 
-export function isAbilityBonus(bonusTarget: BonusTarget): bonusTarget is AbilityBonus {
+export function isAbilityBonus(bonusTarget: NumericBonusTarget): bonusTarget is AbilityBonus {
 	return bonusTarget.startsWith('ability-');
 }
 export function abilityForBonus(bonusTarget: AbilityBonus): Ability {
 	return bonusTarget.substring('ability-'.length) as Ability;
 }
-export function isDefenseBonus(bonusTarget: BonusTarget): bonusTarget is DefenseBonus {
+export function isDefenseBonus(bonusTarget: NumericBonusTarget): bonusTarget is DefenseBonus {
 	return bonusTarget.startsWith('defense-');
 }
 export function defenseForBonus(bonusTarget: DefenseBonus): Defense {
@@ -47,10 +50,7 @@ export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> =
 		parameter: ConditionRules[K];
 	};
 }[TType];
-export type ConditionRuleContext = {
-	actor: ActorDocument;
-	item: ItemDocument;
-};
+export type ConditionRuleContext = ConditionGrantingContext;
 
 export const ruleResultIndeterminate = Symbol('indeterminate');
 export type ConditionRuleIndeterminateResult = typeof ruleResultIndeterminate;

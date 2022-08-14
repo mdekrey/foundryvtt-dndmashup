@@ -1,7 +1,7 @@
-import { BonusTarget, ConditionRule, ConditionRuleContext } from './constants';
+import { NumericBonusTarget, ConditionRule, ConditionRuleContext } from './constants';
 
 export type FeatureBonus = {
-	target: BonusTarget;
+	target: NumericBonusTarget;
 	amount: number | string;
 	type?: string;
 	condition: ConditionRule | null;

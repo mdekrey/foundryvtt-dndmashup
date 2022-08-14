@@ -1,5 +1,5 @@
 import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
-import { Bonuses } from '../../../bonuses';
+import { Bonuses } from '../../../../bonuses';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/mashup-core';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';

@@ -1,7 +1,7 @@
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { DamageType, Defense } from '../../types/types';
 import { ActorDocument } from '../../module/actor';
-import { BonusTarget } from '../../module/bonuses';
+import { NumericBonusTarget } from '../../bonuses';
 import { EquipmentDocument, PowerDocument } from '../../module/item';
 
 export * from './DiceRoller';
@@ -12,7 +12,7 @@ export type DiceRollApplicationParametersBase = {
 	actor: ActorDocument;
 	source: SimpleDocument;
 	power?: PowerDocument;
-	rollType: BonusTarget;
+	rollType: NumericBonusTarget;
 	allowToolSelection: boolean;
 };
 

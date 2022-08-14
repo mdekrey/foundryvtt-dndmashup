@@ -1,5 +1,14 @@
-import { ConditionRuleContext } from '../constants';
-import { conditionsRegistry } from '../registry';
+import { ConditionRuleContext, conditionsRegistry } from '../bonuses';
+import { ActorDocument } from '../module/actor/documentType';
+import { ItemDocument } from '../module/item';
+
+declare global {
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	interface ConditionGrantingContext {
+		actor: ActorDocument;
+		item: ItemDocument;
+	}
+}
 
 // export function proficientIn({ actor, item }: { actor: MashupActor; item: MashupItemBase }) {
 export function proficientIn({ actor, item }: ConditionRuleContext) {

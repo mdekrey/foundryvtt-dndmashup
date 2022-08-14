@@ -1,5 +1,5 @@
 import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
-import { FeatureBonus } from '../../../../bonuses';
+import { FeatureBonus } from '../../../../../bonuses';
 import { ArmorItemSlotTemplate } from './armor/types';
 import { ShieldItemSlotTemplate } from './shield/types';
 import { WeaponItemSlotTemplate } from './weapon/types';

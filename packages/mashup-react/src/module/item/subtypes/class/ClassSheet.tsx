@@ -1,6 +1,6 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { abilities, Ability } from '../../../../types/types';
-import { Bonuses } from '../../../bonuses';
+import { Bonuses } from '../../../../bonuses';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
