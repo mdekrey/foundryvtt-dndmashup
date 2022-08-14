@@ -8,7 +8,6 @@ import { Structured } from '../structured-field';
 import { SearchIcon } from '@heroicons/react/solid';
 import { Container } from '../container';
 import { Label } from '../label';
-import { Field } from '../field';
 
 export type SelectItem<TValue> = {
 	value: TValue;
