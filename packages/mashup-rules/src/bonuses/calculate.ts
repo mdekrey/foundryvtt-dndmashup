@@ -19,14 +19,12 @@ export function filterBonuses(
 	return bonusesWithContext
 		.filter((bonus) => !bonus.disabled)
 		.map((bonus) => {
-			const rule = bonus.condition?.rule;
-			const result = !rule
-				? true
-				: conditionsRegistry[rule].rule(
-						bonus.context as ConditionRuleContext,
-						bonus.condition?.parameter as never,
-						runtimeParameters
-				  );
+			const rule = bonus.condition?.rule ?? '';
+			const result = conditionsRegistry[rule].rule(
+				bonus.context as ConditionRuleContext,
+				bonus.condition?.parameter as never,
+				runtimeParameters
+			);
 			return [bonus, result] as const;
 		})
 		.filter(([, result]) => {

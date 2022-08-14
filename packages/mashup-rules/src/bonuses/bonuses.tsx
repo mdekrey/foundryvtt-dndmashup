@@ -38,7 +38,7 @@ const ruleLens = Lens.from<ConditionRule | null, ConditionRule | null>(
 			return result;
 		}
 );
-type NoRule = { rule: '' } & Partial<Omit<ConditionRule, 'rule'>>;
+type NoRule = { rule: ''; parameter?: undefined } & Partial<Omit<ConditionRule, 'rule'>>;
 const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.combine(ruleLens)
 	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '');
