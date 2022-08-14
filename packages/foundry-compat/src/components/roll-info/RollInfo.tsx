@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import { RollJson } from '../../roll';
 import { AttackRollResult } from './types';
 
 export function RollInfo({ roll, rollResult }: { roll: RollJson; rollResult?: AttackRollResult }) {

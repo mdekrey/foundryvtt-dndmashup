@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AppButton, FormInput } from '@foundryvtt-dndmashup/components';
-import { DocumentSelector } from '../../components';
+import { DocumentSelector } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentDocument } from '../../module/item';
 import { lensFromState, Lens } from '@foundryvtt-dndmashup/core';
 import {

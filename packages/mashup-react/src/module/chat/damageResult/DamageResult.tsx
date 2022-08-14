@@ -1,7 +1,6 @@
-import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import { RollJson, RollInfo } from '@foundryvtt-dndmashup/foundry-compat';
 import { PowerDocument } from '../../item';
 import { DamageType } from '../../../types/types';
-import { RollInfo } from '../../../components';
 import { ChatButton } from '@foundryvtt-dndmashup/components';
 
 export const DamageResult = ({

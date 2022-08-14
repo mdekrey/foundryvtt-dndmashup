@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
-import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import { AttackRollResult, RollInfo, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument, TokenDocument } from '../../actor';
-import { AttackRollResult, RollInfo } from '../../../components';
 import { EquipmentDocument, PowerDocument } from '../../item';
 import { ApplicableEffect, ApplicableEffectSection, AttackEffectTrigger } from '../../../effects';
 

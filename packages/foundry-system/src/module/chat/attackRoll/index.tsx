@@ -1,10 +1,9 @@
 import { chatAttachments } from '../attach';
-import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import { AttackRollResult, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	chatMessageRegistry,
 	Defense,
 	AttackResult,
-	AttackRollResult,
 	PowerDocument,
 	EquipmentDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
