@@ -45,13 +45,5 @@ export function DocumentSelector<T extends SimpleDocument | null>({
 			})
 		),
 	];
-	return (
-		<FormInput.Select
-			value={value}
-			options={options}
-			onChange={onChange}
-			onChangeValue={onChangeValue}
-			className="h-9"
-		/>
-	);
+	return <FormInput.Select value={value} options={options} onChange={onChange} onChangeValue={onChangeValue} />;
 }

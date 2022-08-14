@@ -1,3 +1,4 @@
+import { Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { ConditionRuleContext, ConditionRuleIndeterminateResult } from './constants';
 
 declare global {
@@ -12,6 +13,7 @@ declare global {
 
 export type ConditionRuleRegistryEntry<TType extends keyof ConditionRules> = {
 	ruleText: (parameter?: ConditionRules[TType], runtime?: Partial<ConditionRulesRuntimeParameters>) => string;
+	ruleEditor: React.FC<Stateful<ConditionRules[TType] | undefined>>;
 	rule(
 		input: ConditionRuleContext,
 		parameter: ConditionRules[TType],
@@ -21,6 +23,7 @@ export type ConditionRuleRegistryEntry<TType extends keyof ConditionRules> = {
 
 const unconditional: ConditionRuleRegistryEntry<''> = {
 	ruleText: () => `(always)`,
+	ruleEditor: () => null,
 	rule: () => true,
 };
 

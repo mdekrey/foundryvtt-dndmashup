@@ -167,7 +167,7 @@ function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition">
 				<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />
 				<hr className="my-1" />
-				<p>Some editor...</p>
+				{toEditor(state)}
 				<AppButton className="w-full" onClick={() => setOpen(false)}>
 					Close
 				</AppButton>
@@ -178,4 +178,10 @@ function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 
 function toRuleText(configuredRule: ConditionRule | NoRule) {
 	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
+}
+
+const parameterLens = Lens.fromProp<ConditionRule | NoRule>()('parameter');
+function toEditor(state: Stateful<ConditionRule | NoRule>) {
+	const Editor = conditionsRegistry[state.value.rule].ruleEditor;
+	return <Editor {...(parameterLens.apply(state) as never)} />;
 }
