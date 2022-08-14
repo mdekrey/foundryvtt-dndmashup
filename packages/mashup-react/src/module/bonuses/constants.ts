@@ -40,7 +40,7 @@ export function defenseForBonus(bonusTarget: DefenseBonus): Defense {
 
 export const bonusTypes = ['enhancement', 'ability', 'armor', 'class', 'feat', 'power', 'proficiency', 'shield'];
 
-export type ConditionRuleType = keyof ConditionRules;
+export type ConditionRuleType = Exclude<keyof ConditionRules, ''>;
 export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> = {
 	[K in TType]: {
 		rule: K;

@@ -3,6 +3,8 @@ import {
 	ModalDispatcherContext,
 	ModalDispatcherContextProvider,
 	SimpleApplication,
+} from '@foundryvtt-dndmashup/components';
+import {
 	ApplicationDispatcherContextProvider,
 	ApplicationDispatcherContext,
 	applicationRegistry,

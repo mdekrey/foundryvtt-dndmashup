@@ -1,12 +1,11 @@
 import classNames from 'classnames';
-import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { FeatureBonus } from './types';
 import { BonusTarget, ConditionRule, ConditionRuleType } from './constants';
 import { targets } from './bonus-sheet-utils';
-import { IconButton } from '@foundryvtt-dndmashup/components';
+import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/mashup-core';
 import { conditionsRegistry } from './registry';
-import { Modal } from '@foundryvtt-dndmashup/foundry-compat';
 import { useState } from 'react';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
@@ -15,9 +14,8 @@ const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	label,
 	typeaheadLabel: label,
 }));
-const selectConditions: SelectItem<ConditionRuleType | ''>[] = [
-	{ key: '', value: '', label: '(always)', typeaheadLabel: '(always)' },
-	...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<ConditionRuleType | ''> => {
+const selectConditions: SelectItem<keyof ConditionRules>[] = [
+	...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
 		const text = ruleText();
 		const label = `when ${text}`;
 		return {
@@ -46,8 +44,6 @@ const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
-	const [count, setCount] = useState(0);
-	const [isOpen, setOpen] = useState(false);
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({
@@ -155,20 +151,31 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 					) : null}
 				</tbody>
 			</table>
-			{/* TODO: for testing only */}
-			<button type="button" onClick={() => setOpen((c) => !c)}>
-				Toggle
-			</button>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Counter">
-				<button type="button" onClick={() => setCount((c) => c + 1)}>
-					The count is {count}
-				</button>
-			</Modal>
 		</div>
 	);
 }
 
 const ruleTypeLens = Lens.fromProp<ConditionRule | NoRule>()('rule');
 function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
-	return <FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />;
+	const [isOpen, setOpen] = useState(false);
+
+	return (
+		<>
+			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
+				{toRuleText(state.value)}
+			</AppButton>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition">
+				<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />
+				<hr className="my-1" />
+				<p>Some editor...</p>
+				<AppButton className="w-full" onClick={() => setOpen(false)}>
+					Close
+				</AppButton>
+			</Modal>
+		</>
+	);
+}
+
+function toRuleText(configuredRule: ConditionRule | NoRule) {
+	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
 }

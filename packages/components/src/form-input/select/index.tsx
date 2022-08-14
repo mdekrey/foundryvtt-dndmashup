@@ -2,9 +2,10 @@ import { Combobox } from '@headlessui/react';
 import CheckIcon from '@heroicons/react/solid/CheckIcon';
 import SelectorIcon from '@heroicons/react/solid/SelectorIcon';
 import classNames from 'classnames';
-import { ReactNode, Key, useState, useCallback } from 'react';
+import { ReactNode, Key, useState, useCallback, useRef } from 'react';
 import { ImmutableMutator, Primitive } from '@foundryvtt-dndmashup/mashup-core';
 import { Field } from '../field';
+import { Modal } from '../../modal';
 
 export type SelectItem<TValue> = {
 	value: TValue;
@@ -48,6 +49,8 @@ function SelectComponent<TValue extends Primitive | object>({
 	onChangeValue?: ImmutableMutator<TValue>;
 	className?: string;
 }) {
+	const buttonRef = useRef<HTMLButtonElement>(null);
+	const [isOpen, setOpen] = useState(false);
 	const [query, setQuery] = useState('');
 	const comboboxOnChange = useCallback<React.Dispatch<React.SetStateAction<TValue>>>(
 		(param) => {
@@ -58,6 +61,7 @@ function SelectComponent<TValue extends Primitive | object>({
 				});
 			if (onChange) onChange(typeof param === 'function' ? param(value) : param);
 			setQuery('');
+			buttonRef.current?.focus();
 		},
 		[onChangeValue, onChange, value]
 	);
@@ -71,67 +75,81 @@ function SelectComponent<TValue extends Primitive | object>({
 
 	const inner = (
 		<div className={classNames('relative', className)}>
-			<div
+			<button
+				type="button"
 				className={classNames(
-					'group',
 					'relative w-full h-full text-left',
 					'cursor-default overflow-hidden',
 					'flex items-center'
-				)}>
-				<span className="group-focus-within:hidden absolute inset-y-0 pl-1 flex items-center pointer-events-none">
-					{options.find((opt) => opt.value === value)?.label ?? null}
-				</span>
-				<Combobox.Input
-					className="w-full border-none pl-1 pr-10 leading-5 text-gray-900 focus:ring-0 opacity-0 focus:opacity-100"
-					displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
-					onChange={(event) => setQuery(event.target.value)}
-				/>
-
-				<Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-1">
-					<SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-				</Combobox.Button>
-			</div>
-			<Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-10">
-				{filteredOptions.length === 0 && query !== '' ? (
-					<div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
-				) : (
-					filteredOptions.map((person) => (
-						<Combobox.Option
-							key={person.key}
-							value={person.value}
-							className={({ active, selected }) =>
-								classNames(`relative cursor-default select-none py-2 pl-10 pr-4`, {
-									'font-medium': selected,
-									'font-normal': !selected,
-									'bg-blue-500 text-white': active,
-									'text-gray-900': !active,
-								})
-							}>
-							{({ active, selected }) => (
-								<>
-									{selected && (
-										<span
-											className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-												active ? 'text-white' : 'text-blue-500'
-											}`}>
-											<CheckIcon className="h-5 w-5" aria-hidden="true" />
-										</span>
-									)}
-									{person.label}
-								</>
-							)}
-						</Combobox.Option>
-					))
 				)}
-			</Combobox.Options>
+				ref={buttonRef}
+				onClick={() => setOpen(true)}>
+				<span className="pl-1 flex items-center">{options.find((opt) => opt.value === value)?.label ?? null}</span>
+
+				<span className="absolute inset-y-0 right-0 flex items-center pr-1">
+					<SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+				</span>
+			</button>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Select...">
+				<div
+					onBlur={() => {
+						setOpen(false);
+						buttonRef.current?.focus();
+					}}>
+					<Combobox value={value} onChange={comboboxOnChange}>
+						<Field>
+							<Combobox.Input
+								className="w-full pl-1"
+								displayValue={(v: TValue) => options.find((opt) => opt.value === v)?.typeaheadLabel ?? ''}
+								onChange={(event) => setQuery(event.target.value)}
+								autoFocus
+								ref={(input: HTMLInputElement | null) => {
+									console.log(input);
+									setTimeout(() => input?.focus(), 100);
+								}}
+							/>
+						</Field>
+
+						<div className="max-h-96 overflow-y-scroll">
+							{filteredOptions.length === 0 && query !== '' ? (
+								<div className="cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
+							) : (
+								filteredOptions.map((person) => (
+									<Combobox.Option
+										key={person.key}
+										value={person.value}
+										className={({ active, selected }) =>
+											classNames(`relative cursor-default select-none py-2 pl-10 pr-4`, {
+												'font-medium': selected,
+												'font-normal': !selected,
+												'bg-blue-500 text-white': active,
+												'text-gray-900': !active,
+											})
+										}>
+										{({ active, selected }) => (
+											<>
+												{selected && (
+													<span
+														className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+															active ? 'text-white' : 'text-blue-500'
+														}`}>
+														<CheckIcon className="h-5 w-5" aria-hidden="true" />
+													</span>
+												)}
+												{person.label}
+											</>
+										)}
+									</Combobox.Option>
+								))
+							)}
+						</div>
+					</Combobox>
+				</div>
+			</Modal>
 		</div>
 	);
 
-	return (
-		<Combobox value={value} onChange={comboboxOnChange}>
-			{plain ? inner : <Field>{inner}</Field>}
-		</Combobox>
-	);
+	return plain ? inner : <Field>{inner}</Field>;
 }
 
 export const Select = Object.assign(SelectComponent, {

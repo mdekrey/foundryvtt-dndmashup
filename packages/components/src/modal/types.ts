@@ -1,4 +1,4 @@
-import { SimpleApplication } from '../../interfaces';
+import { SimpleApplication } from './simple-application';
 
 /** See import('packages\foundry-system\node_modules\@league-of-foundry-developers\foundry-vtt-types\src\foundry\client\apps\app.d.ts').ModalOptions */
 export type ApplicationOptions = {

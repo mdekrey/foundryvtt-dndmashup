@@ -1,4 +1,4 @@
-import { SimpleApplication } from './simple-application';
+import { SimpleApplication } from '@foundryvtt-dndmashup/components';
 
 /** See @type ItemDataBaseProperties */
 export type StandardData = {
