@@ -3,5 +3,6 @@ export const dynamicLists = [
 	`proficiencies` as const,
 	`implements` as const,
 	`damageTypes` as const,
+	`criticalDamageTypes` as const,
 ];
 export type DynamicListTarget = typeof dynamicLists[number];
