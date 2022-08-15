@@ -55,7 +55,8 @@ export function ApplicableEffectOptions({
 				source,
 				power,
 				rollType: 'damage',
-				damageTypes: damageEffect.damageTypes,
+				listType: 'damageTypes',
+				baseDamageTypes: damageEffect.damageTypes,
 				allowToolSelection,
 				allowCritical,
 			});

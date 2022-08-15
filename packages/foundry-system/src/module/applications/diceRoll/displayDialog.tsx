@@ -1,7 +1,6 @@
 import {
 	DiceRoller,
 	RollDetails,
-	DiceRollerOptionalProps,
 	DiceRollApplicationParametersBase,
 	EquipmentDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
@@ -12,16 +11,9 @@ export type DisplayDialogProps = DiceRollApplicationParametersBase & {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
-export function displayDialog<T extends string>(
-	props: DisplayDialogProps,
-	onComplete: (rollProps: RollDetails) => void,
-	optionalProps: DiceRollerOptionalProps<T>
-): JSX.Element;
-export function displayDialog(props: DisplayDialogProps, onComplete: (rollProps: RollDetails) => void): JSX.Element;
-export function displayDialog<T extends string = string>(
+export function displayDialog(
 	{ baseDice, actor, power, source, rollType, tool, allowToolSelection }: DisplayDialogProps,
-	onComplete: (rollProps: RollDetails) => void,
-	optionalProps?: DiceRollerOptionalProps<T>
+	onComplete: (rollProps: RollDetails) => void
 ) {
 	const possibleTools = !allowToolSelection
 		? undefined
@@ -33,7 +25,6 @@ export function displayDialog<T extends string = string>(
 
 	return (
 		<DiceRoller
-			{...(optionalProps as any)}
 			actor={actor}
 			rollType={rollType}
 			baseDice={baseDice}

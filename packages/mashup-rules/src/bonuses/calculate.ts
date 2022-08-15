@@ -1,21 +1,17 @@
 import { groupBy } from 'lodash/fp';
-import { isRuleApplicable } from '../conditions';
-import { NumericBonusTarget } from './constants';
-import { FeatureBonusWithContext } from './types';
+import { isRuleApplicable, SimpleConditionRule } from '../conditions';
 
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
 
-export function byTarget(
-	bonusesWithContext: FeatureBonusWithContext[]
-): Record<NumericBonusTarget, FeatureBonusWithContext[]> {
-	return groupBy((e) => e.target, bonusesWithContext) as Record<NumericBonusTarget, FeatureBonusWithContext[]>;
+export function byTarget<TType extends string, TEntry extends { target: TType }>(
+	bonusesWithContext: TEntry[]
+): Record<TType, TEntry[]> {
+	return groupBy((e) => e.target, bonusesWithContext) as Record<TType, TEntry[]>;
 }
 
-export function filterBonuses(
-	bonusesWithContext: FeatureBonusWithContext[],
-	runtimeParameters: Partial<ConditionRulesRuntimeParameters>,
-	includeIndeterminate: boolean
-) {
+export function filterConditions<
+	T extends { condition: SimpleConditionRule; disabled?: boolean; context: Partial<ConditionGrantingContext> }
+>(bonusesWithContext: T[], runtimeParameters: Partial<ConditionRulesRuntimeParameters>, includeIndeterminate: boolean) {
 	return bonusesWithContext
 		.filter((bonus) => !bonus.disabled)
 		.map((bonus) => {

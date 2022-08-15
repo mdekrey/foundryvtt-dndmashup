@@ -13,7 +13,7 @@ import {
 	DefenseBonus,
 	FeatureBonus,
 	FeatureBonusWithContext,
-	filterBonuses,
+	filterConditions,
 	Resistance,
 	sumFinalBonuses,
 	Vulnerability,
@@ -216,6 +216,31 @@ export class MashupActor extends Actor implements ActorDocument {
 		return this._indeterminateBonuses;
 	}
 
+	private _allDynamicListResult: DynamicListEntryWithContext[] | null = null;
+	get allDynamicListResult(): DynamicListEntryWithContext[] {
+		return (
+			this._allDynamicListResult ??
+			(this._allDynamicListResult = [
+				...this.data._source.data.dynamicList.map((bonus) => ({ ...bonus, context: { actor: this } })),
+				...this.dynamicListResult,
+			])
+		);
+	}
+
+	private _appliedDynamicList: DynamicListEntryWithContext[] | null = null;
+	get appliedDynamicList(): DynamicListEntryWithContext[] {
+		if (!this._appliedDynamicList) this.calculateDerivedData();
+		if (!this._appliedDynamicList) throw new Error('Cannot access applied DynamicList before loading is finished');
+		return this._appliedDynamicList;
+	}
+	private _indeterminateDynamicList: DynamicListEntryWithContext[] | null = null;
+	get indeterminateDynamicList(): DynamicListEntryWithContext[] {
+		if (!this._indeterminateDynamicList) this.calculateDerivedData();
+		if (!this._indeterminateDynamicList)
+			throw new Error('Cannot access indeterminate DynamicList before loading is finished');
+		return this._indeterminateDynamicList;
+	}
+
 	override prepareDerivedData() {
 		this._allBonuses = null;
 		this._derivedData = null;
@@ -350,7 +375,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		this._appliedBonuses = appliedBonuses;
 		this._indeterminateBonuses = indeterminateBonuses;
 		numericBonusTargets.forEach((target) => {
-			const filtered = filterBonuses(groupedByTarget[target] ?? [], {}, true);
+			const filtered = filterConditions(groupedByTarget[target] ?? [], {}, true);
 			indeterminateBonuses.push(
 				...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)
 			);
@@ -365,6 +390,12 @@ export class MashupActor extends Actor implements ActorDocument {
 
 		resultData.health.bloodied = Math.floor(resultData.health.hp.max / 2);
 		resultData.health.surgesValue = Math.floor(resultData.health.hp.max / 4);
+
+		const filteredLists = filterConditions(this.allDynamicListResult, {}, true);
+		this._appliedDynamicList = filteredLists.filter(([, result]) => result === true).map(([bonus]) => bonus);
+		this._indeterminateDynamicList = filteredLists
+			.filter(([, result]) => result === ruleResultIndeterminate)
+			.map(([bonus]) => bonus);
 
 		return resultData;
 	}

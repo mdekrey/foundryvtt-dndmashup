@@ -1,5 +1,5 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntryWithContext, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
 import { PowerDocument } from '../item/subtypes/power/dataSourceData';
@@ -21,6 +21,10 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	get allBonuses(): FeatureBonusWithContext[];
 	get appliedBonuses(): FeatureBonusWithContext[];
 	get indeterminateBonuses(): FeatureBonusWithContext[];
+
+	get allDynamicListResult(): DynamicListEntryWithContext[];
+	get appliedDynamicList(): DynamicListEntryWithContext[];
+	get indeterminateDynamicList(): DynamicListEntryWithContext[];
 
 	allPowers(): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;

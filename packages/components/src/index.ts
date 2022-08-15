@@ -1,4 +1,5 @@
 export * from './app-button';
+export * from './block-header';
 export * from './chat-button';
 export * from './details-modal-button';
 export * from './form-input';

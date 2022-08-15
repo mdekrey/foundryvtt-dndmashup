@@ -8,8 +8,7 @@ export function lensFromState<S>([value, setValue]: [S, React.Dispatch<React.Set
 		onChangeValue: (mutator) => {
 			return setValue((p) => {
 				const cloned = cloneDeep(p);
-				immerMutatorToMutator(mutator)(cloned);
-				return cloned;
+				return immerMutatorToMutator(mutator)(cloned);
 			});
 		},
 	};
