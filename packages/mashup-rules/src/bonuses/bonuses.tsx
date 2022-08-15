@@ -4,11 +4,11 @@ import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/componen
 import { conditionsRegistry, ConditionRule, ConditionRuleType, SimpleConditionRule } from '../conditions';
 import { FeatureBonus } from './types';
 import { NumericBonusTarget } from './constants';
-import { targets } from './bonus-sheet-utils';
+import { numericBonusTargetNames } from './bonus-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 
-const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
+const selectTargets = Object.entries(numericBonusTargetNames).map(([key, { label }]) => ({
 	key,
 	value: key as NumericBonusTarget,
 	label,

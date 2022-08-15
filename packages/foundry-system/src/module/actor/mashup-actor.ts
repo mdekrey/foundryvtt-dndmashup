@@ -19,6 +19,7 @@ import {
 	Vulnerability,
 	ruleResultIndeterminate,
 	ConditionRule,
+	DynamicListEntryWithContext,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
@@ -175,6 +176,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	get specialBonuses(): FeatureBonusWithContext[] {
 		return this.data.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
+		);
+	}
+
+	get dynamicListResult(): DynamicListEntryWithContext[] {
+		return this.data.items.contents.flatMap((item) =>
+			item.allDynamicList().map((entry) => ({ ...entry, context: { actor: this, item } }))
 		);
 	}
 

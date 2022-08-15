@@ -7,7 +7,7 @@ import { EpicDestinyData, EpicDestinyDocument } from './subtypes/epicDestiny/dat
 import { PowerData, PowerDocument } from './subtypes/power/dataSourceData';
 import { ItemSlot } from './subtypes/equipment/item-slots';
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { BaseItemTemplateDataSourceData } from './templates/bases';
 
 export interface ItemDataByType {
@@ -37,6 +37,7 @@ export type SpecificItemSourceData<T extends PossibleItemType> = ItemDataByType[
 
 export type CommonItemDocumentProperties = {
 	allGrantedBonuses(): FeatureBonus[];
+	allDynamicList(): DynamicListEntry[];
 	allGrantedPowers(): PowerDocument[];
 };
 

@@ -3,7 +3,7 @@ import { capitalize } from 'lodash/fp';
 import { abilities, defenses, damageTypes } from '../types/types';
 import { AbilityBonus, NumericBonusTarget, DefenseBonus, Resistance, Vulnerability } from './constants';
 
-export const targets: Record<NumericBonusTarget, { label: string }> = {
+export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string }> = {
 	...toObject(
 		abilities,
 		(abil): AbilityBonus => `ability-${abil}`,

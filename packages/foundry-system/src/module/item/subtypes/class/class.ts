@@ -1,4 +1,4 @@
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { ClassDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
@@ -23,5 +23,8 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 			},
 			...this.data.data.grantedBonuses,
 		];
+	}
+	override allDynamicList(): DynamicListEntry[] {
+		return [...this.data.data.dynamicList];
 	}
 }

@@ -103,6 +103,7 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 									<ActorComponents.Effects
 										{...(dataLens.apply(documentState) as never as Stateful<ActorDataSource['data']>)}
 										bonusList={actor.specialBonuses}
+										dynamicList={actor.dynamicListResult}
 									/>
 								</Tabs.Tab>
 							</section>

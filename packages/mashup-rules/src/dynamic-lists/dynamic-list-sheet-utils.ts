@@ -1,6 +1,6 @@
 import { DynamicListTarget } from './constants';
 
-export const targets: Record<DynamicListTarget, { label: string }> = {
+export const dynamicListTargetNames: Record<DynamicListTarget, { label: string }> = {
 	languagesKnown: {
 		label: 'Languages Known',
 	},
