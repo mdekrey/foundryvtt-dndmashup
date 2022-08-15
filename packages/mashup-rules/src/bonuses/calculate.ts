@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash/fp';
-import { NumericBonusTarget, ConditionRuleContext } from './constants';
-import { conditionsRegistry } from './registry';
+import { NumericBonusTarget } from './constants';
+import { isRuleApplicable } from './registry-helpers';
 import { FeatureBonusWithContext } from './types';
 
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
@@ -19,12 +19,7 @@ export function filterBonuses(
 	return bonusesWithContext
 		.filter((bonus) => !bonus.disabled)
 		.map((bonus) => {
-			const rule = bonus.condition?.rule ?? '';
-			const result = conditionsRegistry[rule].rule(
-				bonus.context as ConditionRuleContext,
-				bonus.condition?.parameter as never,
-				runtimeParameters
-			);
+			const result = !bonus.condition || isRuleApplicable(bonus.condition, bonus.context, runtimeParameters);
 			return [bonus, result] as const;
 		})
 		.filter(([, result]) => {

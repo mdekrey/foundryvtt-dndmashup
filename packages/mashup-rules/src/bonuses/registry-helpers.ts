@@ -11,9 +11,9 @@ export function getRuleText<TType extends ConditionRuleType>(
 
 export function isRuleApplicable<TType extends ConditionRuleType>(
 	rule: ConditionRule<TType>,
-	context: ConditionRuleContext,
+	context: Partial<ConditionRuleContext>,
 	runtime?: Partial<ConditionRulesRuntimeParameters>
 ) {
 	const registryEntry: ConditionRuleRegistryEntry<TType> = conditionsRegistry[rule.rule];
-	return registryEntry.rule(context, rule.parameter, runtime ?? {});
+	return registryEntry.rule(context as ConditionRuleContext, rule.parameter, runtime ?? {});
 }

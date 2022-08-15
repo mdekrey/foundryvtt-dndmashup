@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { FeatureBonus } from './types';
+import { FeatureBonus, SimpleConditionRule } from './types';
 import { NumericBonusTarget, ConditionRule, ConditionRuleType } from './constants';
 import { targets } from './bonus-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
@@ -29,7 +29,7 @@ const selectConditions: SelectItem<keyof ConditionRules>[] = [
 
 const baseLens = Lens.identity<FeatureBonus[]>();
 
-const ruleLens = Lens.from<ConditionRule | null, ConditionRule | null>(
+const ruleLens = Lens.from<SimpleConditionRule, SimpleConditionRule>(
 	(rule) => rule,
 	(mutator) =>
 		(draft): any => {

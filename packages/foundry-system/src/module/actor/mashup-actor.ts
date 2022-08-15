@@ -48,7 +48,7 @@ const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isEpicDestinySource,
 ];
 
-function condition(text: string): { condition: ConditionRule } {
+function condition(text: string): { condition: ConditionRule<'manual'> } {
 	return { condition: { rule: 'manual', parameter: { conditionText: text } } };
 }
 

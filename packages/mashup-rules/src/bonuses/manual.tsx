@@ -1,6 +1,7 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens } from '@foundryvtt-dndmashup/core';
-import { ruleResultIndeterminate, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import { ruleResultIndeterminate } from './constants';
+import { conditionsRegistry } from './registry';
 
 function manual(): typeof ruleResultIndeterminate {
 	return ruleResultIndeterminate;

@@ -1,10 +1,12 @@
 import { NumericBonusTarget, ConditionRule, ConditionRuleContext } from './constants';
 
+export type SimpleConditionRule = Exclude<ConditionRule, ConditionRule<''>> | null;
+
 export type FeatureBonus = {
 	target: NumericBonusTarget;
 	amount: number | string;
 	type?: string;
-	condition: ConditionRule | null;
+	condition: SimpleConditionRule;
 	disabled?: boolean;
 };
 
