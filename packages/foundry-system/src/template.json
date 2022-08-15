@@ -4,6 +4,7 @@
 		"templates": {
 			"base": {
 				"bonuses": [],
+				"dynamicList": [],
 				"details": {
 					"level": 1
 				},
@@ -100,7 +101,8 @@
 		"types": ["class", "race", "equipment", "feature", "paragonPath", "epicDestiny", "power"],
 		"templates": {
 			"base": {
-				"grantedBonuses": []
+				"grantedBonuses": [],
+				"dynamicList": []
 			},
 			"itemDescription": {
 				"description": {

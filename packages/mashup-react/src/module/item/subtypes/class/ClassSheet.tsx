@@ -1,5 +1,5 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { abilities, Ability } from '@foundryvtt-dndmashup/mashup-rules';
+import { abilities, Ability, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
@@ -26,6 +26,7 @@ const hpBaseLens = dataLens.toField('hpBase');
 const hpPerLevelLens = dataLens.toField('hpPerLevel');
 const healingSurgesBaseLens = dataLens.toField('healingSurgesBase');
 const bonusesLens = dataLens.toField('grantedBonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 export function ClassSheet({
 	items,
@@ -65,14 +66,12 @@ export function ClassSheet({
 			</div>
 			<div className="grid grid-cols-12 gap-x-1 text-lg text-center">
 				<FormInput className="col-span-2">
-					<FormInput.Field>
-						<FormInput.Structured>
-							<FormInput.Structured.Main>
-								<FormInput.NumberField {...hpBaseLens.apply(documentState)} plain />
-							</FormInput.Structured.Main>
-							<span className="flex-shrink-0">+ CON</span>
-						</FormInput.Structured>
-					</FormInput.Field>
+					<FormInput.Structured>
+						<FormInput.Structured.Main>
+							<FormInput.NumberField {...hpBaseLens.apply(documentState)} plain />
+						</FormInput.Structured.Main>
+						<span className="flex-shrink-0">+ CON</span>
+					</FormInput.Structured>
 					<FormInput.Label>Base HP</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">
@@ -94,6 +93,7 @@ export function ClassSheet({
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList items={items} />

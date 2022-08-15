@@ -2,15 +2,15 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { conditionsRegistry, ConditionRule, ConditionRuleType, SimpleConditionRule } from '../conditions';
-import { FeatureBonus } from './types';
-import { NumericBonusTarget } from './constants';
-import { targets } from './bonus-sheet-utils';
+import { DynamicListEntry } from './types';
+import { DynamicListTarget } from './constants';
+import { targets } from './dynamic-list-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,
-	value: key as NumericBonusTarget,
+	value: key as DynamicListTarget,
 	label,
 	typeaheadLabel: label,
 }));
@@ -27,7 +27,7 @@ const selectConditions: SelectItem<keyof ConditionRules>[] = [
 	}),
 ];
 
-const baseLens = Lens.identity<FeatureBonus[]>();
+const baseLens = Lens.identity<DynamicListEntry[]>().default([]);
 
 const ruleLens = Lens.from<SimpleConditionRule, SimpleConditionRule>(
 	(rule) => rule,
@@ -39,39 +39,44 @@ const ruleLens = Lens.from<SimpleConditionRule, SimpleConditionRule>(
 		}
 );
 type NoRule = { rule: ''; parameter?: undefined } & Partial<Omit<ConditionRule, 'rule'>>;
-const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
+const conditionRuleLens = Lens.fromProp<DynamicListEntry>()('condition')
 	.combine(ruleLens)
-	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '' || (r as any) === '');
+	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '');
 
-export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
-	console.log(bonuses.value);
+export function DynamicList({
+	dynamicList,
+	className,
+}: {
+	dynamicList: Stateful<DynamicListEntry[]>;
+	className?: string;
+}) {
 	function onAdd() {
-		bonuses.onChangeValue((draft) => {
+		dynamicList.onChangeValue((draft) => {
 			draft.push({
-				...bonuses.value[bonuses.value.length - 1],
-				amount: '0',
-				target: 'defense-ac',
+				...dynamicList.value[dynamicList.value.length - 1],
+				target: 'languagesKnown',
+				entry: 'Common',
 			});
 		});
 	}
 
 	function onEnable(index: number) {
 		return () =>
-			bonuses.onChangeValue((draft) => {
+			dynamicList.onChangeValue((draft) => {
 				draft[index].disabled = false;
 			});
 	}
 
 	function onDisable(index: number) {
 		return () =>
-			bonuses.onChangeValue((draft) => {
+			dynamicList.onChangeValue((draft) => {
 				draft[index].disabled = true;
 			});
 	}
 
 	function onDelete(index: number) {
 		return () => {
-			return bonuses.onChangeValue((draft) => {
+			return dynamicList.onChangeValue((draft) => {
 				draft.splice(index, 1);
 			});
 		};
@@ -82,10 +87,8 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 			<table className="w-full border-collapse">
 				<thead className="bg-theme text-white">
 					<tr>
-						<th>Amount</th>
-						<th>Type</th>
-						<th></th>
-						<th>Target</th>
+						<th>List</th>
+						<th>Entry</th>
 						<th>Condition</th>
 						<th>
 							<IconButton iconClassName="fa fa-plus" text="Add" onClick={onAdd} />
@@ -93,44 +96,33 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 					</tr>
 				</thead>
 				<tbody>
-					{bonuses.value.map((bonus, idx) => (
+					{(dynamicList.value ?? []).map((entry, idx) => (
 						<tr
 							key={idx}
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 								'border-b-2 border-transparent',
 								'text-sm',
-								{ 'opacity-75': bonus.disabled }
+								{ 'opacity-75': entry.disabled }
 							)}>
 							<td className="px-1">
-								<FormInput.TextField
-									{...baseLens
-										.toField(idx)
-										.toField('amount')
-										.combine(Lens.cast<string | number, string>())
-										.apply(bonuses)}
-									className="text-center"
-								/>
-							</td>
-							<td className="px-1">
-								<FormInput.TextField
-									{...baseLens.toField(idx).toField('type').default('').apply(bonuses)}
-									className="text-center"
-								/>
-							</td>
-							<td className="px-1 whitespace-nowrap">bonus to</td>
-							<td className="px-1">
 								<FormInput.Select
-									{...baseLens.toField(idx).toField('target').apply(bonuses)}
+									{...baseLens.toField(idx).toField('target').apply(dynamicList)}
 									options={selectTargets}
 									className="text-center"
 								/>
 							</td>
 							<td className="px-1">
-								<ConditionSelector {...baseLens.toField(idx).combine(conditionRuleLens).apply(bonuses)} />
+								<FormInput.TextField
+									{...baseLens.toField(idx).toField('entry').apply(dynamicList)}
+									className="text-center"
+								/>
+							</td>
+							<td className="px-1">
+								<ConditionSelector {...baseLens.toField(idx).combine(conditionRuleLens).apply(dynamicList)} />
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
-								{bonus.disabled ? (
+								{entry.disabled ? (
 									<IconButton iconClassName="far fa-circle" title="Click to Enable" onClick={onEnable(idx)} />
 								) : (
 									<IconButton iconClassName="far fa-check-circle" title="Click to Disable" onClick={onDisable(idx)} />
@@ -139,14 +131,14 @@ export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus
 							</td>
 						</tr>
 					))}
-					{bonuses.value.length === 0 ? (
+					{dynamicList.value.length === 0 ? (
 						<tr
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
 								'border-b-2 border-transparent'
 							)}>
 							<td className="text-center" colSpan={6}>
-								No bonuses
+								No entries
 							</td>
 						</tr>
 					) : null}
@@ -178,7 +170,6 @@ function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 }
 
 function toRuleText(configuredRule: ConditionRule | NoRule) {
-	console.log({ configuredRule });
 	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
 }
 

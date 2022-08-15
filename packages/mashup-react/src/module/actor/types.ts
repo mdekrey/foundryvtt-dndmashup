@@ -1,5 +1,5 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability, Currency } from '@foundryvtt-dndmashup/mashup-rules';
+import { Ability, Currency, DynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type AbilityScores = {
@@ -28,6 +28,7 @@ export type ActionPoints = {
 
 export type BaseActorTemplateDataSourceData = {
 	bonuses: FeatureBonus[];
+	dynamicList: DynamicListEntry[];
 	details: ActorDetails;
 	abilities: AbilityScores;
 	health: Health;

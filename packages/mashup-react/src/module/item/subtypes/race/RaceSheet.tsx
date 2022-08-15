@@ -1,7 +1,7 @@
 import { FormInput, SelectItem, Tabs } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
+import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeaturesList } from '../../components/FeaturesList';
 import { RaceData } from './dataSourceData';
 import { sizes, Size } from '@foundryvtt-dndmashup/mashup-rules';
@@ -11,6 +11,7 @@ const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 const sizeOptions = sizes.map((v): SelectItem<Size> => ({ value: v, key: v, label: capitalize(v), typeaheadLabel: v }));
 
@@ -62,6 +63,7 @@ export function RaceSheet({
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList items={items} />

@@ -1,11 +1,18 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { Bonuses, targets, FeatureBonusWithContext, getRuleText } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	Bonuses,
+	targets,
+	FeatureBonusWithContext,
+	getRuleText,
+	DynamicList,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDataSource } from '../types';
 
 const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
 const bonusesLens = dataLens.toField('bonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 export function Effects({
 	bonusList,
@@ -14,6 +21,7 @@ export function Effects({
 	return (
 		<>
 			<Bonuses bonuses={bonusesLens.apply(documentState)} />
+			<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 			<table>
 				<thead className="bg-theme text-white">
 					<tr>

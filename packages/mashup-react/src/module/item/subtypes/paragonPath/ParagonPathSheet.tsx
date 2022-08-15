@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
+import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/core';
@@ -10,6 +10,7 @@ const baseLens = Lens.identity<SimpleDocumentData<ParagonPathData>>();
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 export function ParagonPathSheet({ item }: { item: ParagonPathDocument }) {
 	const documentState = documentAsState(item);
@@ -40,6 +41,7 @@ export function ParagonPathSheet({ item }: { item: ParagonPathDocument }) {
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList items={item.items.contents} />

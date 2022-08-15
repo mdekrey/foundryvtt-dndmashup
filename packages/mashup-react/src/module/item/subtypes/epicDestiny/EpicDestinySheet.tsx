@@ -1,5 +1,5 @@
 import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
-import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
+import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
@@ -11,6 +11,7 @@ const nameLens = baseLens.toField('name');
 const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 export function EpicDestinySheet({ item }: { item: EpicDestinyDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
@@ -42,6 +43,7 @@ export function EpicDestinySheet({ item }: { item: EpicDestinyDocument }) {
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
 						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
 						<FeaturesList items={item.items.contents} />
