@@ -1,12 +1,12 @@
+import { useState } from 'react';
 import classNames from 'classnames';
 import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { FeatureBonus, SimpleConditionRule } from './types';
-import { NumericBonusTarget, ConditionRule, ConditionRuleType } from './constants';
+import { conditionsRegistry, ConditionRule, ConditionRuleType, SimpleConditionRule } from '../conditions';
+import { FeatureBonus } from './types';
+import { NumericBonusTarget } from './constants';
 import { targets } from './bonus-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { conditionsRegistry } from './registry';
-import { useState } from 'react';
 
 const selectTargets = Object.entries(targets).map(([key, { label }]) => ({
 	key,

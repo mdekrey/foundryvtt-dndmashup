@@ -1,10 +1,5 @@
 import { abilities, Ability, Defense, defenses, DamageType, damageTypes } from '../types/types';
 
-declare global {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	interface ConditionGrantingContext {}
-}
-
 export const numericBonusTargets = [
 	...abilities.map((ability) => `ability-${ability}` as const),
 	...defenses.map((defense) => `defense-${defense}` as const),
@@ -42,15 +37,3 @@ export function defenseForBonus(bonusTarget: DefenseBonus): Defense {
 }
 
 export const bonusTypes = ['enhancement', 'ability', 'armor', 'class', 'feat', 'power', 'proficiency', 'shield'];
-
-export type ConditionRuleType = keyof ConditionRules;
-export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> = {
-	[K in TType]: {
-		rule: K;
-		parameter: ConditionRules[K];
-	};
-}[TType];
-export type ConditionRuleContext = ConditionGrantingContext;
-
-export const ruleResultIndeterminate = Symbol('indeterminate');
-export type ConditionRuleIndeterminateResult = typeof ruleResultIndeterminate;

@@ -1,6 +1,5 @@
-import { NumericBonusTarget, ConditionRule, ConditionRuleContext } from './constants';
-
-export type SimpleConditionRule = Exclude<ConditionRule, ConditionRule<''>> | null;
+import { ConditionRuleContext, SimpleConditionRule } from '../conditions';
+import { NumericBonusTarget } from './constants';
 
 export type FeatureBonus = {
 	target: NumericBonusTarget;

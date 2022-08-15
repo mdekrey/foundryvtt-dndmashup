@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash/fp';
+import { isRuleApplicable } from '../conditions';
 import { NumericBonusTarget } from './constants';
-import { isRuleApplicable } from './registry-helpers';
 import { FeatureBonusWithContext } from './types';
 
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
