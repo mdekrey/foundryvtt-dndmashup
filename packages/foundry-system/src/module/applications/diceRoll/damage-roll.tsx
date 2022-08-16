@@ -2,53 +2,18 @@ import { applicationRegistry, RollJson, toMashupId } from '@foundryvtt-dndmashup
 import { combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
 import {
 	EquipmentDocument,
-	DamageRoller,
 	DamageRollDetails,
 	DamageRollApplicationParametersBase,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { applicationDispatcher } from '../../../components/foundry/apps-provider';
 import { sendChatMessage } from '../../chat/sendChatMessage';
-import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
-import { getToolsForPower } from './getToolsForPower';
 import { roll } from './roll';
 import { oxfordComma } from '@foundryvtt-dndmashup/core';
+import { displayDamageDialog } from './displayDamageDialog';
 
-type DisplayDialogProps = DamageRollApplicationParametersBase & {
+export type DisplayDialogProps = DamageRollApplicationParametersBase & {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
-
-export function displayDamageDialog(
-	{ baseDice, baseDamageTypes, actor, power, source, rollType, listType, tool, allowToolSelection }: DisplayDialogProps,
-	onComplete: (rollProps: DamageRollDetails) => void,
-	onCritical?: (rollProps: DamageRollDetails) => void
-) {
-	const possibleTools = !allowToolSelection
-		? undefined
-		: tool
-		? [tool]
-		: power
-		? getToolsForPower(actor, power)
-		: undefined;
-
-	return (
-		<DamageRoller
-			actor={actor}
-			rollType={rollType}
-			listType={listType}
-			baseDice={baseDice}
-			baseDamageTypes={baseDamageTypes}
-			onRoll={onComplete}
-			runtimeBonusParameters={
-				{
-					/* TODO - parameters for passing to bonuses to determine if they apply or not */
-				}
-			}
-			evaluateBonuses={evaluateAndRoll}
-			possibleTools={possibleTools}
-			onCriticalRoll={onCritical}
-		/>
-	);
-}
 
 applicationRegistry.damage = async ({ allowCritical, ...baseParams }, resolve, reject) => {
 	return {

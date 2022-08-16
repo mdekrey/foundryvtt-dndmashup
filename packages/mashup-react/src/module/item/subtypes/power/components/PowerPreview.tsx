@@ -126,8 +126,14 @@ function damageEffectText(effect: DamageEffect) {
 }
 
 function healingEffectText(effect: HealingEffect) {
-	// TODO
-	return '';
+	const prefix = effect.spendHealingSurge
+		? 'The target may spend a healing surge. If they do, the target'
+		: 'The target';
+	const verb = effect.isTemporary ? 'gains temporary hit points' : 'regains hit points';
+	const link = 'equal to';
+	const amount = [effect.healingSurge ? 'its healing surge value' : '', effect.healing].filter(Boolean).join(' plus ');
+
+	return `${prefix} ${verb} ${link} ${amount}.`;
 }
 
 function oxfordComma(parts: string[]) {

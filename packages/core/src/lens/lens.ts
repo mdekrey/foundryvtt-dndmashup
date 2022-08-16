@@ -39,14 +39,17 @@ export class Lens<TSource, TValue> {
 		return this.combine(makeFieldLens<TValue, TProp>(field));
 	}
 
-	default(value: NonNullable<TValue>): Lens<TSource, NonNullable<TValue>>;
+	default(
+		value: NonNullable<TValue>,
+		predicate?: (value: NonNullable<TValue>) => boolean
+	): Lens<TSource, NonNullable<TValue>>;
 	default<TOther>(
 		value: TOther,
 		predicate: (value: NonNullable<TValue> | TOther) => value is TOther
 	): Lens<TSource, NonNullable<TValue> | TOther>;
 	default<TOther>(
 		value: TOther | NonNullable<TValue>,
-		predicate?: (value: NonNullable<TValue> | TOther) => value is TOther
+		predicate?: (value: NonNullable<TValue> | TOther) => boolean
 	): Lens<TSource, NonNullable<TValue> | TOther> {
 		return this.combine(
 			Lens.from<TValue, NonNullable<TValue> | TOther>(

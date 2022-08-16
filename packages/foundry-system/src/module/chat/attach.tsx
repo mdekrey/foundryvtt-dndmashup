@@ -4,13 +4,13 @@ import { FoundryWrapper } from '../../components/foundry';
 
 export type ChatMessageProps = ToObjectFalseType<ChatMessage>; // ChatMessageDataProperties;
 
-export const chatAttachments: Record<string, React.FC<ChatMessageProps>> = {};
+export const chatAttachments: Record<string, (props: ChatMessageProps) => React.ReactNode> = {};
 
 export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.MessageData) {
 	if (typeof data.message.flags['attach-component'] !== 'string') return;
 
-	const Component = chatAttachments[data.message.flags['attach-component']];
-	if (!Component) {
+	const component = chatAttachments[data.message.flags['attach-component']];
+	if (!component) {
 		console.error('Unknown attach-component setting', data.message.flags['attach-component'], data);
 		return;
 	}
@@ -19,12 +19,13 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 	content.addClass('foundry-reset').addClass('dndmashup');
 
 	try {
-		createRoot(content[0]).render(
-			<FoundryWrapper>
-				<Component {...data.message} />
-			</FoundryWrapper>
-		);
+		const children = component(data.message);
+		createRoot(content[0]).render(<FoundryWrapper>{children}</FoundryWrapper>);
 	} catch (ex) {
 		console.error(ex);
+		content[0].prepend(
+			$('<p class="text-red-dark text-xs italic">Unable to attach message, check console for errors.</p>')[0]
+		);
+		content.css('pointer-events', 'none');
 	}
 }

@@ -50,6 +50,10 @@ export type CriticalDamageRollApplicationParameters = DamageRollApplicationParam
 
 export type HealingRollApplicationParameters = DiceRollApplicationParametersBase & {
 	rollType: 'healing';
+
+	spendHealingSurge: boolean;
+	healingSurge: boolean;
+	isTemporary: boolean;
 };
 
 declare global {

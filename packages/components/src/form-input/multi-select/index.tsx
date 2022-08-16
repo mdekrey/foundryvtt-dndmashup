@@ -12,10 +12,12 @@ import { Label } from '../label';
 export function MultiSelect<TValue extends Primitive>({
 	value,
 	options,
+	disabled,
 	onChangeValue,
 }: {
 	value: TValue[];
 	options: SelectItem<TValue>[];
+	disabled?: boolean;
 	onChangeValue?: ImmutableMutator<TValue[]>;
 }) {
 	const [query, setQuery] = useState('');
@@ -30,18 +32,21 @@ export function MultiSelect<TValue extends Primitive>({
 	return (
 		<DetailsModalButton
 			modalTitle="Select..."
+			disabled={disabled}
 			buttonContents={
-				value.length > 0
-					? value
-							.map((valueEntry) => options.find((opt) => opt.value === valueEntry))
-							.filter((opt): opt is SelectItem<TValue> => !!opt)
-							.map((option, index) => (
-								<Fragment key={option.key}>
-									{index === 0 ? '' : ', '}
-									{option.label}
-								</Fragment>
-							))
-					: 'normal'
+				value.length > 0 ? (
+					value
+						.map((valueEntry) => options.find((opt) => opt.value === valueEntry))
+						.filter((opt): opt is SelectItem<TValue> => !!opt)
+						.map((option, index) => (
+							<Fragment key={option.key}>
+								{index === 0 ? '' : ', '}
+								{option.label}
+							</Fragment>
+						))
+				) : (
+					<>&nbsp;</>
+				)
 			}
 			modalContents={({ onClose }) => {
 				const comboboxOnChange: React.Dispatch<React.SetStateAction<TValue[]>> = (param) => {

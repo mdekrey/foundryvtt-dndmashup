@@ -42,22 +42,27 @@ export const damageTypesLens = Lens.from<DamageEffect | null, DamageType[]>(
 	}
 );
 
-export function DamageFields({ prefix, ...props }: { prefix?: string } & Stateful<DamageEffect | null>) {
+export function DamageFields({
+	className,
+	prefix,
+	...props
+}: { prefix?: string; className?: string } & Stateful<DamageEffect | null>) {
 	const damageState = damageDiceLens.apply(props);
 	const damageTypeState = damageTypesLens.apply(props);
 	return (
-		<div className="grid grid-cols-12 gap-x-1">
+		<div className={classNames('grid grid-cols-12 gap-x-1', className)}>
 			<FormInput className="col-span-5 self-end">
 				<FormInput.TextField {...damageState} />
 				<FormInput.Label>{prefix} Damage Dice</FormInput.Label>
 			</FormInput>
 			<FormInput className={classNames('col-span-5', { 'opacity-50 focus-within:opacity-100': !damageState.value })}>
-				<FormInput.MultiSelect {...damageTypeState} options={damageState.value ? damageTypeOptions : []} />
+				<FormInput.MultiSelect
+					{...damageTypeState}
+					options={damageState.value ? damageTypeOptions : []}
+					disabled={!damageState.value}
+				/>
 				<FormInput.Label>Damage Type</FormInput.Label>
 			</FormInput>
-			<div className={classNames('col-span-2', { 'opacity-50 focus-within:opacity-100': !damageState.value })}>
-				damage
-			</div>
 		</div>
 	);
 }

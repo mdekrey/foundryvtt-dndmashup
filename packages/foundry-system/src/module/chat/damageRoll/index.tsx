@@ -49,8 +49,8 @@ function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType
 	const effectiveAmount = amount; // TODO - apply resistance/vulnerabilities
 	if (effectiveAmount === 0) return;
 
-	const tempHpRemaining = Math.max(0, health.temporaryHp - amount);
-	const damageRemaining = amount - (health.temporaryHp - tempHpRemaining);
+	const tempHpRemaining = Math.max(0, health.temporaryHp - effectiveAmount);
+	const damageRemaining = effectiveAmount - (health.temporaryHp - tempHpRemaining);
 	const healthRemaining = health.hp.value - damageRemaining;
 	const data: Partial<Record<'data.health.hp.value' | 'data.health.temporaryHp', number>> = {};
 	if (tempHpRemaining !== health.temporaryHp) data['data.health.temporaryHp'] = tempHpRemaining;

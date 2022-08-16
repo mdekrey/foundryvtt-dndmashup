@@ -3,7 +3,7 @@ import { combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmash
 import { DamageRollDetails } from '@foundryvtt-dndmashup/mashup-react';
 import { sendChatMessage } from '../../chat/sendChatMessage';
 import { roll } from './roll';
-import { displayDamageDialog } from './damage-roll';
+import { displayDamageDialog } from './displayDamageDialog';
 import { oxfordComma } from '@foundryvtt-dndmashup/core';
 
 applicationRegistry.criticalDamage = async ({ ...baseParams }, resolve) => {

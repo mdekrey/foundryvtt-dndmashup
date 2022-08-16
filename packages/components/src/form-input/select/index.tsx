@@ -62,7 +62,7 @@ function SelectComponent<TValue extends Primitive | object>({
 		<DetailsModalButton
 			className={className}
 			modalTitle="Select..."
-			buttonContents={options.find((opt) => opt.value === value)?.label ?? null}
+			buttonContents={options.find((opt) => opt.value === value)?.label ?? <>&nbsp;</>}
 			modalContents={({ onClose }) => {
 				const comboboxOnChange: React.Dispatch<React.SetStateAction<TValue>> = (param) => {
 					if (onChangeValue)

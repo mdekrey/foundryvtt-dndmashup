@@ -17,7 +17,6 @@ export const DamageResult = ({
 	onApplyHalfDamage?: () => void;
 	onApplyDamage?: () => void;
 }) => {
-	console.log({ roll });
 	return (
 		<>
 			<div className="dice-roll block">

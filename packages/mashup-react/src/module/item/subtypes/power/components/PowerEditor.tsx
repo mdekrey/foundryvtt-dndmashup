@@ -189,7 +189,7 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew:
 						className={classNames({
 							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
 						})}>
-						<div className={classNames({ 'px-4 pb-4': !isNew, 'p-4 focus-within:opacity-100 opacity-75': isNew })}>
+						<div className={classNames('p-4', { 'focus-within:opacity-100 opacity-75': isNew })}>
 							<PowerEffectFields {...props} />
 						</div>
 					</div>

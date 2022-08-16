@@ -44,7 +44,6 @@ const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '' || (r as any) === '');
 
 export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
-	console.log(bonuses.value);
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({
@@ -178,7 +177,6 @@ function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 }
 
 function toRuleText(configuredRule: ConditionRule | NoRule) {
-	console.log({ configuredRule });
 	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
 }
 

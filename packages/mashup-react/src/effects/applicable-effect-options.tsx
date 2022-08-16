@@ -3,7 +3,7 @@ import { IconButton } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
-import { ApplicableEffect, DamageEffect } from './types';
+import { ApplicableEffect, DamageEffect, HealingEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 
 export type ApplicableEffectOptionsProps = {
@@ -40,7 +40,14 @@ export function ApplicableEffectOptions({
 				</button>
 			)}
 			{/* TODO: healing */}
-			{effect.healing && <IconButton className="text-lg" iconClassName="fas fa-heart" title={`${mode} Healing`} />}
+			{effect.healing && (
+				<IconButton
+					className="text-lg"
+					iconClassName="fas fa-heart"
+					onClick={healingRoll(effect.healing)}
+					title={`${mode} Healing`}
+				/>
+			)}
 			{/* TODO: effect */}
 			{false && <IconButton className="text-lg" iconClassName="fas fa-bullseye" title={`Apply ${mode} Effects`} />}
 		</>
@@ -59,6 +66,24 @@ export function ApplicableEffectOptions({
 				baseDamageTypes: damageEffect.damageTypes,
 				allowToolSelection,
 				allowCritical,
+			});
+		};
+	}
+
+	function healingRoll(healingEffect: HealingEffect) {
+		return () => {
+			applications.launchApplication('healing', {
+				baseDice: healingEffect.healing,
+				title: prefix ? `${prefix} ${mode}` : mode,
+				actor,
+				source,
+				power,
+				rollType: 'healing',
+				allowToolSelection,
+
+				spendHealingSurge: healingEffect.spendHealingSurge,
+				healingSurge: healingEffect.healingSurge,
+				isTemporary: healingEffect.isTemporary,
 			});
 		};
 	}

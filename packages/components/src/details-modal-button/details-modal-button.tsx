@@ -12,9 +12,11 @@ export function DetailsModalButton({
 	modalTitle,
 	buttonContents,
 	modalContents,
+	disabled,
 }: {
 	className?: string;
 	modalTitle: string;
+	disabled?: boolean;
 	buttonContents: React.ReactNode;
 	modalContents: React.ReactNode | ((p: ModalContentsProps) => React.ReactNode);
 }) {
@@ -40,7 +42,7 @@ export function DetailsModalButton({
 					className
 				)}
 				ref={buttonRef}
-				onClick={() => setOpen(true)}>
+				onClick={disabled ? undefined : () => setOpen(true)}>
 				{buttonContents}
 			</button>
 			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title={modalTitle}>

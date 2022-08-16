@@ -151,7 +151,7 @@
 			"templates": ["base"],
 			"flavorText": "",
 			"type": "Human Racial Power",
-			"usage": "At-Will",
+			"usage": "at-will",
 			"keywords": [],
 			"actionType": "standard",
 			"effects": [],

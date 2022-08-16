@@ -32,15 +32,15 @@ export async function sendChatMessage<T extends MashupChatMessageType>(
 		...result,
 	} as ChatMessageProps;
 
-	const Component = chatAttachments[messageType];
-	const html = await renderReactToHtml(
-		<FoundryWrapper>
-			<Component {...messageInfo} />
-		</FoundryWrapper>
-	);
+	try {
+		const html = await renderReactToHtml(<FoundryWrapper>{chatAttachments[messageType](messageInfo)}</FoundryWrapper>);
 
-	return ChatMessage.create({
-		...messageInfo,
-		content: html,
-	});
+		return ChatMessage.create({
+			...messageInfo,
+			content: html,
+		});
+	} catch (ex) {
+		console.error(ex);
+		return null;
+	}
 }

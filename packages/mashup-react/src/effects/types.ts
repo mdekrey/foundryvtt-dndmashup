@@ -14,6 +14,7 @@ export type DamageEffect = {
 
 export type HealingEffect = {
 	healing: string;
+	spendHealingSurge: boolean;
 	healingSurge: boolean;
 	isTemporary: boolean;
 };
