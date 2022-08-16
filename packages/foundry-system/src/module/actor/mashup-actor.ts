@@ -281,6 +281,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	override getRollData() {
 		return {
 			actor: this,
+			initiative: this.derivedData.initiative,
 		};
 	}
 
@@ -403,12 +404,6 @@ export class MashupActor extends Actor implements ActorDocument {
 	allPowers() {
 		return this.items.contents.flatMap((item: ItemDocument) => (isPower(item) ? item : item.allGrantedPowers()));
 	}
-
-	// override getRollData() {
-	// 	const data = super.getRollData();
-	// 	// see https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD06-Extending-the-Actor-class#actorgetrolldata
-	// 	return data;
-	// }
 
 	/** When adding a new embedded document, clean up others of the same type */
 	protected override _preCreateEmbeddedDocuments(

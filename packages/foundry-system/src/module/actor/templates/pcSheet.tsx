@@ -1,5 +1,5 @@
-import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { Tabs } from '@foundryvtt-dndmashup/components';
+import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { ImageButton, Tabs } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorComponents, ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';
@@ -14,7 +14,7 @@ const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
 const detailsLens = dataLens.toField('details').toField('biography');
 
-export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
+export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
 
 	// TODO: derived data doesn't need to go to actor.data
@@ -74,6 +74,20 @@ export function PcSheet({ actor }: { actor: SpecificActor<'pc'> }) {
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
+						<div className="flex text-lg justify-around">
+							<div className="group">
+								<span className="font-bold">{ensureSign(data.initiative)}</span> Initiative
+								<ImageButton
+									className="ml-1 invisible group-hover:visible"
+									src="/icons/svg/d20-black.svg"
+									onClick={onRollInitiative}
+								/>
+							</div>
+							<div>
+								<span className="font-bold">{data.speed} sq.</span> Speed
+							</div>
+						</div>
+						<div className="border-b-2 border-black"></div>
 						<Tabs defaultActiveTab="details">
 							<Tabs.Nav>
 								<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
