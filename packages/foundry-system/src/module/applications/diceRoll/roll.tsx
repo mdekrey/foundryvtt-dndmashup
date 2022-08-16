@@ -5,7 +5,8 @@ export async function roll(
 	dice: string,
 	context: MashupDiceContext,
 	sendToChatAs?: ActorDocument,
-	evaluationOptions?: InexactPartial<RollTerm.EvaluationOptions>
+	evaluationOptions?: InexactPartial<RollTerm.EvaluationOptions>,
+	flavor?: string
 ): Promise<Roll<MashupDiceContext>> {
 	// Example full formula: 1d20 + 2[ability bonus] + 4[power bonus] + 2[bonus]
 	const roll = Roll.create(dice, context);
@@ -13,6 +14,7 @@ export async function roll(
 
 	if (sendToChatAs) {
 		await roll.toMessage({
+			flavor,
 			speaker: {
 				actor: sendToChatAs.id,
 				token: sendToChatAs.token?.id,

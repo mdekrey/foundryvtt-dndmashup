@@ -4,7 +4,7 @@ import { BonusByType, combineRollComponents, fromBonusesToFormula } from '@found
 import { displayDialog } from './displayDialog';
 import { roll } from './roll';
 
-applicationRegistry.diceRoll = async ({ sendToChat, ...baseParams }, resolve) => {
+applicationRegistry.diceRoll = async ({ sendToChat, flavor, ...baseParams }, resolve) => {
 	return {
 		content: displayDialog(baseParams, onRoll),
 		title: `Roll: ${baseParams.title}`,
@@ -23,7 +23,13 @@ applicationRegistry.diceRoll = async ({ sendToChat, ...baseParams }, resolve) =>
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
 		const result = (
-			await roll(dice, { actor: baseParams.actor, item: tool }, sendToChat ? baseParams.actor : undefined)
+			await roll(
+				dice,
+				{ actor: baseParams.actor, item: tool },
+				sendToChat ? baseParams.actor : undefined,
+				undefined,
+				flavor
+			)
 		).total;
 		if (result !== undefined) resolve(result);
 	}

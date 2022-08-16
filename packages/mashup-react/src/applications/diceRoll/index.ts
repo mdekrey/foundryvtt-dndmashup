@@ -15,6 +15,7 @@ export type DiceRollApplicationParametersBase = {
 	power?: PowerDocument;
 	rollType: NumericBonusTarget;
 	allowToolSelection: boolean;
+	flavor?: string;
 };
 
 export type DamageRollApplicationParametersBase = {
