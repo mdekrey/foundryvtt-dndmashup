@@ -1,7 +1,6 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorComponents, ActorDataSource, PlayerCharacterDataSourceData } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
@@ -19,13 +18,11 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
 	const dataState: Stateful<PlayerCharacterDataSourceData> = dataLens.apply(documentState);
 
-	// TODO: derived data doesn't need to go to actor.data
 	const data = actor.derivedData;
 	const defenses = data.defenses;
 	const maxHp = data.health.hp.max;
 	const healingSurgeValue = data.health.surgesValue;
 	const healingSurgesPerDay = data.health.surgesRemaining.max;
-	const getFinalScore = (ability: Ability) => data.abilities[ability].total;
 
 	return (
 		<>
@@ -69,11 +66,8 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 
 				<div className="flex-grow flex flex-row gap-1">
 					<div>
-						<ActorComponents.Abilities
-							abilitiesState={abilitiesLens.apply(documentState)}
-							getFinalScore={getFinalScore}
-						/>
-						<ActorComponents.Skills skillsState={skillsLens.apply(documentState)} />
+						<ActorComponents.Abilities actor={actor} abilitiesState={abilitiesLens.apply(documentState)} />
+						<ActorComponents.Skills actor={actor} skillsState={skillsLens.apply(documentState)} />
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">

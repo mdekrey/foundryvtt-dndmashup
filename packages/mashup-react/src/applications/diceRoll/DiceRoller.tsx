@@ -24,6 +24,7 @@ export type DiceRollerRequiredProps = {
 	baseDice: string;
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
+	extraBonuses?: FeatureBonusWithContext[];
 
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: RollDetails): void;
@@ -37,6 +38,7 @@ export function DiceRoller({
 	possibleTools,
 	rollType,
 	runtimeBonusParameters,
+	extraBonuses,
 	evaluateBonuses,
 	onRoll,
 }: DiceRollerProps) {
@@ -58,6 +60,7 @@ export function DiceRoller({
 				actor={actor}
 				tool={tool}
 				evaluateBonuses={evaluateBonuses}
+				extraBonuses={extraBonuses}
 				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
 				rollTarget={rollType}
 				runtimeBonusParameters={runtimeBonusParameters}

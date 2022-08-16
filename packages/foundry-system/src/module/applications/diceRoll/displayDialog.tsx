@@ -12,7 +12,7 @@ export type DisplayDialogProps = DiceRollApplicationParametersBase & {
 };
 
 export function displayDialog(
-	{ baseDice, actor, power, source, rollType, tool, allowToolSelection }: DisplayDialogProps,
+	{ baseDice, actor, power, source, rollType, extraBonuses, tool, allowToolSelection }: DisplayDialogProps,
 	onComplete: (rollProps: RollDetails) => void
 ) {
 	const possibleTools = !allowToolSelection
@@ -34,7 +34,8 @@ export function displayDialog(
 					/* TODO - parameters for passing to bonuses to determine if they apply or not */
 				}
 			}
-			evaluateBonuses={evaluateAndRoll}
+			extraBonuses={extraBonuses}
+			evaluateBonuses={(bonuses) => evaluateAndRoll(bonuses)}
 			possibleTools={possibleTools}
 		/>
 	);

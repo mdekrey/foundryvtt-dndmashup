@@ -116,6 +116,7 @@ const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number
 	speed: (data, value) => (data.speed = value),
 	initiative: (data, value) => (data.initiative = value),
 
+	check: noop,
 	'attack-roll': noop,
 	damage: noop,
 	'critical-damage': noop,
@@ -367,6 +368,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			),
 			speed: 0,
 			initiative: 0,
+			halfLevel: Math.floor(this.data.data.details.level / 2),
 			size: this.appliedRace?.data.data.size ?? 'medium',
 		};
 		this._derivedData = resultData;

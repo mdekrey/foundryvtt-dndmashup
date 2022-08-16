@@ -2,6 +2,7 @@ import { ActorSheetJsx } from './templates/sheet';
 import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 import { ItemDataSource } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MashupItemBase } from '../item/mashup-item';
+import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
@@ -30,15 +31,18 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 		const skills = itemData.filter((i) => i.type === 'skill');
 
 		if (skills.length > 0 && this.actor.data.type === 'pc') {
-			const data: Partial<Record<`data.skills.${number}.${'img' | 'name' | 'ranks'}`, string | number>> = {};
-			const i = this.actor.data.data.skills?.length ?? 0;
+			const data: Record<`data.skills`, SkillEntry[]> = {
+				'data.skills': this.actor.data.data.skills ?? [],
+			};
 			for (const skill of skills) {
 				if (this.actor.data.data.skills?.find((s) => s.name === skill.name) && skill.img && skill.name) {
 					continue;
 				}
-				data[`data.skills.${i}.img`] = skill.img || '';
-				data[`data.skills.${i}.name`] = skill.name || '';
-				data[`data.skills.${i}.ranks`] = 0;
+				data['data.skills'].push({
+					img: skill.img || '',
+					name: skill.name,
+					ranks: 0,
+				});
 			}
 			await this.actor.update(data);
 		}

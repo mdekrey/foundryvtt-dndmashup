@@ -3,8 +3,20 @@ import { BonusByType, FeatureBonusWithContext, untypedBonus } from '@foundryvtt-
 
 const max = (v: number[]) => Math.max(...v);
 
-export function evaluateAndRoll(bonusesWithContext: FeatureBonusWithContext[]): BonusByType {
-	const byType = groupBy((e) => e.type, bonusesWithContext);
+export function evaluateAndRoll(
+	bonusesWithContext: FeatureBonusWithContext[],
+	initialBonuses?: BonusByType
+): BonusByType {
+	const extraBonuses = Object.entries(initialBonuses ?? {}).map(
+		([type, value]): FeatureBonusWithContext => ({
+			amount: value,
+			target: '' as never,
+			type,
+			condition: null,
+			context: {},
+		})
+	);
+	const byType = groupBy((e) => e.type, [...bonusesWithContext, ...extraBonuses]);
 
 	const finalBonuses = Object.fromEntries(
 		Object.entries(byType)

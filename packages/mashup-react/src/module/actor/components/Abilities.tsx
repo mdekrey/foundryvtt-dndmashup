@@ -1,18 +1,21 @@
 import { Fragment } from 'react';
-import { FormInput } from '@foundryvtt-dndmashup/components';
+import { FormInput, ImageButton } from '@foundryvtt-dndmashup/components';
 import { abilities, Ability } from '@foundryvtt-dndmashup/mashup-rules';
 import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AbilityScores } from '../types';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { ActorDocument } from '../documentType';
 
 const baseLens = Lens.identity<AbilityScores>();
 
 export function Abilities({
+	actor,
 	abilitiesState,
-	getFinalScore,
 }: {
+	actor: ActorDocument;
 	abilitiesState: Stateful<AbilityScores>;
-	getFinalScore(ability: Ability): number;
 }) {
+	const applicationDispatcher = useApplicationDispatcher();
 	return (
 		<>
 			<div className="grid grid-cols-3 gap-1 items-center justify-items-center w-32">
@@ -24,10 +27,47 @@ export function Abilities({
 							className="w-8 text-lg text-center"
 						/>
 						<FormInput.Label className="uppercase font-bold link">{ability}</FormInput.Label>
-						<span title="{{a}}">{ensureSign(getFinalScore(ability))}</span>
+						<div className="group relative self-stretch justify-self-stretch flex items-center justify-center">
+							<span className="group-hover:invisible" title="{{a}}">
+								{ensureSign(actor.derivedData.abilities[ability].total)}
+							</span>
+
+							<div className="absolute inset-0 text-center invisible group-hover:visible">
+								<ImageButton src="/icons/svg/d20-black.svg" onClick={() => onRoll(ability)} />
+							</div>
+						</div>
 					</Fragment>
 				))}
 			</div>
 		</>
 	);
+	function onRoll(ability: Ability) {
+		// TODO: better flavor
+		applicationDispatcher.launchApplication('diceRoll', {
+			actor,
+			allowToolSelection: false,
+			baseDice: `d20`,
+			rollType: 'check',
+			sendToChat: true,
+			source: actor,
+			title: `${ability.toUpperCase()} Check`,
+			flavor: `uses ${ability.toUpperCase()}`,
+			extraBonuses: [
+				{
+					amount: actor.derivedData.abilities[ability].total,
+					condition: null,
+					context: { actor },
+					target: 'check',
+					type: 'ability',
+				},
+				{
+					condition: { rule: 'manual', parameter: { conditionText: 'half-level applies' } },
+					type: 'rank',
+					target: 'check',
+					amount: actor.derivedData.halfLevel,
+					context: { actor },
+				},
+			],
+		});
+	}
 }

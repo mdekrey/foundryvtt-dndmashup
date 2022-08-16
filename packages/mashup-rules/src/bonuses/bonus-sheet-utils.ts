@@ -24,6 +24,7 @@ export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string
 	'critical-damage': { label: 'Critical Damage' },
 	healing: { label: 'Healing' },
 	'saving-throw': { label: 'Saving Throws' },
+	check: { label: 'Skill or Ability Check' },
 
 	...toObject(
 		damageTypes,

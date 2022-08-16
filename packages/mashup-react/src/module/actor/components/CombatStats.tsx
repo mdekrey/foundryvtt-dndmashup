@@ -59,6 +59,7 @@ function SavingThrowSection({ actor }: { actor: ActorDocument }) {
 			source: actor,
 			sendToChat: true,
 			title: 'Saving Throw',
+			flavor: '... makes a saving throw',
 		});
 	}
 }

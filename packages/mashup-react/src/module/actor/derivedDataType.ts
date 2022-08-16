@@ -21,6 +21,7 @@ export type CommonDerivedDataProperties = {
 	speed: number;
 	initiative: number;
 	size: Size;
+	halfLevel: number;
 };
 
 export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {

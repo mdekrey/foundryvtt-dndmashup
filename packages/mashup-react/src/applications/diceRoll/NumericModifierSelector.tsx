@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { EquipmentDocument } from '../../module/item';
-import { lensFromState, Lens } from '@foundryvtt-dndmashup/core';
+import { lensFromState, Lens, ensureSign } from '@foundryvtt-dndmashup/core';
 import {
 	BonusByType,
 	NumericBonusTarget,
@@ -19,6 +19,7 @@ export function NumericModifierSelector({
 	tool,
 	rollTarget,
 	runtimeBonusParameters,
+	extraBonuses,
 	evaluateBonuses,
 	onBonusesChange,
 }: {
@@ -26,6 +27,7 @@ export function NumericModifierSelector({
 	rollTarget: NumericBonusTarget;
 	actor: ActorDocument;
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
+	extraBonuses?: FeatureBonusWithContext[];
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onBonusesChange(bonusFormula: RollComponent, bonusByType: BonusByType): void;
 }) {
@@ -47,9 +49,27 @@ export function NumericModifierSelector({
 		return { indeterminate, applied };
 	}, [tool]);
 
+	const extraBonusLists = useMemo(() => {
+		if (!extraBonuses) return { indeterminate: [], applied: [] };
+		const filtered = filterConditions(
+			extraBonuses
+				.filter((b) => b.target === rollTarget)
+				.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor } })),
+			runtimeBonusParameters,
+			true
+		);
+		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
+		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
+		return { indeterminate, applied };
+	}, [extraBonuses]);
+
 	const indeterminateBonuses = useMemo(
-		() => [...actor.indeterminateBonuses.filter((b) => b.target === rollTarget), ...toolBonuses.indeterminate],
-		[actor.indeterminateBonuses, toolBonuses.indeterminate]
+		() => [
+			...actor.indeterminateBonuses.filter((b) => b.target === rollTarget),
+			...toolBonuses.indeterminate,
+			...extraBonusLists.indeterminate,
+		],
+		[actor.indeterminateBonuses, toolBonuses.indeterminate, extraBonusLists.indeterminate]
 	);
 
 	const { bonusFormula, bonusByType } = useMemo(() => {
@@ -57,10 +77,10 @@ export function NumericModifierSelector({
 		const selectedBonuses: FeatureBonusWithContext[] = [
 			...actor.appliedBonuses.filter((b) => b.target === rollTarget),
 			...toolBonuses.applied,
+			...extraBonusLists.applied,
 			...selectedIndeterminateBonuses,
 		];
 		if (additionalModifiersState.value.trim()) {
-			console.log('include', additionalModifiersState.value);
 			selectedBonuses.push({
 				target: rollTarget,
 				amount: additionalModifiersState.value.trim(),
@@ -69,7 +89,6 @@ export function NumericModifierSelector({
 			});
 		}
 		const bonusByType = evaluateBonuses(selectedBonuses);
-		console.log({ bonusByType, selectedBonuses });
 		return {
 			bonusFormula: fromBonusesToFormula(bonusByType),
 			bonusByType,
@@ -79,6 +98,7 @@ export function NumericModifierSelector({
 		indeterminateBonuses,
 		actor.appliedBonuses,
 		toolBonuses.applied,
+		extraBonusLists.applied,
 		additionalModifiersState.value,
 	]);
 
@@ -95,7 +115,8 @@ export function NumericModifierSelector({
 						className="self-center"
 					/>
 					<span>
-						{b.amount} {b.amount < 0 ? 'penalty' : `${b.type ? `${b.type} ` : ''}bonus`.trim()} if{' '}
+						{typeof b.amount === 'number' ? ensureSign(b.amount) : b.amount}{' '}
+						{b.amount < 0 ? 'penalty' : `${b.type ? `${b.type} ` : ''}bonus`.trim()} if{' '}
 						{b.condition ? getRuleText(b.condition) : '...?'}
 					</span>
 				</FormInput.Inline>

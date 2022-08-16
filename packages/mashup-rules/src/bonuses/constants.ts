@@ -15,6 +15,7 @@ export const numericBonusTargets = [
 	`critical-damage` as const,
 	`saving-throw` as const,
 	`healing` as const,
+	`check` as const,
 ];
 
 export type AbilityBonus = `ability-${Ability}`;
