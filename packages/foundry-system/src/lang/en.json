@@ -8,5 +8,6 @@
 	"ITEM.TypeFeature": "Feature",
 	"ITEM.TypeParagonpath": "Paragon Path",
 	"ITEM.TypePower": "Power",
-	"ITEM.TypeRace": "Race"
+	"ITEM.TypeRace": "Race",
+	"ITEM.TypeSkill": "Skill"
 }

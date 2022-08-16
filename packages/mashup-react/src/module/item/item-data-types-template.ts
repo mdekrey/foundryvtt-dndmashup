@@ -9,6 +9,7 @@ import { ItemSlot } from './subtypes/equipment/item-slots';
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { BaseItemTemplateDataSourceData } from './templates/bases';
+import { SkillData, SkillDocument } from './subtypes/skill';
 
 export interface ItemDataByType {
 	class: ClassData;
@@ -18,6 +19,7 @@ export interface ItemDataByType {
 	paragonPath: ParagonPathData;
 	epicDestiny: EpicDestinyData;
 	power: PowerData;
+	skill: SkillData;
 }
 
 export interface ItemDocumentByType {
@@ -28,6 +30,7 @@ export interface ItemDocumentByType {
 	paragonPath: ParagonPathDocument;
 	epicDestiny: EpicDestinyDocument;
 	power: PowerDocument;
+	skill: SkillDocument;
 }
 
 export type PossibleItemType = keyof ItemDataByType;

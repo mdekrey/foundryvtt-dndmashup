@@ -1,6 +1,6 @@
 import { MashupItemBase } from './mashup-item';
 import { PossibleItemData, PossibleItemType } from './types';
-import { ClassSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { ClassSheet, SkillSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { RaceSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { FeatureSheet } from '@foundryvtt-dndmashup/mashup-react';
@@ -20,6 +20,7 @@ const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] 
 	epicDestiny: EpicDestinySheet,
 	paragonPath: ParagonPathSheet,
 	power: PowerSheet,
+	skill: SkillSheet,
 };
 
 function ItemSheetJsx({ sheet }: { sheet: MashupItemSheet }) {

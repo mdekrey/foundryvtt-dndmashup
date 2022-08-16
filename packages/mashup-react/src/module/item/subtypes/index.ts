@@ -5,3 +5,4 @@ export * from './feature';
 export * from './paragonPath';
 export * from './power';
 export * from './race';
+export * from './skill';

@@ -62,8 +62,15 @@ export type PcDetails = ActorDetails & {
 	adventuringCompany: string;
 };
 
+export type SkillEntry = {
+	name: string;
+	img: string;
+	ranks: number;
+};
+
 export type PcActorTemplateDataSourceData = {
 	details: PcDetails;
+	skills?: SkillEntry[];
 };
 
 export type MonsterActorTemplateDataSourceData = {

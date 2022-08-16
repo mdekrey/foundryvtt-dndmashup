@@ -6,6 +6,7 @@ import { MashupItemFeature } from './feature/class';
 import { MashupParagonPath } from './paragonPath/class';
 import { MashupEpicDestiny } from './epicDestiny/class';
 import { MashupPower } from './power/class';
+import { MashupSkill } from './skill/class';
 
 export const itemMappings = {
 	class: MashupItemClass,
@@ -15,6 +16,7 @@ export const itemMappings = {
 	paragonPath: MashupParagonPath,
 	epicDestiny: MashupEpicDestiny,
 	power: MashupPower,
+	skill: MashupSkill,
 };
 
 // If there is an error on the following line, not all types are mapped above

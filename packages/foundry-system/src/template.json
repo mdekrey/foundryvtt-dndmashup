@@ -98,7 +98,7 @@
 		}
 	},
 	"Item": {
-		"types": ["class", "race", "equipment", "feature", "paragonPath", "epicDestiny", "power"],
+		"types": ["power", "equipment", "feature", "skill", "class", "race", "paragonPath", "epicDestiny"],
 		"templates": {
 			"base": {
 				"grantedBonuses": [],
@@ -158,6 +158,9 @@
 			"special": "",
 			"displayOverride": "",
 			"isBasic": false
+		},
+		"skill": {
+			"templates": ["base", "itemDescription"]
 		}
 	}
 }

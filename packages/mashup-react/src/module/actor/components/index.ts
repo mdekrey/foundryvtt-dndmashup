@@ -10,6 +10,8 @@ import { HealingSurges } from './HealingSurges';
 import { HitPoints } from './HitPoints';
 import { Inventory } from './Inventory';
 import { Powers } from './Powers';
+import { CombatStats } from './CombatStats';
+import { Skills } from './Skills';
 
 export const ActorComponents = {
 	Abilities,
@@ -24,4 +26,6 @@ export const ActorComponents = {
 	HitPoints,
 	Inventory,
 	Powers,
+	CombatStats,
+	Skills,
 };

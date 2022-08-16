@@ -1,8 +1,8 @@
-import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { FormInput, ImageButton, Tabs } from '@foundryvtt-dndmashup/components';
-import { documentAsState, SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { Tabs } from '@foundryvtt-dndmashup/components';
+import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { Ability } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorComponents, ActorDataSource, ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorComponents, ActorDataSource, PlayerCharacterDataSourceData } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
 import { PossibleItemData } from '../../item/types';
@@ -13,10 +13,11 @@ const abilitiesLens = dataLens.toField('abilities');
 const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
 const detailsLens = dataLens.toField('details').toField('biography');
-const deathSavingThrowLens = dataLens.toField('health').toField('deathSavesRemaining');
+const skillsLens = dataLens.toField('skills').default([]);
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
+	const dataState: Stateful<PlayerCharacterDataSourceData> = dataLens.apply(documentState);
 
 	// TODO: derived data doesn't need to go to actor.data
 	const data = actor.derivedData;
@@ -72,28 +73,16 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 							abilitiesState={abilitiesLens.apply(documentState)}
 							getFinalScore={getFinalScore}
 						/>
+						<ActorComponents.Skills skillsState={skillsLens.apply(documentState)} />
 					</div>
 					<div className="border-r-2 border-black"></div>
 					<div className="flex-grow flex flex-col">
-						<div className="flex text-lg justify-around items-center">
-							<div className="group">
-								<span className="font-bold">{ensureSign(data.initiative)}</span> Initiative
-								<ImageButton
-									className="ml-1 invisible group-hover:visible"
-									src="/icons/svg/d20-black.svg"
-									onClick={onRollInitiative}
-								/>
-							</div>
-							<div>
-								<span className="font-bold">{data.speed} sq.</span> Speed
-							</div>
-							<div>
-								<SavingThrowSection actor={actor} />
-							</div>
-							<div className="flex flex-row group items-center">
-								<DeathSavingThrowSection actor={actor} {...deathSavingThrowLens.apply(documentState)} />
-							</div>
-						</div>
+						<ActorComponents.CombatStats
+							actor={actor}
+							data={data}
+							onRollInitiative={onRollInitiative}
+							dataState={dataState}
+						/>
 						<div className="border-b-2 border-black"></div>
 						<Tabs defaultActiveTab="details">
 							<Tabs.Nav>
@@ -134,65 +123,4 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 			</article>
 		</>
 	);
-}
-
-function SavingThrowSection({ actor }: { actor: ActorDocument }) {
-	const applicationContext = useApplicationDispatcher();
-	return (
-		<>
-			Saving Throw
-			<ImageButton className="ml-1" src="/icons/svg/d20-black.svg" onClick={onSavingThrow} />
-		</>
-	);
-
-	function onSavingThrow() {
-		applicationContext.launchApplication('diceRoll', {
-			actor,
-			baseDice: 'd20',
-			rollType: 'saving-throw',
-			allowToolSelection: false,
-			source: actor,
-			sendToChat: true,
-			title: 'Saving Throw',
-		});
-	}
-}
-
-function DeathSavingThrowSection({ actor, ...deathSavingThrowState }: { actor: ActorDocument } & Stateful<number>) {
-	const applicationContext = useApplicationDispatcher();
-	return (
-		<>
-			<FormInput className="w-20 inline-block">
-				<FormInput.NumberField {...deathSavingThrowState} className="text-center" />
-				<FormInput.Label>Death Saves</FormInput.Label>
-			</FormInput>
-
-			<ImageButton
-				className="ml-1 invisible group-hover:visible"
-				src="/icons/svg/d20-black.svg"
-				onClick={onSavingThrow}
-			/>
-		</>
-	);
-
-	async function onSavingThrow() {
-		try {
-			const { result } = await applicationContext.launchApplication('diceRoll', {
-				actor,
-				baseDice: 'd20',
-				rollType: 'saving-throw',
-				allowToolSelection: false,
-				source: actor,
-				sendToChat: true,
-				title: 'Death Saving Throw',
-				flavor: 'Death Saving Throw',
-			});
-			const rollResult = await result;
-			if (rollResult < 10) {
-				deathSavingThrowState.onChangeValue((prev) => prev - 1);
-			}
-		} catch (ex) {
-			// no need to do anything with a cancellation
-		}
-	}
 }
