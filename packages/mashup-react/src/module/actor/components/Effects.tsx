@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import {
 	Bonuses,
 	numericBonusTargetNames,
@@ -47,8 +47,8 @@ export function Effects({
 									{ 'opacity-75': bonus.disabled }
 								)}>
 								<td className="px-1">
-									{bonus.amount} {bonus.type} bonus to {numericBonusTargetNames[bonus.target].label} {conditionText}
-									{/* TODO - better editor that includes condition parameters */}
+									{ensureSign(bonus.amount)} {bonus.type} bonus to {numericBonusTargetNames[bonus.target].label}{' '}
+									{conditionText ? `when ${conditionText}` : null}
 								</td>
 								<td>
 									{bonus.context.item ? (
