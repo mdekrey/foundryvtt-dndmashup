@@ -1,5 +1,5 @@
 import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
-import { EquipmentData, EquipmentDocument, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
+import { EquipmentData, EquipmentDocument, itemSlots, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
 import { ItemSlot } from '@foundryvtt-dndmashup/mashup-react';
@@ -13,7 +13,10 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonus[] {
 		if ((this.data.data.itemSlot === 'weapon' || this.data.data.itemSlot === 'implement') && !isForPowerUse) return [];
 		if (!this.data.data.equipped?.length && this.data.data.itemSlot) return [];
-		return [...this.data.data.grantedBonuses];
+		return [
+			...itemSlots[this.data.data.itemSlot].bonuses(this.data.data.equipmentProperties as never),
+			...this.data.data.grantedBonuses,
+		];
 	}
 	override allDynamicList(isForPowerUse?: boolean): DynamicListEntry[] {
 		if ((this.data.data.itemSlot === 'weapon' || this.data.data.itemSlot === 'implement') && !isForPowerUse) return [];

@@ -6,7 +6,7 @@ import { ArmorDetails } from './details';
 export const ArmorInfo: ItemSlotInfo<'armor'> = {
 	display: 'Armor',
 	optionLabel: 'Armor',
-	bonuses: () => [],
+	bonuses: ({ armorBonus }) => [{ type: 'armor', target: 'defense-ac', amount: armorBonus, condition: null }],
 	equippedSlots: ['body'],
 	slotsNeeded: () => 1,
 	defaultEquipmentInfo,

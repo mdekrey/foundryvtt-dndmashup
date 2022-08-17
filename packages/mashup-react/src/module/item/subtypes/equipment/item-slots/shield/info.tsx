@@ -7,7 +7,10 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 	optionLabel: 'Shield',
 	equippedSlots: ['off-hand'],
 	slotsNeeded: () => 1,
-	bonuses: () => [],
+	bonuses: ({ shieldBonus }) => [
+		{ amount: shieldBonus, condition: null, target: 'defense-ac', type: 'shield' },
+		{ amount: shieldBonus, condition: null, target: 'defense-refl', type: 'shield' },
+	],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
 		<>{`${input.type}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`}</>
