@@ -6,7 +6,6 @@ import { FeaturesList } from '../../components/FeaturesList';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ClassData } from './dataSourceData';
-import { isEquipment } from '../equipment/isEquipment';
 
 const keyAbilitiesIndex = [0, 1, 2];
 const roles = ['Striker', 'Defender', 'Leader', 'Controller'].map(
