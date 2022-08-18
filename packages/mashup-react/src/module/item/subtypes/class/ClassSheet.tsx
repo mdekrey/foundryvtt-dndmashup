@@ -87,7 +87,7 @@ export function ClassSheet({
 			<Tabs defaultActiveTab="bonuses">
 				<Tabs.Nav>
 					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
-					{items.filter(isEquipment).length ? <Tabs.NavButton tabName="features">Features</Tabs.NavButton> : null}
+					<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
 				</Tabs.Nav>
 
 				<section className="flex-grow">
