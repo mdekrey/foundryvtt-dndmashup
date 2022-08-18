@@ -1,5 +1,5 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/core';
@@ -40,7 +40,7 @@ export function ParagonPathSheet({ item }: { item: ParagonPathDocument }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">

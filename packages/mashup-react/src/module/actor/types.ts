@@ -1,5 +1,5 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability, Currency, DynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
+import { Ability, Currency, DynamicListEntry, PoolState } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type AbilityScores = {
@@ -37,10 +37,6 @@ export type BaseActorTemplateDataSourceData = {
 		currentRemaining: number;
 		usedThisEncounter: boolean;
 	};
-	languages: {
-		spoken: { value: string[] };
-		script: { value: string[] };
-	};
 	senses: {
 		vision: { value: string[] };
 		special: { value: string[] };
@@ -49,6 +45,7 @@ export type BaseActorTemplateDataSourceData = {
 	currency: {
 		[currency in Currency]: number;
 	};
+	pools: PoolState[];
 };
 
 export type PcDetails = ActorDetails & {

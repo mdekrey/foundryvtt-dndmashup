@@ -43,7 +43,7 @@ const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.combine(ruleLens)
 	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '' || (r as any) === '');
 
-export function Bonuses({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
+export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({

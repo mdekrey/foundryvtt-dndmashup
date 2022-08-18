@@ -16,6 +16,7 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 				condition: null,
 			},
 			...this.data.data.grantedBonuses,
+			...this.items.contents.flatMap((item) => item.allGrantedBonuses()),
 		];
 	}
 	override allDynamicList(): DynamicListEntry[] {

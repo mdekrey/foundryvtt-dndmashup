@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormInput, TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { Description } from '../../components/Description';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { SkillData, SkillDocument } from './dataSourceData';
@@ -33,7 +33,7 @@ export function SkillSheet({ item }: { item: SkillDocument }) {
 				<Description {...dataLens.toField('description').apply(documentState)} isEditor={item.isOwner} />
 			</TabbedSheet.Tab>
 			<TabbedSheet.Tab name="bonuses" label="Bonuses">
-				<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 			</TabbedSheet.Tab>
 		</TabbedSheet>

@@ -1,11 +1,11 @@
-import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
-import { Tabs } from '@foundryvtt-dndmashup/components';
+import { BonusesEditor, DynamicList, PoolsEditor } from '@foundryvtt-dndmashup/mashup-rules';
+import { FormInput, SelectItem, TabbedSheet } from '@foundryvtt-dndmashup/components';
+import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { FeatureDocument, FeatureData } from './dataSourceData';
-import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { useState } from 'react';
 
 const options = Object.entries(featureTypes).map(
 	([key, { label: label }]): SelectItem<FeatureType> => ({
@@ -21,19 +21,19 @@ const imageLens = baseLens.toField('img');
 const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
+const grantedPoolsLens = dataLens.toField('grantedPools').default([]);
 
 export function FeatureSheet({ item }: { item: FeatureDocument }) {
+	const [activeTab, setActiveTab] = useState('bonuses');
 	const documentState = documentAsState(item);
 	return (
-		<div className="h-full flex flex-col gap-1">
-			<div className="flex flex-row gap-1">
-				<FormInput.ImageEditor
-					{...imageLens.apply(documentState)}
-					title={item.name}
-					className="w-24 h-24 border-2 border-black p-px"
-				/>
-				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow text-lg">
-					<FormInput className="col-span-9">
+		<TabbedSheet
+			img={imageLens.apply(documentState)}
+			name={item.name}
+			tabState={{ activeTab, setActiveTab }}
+			headerSection={
+				<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
+					<FormInput className="col-span-9 text-lg">
 						<FormInput.TextField {...baseLens.toField('name').apply(documentState)} />
 						<FormInput.Label>Feature Name</FormInput.Label>
 					</FormInput>
@@ -51,26 +51,19 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 						<FormInput.Label>Summary</FormInput.Label>
 					</FormInput>
 				</div>
-			</div>
-			<div className="border-b border-black"></div>
-			<Tabs defaultActiveTab="bonuses">
-				<Tabs.Nav>
-					<Tabs.NavButton tabName="bonuses">Bonuses</Tabs.NavButton>
-					{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
-						<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
-					) : null}
-				</Tabs.Nav>
-
-				<section className="flex-grow">
-					<Tabs.Tab tabName="bonuses">
-						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
-						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
-					</Tabs.Tab>
-					<Tabs.Tab tabName="features">
-						<FeaturesList items={item.items.contents} />
-					</Tabs.Tab>
-				</section>
-			</Tabs>
-		</div>
+			}>
+			<TabbedSheet.Tab name="bonuses" label="Bonuses">
+				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
+			</TabbedSheet.Tab>
+			<TabbedSheet.Tab name="pools" label="Pools">
+				<PoolsEditor pools={grantedPoolsLens.apply(documentState)} className="flex-grow" />
+			</TabbedSheet.Tab>
+			{item.items.contents.filter((item) => item.type !== 'equipment').length ? (
+				<TabbedSheet.Tab name="features" label="Features">
+					<FeaturesList items={item.items.contents} />
+				</TabbedSheet.Tab>
+			) : null}
+		</TabbedSheet>
 	);
 }

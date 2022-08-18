@@ -1,6 +1,6 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { abilities, Ability, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
-import { Bonuses } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor } from '@foundryvtt-dndmashup/mashup-rules';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
@@ -92,7 +92,7 @@ export function ClassSheet({
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">

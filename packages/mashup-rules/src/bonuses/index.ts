@@ -1,4 +1,4 @@
-export * from './bonuses';
+export * from './bonuses-editor';
 export * from './constants';
 export * from './types';
 export * from './calculate';

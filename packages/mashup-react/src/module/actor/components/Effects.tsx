@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import {
-	Bonuses,
+	BonusesEditor,
 	numericBonusTargetNames,
 	FeatureBonusWithContext,
 	getRuleText,
@@ -26,7 +26,7 @@ export function Effects({
 }) {
 	return (
 		<>
-			<Bonuses bonuses={bonusesLens.apply(documentState)} />
+			<BonusesEditor bonuses={bonusesLens.apply(documentState)} />
 			<table>
 				<thead className="bg-theme text-white">
 					<tr>

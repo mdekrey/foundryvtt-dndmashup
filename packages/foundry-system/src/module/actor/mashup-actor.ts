@@ -370,6 +370,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			initiative: 0,
 			halfLevel: Math.floor(this.data.data.details.level / 2),
 			size: this.appliedRace?.data.data.size ?? 'medium',
+			pools: [],
 		};
 		this._derivedData = resultData;
 		const groupedByTarget = byTarget(allBonuses);

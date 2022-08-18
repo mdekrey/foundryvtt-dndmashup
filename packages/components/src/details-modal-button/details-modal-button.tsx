@@ -1,11 +1,18 @@
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
-import { useState, useRef } from 'react';
+import { useState, useRef, createContext, useContext, useMemo } from 'react';
 import { Modal } from '../modal';
+import { noop } from 'lodash/fp';
 
 type ModalContentsProps = {
 	onClose: () => void;
 };
+
+type DetailsModalContext = {
+	ignoreFocusChange(ignore: boolean): void;
+	depth: number;
+};
+const detailsModalContext = createContext<DetailsModalContext>({ ignoreFocusChange: noop, depth: 0 });
 
 export function DetailsModalButton({
 	className,
@@ -20,14 +27,24 @@ export function DetailsModalButton({
 	buttonContents: React.ReactNode;
 	modalContents: React.ReactNode | ((p: ModalContentsProps) => React.ReactNode);
 }) {
+	const ignoreFocusRef = useRef<boolean>(false);
+	const { ignoreFocusChange, depth } = useContext(detailsModalContext);
 	const divRef = useRef<HTMLDivElement>();
 	const buttonRef = useRef<HTMLButtonElement>(null);
-	const [isOpen, setOpen] = useState(false);
+	const [isOpen, innerSetOpen] = useState(false);
 
-	const onClose = () => {
-		setOpen(false);
-		buttonRef.current?.focus();
-	};
+	const detailsModalContextValue = useMemo<DetailsModalContext>(
+		() => ({
+			ignoreFocusChange(ignore) {
+				if (!ignore && ignoreFocusRef.current) focusSelf();
+				setTimeout(() => {
+					ignoreFocusRef.current = ignore;
+				}, 100);
+			},
+			depth: depth + 1,
+		}),
+		[]
+	);
 
 	return (
 		<>
@@ -46,25 +63,48 @@ export function DetailsModalButton({
 				{buttonContents}
 			</button>
 			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title={modalTitle}>
-				<div
-					onBlur={(ev) => {
-						if (!divRef.current?.contains(document.activeElement)) onClose();
-					}}
-					ref={(container) => {
-						divRef.current = container ?? undefined;
-						setTimeout(() => {
-							if (container) {
-								container
-									.querySelector<Element & HTMLOrSVGElement>(
-										'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-									)
-									?.focus();
-							}
-						}, 100);
-					}}>
-					{typeof modalContents === 'function' ? modalContents({ onClose }) : modalContents}
-				</div>
+				<detailsModalContext.Provider value={detailsModalContextValue}>
+					<div
+						onBlur={onBlur}
+						ref={(container) => {
+							divRef.current = container ?? undefined;
+							setTimeout(() => {
+								focusSelf();
+							}, 100);
+						}}>
+						{typeof modalContents === 'function' ? modalContents({ onClose: () => setOpen(false) }) : modalContents}
+					</div>
+				</detailsModalContext.Provider>
 			</Modal>
 		</>
 	);
+
+	function onBlur() {
+		setTimeout(() => {
+			if (ignoreFocusRef.current) return;
+			console.log('onBlur', divRef.current, document.activeElement, depth);
+			if (!divRef.current?.contains(document.activeElement)) {
+				setOpen(false);
+			}
+		});
+	}
+
+	function focusSelf() {
+		if (divRef.current) {
+			divRef.current
+				.querySelector<Element & HTMLOrSVGElement>(
+					'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+				)
+				?.focus();
+		}
+	}
+
+	function setOpen(isOpen: boolean) {
+		console.log('setOpen', isOpen, depth);
+		ignoreFocusChange(isOpen);
+		innerSetOpen(isOpen);
+		if (!isOpen) {
+			buttonRef.current?.focus();
+		}
+	}
 }

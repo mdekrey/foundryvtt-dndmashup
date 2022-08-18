@@ -1,5 +1,5 @@
 import { FormInput, Tabs } from '@foundryvtt-dndmashup/components';
-import { Bonuses, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeaturesList } from '../../components/FeaturesList';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
@@ -42,7 +42,7 @@ export function EpicDestinySheet({ item }: { item: EpicDestinyDocument }) {
 
 				<section className="flex-grow">
 					<Tabs.Tab tabName="bonuses">
-						<Bonuses bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+						<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 						<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 					</Tabs.Tab>
 					<Tabs.Tab tabName="features">
