@@ -13,7 +13,7 @@ const baseLens = Lens.identity<SkillEntry[]>().to(
 
 export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsState: Stateful<SkillEntry[]> }) {
 	const applicationDispatcher = useApplicationDispatcher();
-	return (
+	return skillsState.value.length > 0 ? (
 		<div className="grid grid-cols-3 gap-1 mt-2 items-center justify-items-center w-32">
 			<h2 className="text-lg col-span-3">Skills</h2>
 			{skillsState.value.map((skill, index) => (
@@ -29,7 +29,7 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 				</Fragment>
 			))}
 		</div>
-	);
+	) : null;
 
 	function onRoll(skill: SkillEntry) {
 		// TODO: better flavor

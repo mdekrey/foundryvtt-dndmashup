@@ -13,6 +13,7 @@ const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
 const detailsLens = dataLens.toField('details').toField('biography');
 const skillsLens = dataLens.toField('skills').default([]);
+const poolsLens = dataLens.toField('pools').default([]);
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
@@ -23,6 +24,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 	const maxHp = data.health.hp.max;
 	const healingSurgeValue = data.health.surgesValue;
 	const healingSurgesPerDay = data.health.surgesRemaining.max;
+	const pools = data.pools;
 
 	return (
 		<>
@@ -40,28 +42,20 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 				</header>
 
 				<div className="flex gap-1 flex-row border-t-2 border-b-2 border-black m-1 p-1 justify-around">
-					<section className="flex flex-col items-center">
-						<ActorComponents.HitPoints healthState={healthLens.apply(documentState)} maxHp={maxHp} />
-					</section>
+					<ActorComponents.HitPoints healthState={healthLens.apply(documentState)} maxHp={maxHp} />
 					<div className="border-r-2 border-black"></div>
 
-					<section className="flex flex-col items-center">
-						<ActorComponents.Defenses defenses={defenses} />
-					</section>
+					<ActorComponents.Defenses defenses={defenses} />
 					<div className="border-r-2 border-black"></div>
 
-					<section className="flex flex-col items-center">
-						<ActorComponents.HealingSurges
-							healingSurgeValue={healingSurgeValue}
-							healingSurgesPerDay={healingSurgesPerDay}
-							healthState={healthLens.apply(documentState)}
-						/>
-					</section>
+					<ActorComponents.HealingSurges
+						healingSurgeValue={healingSurgeValue}
+						healingSurgesPerDay={healingSurgesPerDay}
+						healthState={healthLens.apply(documentState)}
+					/>
 					<div className="border-r-2 border-black"></div>
 
-					<section className="flex flex-col items-center">
-						<ActorComponents.ActionPoints actionPointsState={actionPointsLens.apply(documentState)} />
-					</section>
+					<ActorComponents.ActionPoints actionPointsState={actionPointsLens.apply(documentState)} />
 				</div>
 
 				<div className="flex-grow flex flex-row gap-1">
@@ -86,6 +80,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
 								<Tabs.NavButton tabName="feats">Feats</Tabs.NavButton>
 								<Tabs.NavButton tabName="effects">Effects</Tabs.NavButton>
+								<Tabs.NavButton tabName="pools">Resources</Tabs.NavButton>
 							</Tabs.Nav>
 							<section className="flex-grow">
 								<Tabs.Tab tabName="details">
@@ -109,6 +104,9 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 										bonusList={actor.specialBonuses}
 										dynamicList={actor.dynamicListResult}
 									/>
+								</Tabs.Tab>
+								<Tabs.Tab tabName="pools">
+									<ActorComponents.Pools poolLimits={pools} poolsState={poolsLens.apply(documentState)} />
 								</Tabs.Tab>
 							</section>
 						</Tabs>

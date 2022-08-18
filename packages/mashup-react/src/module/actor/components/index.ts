@@ -12,6 +12,7 @@ import { Inventory } from './Inventory';
 import { Powers } from './Powers';
 import { CombatStats } from './CombatStats';
 import { Skills } from './Skills';
+import { Pools } from './Pools';
 
 export const ActorComponents = {
 	Abilities,
@@ -28,4 +29,5 @@ export const ActorComponents = {
 	Powers,
 	CombatStats,
 	Skills,
+	Pools,
 };
