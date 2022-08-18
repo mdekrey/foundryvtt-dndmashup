@@ -17,13 +17,16 @@ export type PoolState = {
 	usedSinceRest: number;
 };
 
+export const poolBonusTargets = ['max', 'longRest', 'shortRest', 'perRest'] as const;
+export type PoolBonusTarget = typeof poolBonusTargets[number];
+
 export type PoolBonus = {
 	name: string;
-	target: 'max' | 'longRest' | 'shortRest' | 'perRest';
+	target: PoolBonusTarget;
 	amount: number | string;
 };
 
 export type ResolvedPoolBonus = {
-	target: 'max' | 'longRest' | 'shortRest' | 'perRest';
+	target: PoolBonusTarget;
 	amount: number;
 };

@@ -1,4 +1,4 @@
-import { BonusesEditor, DynamicList, PoolsEditor } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor, DynamicList, PoolBonusEditor, PoolsEditor } from '@foundryvtt-dndmashup/mashup-rules';
 import { FormInput, SelectItem, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeaturesList } from '../../components/FeaturesList';
@@ -22,6 +22,7 @@ const dataLens = baseLens.toField('data');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 const grantedPoolsLens = dataLens.toField('grantedPools').default([]);
+const grantedPoolBonusesLens = dataLens.toField('grantedPoolBonuses').default([]);
 
 export function FeatureSheet({ item }: { item: FeatureDocument }) {
 	const [activeTab, setActiveTab] = useState('bonuses');
@@ -56,7 +57,8 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 			</TabbedSheet.Tab>
-			<TabbedSheet.Tab name="pools" label="Pools">
+			<TabbedSheet.Tab name="pools" label="Resources">
+				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />
 				<PoolsEditor pools={grantedPoolsLens.apply(documentState)} className="flex-grow" />
 			</TabbedSheet.Tab>
 			{item.items.contents.filter((item) => item.type !== 'equipment').length ? (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormInput, TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { BonusesEditor, DynamicList } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusesEditor, DynamicList, PoolBonusEditor } from '@foundryvtt-dndmashup/mashup-rules';
 import { Description } from '../../components/Description';
 import { getItemSlotInfo, ItemSlot, itemSlots, ItemSlotTemplate } from './item-slots';
 import { getEquipmentProperties } from './getEquipmentProperties';
@@ -36,6 +36,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 		.toField('equipmentProperties')
 		.default(defaultEquipmentInfo as never)
 		.apply(documentState) as never;
+	const grantedPoolBonusesLens = dataLens.toField('grantedPoolBonuses').default([]);
 
 	function onChangeItemSlot(itemSlot: React.SetStateAction<ItemSlot>) {
 		documentState.onChangeValue((draft) => {
@@ -89,6 +90,9 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 			<TabbedSheet.Tab name="bonuses" label="Bonuses">
 				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
+			</TabbedSheet.Tab>
+			<TabbedSheet.Tab name="pools" label="Resources">
+				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />
 			</TabbedSheet.Tab>
 			{item.data.data.container ? (
 				<TabbedSheet.Tab name="contents" label="Contents">
