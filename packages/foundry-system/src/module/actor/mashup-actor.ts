@@ -20,6 +20,8 @@ import {
 	ruleResultIndeterminate,
 	ConditionRule,
 	DynamicListEntryWithContext,
+	combinePoolLimits,
+	ResolvedPoolBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { isClass } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
@@ -400,6 +402,27 @@ export class MashupActor extends Actor implements ActorDocument {
 		this._indeterminateDynamicList = filteredLists
 			.filter(([, result]) => result === ruleResultIndeterminate)
 			.map(([bonus]) => bonus);
+
+		const pools = this.items.contents.flatMap((item) => item.allGrantedPools());
+		console.log(pools);
+		this.items.contents
+			.flatMap((item) => item.allGrantedPoolBonuses())
+			.reduce((prev, next) => {
+				const idx = prev.findIndex((pool) => pool.name === next.name);
+				if (idx === -1) console.warn(`Unknown pool: ${next.name}`);
+				else {
+					const resolved: ResolvedPoolBonus = {
+						...next,
+						amount:
+							typeof next.amount === 'number'
+								? next.amount
+								: new Roll(next.amount, { actor: this }).roll({ async: false })._total,
+					};
+					prev[idx] = combinePoolLimits(prev[idx], resolved);
+				}
+				return prev;
+			}, pools);
+		resultData.pools = pools;
 
 		return resultData;
 	}

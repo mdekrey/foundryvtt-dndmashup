@@ -1,4 +1,4 @@
-import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
@@ -11,6 +11,12 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 		return [];
 	}
 	override allDynamicList(): DynamicListEntry[] {
+		return [];
+	}
+	override allGrantedPools(): PoolLimits[] {
+		return [];
+	}
+	override allGrantedPoolBonuses(): PoolBonus[] {
 		return [];
 	}
 }

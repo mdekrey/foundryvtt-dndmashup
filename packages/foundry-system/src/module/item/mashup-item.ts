@@ -1,6 +1,6 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
@@ -37,6 +37,12 @@ export class MashupItemBase extends Item implements ItemDocument {
 		return [];
 	}
 	allGrantedPowers(): PowerDocument[] {
+		return [];
+	}
+	allGrantedPools(): PoolLimits[] {
+		return [];
+	}
+	allGrantedPoolBonuses(): PoolBonus[] {
 		return [];
 	}
 	override get type(): PossibleItemType {
@@ -240,5 +246,7 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 
 	abstract override allGrantedBonuses(): FeatureBonus[];
 	abstract override allDynamicList(): DynamicListEntry[];
+	abstract override allGrantedPools(): PoolLimits[];
+	abstract override allGrantedPoolBonuses(): PoolBonus[];
 	abstract override canEmbedItem(type: PossibleItemType): boolean;
 }

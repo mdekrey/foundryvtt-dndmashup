@@ -1,4 +1,4 @@
-import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { RaceDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
@@ -20,6 +20,12 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 		];
 	}
 	override allDynamicList(): DynamicListEntry[] {
-		return this.data.data.dynamicList;
+		return [...this.data.data.dynamicList, ...this.items.contents.flatMap((item) => item.allDynamicList())];
+	}
+	override allGrantedPools(): PoolLimits[] {
+		return this.items.contents.flatMap((item) => item.allGrantedPools());
+	}
+	override allGrantedPoolBonuses(): PoolBonus[] {
+		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
 	}
 }

@@ -1,4 +1,4 @@
-import { DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { SkillDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
@@ -12,5 +12,11 @@ export class MashupSkill extends MashupItem<'skill'> implements SkillDocument {
 	}
 	override allDynamicList(): DynamicListEntry[] {
 		return this.data.data.dynamicList;
+	}
+	override allGrantedPools(): PoolLimits[] {
+		return [];
+	}
+	override allGrantedPoolBonuses(): PoolBonus[] {
+		return [];
 	}
 }

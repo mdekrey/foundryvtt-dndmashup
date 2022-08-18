@@ -9,8 +9,8 @@ export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 		featureType: FeatureType;
 		summary: string;
 
-		grantedPools: PoolLimits[];
-		grantedPoolBonuses: PoolBonus[];
+		grantedPools?: PoolLimits[];
+		grantedPoolBonuses?: PoolBonus[];
 	};
 
 export type FeatureData = TypedData<'feature', FeatureDataSourceData>;
