@@ -3,7 +3,6 @@ import { ActionPoints } from './ActionPoints';
 import { Details } from './Details';
 import { Defenses } from './Defenses';
 import { Effects } from './Effects';
-import { Feats } from './Feats';
 import { Features } from './Features';
 import { Header } from './Header';
 import { HealingSurges } from './HealingSurges';
@@ -20,7 +19,6 @@ export const ActorComponents = {
 	Details,
 	Defenses,
 	Effects,
-	Feats,
 	Features,
 	Header,
 	HealingSurges,

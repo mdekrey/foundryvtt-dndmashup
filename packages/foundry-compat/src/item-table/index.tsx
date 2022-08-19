@@ -27,7 +27,7 @@ export function ItemTable<T extends SimpleDocument, ChildProps extends Record<st
 			<thead className="bg-theme text-white">
 				<tr>
 					<th className="py-1 w-10" />
-					<th className="py-1 pl-1 text-left">{title} Name</th>
+					<th className="py-1 pl-1 text-left">{title}</th>
 					{TableHeader && <TableHeader {...(passedProps as any)} />}
 					<th className="py-1 w-0" />
 				</tr>

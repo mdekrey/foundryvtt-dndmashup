@@ -14,7 +14,7 @@ const features: {
 }[] = [
 	{
 		key: 'character-details',
-		label: '',
+		label: 'Name',
 		filter: (item) =>
 			item.type === 'class' || item.type === 'race' || item.type === 'paragonPath' || item.type === 'epicDestiny',
 	},
@@ -46,6 +46,14 @@ const features: {
 		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
+		header: FeatureHeader,
+		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		addedCellCount: 1,
+	},
+	{
+		key: 'feats',
+		label: 'Feat',
+		filter: (item) => isFeature(item) && item.data.data.featureType === 'feat',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
 		addedCellCount: 1,

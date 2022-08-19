@@ -74,11 +74,10 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 						<div className="border-b-2 border-black"></div>
 						<Tabs defaultActiveTab="details">
 							<Tabs.Nav>
-								<Tabs.NavButton tabName="details">Details</Tabs.NavButton>
+								<Tabs.NavButton tabName="details">Biography</Tabs.NavButton>
 								<Tabs.NavButton tabName="inventory">Inventory</Tabs.NavButton>
 								<Tabs.NavButton tabName="powers">Powers</Tabs.NavButton>
 								<Tabs.NavButton tabName="features">Features</Tabs.NavButton>
-								<Tabs.NavButton tabName="feats">Feats</Tabs.NavButton>
 								<Tabs.NavButton tabName="effects">Effects</Tabs.NavButton>
 								<Tabs.NavButton tabName="pools">Resources</Tabs.NavButton>
 							</Tabs.Nav>
@@ -94,9 +93,6 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
 									<ActorComponents.Features items={actor.items.contents as SimpleDocument<PossibleItemData>[]} />
-								</Tabs.Tab>
-								<Tabs.Tab tabName="feats">
-									<ActorComponents.Feats items={actor.items.contents} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="effects">
 									<ActorComponents.Effects
