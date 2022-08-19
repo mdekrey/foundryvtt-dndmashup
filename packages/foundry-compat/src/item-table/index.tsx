@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useRef } from 'react';
-import { IconButton } from '@foundryvtt-dndmashup/components';
+import { IconButton, Table } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument } from '../interfaces';
 
 export function ItemTable<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
@@ -23,15 +23,13 @@ export function ItemTable<T extends SimpleDocument, ChildProps extends Record<st
 	className?: string;
 }) {
 	return (
-		<table className={classNames('w-full border-collapse', className)}>
-			<thead className="bg-theme text-white">
-				<tr>
-					<th className="py-1 w-10" />
-					<th className="py-1 pl-1 text-left">{title}</th>
-					{TableHeader && <TableHeader {...(passedProps as any)} />}
-					<th className="py-1 w-0" />
-				</tr>
-			</thead>
+		<Table className={className}>
+			<Table.HeaderRow>
+				<th className="w-10" />
+				<th className="pl-1 text-left">{title}</th>
+				{TableHeader && <TableHeader {...(passedProps as any)} />}
+				<th className="w-0" />
+			</Table.HeaderRow>
 			{items.map((item) => (
 				<ItemTableRow
 					key={item.id}
@@ -42,7 +40,7 @@ export function ItemTable<T extends SimpleDocument, ChildProps extends Record<st
 					addedCellCount={addedCellCount}
 				/>
 			))}
-		</table>
+		</Table>
 	);
 }
 
@@ -62,7 +60,7 @@ function ItemTableRow<T extends SimpleDocument, ChildProps extends Record<string
 	const detailRef = useRef<HTMLDivElement | null>(null);
 
 	return (
-		<tbody className="even:bg-gradient-to-r from-transparent to-white odd:bg-transparent">
+		<Table.Body>
 			<tr className="border-b-2 border-transparent">
 				<td className="w-10 h-10 px-1">
 					{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
@@ -97,7 +95,7 @@ function ItemTableRow<T extends SimpleDocument, ChildProps extends Record<string
 					<td></td>
 				</tr>
 			) : null}
-		</tbody>
+		</Table.Body>
 	);
 
 	function edit() {

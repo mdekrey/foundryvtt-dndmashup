@@ -9,3 +9,4 @@ export * from './tab-section';
 export * from './text-placeholder';
 export * from './tabbed-sheet';
 export * from './modal';
+export * from './table';
