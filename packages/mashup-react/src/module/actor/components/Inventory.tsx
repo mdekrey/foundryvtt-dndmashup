@@ -60,12 +60,7 @@ function InventorySlotTable<T extends ItemSlot>({
 	onEquip?: (item: EquipmentDocument<T>, equipSlot: EquippedItemSlot) => void;
 }) {
 	const itemSlotInfo = itemSlots[slot];
-	const {
-		inventoryTableHeader: TableHeader,
-		inventoryTableBody: TableBody,
-		inventoryTableAddedCellCount,
-		equippedSlots,
-	} = itemSlotInfo;
+	const { inventoryTableHeader: TableHeader, inventoryTableBody: TableBody, equippedSlots } = itemSlotInfo;
 
 	const canEquip = equippedSlots.length;
 
@@ -105,15 +100,7 @@ function InventorySlotTable<T extends ItemSlot>({
 		[TableBody, equippedSlots]
 	);
 
-	const addedCellCount = inventoryTableAddedCellCount + canEquip ? 1 : 0;
-
 	return (
-		<ItemTable
-			items={items}
-			title={itemSlots[slot].display}
-			header={InventorySlotHeader}
-			body={InventorySlotBody}
-			addedCellCount={addedCellCount}
-		/>
+		<ItemTable items={items} title={itemSlots[slot].display} header={InventorySlotHeader} body={InventorySlotBody} />
 	);
 }

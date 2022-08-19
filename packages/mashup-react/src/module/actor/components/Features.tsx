@@ -10,7 +10,6 @@ const features: {
 	filter: (item: SimpleDocument<PossibleItemSourceData>) => boolean;
 	header?: React.FC;
 	body?: React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>;
-	addedCellCount?: number;
 }[] = [
 	{
 		key: 'character-details',
@@ -24,7 +23,6 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
-		addedCellCount: 1,
 	},
 	{
 		key: 'class-feature',
@@ -32,7 +30,6 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
-		addedCellCount: 1,
 	},
 	{
 		key: 'paragon-feature',
@@ -40,7 +37,6 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
-		addedCellCount: 1,
 	},
 	{
 		key: 'epic-feature',
@@ -48,7 +44,6 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
-		addedCellCount: 1,
 	},
 	{
 		key: 'feats',
@@ -56,7 +51,6 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'feat',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
-		addedCellCount: 1,
 	},
 ];
 
@@ -73,8 +67,8 @@ export function Features({ items }: { items: SimpleDocument<PossibleItemSourceDa
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));
 	return (
 		<>
-			{groups.map(({ key, label, items, header, body, addedCellCount }) => (
-				<ItemTable key={key} items={items} title={label} header={header} body={body} addedCellCount={addedCellCount} />
+			{groups.map(({ key, label, items, header, body }) => (
+				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
 			{other.length ? <ItemTable items={other} title="Other" /> : null}
 		</>

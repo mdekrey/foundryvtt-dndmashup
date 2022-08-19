@@ -42,7 +42,6 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<td className="text-center">{equipmentProperties.range || <>&mdash;</>}</td>
 		</>
 	),
-	inventoryTableAddedCellCount: 3,
 	additionalTabs: (stateful) => (
 		<>
 			<TabbedSheet.Tab name="attackEffects" label="Attack Effects">

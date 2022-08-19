@@ -28,7 +28,6 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 			<td className="text-center">{implementGroups[equipmentProperties.group]}</td>
 		</>
 	),
-	inventoryTableAddedCellCount: 1,
 	additionalTabs: (stateful) => (
 		<>
 			<TabbedSheet.Tab name="attackEffects" label="Attack Effects">

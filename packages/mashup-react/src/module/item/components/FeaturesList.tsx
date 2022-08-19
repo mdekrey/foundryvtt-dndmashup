@@ -57,7 +57,7 @@ export function FeaturesList({ items }: { items: SimpleDocument[] }) {
 	return (
 		<>
 			{groups.map(({ key, label, items, header, body }) => (
-				<ItemTable key={key} items={items} title={label} header={header} body={body} addedCellCount={1} />
+				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
 			{other.length ? <ItemTable items={other} title="Other" /> : null}
 		</>
