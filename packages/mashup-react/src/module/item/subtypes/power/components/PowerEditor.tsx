@@ -1,5 +1,5 @@
 import { FormInput, IconButton } from '@foundryvtt-dndmashup/components';
-import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
+import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	attackRollLens,
 	HitAndMissFields,
@@ -27,21 +27,19 @@ import {
 	sourceIdLens,
 } from './sheetLenses';
 import classNames from 'classnames';
-import { PowerDocument, PowerEffect } from '../dataSourceData';
+import { PowerData, PowerEffect } from '../dataSourceData';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AttackTypeInfo } from './AttackTypeInfo';
 import { useEffect, useReducer, useRef, useState } from 'react';
 
-export function PowerEditor({ item }: { item: PowerDocument }) {
-	const documentState = documentAsState(item, { deleteData: true });
-
+export function PowerEditor({ itemState: documentState }: { itemState: Stateful<SimpleDocumentData<PowerData>> }) {
 	return (
 		<>
 			<div className="h-full flex flex-col gap-1">
 				<div className="flex flex-row gap-1">
 					<FormInput.ImageEditor
 						{...imageLens.apply(documentState)}
-						title={item.name}
+						title={documentState.value.name}
 						className="w-24 h-24 border-2 border-black p-px"
 					/>
 					<div className="grid grid-cols-12 grid-rows-2 gap-x-1 items-end flex-grow">
@@ -90,7 +88,7 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !item.data.data.requirement,
+						'opacity-50 focus-within:opacity-100': !documentState.value.data.requirement,
 					})}>
 					<FormInput.TextField {...powerRequirementLens.apply(documentState)} />
 					<FormInput.Label>Requirement</FormInput.Label>
@@ -98,7 +96,7 @@ export function PowerEditor({ item }: { item: PowerDocument }) {
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !item.data.data.prerequisite,
+						'opacity-50 focus-within:opacity-100': !documentState.value.data.prerequisite,
 					})}>
 					<FormInput.TextField {...powerPrerequisiteLens.apply(documentState)} />
 					<FormInput.Label>Prerequisite</FormInput.Label>

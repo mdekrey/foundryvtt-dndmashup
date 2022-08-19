@@ -177,6 +177,7 @@ function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 }
 
 function toRuleText(configuredRule: ConditionRule | NoRule) {
+	console.log(configuredRule);
 	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
 }
 

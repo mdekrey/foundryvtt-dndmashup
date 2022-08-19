@@ -1,6 +1,6 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ApplicableEffect } from '../../../../effects';
-import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
+import { Defense, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
@@ -18,6 +18,9 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	isBasic: boolean;
 
 	effects: PowerEffect[];
+
+	usedPools?: string[];
+	grantedPools?: PoolLimits[];
 };
 
 export type PowerData = TypedData<'power', PowerDataSourceData>;

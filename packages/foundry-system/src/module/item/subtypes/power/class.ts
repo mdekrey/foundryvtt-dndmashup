@@ -14,7 +14,7 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 		return [];
 	}
 	override allGrantedPools(): PoolLimits[] {
-		return [];
+		return this.data.data.grantedPools ?? [];
 	}
 	override allGrantedPoolBonuses(): PoolBonus[] {
 		return [];

@@ -404,7 +404,6 @@ export class MashupActor extends Actor implements ActorDocument {
 			.map(([bonus]) => bonus);
 
 		const pools = this.items.contents.flatMap((item) => item.allGrantedPools());
-		console.log(pools);
 		this.items.contents
 			.flatMap((item) => item.allGrantedPoolBonuses())
 			.reduce((prev, next) => {
