@@ -487,7 +487,50 @@ export class MashupActor extends Actor implements ActorDocument {
 		]);
 	}
 
+	async applyHealing({
+		amount = 0,
+		isTemporary = false,
+		addHealingSurgeValue = false,
+		spendHealingSurge = false,
+		additionalUpdates = {},
+	}: {
+		amount?: number;
+		isTemporary?: boolean;
+		addHealingSurgeValue?: boolean;
+		spendHealingSurge?: boolean;
+		additionalUpdates?: Record<string, unknown>;
+	}) {
+		if (amount === 0 && !addHealingSurgeValue) {
+			ui.notifications?.warn(`Healing amount was 0.`);
+			return;
+		}
+		const health = this.data.data.health;
+
+		if (spendHealingSurge && health.surgesRemaining.value <= 0) {
+			ui.notifications?.warn(`Not enough healing surges available on ${this.name}.`);
+			return;
+		}
+
+		const effectiveAmount = amount + (addHealingSurgeValue ? health.surgesValue : 0);
+
+		const data: Partial<
+			Record<'data.health.hp.value' | 'data.health.temporaryHp' | 'data.health.surgesRemaining.value', number>
+		> = {
+			...additionalUpdates,
+		};
+		if (spendHealingSurge) {
+			data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - 1;
+		}
+		if (isTemporary) {
+			data['data.health.temporaryHp'] = health.temporaryHp + effectiveAmount;
+		} else {
+			data['data.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
+		}
+		await this.update(data);
+	}
+
 	isReady(power: PowerDocument) {
+		// TODO
 		return true;
 	}
 }

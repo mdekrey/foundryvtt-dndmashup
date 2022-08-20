@@ -1,43 +1,7 @@
-import noop from 'lodash/fp/noop';
 import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
+import { commonActions, isPower, CommonAction } from '../actions';
 import { ActorDocument } from '../documentType';
-import { CommonAction, isPower, PowerTable } from './power-components';
-
-const commonActions: CommonAction[] = [
-	{
-		name: 'Total Defense',
-		img: 'icons/magic/defensive/shield-barrier-blue.webp',
-		action: 'standard',
-		usage: 'at-will',
-		hint: '+2 to all Defenses until your next turn',
-		isReady: () => true,
-		use: noop,
-	},
-	{
-		name: 'Second Wind',
-		img: 'icons/magic/defensive/shield-barrier-glowing-blue.webp',
-		action: 'standard',
-		usage: 'encounter',
-		hint: 'Once per encounter, spend a healing surge and defend yourself',
-		isReady: (actor) => !actor.data.data.health.secondWindUsed,
-		setReady: (actor, ready) => {
-			actor.update({ 'data.health.secondWindUsed': !ready }, {});
-		},
-		use: noop,
-	},
-	{
-		name: 'Spend Action Point',
-		img: 'icons/skills/movement/arrow-upward-yellow.webp',
-		action: 'free',
-		usage: 'encounter',
-		hint: 'Once per encounter, spend an action point to gain an extra turn',
-		isReady: (actor) => !actor.data.data.actionPoints.usedThisEncounter,
-		setReady: (actor, ready) => {
-			actor.update({ 'data.actionPoints.usedThisEncounter': !ready }, {});
-		},
-		use: noop,
-	},
-];
+import { PowerTable } from './power-components';
 
 const powerGroups: {
 	key: React.Key;

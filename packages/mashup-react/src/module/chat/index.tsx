@@ -3,6 +3,7 @@ import './power';
 export * from './attackResult';
 export * from './damageResult';
 export * from './healingResult';
+export * from './plainText';
 export type { PowerChatMessage } from './power';
 export * from './context';
 export * from './registry';

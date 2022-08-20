@@ -2,7 +2,6 @@ import { chatAttachments } from '../attach';
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { chatMessageRegistry, HealingResult, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { fromMashupId, isGame } from '../../../core/foundry';
-import { MashupActor } from '../../actor/mashup-actor';
 
 chatMessageRegistry.healingResult = async (
 	actor,
@@ -46,42 +45,13 @@ chatAttachments['healingResult'] = ({ flags: { roll, powerId, isTemporary, heali
 		await Promise.all(
 			tokens.map(async (token) => {
 				if (!token.actor) return;
-				applyHealing(token.actor, value, isTemporary as boolean, healingSurge as boolean, spendHealingSurge as boolean);
+				token.actor.applyHealing({
+					amount: value,
+					isTemporary: isTemporary as boolean,
+					addHealingSurgeValue: healingSurge as boolean,
+					spendHealingSurge: spendHealingSurge as boolean,
+				});
 			})
 		);
 	}
 };
-
-function applyHealing(
-	actor: MashupActor,
-	amount: number,
-	isTemporary: boolean,
-	healingSurge: boolean,
-	spendHealingSurge: boolean
-) {
-	if (amount === 0) {
-		ui.notifications?.warn(`Healing amount was 0.`);
-		return;
-	}
-	const health = actor.data.data.health;
-
-	if (spendHealingSurge && health.surgesRemaining.value <= 0) {
-		ui.notifications?.warn(`Not enough healing surges available on ${actor.name}.`);
-		return;
-	}
-
-	const effectiveAmount = amount + (healingSurge ? health.surgesValue : 0);
-
-	const data: Partial<
-		Record<'data.health.hp.value' | 'data.health.temporaryHp' | 'data.health.surgesRemaining.value', number>
-	> = {};
-	if (spendHealingSurge) {
-		data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - 1;
-	}
-	if (isTemporary) {
-		data['data.health.temporaryHp'] = health.temporaryHp + effectiveAmount;
-	} else {
-		data['data.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
-	}
-	actor.update(data);
-}

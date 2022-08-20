@@ -1,9 +1,8 @@
 import { ActorDocument } from '../../documentType';
-import { CommonAction } from './CommonAction';
+import { isPower, CommonAction } from '../../actions';
 import { Table } from '@foundryvtt-dndmashup/components';
 import { PowerDocument } from '../../../item/subtypes/power/dataSourceData';
 import { Row } from './Row';
-import { isPower } from './isPower';
 
 export function PowerTable({
 	actor,

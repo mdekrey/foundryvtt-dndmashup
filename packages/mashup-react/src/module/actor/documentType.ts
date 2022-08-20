@@ -29,4 +29,12 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	allPowers(): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;
 	isReady(power: PowerDocument): boolean;
+
+	applyHealing(options: {
+		amount?: number;
+		isTemporary?: boolean;
+		addHealingSurgeValue?: boolean;
+		spendHealingSurge?: boolean;
+		additionalUpdates?: Record<string, unknown>;
+	}): Promise<void>;
 };
