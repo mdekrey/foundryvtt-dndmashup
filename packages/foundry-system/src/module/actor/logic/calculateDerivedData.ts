@@ -8,8 +8,8 @@ import {
 	damageTypes,
 	DefenseBonus,
 	defenses,
-	DynamicListEntryWithContext,
-	FeatureBonusWithContext,
+	FullDynamicListEntry,
+	FullFeatureBonus,
 	filterConditions,
 	NumericBonusTarget,
 	numericBonusTargets,
@@ -62,10 +62,10 @@ export function calculateDerivedData(
 	this: MashupActor,
 	setPrivates: (data: {
 		derivedData: ActorDerivedData;
-		appliedBonuses: FeatureBonusWithContext[];
-		indeterminateBonuses: FeatureBonusWithContext[];
-		appliedDynamicList: DynamicListEntryWithContext[];
-		indeterminateDynamicList: DynamicListEntryWithContext[];
+		appliedBonuses: FullFeatureBonus[];
+		indeterminateBonuses: FullFeatureBonus[];
+		appliedDynamicList: FullDynamicListEntry[];
+		indeterminateDynamicList: FullDynamicListEntry[];
 	}) => void
 ): ActorDerivedData {
 	// TODO: this would be better as a proxy object
@@ -101,8 +101,8 @@ export function calculateDerivedData(
 		size: this.appliedRace?.data.data.size ?? 'medium',
 		pools: [],
 	};
-	const appliedBonuses: FeatureBonusWithContext[] = [];
-	const indeterminateBonuses: FeatureBonusWithContext[] = [];
+	const appliedBonuses: FullFeatureBonus[] = [];
+	const indeterminateBonuses: FullFeatureBonus[] = [];
 	setPrivates({
 		derivedData: resultData,
 		appliedBonuses: appliedBonuses,

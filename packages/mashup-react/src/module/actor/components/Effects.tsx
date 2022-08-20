@@ -1,32 +1,24 @@
 import classNames from 'classnames';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { ensureSign } from '@foundryvtt-dndmashup/core';
 import {
-	BonusesEditor,
 	numericBonusTargetNames,
-	FeatureBonusWithContext,
+	FeatureBonusWithSource,
 	getRuleText,
-	DynamicList,
-	DynamicListEntryWithContext,
+	DynamicListEntryWithSource,
 	dynamicListTargetNames,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDataSource } from '../types';
-
-const dataLens = Lens.identity<ActorDataSource['data']>(); // baseLens.toField('data');
-const bonusesLens = dataLens.toField('bonuses');
-const dynamicListLens = dataLens.toField('dynamicList');
+import { sortBy } from 'lodash/fp';
 
 export function Effects({
 	bonusList,
 	dynamicList,
-	...documentState
-}: Stateful<ActorDataSource['data']> & {
-	bonusList: FeatureBonusWithContext[];
-	dynamicList: DynamicListEntryWithContext[];
+}: {
+	bonusList: FeatureBonusWithSource[];
+	dynamicList: DynamicListEntryWithSource[];
 }) {
 	return (
 		<>
-			<BonusesEditor bonuses={bonusesLens.apply(documentState)} />
 			<table>
 				<thead className="bg-theme text-white">
 					<tr>
@@ -51,15 +43,15 @@ export function Effects({
 									{conditionText ? `when ${conditionText}` : null}
 								</td>
 								<td>
-									{bonus.context.item ? (
+									{bonus.source ? (
 										<button
 											type="button"
 											className="w-full text-left"
-											onClick={() => bonus.context.item && edit(bonus.context.item)}>
-											{bonus.context.item.img ? (
-												<img src={bonus.context.item.img} alt="" className="w-8 h-8 inline-block mr-2" />
+											onClick={() => bonus.source && edit(bonus.source)}>
+											{bonus.source.img ? (
+												<img src={bonus.source.img} alt="" className="w-8 h-8 inline-block mr-2" />
 											) : null}
-											{bonus.context.item.name}
+											{bonus.source.name}
 										</button>
 									) : null}
 								</td>
@@ -80,16 +72,15 @@ export function Effects({
 				</tbody>
 			</table>
 
-			<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 			<table>
 				<thead className="bg-theme text-white">
 					<tr>
-						<th>Bonus</th>
+						<th>List Entry</th>
 						<th>Source</th>
 					</tr>
 				</thead>
 				<tbody>
-					{dynamicList.map((entry, idx) => {
+					{sortBy((l) => [l.target, l.entry], dynamicList).map((entry, idx) => {
 						const condition = entry.condition;
 						const conditionText = condition ? getRuleText(condition) : null;
 						return (
@@ -104,15 +95,15 @@ export function Effects({
 									{dynamicListTargetNames[entry.target].label}: {entry.entry} {conditionText}
 								</td>
 								<td>
-									{entry.context.item ? (
+									{entry.source ? (
 										<button
 											type="button"
 											className="w-full text-left"
-											onClick={() => entry.context.item && edit(entry.context.item)}>
-											{entry.context.item.img ? (
-												<img src={entry.context.item.img} alt="" className="w-8 h-8 inline-block mr-2" />
+											onClick={() => entry.source && edit(entry.source)}>
+											{entry.source.img ? (
+												<img src={entry.source.img} alt="" className="w-8 h-8 inline-block mr-2" />
 											) : null}
-											{entry.context.item.name}
+											{entry.source.name}
 										</button>
 									) : null}
 								</td>

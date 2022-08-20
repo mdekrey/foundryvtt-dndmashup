@@ -1,4 +1,9 @@
-import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	DynamicListEntryWithSource,
+	FeatureBonusWithSource,
+	PoolBonus,
+	PoolLimits,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { EquipmentData, EquipmentDocument, itemSlots, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { SpecificItemEquipmentData } from '../../types';
@@ -10,16 +15,16 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
-	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonus[] {
+	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonusWithSource[] {
 		if (!this.canApplyBonuses(isForPowerUse)) return [];
 		return [
 			...itemSlots[this.data.data.itemSlot].bonuses(this.data.data.equipmentProperties as never),
 			...this.data.data.grantedBonuses,
-		];
+		].map((b) => ({ ...b, source: this }));
 	}
-	override allDynamicList(isForPowerUse?: boolean): DynamicListEntry[] {
+	override allDynamicList(isForPowerUse?: boolean): DynamicListEntryWithSource[] {
 		if (!this.canApplyBonuses(isForPowerUse)) return [];
-		return [...this.data.data.dynamicList];
+		return this.data.data.dynamicList.map((b) => ({ ...b, source: this }));
 	}
 	override allGrantedPools(): PoolLimits[] {
 		return [];

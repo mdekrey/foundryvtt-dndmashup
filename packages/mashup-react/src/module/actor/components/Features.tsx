@@ -3,6 +3,8 @@ import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
 import { PossibleItemSourceData } from '../../item/item-data-types-template';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
+import { BonusesEditor, DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { Stateful } from '@foundryvtt-dndmashup/core';
 
 const features: {
 	key: React.Key;
@@ -54,7 +56,15 @@ const features: {
 	},
 ];
 
-export function Features({ items }: { items: SimpleDocument<PossibleItemSourceData>[] }) {
+export function Features({
+	items,
+	bonuses,
+	dynamicList,
+}: {
+	items: SimpleDocument<PossibleItemSourceData>[];
+	bonuses: Stateful<FeatureBonus[]>;
+	dynamicList: Stateful<DynamicListEntry[]>;
+}) {
 	const nonEquipment = items.filter(
 		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.data.data.featureType !== 'feat')
 	);
@@ -71,6 +81,8 @@ export function Features({ items }: { items: SimpleDocument<PossibleItemSourceDa
 				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
 			{other.length ? <ItemTable items={other} title="Other" /> : null}
+			<BonusesEditor bonuses={bonuses} />
+			<DynamicList dynamicList={dynamicList} />
 		</>
 	);
 }

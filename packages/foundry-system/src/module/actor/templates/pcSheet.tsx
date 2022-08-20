@@ -1,7 +1,7 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { ActorComponents, ActorDataSource, PlayerCharacterDataSourceData } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorComponents, PlayerCharacterDataSourceData } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
 import { PossibleItemData } from '../../item/types';
@@ -14,6 +14,8 @@ const actionPointsLens = dataLens.toField('actionPoints');
 const detailsLens = dataLens.toField('details').toField('biography');
 const skillsLens = dataLens.toField('skills').default([]);
 const poolsLens = dataLens.toField('pools').default([]);
+const bonusesLens = dataLens.toField('bonuses');
+const dynamicListLens = dataLens.toField('dynamicList');
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
@@ -92,14 +94,14 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 									<ActorComponents.Powers actor={actor} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
-									<ActorComponents.Features items={actor.items.contents as SimpleDocument<PossibleItemData>[]} />
+									<ActorComponents.Features
+										items={actor.items.contents as SimpleDocument<PossibleItemData>[]}
+										bonuses={bonusesLens.apply(documentState)}
+										dynamicList={dynamicListLens.apply(documentState)}
+									/>
 								</Tabs.Tab>
 								<Tabs.Tab tabName="effects">
-									<ActorComponents.Effects
-										{...(dataLens.apply(documentState) as never as Stateful<ActorDataSource['data']>)}
-										bonusList={actor.specialBonuses}
-										dynamicList={actor.dynamicListResult}
-									/>
+									<ActorComponents.Effects bonusList={actor.specialBonuses} dynamicList={actor.dynamicListResult} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="pools">
 									<ActorComponents.Pools poolLimits={pools} poolsState={poolsLens.apply(documentState)} />

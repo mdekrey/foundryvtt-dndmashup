@@ -1,4 +1,9 @@
-import { DynamicListEntry, FeatureBonus, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	DynamicListEntryWithSource,
+	FeatureBonusWithSource,
+	PoolBonus,
+	PoolLimits,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ParagonPathDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
@@ -7,10 +12,10 @@ export class MashupParagonPath extends MashupItem<'paragonPath'> implements Para
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'feature';
 	}
-	override allGrantedBonuses(): FeatureBonus[] {
+	override allGrantedBonuses(): FeatureBonusWithSource[] {
 		return this.items.contents.flatMap((item) => item.allGrantedBonuses());
 	}
-	override allDynamicList(): DynamicListEntry[] {
+	override allDynamicList(): DynamicListEntryWithSource[] {
 		return this.items.contents.flatMap((item) => item.allDynamicList());
 	}
 	override allGrantedPools(): PoolLimits[] {

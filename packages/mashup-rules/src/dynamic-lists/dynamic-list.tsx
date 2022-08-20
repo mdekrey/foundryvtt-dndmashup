@@ -101,7 +101,7 @@ export function DynamicList({
 							key={idx}
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
-								'border-b-2 border-transparent',
+								'border-t-2 border-transparent',
 								'text-sm',
 								{ 'opacity-75': entry.disabled }
 							)}>

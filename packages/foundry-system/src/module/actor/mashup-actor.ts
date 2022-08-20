@@ -2,7 +2,7 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { FeatureBonusWithContext, DynamicListEntryWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { FullFeatureBonus, FullDynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	isClass,
@@ -85,16 +85,13 @@ export class MashupActor extends Actor implements ActorDocument {
 		return Math.floor(this.data.data.details.level / 10);
 	}
 
-	get specialBonuses(): FeatureBonusWithContext[] {
-		return this.data.items.contents.flatMap((item) =>
-			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
-		);
-	}
-
-	get dynamicListResult(): DynamicListEntryWithContext[] {
-		return this.data.items.contents.flatMap((item) =>
-			item.allDynamicList().map((entry) => ({ ...entry, context: { actor: this, item } }))
-		);
+	get specialBonuses(): FullFeatureBonus[] {
+		return [
+			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
+			...this.data.items.contents.flatMap((item) =>
+				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
+			),
+		];
 	}
 
 	private _derivedData: ActorDerivedData | null = null;
@@ -102,51 +99,53 @@ export class MashupActor extends Actor implements ActorDocument {
 		return this._derivedData ?? (this._derivedData = this.calculateDerivedData());
 	}
 
-	private _allBonuses: FeatureBonusWithContext[] | null = null;
-	get allBonuses(): FeatureBonusWithContext[] {
+	private _allBonuses: FullFeatureBonus[] | null = null;
+	get allBonuses(): FullFeatureBonus[] {
 		return (
 			this._allBonuses ??
 			(this._allBonuses = [
 				// all active effects and other linked objects should be loaded here
-				...standardBonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
-				...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, context: { actor: this } })),
+				...standardBonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
 				...this.specialBonuses,
 			])
 		);
 	}
 
-	private _appliedBonuses: FeatureBonusWithContext[] | null = null;
-	get appliedBonuses(): FeatureBonusWithContext[] {
+	private _appliedBonuses: FullFeatureBonus[] | null = null;
+	get appliedBonuses(): FullFeatureBonus[] {
 		if (!this._appliedBonuses) this.calculateDerivedData();
 		if (!this._appliedBonuses) throw new Error('Cannot access applied bonuses before loading is finished');
 		return this._appliedBonuses;
 	}
-	private _indeterminateBonuses: FeatureBonusWithContext[] | null = null;
-	get indeterminateBonuses(): FeatureBonusWithContext[] {
+	private _indeterminateBonuses: FullFeatureBonus[] | null = null;
+	get indeterminateBonuses(): FullFeatureBonus[] {
 		if (!this._indeterminateBonuses) this.calculateDerivedData();
 		if (!this._indeterminateBonuses) throw new Error('Cannot access indeterminate bonuses before loading is finished');
 		return this._indeterminateBonuses;
 	}
 
-	private _allDynamicListResult: DynamicListEntryWithContext[] | null = null;
-	get allDynamicListResult(): DynamicListEntryWithContext[] {
-		return (
-			this._allDynamicListResult ??
-			(this._allDynamicListResult = [
-				...this.data._source.data.dynamicList.map((bonus) => ({ ...bonus, context: { actor: this } })),
-				...this.dynamicListResult,
-			])
-		);
+	get dynamicListResult(): FullDynamicListEntry[] {
+		return [
+			...this.data._source.data.dynamicList.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
+			...this.data.items.contents.flatMap((item) =>
+				item.allDynamicList().map((entry) => ({ ...entry, context: { actor: this, item } }))
+			),
+		];
 	}
 
-	private _appliedDynamicList: DynamicListEntryWithContext[] | null = null;
-	get appliedDynamicList(): DynamicListEntryWithContext[] {
+	private _allDynamicListResult: FullDynamicListEntry[] | null = null;
+	get allDynamicListResult(): FullDynamicListEntry[] {
+		return this._allDynamicListResult ?? (this._allDynamicListResult = this.dynamicListResult);
+	}
+
+	private _appliedDynamicList: FullDynamicListEntry[] | null = null;
+	get appliedDynamicList(): FullDynamicListEntry[] {
 		if (!this._appliedDynamicList) this.calculateDerivedData();
 		if (!this._appliedDynamicList) throw new Error('Cannot access applied DynamicList before loading is finished');
 		return this._appliedDynamicList;
 	}
-	private _indeterminateDynamicList: DynamicListEntryWithContext[] | null = null;
-	get indeterminateDynamicList(): DynamicListEntryWithContext[] {
+	private _indeterminateDynamicList: FullDynamicListEntry[] | null = null;
+	get indeterminateDynamicList(): FullDynamicListEntry[] {
 		if (!this._indeterminateDynamicList) this.calculateDerivedData();
 		if (!this._indeterminateDynamicList)
 			throw new Error('Cannot access indeterminate DynamicList before loading is finished');
