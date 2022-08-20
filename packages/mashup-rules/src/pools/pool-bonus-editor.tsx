@@ -59,8 +59,8 @@ export function PoolBonusEditor({ pools, className }: { pools: Stateful<PoolBonu
 								key={idx}
 								className={classNames(
 									'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
-									'border-b-2 border-transparent',
-									'text-sm'
+									'text-sm',
+									'h-10'
 								)}>
 								<td className="px-1">
 									<FormInput.TextField

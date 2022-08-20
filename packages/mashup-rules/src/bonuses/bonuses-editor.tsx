@@ -97,8 +97,8 @@ export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<Featur
 							key={idx}
 							className={classNames(
 								'even:bg-gradient-to-r from-transparent to-white odd:bg-transparent',
-								'border-t-2 border-transparent',
 								'text-sm',
+								'h-10',
 								{ 'opacity-75': bonus.disabled }
 							)}>
 							<td className="px-1">

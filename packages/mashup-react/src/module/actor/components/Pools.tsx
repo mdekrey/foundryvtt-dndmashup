@@ -38,7 +38,7 @@ export function Pools({
 	poolsState: Stateful<PoolState[]>;
 }) {
 	return poolLimits.length > 0 ? (
-		<div className="grid grid-cols-3 gap-1 mt-2 items-center justify-items-center">
+		<div className="grid grid-cols-3 gap-1 mt-2 items-start justify-items-center">
 			{poolLimits.map((pool, index) => (
 				<PoolDetails key={pool.name} pool={pool} state={lensToPoolState(pool.name).apply(poolsState)} />
 			))}
@@ -63,9 +63,9 @@ function PoolDetails({ pool, state }: { pool: SourcedPoolLimits; state: Stateful
 				</>
 			}
 			footer={
-				<div>
+				<div className="flex flex-col gap-1">
 					{typeof pool.maxBetweenRest === 'number' ? (
-						<div className="flex justify-start flex-grow items-baseline gap-1 text-sm">
+						<div className="self-center flex justify-start flex-grow items-baseline gap-1 text-sm">
 							<span>Since rest: </span>
 							<FormInput className="w-12">
 								<FormInput.NumberField {...usedSinceRestLens.apply(state)} className="text-center" />
