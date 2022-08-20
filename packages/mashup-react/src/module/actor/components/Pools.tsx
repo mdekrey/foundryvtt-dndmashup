@@ -1,7 +1,8 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { PoolLimits, PoolState } from '@foundryvtt-dndmashup/mashup-rules';
+import { PoolState, SourcedPoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { ResourceLayout } from './ResourceLayout';
 import { FormInput } from '@foundryvtt-dndmashup/components';
+import { SourceButton } from './SourceButton';
 
 const baseLens = Lens.identity<PoolState[]>().to(
 	(v) => v,
@@ -29,7 +30,13 @@ const lensToPoolState = (poolName: string) => {
 		.default({ name: poolName, usedSinceRest: 0, value: 0 });
 };
 
-export function Pools({ poolLimits, poolsState }: { poolLimits: PoolLimits[]; poolsState: Stateful<PoolState[]> }) {
+export function Pools({
+	poolLimits,
+	poolsState,
+}: {
+	poolLimits: SourcedPoolLimits[];
+	poolsState: Stateful<PoolState[]>;
+}) {
 	return poolLimits.length > 0 ? (
 		<div className="grid grid-cols-3 gap-1 mt-2 items-center justify-items-center">
 			{poolLimits.map((pool, index) => (
@@ -42,7 +49,7 @@ export function Pools({ poolLimits, poolsState }: { poolLimits: PoolLimits[]; po
 const currentLens = Lens.fromProp<PoolState>()('value');
 const usedSinceRestLens = Lens.fromProp<PoolState>()('usedSinceRest');
 
-function PoolDetails({ pool, state }: { pool: PoolLimits; state: Stateful<PoolState> }) {
+function PoolDetails({ pool, state }: { pool: SourcedPoolLimits; state: Stateful<PoolState> }) {
 	return (
 		<ResourceLayout
 			title={pool.name}
@@ -56,16 +63,21 @@ function PoolDetails({ pool, state }: { pool: PoolLimits; state: Stateful<PoolSt
 				</>
 			}
 			footer={
-				typeof pool.maxBetweenRest === 'number' ? (
-					<div className="flex justify-start flex-grow items-baseline gap-1 text-sm">
-						<span>Since rest: </span>
-						<FormInput className="w-12">
-							<FormInput.NumberField {...usedSinceRestLens.apply(state)} className="text-center" />
-							<FormInput.Label>Used</FormInput.Label>
-						</FormInput>
-						<span className="pb-4">/ {pool.maxBetweenRest}</span>
-					</div>
-				) : null
+				<div>
+					{typeof pool.maxBetweenRest === 'number' ? (
+						<div className="flex justify-start flex-grow items-baseline gap-1 text-sm">
+							<span>Since rest: </span>
+							<FormInput className="w-12">
+								<FormInput.NumberField {...usedSinceRestLens.apply(state)} className="text-center" />
+								<FormInput.Label>Used</FormInput.Label>
+							</FormInput>
+							<span className="pb-4">/ {pool.maxBetweenRest}</span>
+						</div>
+					) : null}
+					{pool.source.map((source, index) => (
+						<SourceButton key={source.id ?? index} source={source} />
+					))}
+				</div>
 			}
 		/>
 	);

@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ensureSign } from '@foundryvtt-dndmashup/core';
 import {
 	numericBonusTargetNames,
@@ -9,6 +8,7 @@ import {
 	dynamicListTargetNames,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { sortBy } from 'lodash/fp';
+import { SourceButton } from './SourceButton';
 
 export function Effects({
 	bonusList,
@@ -42,19 +42,7 @@ export function Effects({
 									{ensureSign(bonus.amount)} {bonus.type} bonus to {numericBonusTargetNames[bonus.target].label}{' '}
 									{conditionText ? `when ${conditionText}` : null}
 								</td>
-								<td>
-									{bonus.source ? (
-										<button
-											type="button"
-											className="w-full text-left"
-											onClick={() => bonus.source && edit(bonus.source)}>
-											{bonus.source.img ? (
-												<img src={bonus.source.img} alt="" className="w-8 h-8 inline-block mr-2" />
-											) : null}
-											{bonus.source.name}
-										</button>
-									) : null}
-								</td>
+								<td>{bonus.source ? <SourceButton source={bonus.source} /> : null}</td>
 							</tr>
 						);
 					})}
@@ -94,19 +82,7 @@ export function Effects({
 								<td className="px-1">
 									{dynamicListTargetNames[entry.target].label}: {entry.entry} {conditionText}
 								</td>
-								<td>
-									{entry.source ? (
-										<button
-											type="button"
-											className="w-full text-left"
-											onClick={() => entry.source && edit(entry.source)}>
-											{entry.source.img ? (
-												<img src={entry.source.img} alt="" className="w-8 h-8 inline-block mr-2" />
-											) : null}
-											{entry.source.name}
-										</button>
-									) : null}
-								</td>
+								<td>{entry.source ? <SourceButton source={entry.source} /> : null}</td>
 							</tr>
 						);
 					})}
@@ -125,8 +101,4 @@ export function Effects({
 			</table>
 		</>
 	);
-
-	function edit(item: SimpleDocument) {
-		item.showEditDialog();
-	}
 }

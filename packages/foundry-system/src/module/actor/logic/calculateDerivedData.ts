@@ -22,6 +22,7 @@ import {
 import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
+import { uniq } from 'lodash/fp';
 
 const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number) => void> = {
 	...toObject(
@@ -154,7 +155,7 @@ export function calculateDerivedData(
 							? next.amount
 							: new Roll(next.amount, { actor: this }).roll({ async: false })._total,
 				};
-				prev[idx] = combinePoolLimits(prev[idx], resolved);
+				prev[idx] = { ...combinePoolLimits(prev[idx], resolved), source: uniq([...prev[idx].source, next.source]) };
 			}
 			return prev;
 		}, pools);

@@ -1,8 +1,8 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
-	PoolBonus,
-	PoolLimits,
+	SourcedPoolBonus,
+	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ClassDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -38,10 +38,10 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 			...this.items.contents.flatMap((item) => item.allDynamicList()),
 		];
 	}
-	override allGrantedPools(): PoolLimits[] {
+	override allGrantedPools(): SourcedPoolLimits[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPools());
 	}
-	override allGrantedPoolBonuses(): PoolBonus[] {
+	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
 	}
 }

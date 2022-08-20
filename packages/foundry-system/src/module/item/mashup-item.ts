@@ -3,8 +3,8 @@ import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-ty
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
-	PoolBonus,
-	PoolLimits,
+	SourcedPoolBonus,
+	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
@@ -44,10 +44,10 @@ export class MashupItemBase extends Item implements ItemDocument {
 	allGrantedPowers(): PowerDocument[] {
 		return [];
 	}
-	allGrantedPools(): PoolLimits[] {
+	allGrantedPools(): SourcedPoolLimits[] {
 		return [];
 	}
-	allGrantedPoolBonuses(): PoolBonus[] {
+	allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return [];
 	}
 	override get type(): PossibleItemType {
@@ -251,7 +251,7 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 
 	abstract override allGrantedBonuses(): FeatureBonusWithSource[];
 	abstract override allDynamicList(): DynamicListEntryWithSource[];
-	abstract override allGrantedPools(): PoolLimits[];
-	abstract override allGrantedPoolBonuses(): PoolBonus[];
+	abstract override allGrantedPools(): SourcedPoolLimits[];
+	abstract override allGrantedPoolBonuses(): SourcedPoolBonus[];
 	abstract override canEmbedItem(type: PossibleItemType): boolean;
 }

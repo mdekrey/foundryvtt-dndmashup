@@ -1,8 +1,8 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
-	PoolBonus,
-	PoolLimits,
+	SourcedPoolBonus,
+	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { FeatureDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -14,11 +14,13 @@ export class MashupItemFeature extends MashupItem<'feature'> implements FeatureD
 	override allDynamicList(): DynamicListEntryWithSource[] {
 		return this.data.data.dynamicList.map((b) => ({ ...b, source: this }));
 	}
-	override allGrantedPools(): PoolLimits[] {
-		return this.data.data.grantedPools ? [...this.data.data.grantedPools] : [];
+	override allGrantedPools(): SourcedPoolLimits[] {
+		return this.data.data.grantedPools ? this.data.data.grantedPools.map((b) => ({ ...b, source: [this] })) : [];
 	}
-	override allGrantedPoolBonuses(): PoolBonus[] {
-		return this.data.data.grantedPoolBonuses ? [...this.data.data.grantedPoolBonuses] : [];
+	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
+		return this.data.data.grantedPoolBonuses
+			? this.data.data.grantedPoolBonuses.map((b) => ({ ...b, source: this }))
+			: [];
 	}
 
 	override canEmbedItem(): boolean {

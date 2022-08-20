@@ -1,8 +1,8 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
-	PoolBonus,
-	PoolLimits,
+	SourcedPoolBonus,
+	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ParagonPathDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -18,10 +18,10 @@ export class MashupParagonPath extends MashupItem<'paragonPath'> implements Para
 	override allDynamicList(): DynamicListEntryWithSource[] {
 		return this.items.contents.flatMap((item) => item.allDynamicList());
 	}
-	override allGrantedPools(): PoolLimits[] {
+	override allGrantedPools(): SourcedPoolLimits[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPools());
 	}
-	override allGrantedPoolBonuses(): PoolBonus[] {
+	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
 	}
 }

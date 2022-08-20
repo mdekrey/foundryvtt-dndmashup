@@ -1,4 +1,4 @@
-import { Ability, DamageType, Defense, PoolLimits, Size } from '@foundryvtt-dndmashup/mashup-rules';
+import { Ability, DamageType, Defense, SourcedPoolLimits, Size } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type CommonDerivedDataProperties = {
 	abilities: {
@@ -22,7 +22,7 @@ export type CommonDerivedDataProperties = {
 	initiative: number;
 	size: Size;
 	halfLevel: number;
-	pools: PoolLimits[];
+	pools: SourcedPoolLimits[];
 };
 
 export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {
