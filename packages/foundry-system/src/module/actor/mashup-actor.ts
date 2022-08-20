@@ -1,48 +1,32 @@
 import { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
+import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
+import { FeatureBonusWithContext, DynamicListEntryWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
-	abilities,
-	damageTypes,
-	defenses,
-	AbilityBonus,
-	NumericBonusTarget,
-	numericBonusTargets,
-	byTarget,
-	DefenseBonus,
-	FeatureBonus,
-	FeatureBonusWithContext,
-	filterConditions,
-	Resistance,
-	sumFinalBonuses,
-	Vulnerability,
-	ruleResultIndeterminate,
-	ConditionRule,
-	DynamicListEntryWithContext,
-	combinePoolLimits,
-	ResolvedPoolBonus,
-} from '@foundryvtt-dndmashup/mashup-rules';
-import { isClass, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
-import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';
-import { isParagonPath } from '@foundryvtt-dndmashup/mashup-react';
-import { isPower } from '@foundryvtt-dndmashup/mashup-react';
-import { isRace } from '@foundryvtt-dndmashup/mashup-react';
+	isClass,
+	PowerDocument,
+	isEpicDestiny,
+	isEquipment,
+	isParagonPath,
+	isPower,
+	isRace,
+	ActorDerivedData,
+	ActorDocument,
+	EquippedItemSlot,
+	getItemSlotInfo,
+	EquipmentData,
+	getEquipmentProperties,
+	ItemDocument,
+} from '@foundryvtt-dndmashup/mashup-react';
+import { expandObjectsAndArrays } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
-import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
-import { ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { EquippedItemSlot, getItemSlotInfo } from '@foundryvtt-dndmashup/mashup-react';
-import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { EquipmentData } from '@foundryvtt-dndmashup/mashup-react';
-import { getEquipmentProperties } from '@foundryvtt-dndmashup/mashup-react';
-import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { evaluateAndRoll } from '../bonuses/evaluateAndRoll';
-import { toObject } from '@foundryvtt-dndmashup/core';
-import { isGame } from '../../core/foundry';
-import { noop } from 'lodash/fp';
+import { calculateDerivedData } from './logic/calculateDerivedData';
+import { standardBonuses } from './logic/standardBonuses';
+import { updateBloodied } from './logic/updateBloodied';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -50,81 +34,6 @@ const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isParagonPathSource,
 	isEpicDestinySource,
 ];
-
-function condition(text: string): { condition: ConditionRule<'manual'> } {
-	return { condition: { rule: 'manual', parameter: { conditionText: text } } };
-}
-
-const base = { condition: null } as const;
-const standardBonuses: FeatureBonus[] = [
-	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
-	{ ...base, target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
-	{ ...base, target: 'ability-dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
-	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
-	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
-	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
-	{ ...base, target: 'maxHp', amount: `10 + 2 * @actor.derivedData.abilities.con.total`, type: 'base' },
-	{ ...base, target: 'surges-max', amount: '@actor.derivedData.abilities.con.total', type: 'ability' },
-	{ ...base, target: 'defense-ac', amount: 10 },
-	{ ...base, target: 'defense-ac', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
-	{ ...base, target: 'defense-fort', amount: 10 },
-	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.str.total', type: 'ability' },
-	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.abilities.con.total', type: 'ability' },
-	{ ...base, target: 'defense-refl', amount: 10 },
-	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
-	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.abilities.int.total', type: 'ability' },
-	{ ...base, target: 'defense-will', amount: 10 },
-	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis.total', type: 'ability' },
-	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha.total', type: 'ability' },
-	{ ...base, target: 'initiative', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
-
-	{ ...condition('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
-	{ ...condition('you are charging'), target: 'attack-roll', amount: 1 },
-	{ ...condition('the target has concealment from you'), target: 'attack-roll', amount: -2 },
-	{ ...condition('the target has total concealment from you'), target: 'attack-roll', amount: -5 },
-	{ ...condition('the target has cover from you'), target: 'attack-roll', amount: -2 },
-	{ ...condition('the target has superior cover from you'), target: 'attack-roll', amount: -5 },
-	{ ...condition('the target is long range from you'), target: 'attack-roll', amount: -2 },
-	{ ...condition('you are prone'), target: 'attack-roll', amount: -2 }, // TODO: automate
-	{ ...condition('you are restrained'), target: 'attack-roll', amount: -2 }, // TODO: automate
-	{ ...condition('you are running'), target: 'attack-roll', amount: -5 },
-	{ ...condition('you are squeezing'), target: 'attack-roll', amount: -5 },
-];
-
-const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number) => void> = {
-	...toObject(
-		abilities,
-		(abil): AbilityBonus => `ability-${abil}`,
-		(abil) => (data, value) => (data.abilities[abil].total = value)
-	),
-	...toObject(
-		defenses,
-		(def): DefenseBonus => `defense-${def}`,
-		(def) => (data, value) => (data.defenses[def] = value)
-	),
-	...toObject(
-		damageTypes,
-		(dmg): Resistance => `${dmg}-resistance`,
-		(dmg) => (data, value) => (data.damageTypes[dmg].resistance = value)
-	),
-	...toObject(
-		damageTypes,
-		(dmg): Vulnerability => `${dmg}-vulnerability`,
-		(dmg) => (data, value) => (data.damageTypes[dmg].vulnerability = value)
-	),
-	maxHp: (data, value) => (data.health.hp.max = value),
-	'surges-max': (data, value) => (data.health.surgesRemaining.max = value),
-	'surges-value': (data, value) => (data.health.surgesValue = value),
-	speed: (data, value) => (data.speed = value),
-	initiative: (data, value) => (data.initiative = value),
-
-	check: noop,
-	'attack-roll': noop,
-	damage: noop,
-	'critical-damage': noop,
-	healing: noop,
-	'saving-throw': noop,
-};
 
 const tokenHpColors = {
 	damage: 0xff0000,
@@ -282,148 +191,30 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	override getRollData() {
-		return {
-			actor: this,
-			initiative: this.derivedData.initiative,
-		};
+		return { actor: this };
 	}
 
-	async updateBloodied() {
-		const findEffectId = (statusToCheck: string) => {
-			return this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck)?.id ?? null;
-		};
-		const setIfNotPresent = async (statusToCheck: string) => {
-			if (!isGame(game)) return;
+	readonly updateBloodied = updateBloodied;
 
-			const existingEffect = this.effects.find((x) => x.data.flags.core?.statusId === statusToCheck);
-			if (existingEffect) return;
-
-			const status = CONFIG.statusEffects.find((x) => x.id === statusToCheck);
-			if (!status) return;
-
-			const { _id, id, ...params } = status;
-
-			const effect = {
-				...params,
-				label: status.label && game.i18n.localize(status.label),
-				flags: {
-					core: {
-						statusId: statusToCheck,
-					},
-				},
-			};
-			await ActiveEffect.create(effect, { parent: this });
-		};
-
-		const calculated = this.calculateDerivedData();
-		const shouldBeDead = this.data.data.health.hp.value <= 0 && this.data.type === 'monster';
-		// const shouldBeDying = this.data.data.health.currentHp <= 0 && this.data.type === 'pc';
-		const shouldBeBloodied = !shouldBeDead && calculated.health.bloodied > this.data.data.health.hp.value;
-
-		const isBloodied = this.isStatus('bloodied');
-		const isDead = this.isStatus('dead');
-		// const currentDyingId = findEffectId('dying');
-
-		if (isDead) return;
-
-		if (shouldBeBloodied && !isBloodied) await setIfNotPresent('bloodied');
-		if (!shouldBeBloodied && isBloodied)
-			await this.deleteEmbeddedDocuments(
-				'ActiveEffect',
-				[findEffectId('bloodied')].filter((v): v is string => !!v)
-			);
-
-		if (shouldBeDead && !isDead) await setIfNotPresent('dead');
+	async createActiveEffect(effect: ActiveEffectDataConstructorData) {
+		await ActiveEffect.create(effect, { parent: this });
 	}
 
 	isStatus(statusToCheck: string): boolean {
 		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
 	}
 
-	private calculateDerivedData(): ActorDerivedData {
-		// TODO: this would be better as a proxy object
-		const allBonuses = this.allBonuses;
-
-		const resultData: ActorDerivedData = {
-			abilities: toObject(
-				abilities,
-				(abil) => abil,
-				() => ({ total: 0 })
-			),
-			health: {
-				hp: { max: 0 },
-				bloodied: 0,
-				surgesRemaining: {
-					max: 0,
-				},
-				surgesValue: 0,
-			},
-			defenses: toObject(
-				defenses,
-				(def) => def,
-				() => 0
-			),
-			damageTypes: toObject(
-				damageTypes,
-				(dmg) => dmg,
-				() => ({ resistance: 0, vulnerability: 0 })
-			),
-			speed: 0,
-			initiative: 0,
-			halfLevel: Math.floor(this.data.data.details.level / 2),
-			size: this.appliedRace?.data.data.size ?? 'medium',
-			pools: [],
-		};
-		this._derivedData = resultData;
-		const groupedByTarget = byTarget(allBonuses);
-		const appliedBonuses: FeatureBonusWithContext[] = [];
-		const indeterminateBonuses: FeatureBonusWithContext[] = [];
-		this._appliedBonuses = appliedBonuses;
-		this._indeterminateBonuses = indeterminateBonuses;
-		numericBonusTargets.forEach((target) => {
-			const filtered = filterConditions(groupedByTarget[target] ?? [], {}, true);
-			indeterminateBonuses.push(
-				...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)
-			);
-			const applicable = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
-			appliedBonuses.push(...applicable);
-			const evaluatedBonuses = evaluateAndRoll(applicable);
-			const final = sumFinalBonuses(evaluatedBonuses);
-			setters[target](resultData, final);
-		});
-
-		this.subActorFunctions.prepare(resultData, this);
-
-		resultData.health.bloodied = Math.floor(resultData.health.hp.max / 2);
-		resultData.health.surgesValue = Math.floor(resultData.health.hp.max / 4);
-
-		const filteredLists = filterConditions(this.allDynamicListResult, {}, true);
-		this._appliedDynamicList = filteredLists.filter(([, result]) => result === true).map(([bonus]) => bonus);
-		this._indeterminateDynamicList = filteredLists
-			.filter(([, result]) => result === ruleResultIndeterminate)
-			.map(([bonus]) => bonus);
-
-		const pools = this.items.contents.flatMap((item) => item.allGrantedPools());
-		this.items.contents
-			.flatMap((item) => item.allGrantedPoolBonuses())
-			.reduce((prev, next) => {
-				const idx = prev.findIndex((pool) => pool.name === next.name);
-				if (idx === -1) console.warn(`Unknown pool: ${next.name}`);
-				else {
-					const resolved: ResolvedPoolBonus = {
-						...next,
-						amount:
-							typeof next.amount === 'number'
-								? next.amount
-								: new Roll(next.amount, { actor: this }).roll({ async: false })._total,
-					};
-					prev[idx] = combinePoolLimits(prev[idx], resolved);
-				}
-				return prev;
-			}, pools);
-		resultData.pools = pools;
-
-		return resultData;
+	private calculateDerivedData() {
+		return calculateDerivedData.call(
+			this,
+			({ derivedData, appliedBonuses, indeterminateBonuses, appliedDynamicList, indeterminateDynamicList }) => {
+				this._derivedData = derivedData;
+				this._appliedBonuses = appliedBonuses;
+				this._indeterminateBonuses = indeterminateBonuses;
+				this._appliedDynamicList = appliedDynamicList;
+				this._indeterminateDynamicList = indeterminateDynamicList;
+			}
+		);
 	}
 
 	allPowers() {
@@ -454,6 +245,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		const resultData = {
 			...(expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData),
 		};
+		// Use embedded document creation process instead of update - this does weird/bad things. Plus, it's a huge recursive tree.
 		if (resultData.items) delete resultData.items;
 		if (resultData.effects) delete resultData.effects;
 
