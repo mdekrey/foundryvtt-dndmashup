@@ -23,7 +23,7 @@ import {
 	combinePoolLimits,
 	ResolvedPoolBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { isClass } from '@foundryvtt-dndmashup/mashup-react';
+import { isClass, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { isEpicDestiny } from '@foundryvtt-dndmashup/mashup-react';
 import { isEquipment } from '@foundryvtt-dndmashup/mashup-react';
 import { isParagonPath } from '@foundryvtt-dndmashup/mashup-react';
@@ -485,6 +485,10 @@ export class MashupActor extends Actor implements ActorDocument {
 			{ _id: itemData._id, data: { equipped: next } },
 			...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
 		]);
+	}
+
+	isReady(power: PowerDocument) {
+		return true;
 	}
 }
 
