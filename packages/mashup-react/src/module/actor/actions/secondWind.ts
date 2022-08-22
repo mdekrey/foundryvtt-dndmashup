@@ -1,4 +1,5 @@
 import { CommonAction } from './common-action';
+import { totalDefenseEffect } from './totalDefense';
 
 export const secondWind: CommonAction = {
 	name: 'Second Wind',
@@ -10,14 +11,14 @@ export const secondWind: CommonAction = {
 	setReady: (actor, ready) => {
 		actor.update({ 'data.health.secondWindUsed': !ready }, {});
 	},
-	use: (actor, chatDispatch) => {
+	use: async (actor, chatDispatch) => {
 		if (actor.data.data.health.secondWindUsed) return;
-		actor.applyHealing({
+		await actor.applyHealing({
 			addHealingSurgeValue: true,
 			spendHealingSurge: true,
 			additionalUpdates: { 'data.health.secondWindUsed': true },
 		});
-		// TODO - add total defense
+		await actor.createActiveEffect(totalDefenseEffect);
 		chatDispatch.sendChatMessage(
 			'plain-text',
 			actor,

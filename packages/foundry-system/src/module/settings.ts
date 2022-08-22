@@ -3,9 +3,11 @@ import { MashupActorSheet } from './actor/mashup-actor-sheet';
 import { MashupItemProxy } from './item/mashup-item-proxy';
 import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';
+import { MashupActiveEffect } from './active-effect';
 
 declare global {
 	interface DocumentClassConfig {
+		ActiveEffect: typeof MashupActiveEffect;
 		Actor: typeof MashupActor;
 		Item: typeof MashupItemBase;
 	}
@@ -21,6 +23,7 @@ export function registerSettings(): void {
 
 	CONFIG.Actor.documentClass = MashupActor;
 	CONFIG.Item.documentClass = MashupItemProxy as any;
+	CONFIG.ActiveEffect.documentClass = MashupActiveEffect;
 }
 
 export function registerCustomSheets() {

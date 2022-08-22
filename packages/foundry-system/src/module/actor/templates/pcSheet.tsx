@@ -1,7 +1,11 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { Tabs } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { ActorComponents, PlayerCharacterDataSourceData } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	ActiveEffectDocument,
+	ActorComponents,
+	PlayerCharacterDataSourceData,
+} from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
 import { PossibleItemData } from '../../item/types';
@@ -95,6 +99,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
 									<ActorComponents.Features
+										effects={actor.effects.contents as ActiveEffectDocument[]}
 										items={actor.items.contents as SimpleDocument<PossibleItemData>[]}
 										bonuses={bonusesLens.apply(documentState)}
 										dynamicList={dynamicListLens.apply(documentState)}

@@ -8,6 +8,7 @@ import {
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import { PossibleItemData } from './types';
 import { isGame } from '../../core/foundry';
+import { MashupActiveEffect } from '../active-effect';
 
 export class MashupItemData<TItem extends PossibleItemData>
 	extends foundry.abstract.DocumentData<
@@ -23,7 +24,7 @@ export class MashupItemData<TItem extends PossibleItemData>
 	type!: TItem['type'];
 	img!: string | null;
 	data!: TItem['data'];
-	effects!: EmbeddedCollection<typeof ActiveEffect, foundry.data.ItemData>;
+	effects!: EmbeddedCollection<typeof MashupActiveEffect, foundry.data.ItemData>;
 	folder!: string | null;
 	sort!: number;
 	permission!: Partial<Record<string, 0 | 1 | 2 | 3>>;

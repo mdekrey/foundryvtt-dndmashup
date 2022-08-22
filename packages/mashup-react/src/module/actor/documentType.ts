@@ -1,5 +1,6 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { DynamicListEntryWithContext, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { ActiveEffectDocumentConstructorData } from '../active-effect/active-effect-document-constructor-data';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
 import { PowerDocument } from '../item/subtypes/power/dataSourceData';
@@ -37,4 +38,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 		spendHealingSurge?: boolean;
 		additionalUpdates?: Record<string, unknown>;
 	}): Promise<void>;
+
+	// TODO: duration
+	createActiveEffect(effect: ActiveEffectDocumentConstructorData): Promise<void>;
 };

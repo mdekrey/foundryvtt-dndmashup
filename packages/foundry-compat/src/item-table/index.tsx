@@ -1,8 +1,13 @@
 import classNames from 'classnames';
 import { IconButton, Table } from '@foundryvtt-dndmashup/components';
-import { SimpleDocument } from '../interfaces';
+import { BaseDocument } from '../interfaces';
 
-export function ItemTable<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
+type ItemTableDocument = BaseDocument & {
+	img: string | null;
+	showEditDialog(): void;
+};
+
+export function ItemTable<T extends ItemTableDocument, ChildProps extends Record<string, unknown>>({
 	title,
 	items,
 	passedProps,
@@ -32,7 +37,7 @@ export function ItemTable<T extends SimpleDocument, ChildProps extends Record<st
 	);
 }
 
-function ItemTableRow<T extends SimpleDocument, ChildProps extends Record<string, unknown>>({
+function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<string, unknown>>({
 	item,
 	passedProps,
 	body: TableBody,

@@ -1,11 +1,11 @@
-import { BonusByType, untypedBonus } from './types';
+import { BonusByType } from './types';
 
 export function fromBonusesToFormula(bonuses: BonusByType): string | number {
 	const sum = Object.keys(bonuses)
 		.map((k) => bonuses[k])
 		.reduce((a, b) => a + b, 0);
 
-	return combineRollComponents(bonuses[untypedBonus] ?? 0, sum);
+	return sum;
 }
 
 export type RollComponent = string | number;

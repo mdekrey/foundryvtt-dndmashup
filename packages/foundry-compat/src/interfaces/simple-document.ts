@@ -28,9 +28,9 @@ export type BaseDocument = {
  * Represents a simple document without using the Foundry types to try to speed up conpilation
  */
 export type SimpleDocument<TData = unknown> = BaseDocument & {
-	img: string | null;
 	data: SimpleDocumentData<TData>;
 	type: TData extends { type: infer TType } ? TType : unknown;
+	img: string | null;
 
 	readonly items: { contents: SimpleDocument[] };
 

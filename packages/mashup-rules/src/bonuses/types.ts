@@ -1,4 +1,3 @@
-import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ConditionRuleContext, SimpleConditionRule } from '../conditions';
 import { NumericBonusTarget } from './constants';
 
@@ -11,15 +10,13 @@ export type FeatureBonus = {
 };
 
 export type FeatureBonusWithSource = FeatureBonus & {
-	source: SimpleDocument;
+	source: { id: string | null; name: string | null; img: string | null; showEditDialog(): void };
 };
 
 export type FeatureBonusWithContext = FeatureBonus & {
 	context: Partial<ConditionRuleContext>;
 };
 export type FullFeatureBonus = FeatureBonusWithSource & FeatureBonusWithContext;
-export const untypedBonus = Symbol('untyped');
 export type BonusByType = {
-	[untypedBonus]?: string;
 	[k: string]: number;
 };

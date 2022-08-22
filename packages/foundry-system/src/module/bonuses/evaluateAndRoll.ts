@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash/fp';
-import { BonusByType, FeatureBonusWithContext, untypedBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 
 const max = (v: number[]) => Math.max(...v);
 
@@ -16,25 +16,17 @@ export function evaluateAndRoll(
 			context: {},
 		})
 	);
-	const byType = groupBy((e) => e.type, [...bonusesWithContext, ...extraBonuses]);
+	const byType = groupBy((e) => e.type || '', [...bonusesWithContext, ...extraBonuses]);
 
 	const finalBonuses = Object.fromEntries(
 		Object.entries(byType)
 			.map(([k, v]) => {
 				if (k === '') {
-					const byType = groupBy((e) => typeof e.amount, v);
-					const indeterminateBonuses = (byType['string'] ?? [])
-						.map(({ amount }) => amount as string)
-						.map((amount) => amount.trim().replace(/^\+/, ''))
-						.join(' + ');
-					const determinateBonuses = (byType['number'] ?? [])
-						.map(({ amount }) => amount as number)
+					const determinateBonuses = v
+						.map(({ amount, context }) => evaluateAmount(amount, context))
 						.reduce((a, b) => a + b, 0);
 
-					return [
-						['', determinateBonuses],
-						[untypedBonus, indeterminateBonuses],
-					];
+					return [[k, determinateBonuses]];
 				}
 				const value = max(
 					v.map(({ amount, context }) =>
@@ -47,4 +39,8 @@ export function evaluateAndRoll(
 	);
 
 	return finalBonuses;
+}
+
+function evaluateAmount(amount: string | number, context: Partial<ConditionGrantingContext>) {
+	return typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total;
 }

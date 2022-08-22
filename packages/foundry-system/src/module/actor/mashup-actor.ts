@@ -27,6 +27,7 @@ import { PossibleActorData, SpecificActorData } from './types';
 import { calculateDerivedData } from './logic/calculateDerivedData';
 import { standardBonuses } from './logic/standardBonuses';
 import { updateBloodied } from './logic/updateBloodied';
+import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -87,6 +88,9 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	get specialBonuses(): FullFeatureBonus[] {
 		return [
+			...this.effects.contents.flatMap((effect) =>
+				effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
+			),
 			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
 			...this.data.items.contents.flatMap((item) =>
 				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
@@ -193,9 +197,20 @@ export class MashupActor extends Actor implements ActorDocument {
 		return { actor: this };
 	}
 
+	protected override async _preCreate(
+		data: ActorDataConstructorData,
+		options: DocumentModificationOptions,
+		user: BaseUser
+	): Promise<void> {
+		if (this.type === 'pc') {
+			this.data.token.update({ vision: true, actorLink: true, disposition: 1 });
+		}
+	}
+
 	readonly updateBloodied = updateBloodied;
 
 	async createActiveEffect(effect: ActiveEffectDataConstructorData) {
+		console.log(effect);
 		await ActiveEffect.create(effect, { parent: this });
 	}
 

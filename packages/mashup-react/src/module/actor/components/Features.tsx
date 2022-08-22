@@ -5,6 +5,7 @@ import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
 import { BonusesEditor, DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { Stateful } from '@foundryvtt-dndmashup/core';
+import { ActiveEffectDocument } from '../../active-effect';
 
 const features: {
 	key: React.Key;
@@ -57,10 +58,12 @@ const features: {
 ];
 
 export function Features({
+	effects,
 	items,
 	bonuses,
 	dynamicList,
 }: {
+	effects: ActiveEffectDocument[];
 	items: SimpleDocument<PossibleItemSourceData>[];
 	bonuses: Stateful<FeatureBonus[]>;
 	dynamicList: Stateful<DynamicListEntry[]>;
@@ -77,6 +80,7 @@ export function Features({
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));
 	return (
 		<>
+			{effects.length > 0 ? <ItemTable items={effects} title="Effects" /> : null}
 			{groups.map(({ key, label, items, header, body }) => (
 				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
