@@ -1,4 +1,3 @@
-import noop from 'lodash/fp/noop';
 import { CommonAction } from './common-action';
 
 export const spendActionPoint: CommonAction = {
@@ -11,5 +10,17 @@ export const spendActionPoint: CommonAction = {
 	setReady: (actor, ready) => {
 		actor.update({ 'data.actionPoints.usedThisEncounter': !ready }, {});
 	},
-	use: noop,
+	use: async (actor, chatDispatch) => {
+		if (actor.data.data.actionPoints.usedThisEncounter) return;
+		if (actor.data.data.actionPoints.value < 1) return;
+		await actor.update(
+			{
+				'data.actionPoints.usedThisEncounter': true,
+				'data.actionPoints.value': actor.data.data.actionPoints.value - 1,
+			},
+			{}
+		);
+		// TODO: action point additional effects
+		chatDispatch.sendChatMessage('plain-text', actor, 'spends an action point to get another action!');
+	},
 };
