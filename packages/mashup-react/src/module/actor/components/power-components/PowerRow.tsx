@@ -5,10 +5,12 @@ import { useChatMessageDispatcher } from '../../../chat';
 import { PowerPreview } from '../../../item/subtypes/power/components/PowerPreview';
 import { PowerDocument } from '../../../item/subtypes/power/dataSourceData';
 import { PowerFirstRow } from './PowerFirstRow';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 
 export function PowerRow({ actor, power }: { actor: ActorDocument; power: PowerDocument }) {
 	const detailRef = useRef<HTMLDivElement | null>(null);
 	const dispatch = useChatMessageDispatcher();
+	const apps = useApplicationDispatcher();
 
 	return (
 		<Table.Body>
@@ -40,8 +42,15 @@ export function PowerRow({ actor, power }: { actor: ActorDocument; power: PowerD
 	function edit() {
 		power.showEditDialog();
 	}
-	function remove() {
-		power.delete();
+	async function remove() {
+		const result = await apps
+			.launchApplication('dialog', {
+				title: 'Are you sure...?',
+				content: `Are you sure you want to delete ${power.name}? This cannot be undone.`,
+			})
+			.then(({ result }) => result)
+			.catch(() => false);
+		if (result) power.delete();
 	}
 	async function shareToChat() {
 		dispatch.sendChatMessage('power', actor, { item: power });

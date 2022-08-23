@@ -7,6 +7,7 @@ import { NumericBonusTarget } from './constants';
 import { numericBonusTargetNames } from './bonus-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 
 const selectTargets = Object.entries(numericBonusTargetNames).map(([key, { label }]) => ({
 	key,
@@ -44,6 +45,8 @@ const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
 	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '' || (r as any) === '');
 
 export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
+	const apps = useApplicationDispatcher();
+
 	function onAdd() {
 		bonuses.onChangeValue((draft) => {
 			draft.push({
@@ -69,10 +72,18 @@ export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<Featur
 	}
 
 	function onDelete(index: number) {
-		return () => {
-			return bonuses.onChangeValue((draft) => {
-				draft.splice(index, 1);
-			});
+		return async () => {
+			const result = await apps
+				.launchApplication('dialog', {
+					title: 'Are you sure...?',
+					content: `Are you sure you want to delete this bonus? This cannot be undone.`,
+				})
+				.then(({ result }) => result)
+				.catch(() => false);
+			if (result)
+				return bonuses.onChangeValue((draft) => {
+					draft.splice(index, 1);
+				});
 		};
 	}
 

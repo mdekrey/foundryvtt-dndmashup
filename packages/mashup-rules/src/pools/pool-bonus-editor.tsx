@@ -1,5 +1,6 @@
 import { FormInput, IconButton, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import classNames from 'classnames';
 import { PoolBonus, PoolBonusTarget } from './types';
 
@@ -13,6 +14,7 @@ const targetOptions: SelectItem<PoolBonusTarget>[] = [
 ];
 
 export function PoolBonusEditor({ pools, className }: { pools: Stateful<PoolBonus[]>; className?: string }) {
+	const apps = useApplicationDispatcher();
 	function onAdd() {
 		pools.onChangeValue((draft) => {
 			if (draft.length === 0) {
@@ -31,10 +33,18 @@ export function PoolBonusEditor({ pools, className }: { pools: Stateful<PoolBonu
 	}
 
 	function onDelete(index: number) {
-		return () => {
-			return pools.onChangeValue((draft) => {
-				draft.splice(index, 1);
-			});
+		return async () => {
+			const result = await apps
+				.launchApplication('dialog', {
+					title: 'Are you sure...?',
+					content: `Are you sure you want to delete this resource bonus? This cannot be undone.`,
+				})
+				.then(({ result }) => result)
+				.catch(() => false);
+			if (result)
+				return pools.onChangeValue((draft) => {
+					draft.splice(index, 1);
+				});
 		};
 	}
 

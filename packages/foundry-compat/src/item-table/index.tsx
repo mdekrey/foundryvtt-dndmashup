@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { IconButton, Table } from '@foundryvtt-dndmashup/components';
 import { BaseDocument } from '../interfaces';
+import { useApplicationDispatcher } from '../components';
 
 type ItemTableDocument = BaseDocument & {
 	img: string | null;
@@ -46,6 +47,7 @@ function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<str
 	passedProps: ChildProps;
 	body: undefined | React.FC<{ item: T } & ChildProps>;
 }) {
+	const apps = useApplicationDispatcher();
 	return (
 		<Table.Body>
 			<tr className="border-b-2 border-transparent">
@@ -69,7 +71,14 @@ function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<str
 	function edit() {
 		item.showEditDialog();
 	}
-	function remove() {
-		item.delete();
+	async function remove() {
+		const result = await apps
+			.launchApplication('dialog', {
+				title: 'Are you sure...?',
+				content: `Are you sure you want to delete ${item.name}? This cannot be undone.`,
+			})
+			.then(({ result }) => result)
+			.catch(() => false);
+		if (result) item.delete();
 	}
 }

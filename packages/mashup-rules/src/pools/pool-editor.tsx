@@ -1,5 +1,6 @@
 import { DetailsModalButton, FormInput, IconButton, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import classNames from 'classnames';
 import { PoolLimits, PoolRechargeConfiguration, PoolRegain, PoolReset } from './types';
 import { isRegainPoolRecharge } from './utils';
@@ -7,6 +8,7 @@ import { isRegainPoolRecharge } from './utils';
 const baseLens = Lens.identity<PoolLimits[]>();
 
 export function PoolsEditor({ pools, className }: { pools: Stateful<PoolLimits[]>; className?: string }) {
+	const apps = useApplicationDispatcher();
 	function onAdd() {
 		pools.onChangeValue((draft) => {
 			if (draft.length === 0) {
@@ -27,10 +29,18 @@ export function PoolsEditor({ pools, className }: { pools: Stateful<PoolLimits[]
 	}
 
 	function onDelete(index: number) {
-		return () => {
-			return pools.onChangeValue((draft) => {
-				draft.splice(index, 1);
-			});
+		return async () => {
+			const result = await apps
+				.launchApplication('dialog', {
+					title: 'Are you sure...?',
+					content: `Are you sure you want to delete this resource? This cannot be undone.`,
+				})
+				.then(({ result }) => result)
+				.catch(() => false);
+			if (result)
+				return pools.onChangeValue((draft) => {
+					draft.splice(index, 1);
+				});
 		};
 	}
 

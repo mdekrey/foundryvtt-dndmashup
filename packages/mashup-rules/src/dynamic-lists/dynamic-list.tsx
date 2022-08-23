@@ -7,6 +7,7 @@ import { DynamicListTarget } from './constants';
 import { dynamicListTargetNames } from './dynamic-list-sheet-utils';
 import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 
 const selectTargets = Object.entries(dynamicListTargetNames).map(([key, { label }]) => ({
 	key,
@@ -50,6 +51,7 @@ export function DynamicList({
 	dynamicList: Stateful<DynamicListEntry[]>;
 	className?: string;
 }) {
+	const apps = useApplicationDispatcher();
 	function onAdd() {
 		dynamicList.onChangeValue((draft) => {
 			draft.push({
@@ -75,10 +77,18 @@ export function DynamicList({
 	}
 
 	function onDelete(index: number) {
-		return () => {
-			return dynamicList.onChangeValue((draft) => {
-				draft.splice(index, 1);
-			});
+		return async () => {
+			const result = await apps
+				.launchApplication('dialog', {
+					title: 'Are you sure...?',
+					content: `Are you sure you want to delete this entry? This cannot be undone.`,
+				})
+				.then(({ result }) => result)
+				.catch(() => false);
+			if (result)
+				return dynamicList.onChangeValue((draft) => {
+					draft.splice(index, 1);
+				});
 		};
 	}
 
