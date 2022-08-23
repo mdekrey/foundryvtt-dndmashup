@@ -24,6 +24,7 @@ import './module/chat/power';
 import { libWrapper } from './libwrapper-shim';
 import { PowerEffectTemplate } from './module/power-effect-template';
 import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
+import { onNextTurn } from './module/active-effect/turns';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -90,6 +91,8 @@ Hooks.once('init', async () => {
 		'MeasuredTemplate.prototype._refreshRulerText',
 		PowerEffectTemplate._refreshRulerBurst
 	);
+
+	libWrapper.register(systemName, 'Combat.prototype.nextTurn', onNextTurn);
 
 	libWrapper.register(systemName, 'Roll.parse', parseWrapper);
 });

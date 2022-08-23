@@ -25,7 +25,7 @@ export async function updateBloodied(this: MashupActor) {
 				},
 			},
 		};
-		await this.createActiveEffect(effect);
+		await this.createActiveEffect(effect, { durationType: 'other', description: 'while HP ≤ Bloodied Value' });
 	};
 
 	const calculated = this.derivedData;

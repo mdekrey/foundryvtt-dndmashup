@@ -1,5 +1,5 @@
 import { CommonAction } from './common-action';
-import { totalDefenseEffect } from './totalDefense';
+import { totalDefenseDuration, totalDefenseEffect } from './totalDefense';
 
 export const secondWind: CommonAction = {
 	name: 'Second Wind',
@@ -18,7 +18,7 @@ export const secondWind: CommonAction = {
 			spendHealingSurge: true,
 			additionalUpdates: { 'data.health.secondWindUsed': true },
 		});
-		await actor.createActiveEffect(totalDefenseEffect);
+		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration);
 		chatDispatch.sendChatMessage(
 			'plain-text',
 			actor,

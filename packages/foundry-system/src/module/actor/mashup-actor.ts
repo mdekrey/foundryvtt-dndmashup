@@ -19,6 +19,7 @@ import {
 	EquipmentData,
 	getEquipmentProperties,
 	ItemDocument,
+	ComputableEffectDurationInfo,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -28,6 +29,7 @@ import { calculateDerivedData } from './logic/calculateDerivedData';
 import { standardBonuses } from './logic/standardBonuses';
 import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
+import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -209,9 +211,9 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	readonly updateBloodied = updateBloodied;
 
-	async createActiveEffect(effect: ActiveEffectDataConstructorData) {
-		console.log(effect);
-		await ActiveEffect.create(effect, { parent: this });
+	async createActiveEffect(effect: ActiveEffectDataConstructorData, duration: ComputableEffectDurationInfo) {
+		console.log({ effect, duration });
+		await ActiveEffect.create(createFinalEffectConstructorData(effect, duration, this), { parent: this });
 	}
 
 	isStatus(statusToCheck: string): boolean {

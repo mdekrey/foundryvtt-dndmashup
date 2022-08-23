@@ -1,4 +1,5 @@
-import { ActiveEffectDocumentConstructorData } from '../../active-effect/active-effect-document-constructor-data';
+import { ComputableEffectDurationInfo } from '../../active-effect/types';
+import { ActiveEffectDocumentConstructorData } from '../../active-effect/types';
 import { CommonAction } from './common-action';
 
 export const totalDefenseEffect: ActiveEffectDocumentConstructorData = {
@@ -17,6 +18,10 @@ export const totalDefenseEffect: ActiveEffectDocumentConstructorData = {
 	},
 	// TODO: duration
 };
+export const totalDefenseDuration: ComputableEffectDurationInfo = {
+	rounds: 1,
+	durationType: 'startOfTurn',
+};
 
 export const totalDefense: CommonAction = {
 	name: 'Total Defense',
@@ -27,7 +32,7 @@ export const totalDefense: CommonAction = {
 	isReady: () => true,
 
 	use: async (actor, chatDispatch) => {
-		await actor.createActiveEffect(totalDefenseEffect);
+		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration);
 		chatDispatch.sendChatMessage('plain-text', actor, '... steels their defenses!!');
 	},
 };

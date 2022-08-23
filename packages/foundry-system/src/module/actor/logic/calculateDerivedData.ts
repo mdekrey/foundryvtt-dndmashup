@@ -71,7 +71,6 @@ export function calculateDerivedData(
 ): ActorDerivedData {
 	// TODO: this would be better as a proxy object
 	const allBonuses = this.allBonuses;
-	console.log(allBonuses);
 
 	const resultData: ActorDerivedData = {
 		abilities: toObject(
@@ -122,9 +121,6 @@ export function calculateDerivedData(
 		appliedBonuses.push(...applicable);
 		const evaluatedBonuses = evaluateAndRoll(applicable);
 		const final = sumFinalBonuses(evaluatedBonuses);
-		if (target.startsWith('defense-')) {
-			console.log({ filtered, applicable, evaluatedBonuses, final });
-		}
 		setters[target](resultData, final);
 	});
 

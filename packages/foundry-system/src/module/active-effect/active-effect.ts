@@ -1,12 +1,10 @@
-import { ActiveEffectDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { ActiveEffectDocument, ActiveEffectFlags } from '@foundryvtt-dndmashup/mashup-react';
 import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 declare global {
 	interface FlagConfig {
 		ActiveEffect: {
-			mashup?: {
-				bonuses?: FeatureBonus[];
-			};
+			mashup?: ActiveEffectFlags['mashup'];
 		};
 	}
 }
