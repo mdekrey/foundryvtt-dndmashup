@@ -20,6 +20,7 @@ export function PowerRow({ actor, power }: { actor: ActorDocument; power: PowerD
 				img={power.img ?? ''}
 				hint=""
 				isReady={actor.isReady(power)}
+				onToggleReady={() => toggleReady()}
 				onClickName={toggle}
 				onEdit={edit}
 				onRemove={remove}
@@ -53,7 +54,12 @@ export function PowerRow({ actor, power }: { actor: ActorDocument; power: PowerD
 		if (result) power.delete();
 	}
 	async function shareToChat() {
-		dispatch.sendChatMessage('power', actor, { item: power });
+		if (await actor.applyUsage(power)) {
+			dispatch.sendChatMessage('power', actor, { item: power });
+		}
+	}
+	async function toggleReady() {
+		await actor.toggleReady(power);
 	}
 	function toggle() {
 		if (!detailRef.current) return;

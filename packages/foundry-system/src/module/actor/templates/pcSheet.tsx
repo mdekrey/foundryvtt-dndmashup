@@ -30,7 +30,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 	const maxHp = data.health.hp.max;
 	const healingSurgeValue = data.health.surgesValue;
 	const healingSurgesPerDay = data.health.surgesRemaining.max;
-	const pools = data.pools;
+	const pools = data.poolLimits;
 
 	return (
 		<>

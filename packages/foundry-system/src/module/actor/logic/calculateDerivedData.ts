@@ -100,7 +100,7 @@ export function calculateDerivedData(
 		initiative: 0,
 		halfLevel: Math.floor(this.data.data.details.level / 2),
 		size: this.appliedRace?.data.data.size ?? 'medium',
-		pools: [],
+		poolLimits: [],
 	};
 	const appliedBonuses: FullFeatureBonus[] = [];
 	const indeterminateBonuses: FullFeatureBonus[] = [];
@@ -159,7 +159,7 @@ export function calculateDerivedData(
 			}
 			return prev;
 		}, pools);
-	resultData.pools = pools;
+	resultData.poolLimits = pools;
 
 	return resultData;
 }

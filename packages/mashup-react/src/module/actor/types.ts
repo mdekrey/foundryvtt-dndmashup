@@ -46,6 +46,7 @@ export type BaseActorTemplateDataSourceData = {
 		[currency in Currency]: number;
 	};
 	pools: PoolState[];
+	powerUsage?: Record<string, number>;
 };
 
 export type PcDetails = ActorDetails & {

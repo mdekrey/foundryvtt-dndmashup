@@ -166,7 +166,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
 		if (this.isOwner) {
-			this.updateBloodied();
+			updateBloodied.call(this);
 		}
 	}
 
@@ -208,8 +208,6 @@ export class MashupActor extends Actor implements ActorDocument {
 			this.data.token.update({ vision: true, actorLink: true, disposition: 1 });
 		}
 	}
-
-	readonly updateBloodied = updateBloodied;
 
 	async createActiveEffect(effect: ActiveEffectDataConstructorData, duration: ComputableEffectDurationInfo) {
 		console.log({ effect, duration });
@@ -338,8 +336,51 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	isReady(power: PowerDocument) {
-		// TODO
+		if (!this.data.data.powerUsage) return true;
+		if (!power.id) return false;
+		const pools = power.data.data.usedPools;
+		if (pools && pools.some((poolName) => this.isPoolDrained(poolName))) return false;
+		return !this.data.data.powerUsage[power.id];
+	}
+	async toggleReady(power: PowerDocument): Promise<boolean> {
+		// intentionally does not update pools
+		await this.update({ [`data.powerUsage.${power.id}`]: this.isReady(power) ? 1 : 0 });
 		return true;
+	}
+	async applyUsage(power: PowerDocument): Promise<boolean> {
+		if (!this.isReady(power)) return false;
+
+		const updates: Record<string, unknown> = {};
+		if (power.data.data.usage === 'encounter' || power.data.data.usage === 'daily') {
+			updates[`data.powerUsage.${power.id}`] = this.isReady(power) ? 1 : 0;
+		}
+		const pools = power.data.data.usedPools;
+		if (pools) {
+			updates[`data.pools`] = this.data.data.pools.map((pool) => {
+				return pools.includes(pool.name)
+					? {
+							...pool,
+							usedSinceRest: pool.usedSinceRest + 1,
+							value: pool.value - 1,
+					  }
+					: pool;
+			});
+		}
+
+		await this.update(updates);
+
+		return true;
+	}
+
+	isPoolDrained(poolName: string) {
+		const pool = this.data.data.pools.find((p) => p.name === poolName);
+		const poolMaxes = this.derivedData.poolLimits.find((p) => p.name === poolName);
+		console.log(poolName, { pool, poolMaxes });
+		if (!pool || !poolMaxes) return true;
+		if (pool.value === 0) return true;
+		if (poolMaxes.maxBetweenRest !== null && pool.usedSinceRest >= poolMaxes.maxBetweenRest) return true;
+		console.log(poolName, 'not drained');
+		return false;
 	}
 }
 

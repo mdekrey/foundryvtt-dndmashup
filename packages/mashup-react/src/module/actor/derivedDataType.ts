@@ -22,7 +22,7 @@ export type CommonDerivedDataProperties = {
 	initiative: number;
 	size: Size;
 	halfLevel: number;
-	pools: SourcedPoolLimits[];
+	poolLimits: SourcedPoolLimits[];
 };
 
 export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {
