@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash/fp';
 import classNames from 'classnames';
-import { IconButton } from '@foundryvtt-dndmashup/components';
+import { IconButton, Table } from '@foundryvtt-dndmashup/components';
 import { EquippedItemSlot, equippedItemSlots, ItemSlot, itemSlots } from '../../item/subtypes/equipment/item-slots';
 import { isEquipment } from '../../item/subtypes/equipment/isEquipment';
 import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
@@ -32,15 +32,28 @@ export function Inventory({ actor }: { actor: ActorDocument }) {
 	);
 	return (
 		<>
-			{orderedItemSlots.map((slot) =>
-				inventoryBySlots[slot] ? (
-					<InventorySlotTable
-						items={inventoryBySlots[slot]}
-						key={slot}
-						slot={slot}
-						onEquip={actor.isOwner ? (item, equipSlot) => equip(item.data, equipSlot) : undefined}
-					/>
-				) : null
+			{orderedItemSlots.some((slot) => !!inventoryBySlots[slot]) ? (
+				orderedItemSlots.map((slot) =>
+					inventoryBySlots[slot] ? (
+						<InventorySlotTable
+							items={inventoryBySlots[slot]}
+							key={slot}
+							slot={slot}
+							onEquip={actor.isOwner ? (item, equipSlot) => equip(item.data, equipSlot) : undefined}
+						/>
+					) : null
+				)
+			) : (
+				<Table className="theme-orange-dark">
+					<Table.HeaderRow>
+						<th>No Inventory Items Found</th>
+					</Table.HeaderRow>
+					<Table.Body>
+						<tr>
+							<td className="text-center">Drag-and-drop items onto this sheet to add them</td>
+						</tr>
+					</Table.Body>
+				</Table>
 			)}
 		</>
 	);
@@ -101,6 +114,12 @@ function InventorySlotTable<T extends ItemSlot>({
 	);
 
 	return (
-		<ItemTable items={items} title={itemSlots[slot].display} header={InventorySlotHeader} body={InventorySlotBody} />
+		<ItemTable
+			className="theme-orange-dark"
+			items={items}
+			title={itemSlots[slot].display}
+			header={InventorySlotHeader}
+			body={InventorySlotBody}
+		/>
 	);
 }

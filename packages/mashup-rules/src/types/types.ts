@@ -4,7 +4,7 @@ export type Ability = typeof abilities[number];
 export const defenses = ['ac', 'fort', 'refl', 'will'] as const;
 export type Defense = typeof defenses[number];
 
-export const currencies = ['ad', 'pp', 'gp', 'sp', 'cp'] as const;
+export const currencies = ['cp', 'sp', 'gp', 'pp', 'ad'] as const;
 export type Currency = typeof currencies[number];
 
 export const damageTypes = [

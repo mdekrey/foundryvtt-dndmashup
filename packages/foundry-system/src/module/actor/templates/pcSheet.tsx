@@ -20,6 +20,7 @@ const skillsLens = dataLens.toField('skills').default([]);
 const poolsLens = dataLens.toField('pools').default([]);
 const bonusesLens = dataLens.toField('bonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
+const currencyLens = dataLens.toField('currency');
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
@@ -93,6 +94,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								</Tabs.Tab>
 								<Tabs.Tab tabName="inventory">
 									<ActorComponents.Inventory actor={actor} />
+									<ActorComponents.Currency {...currencyLens.apply(documentState)} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="powers">
 									<ActorComponents.Powers actor={actor} />

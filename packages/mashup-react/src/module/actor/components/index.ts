@@ -8,6 +8,7 @@ import { Header } from './Header';
 import { HealingSurges } from './HealingSurges';
 import { HitPoints } from './HitPoints';
 import { Inventory } from './Inventory';
+import { CurrencyEditor } from './Currency';
 import { Powers } from './Powers';
 import { CombatStats } from './CombatStats';
 import { Skills } from './Skills';
@@ -24,6 +25,7 @@ export const ActorComponents = {
 	HealingSurges,
 	HitPoints,
 	Inventory,
+	Currency: CurrencyEditor,
 	Powers,
 	CombatStats,
 	Skills,
