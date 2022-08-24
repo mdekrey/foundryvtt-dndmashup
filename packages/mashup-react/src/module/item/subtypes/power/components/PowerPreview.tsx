@@ -260,6 +260,8 @@ function actionType(actionType: ActionType) {
 			return 'Move action';
 		case 'opportunity':
 			return 'Opportunity action';
+		case 'none':
+			return 'None';
 		default:
 			return neverEver(actionType);
 	}

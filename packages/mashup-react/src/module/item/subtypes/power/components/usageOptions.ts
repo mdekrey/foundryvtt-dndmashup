@@ -27,6 +27,12 @@ export const usageOptions: SelectItem<PowerUsage>[] = [
 		typeaheadLabel: 'Item',
 	},
 	{
+		value: 'other',
+		key: 'other',
+		label: 'Other',
+		typeaheadLabel: 'Other',
+	},
+	{
 		value: 'recharge-6',
 		key: 'recharge-6',
 		label: 'Recharge 6',

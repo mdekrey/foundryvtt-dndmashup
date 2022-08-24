@@ -38,4 +38,10 @@ export const actionTypeOptions: SelectItem<ActionType>[] = [
 		label: 'Immediate',
 		typeaheadLabel: 'Immediate',
 	},
+	{
+		value: 'none',
+		key: 'none',
+		label: 'None',
+		typeaheadLabel: 'None',
+	},
 ];
