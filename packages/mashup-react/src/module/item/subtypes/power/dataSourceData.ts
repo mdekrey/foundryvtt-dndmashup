@@ -12,9 +12,9 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	actionType: ActionType;
 	special: string;
 	displayOverride: string;
-	trigger?: string;
-	prerequisite?: string;
-	requirement?: string; // TODO: should this be a condition?
+	trigger?: string | null;
+	prerequisite?: string | null;
+	requirement?: string | null; // TODO: should this be a condition?
 	isBasic: boolean;
 
 	effects: PowerEffect[];

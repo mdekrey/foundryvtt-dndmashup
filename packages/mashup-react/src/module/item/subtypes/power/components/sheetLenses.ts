@@ -7,9 +7,9 @@ export const isNull = (e: any): e is null => e === null;
 
 export const baseLens = Lens.identity<SimpleDocumentData<PowerData>>();
 
-const undefinedString = Lens.from<string | undefined, string>(
+const undefinedString = Lens.from<string | undefined | null, string>(
 	(d) => d ?? '',
-	(mutator) => (d) => mutator(d ?? '') || undefined
+	(mutator) => (d) => mutator(d ?? '') || null
 );
 
 export const imageLens = baseLens.toField('img');
