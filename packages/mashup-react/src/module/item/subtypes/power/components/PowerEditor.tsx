@@ -25,6 +25,7 @@ import {
 	effectsLens,
 	newEffectLens,
 	sourceIdLens,
+	powerTriggerLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerData, PowerEffect } from '../dataSourceData';
@@ -100,6 +101,14 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 					})}>
 					<FormInput.TextField {...powerPrerequisiteLens.apply(documentState)} />
 					<FormInput.Label>Prerequisite</FormInput.Label>
+				</FormInput>
+
+				<FormInput
+					className={classNames({
+						'opacity-50 focus-within:opacity-100': !documentState.value.data.trigger,
+					})}>
+					<FormInput.TextField {...powerTriggerLens.apply(documentState)} />
+					<FormInput.Label>Trigger</FormInput.Label>
 				</FormInput>
 
 				<HitAndMissFields {...firstEffectLens.apply(documentState)} />

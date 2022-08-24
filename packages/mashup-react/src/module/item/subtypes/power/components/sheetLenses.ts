@@ -22,6 +22,7 @@ export const powerUsageLens = powerSourceDataLens.toField('usage');
 export const powerActionTypeLens = powerSourceDataLens.toField('actionType');
 export const powerRequirementLens = powerSourceDataLens.toField('requirement').combine(undefinedString);
 export const powerPrerequisiteLens = powerSourceDataLens.toField('prerequisite').combine(undefinedString);
+export const powerTriggerLens = powerSourceDataLens.toField('trigger').combine(undefinedString);
 export const effectsLens = powerSourceDataLens.toField('effects');
 export const usedPoolsLens = powerSourceDataLens.toField('usedPools').default([]);
 export const grantedPoolsLens = powerSourceDataLens.toField('grantedPools').default([]);
