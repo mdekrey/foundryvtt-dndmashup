@@ -17,6 +17,7 @@ import { registerSettings, registerCustomSheets } from './module/settings';
 import { systemName, rootPath } from './module/constants';
 
 import './module/applications';
+import './module/conditions';
 import { attachToChat } from './module/chat';
 
 import './styles/foundryvtt-dndmashup.css';

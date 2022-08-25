@@ -5,7 +5,7 @@ import { ApplicationOptions, UpdatableModal } from './types';
 export type ModalProps = {
 	children?: React.ReactNode;
 	title: string;
-	options?: ApplicationOptions;
+	options?: Partial<ApplicationOptions>;
 	isOpen: boolean;
 	onClose: () => void;
 };

@@ -15,18 +15,6 @@ const selectTargets = Object.entries(numericBonusTargetNames).map(([key, { label
 	label,
 	typeaheadLabel: label,
 }));
-const selectConditions: SelectItem<keyof ConditionRules>[] = [
-	...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
-		const text = ruleText();
-		const label = `when ${text}`;
-		return {
-			key,
-			value: key as ConditionRuleType,
-			label,
-			typeaheadLabel: label,
-		};
-	}),
-];
 
 const baseLens = Lens.identity<FeatureBonus[]>();
 
@@ -169,21 +157,37 @@ export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<Featur
 const ruleTypeLens = Lens.fromProp<ConditionRule | NoRule>()('rule');
 function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
 	const [isOpen, setOpen] = useState(false);
+	const selectConditions: SelectItem<keyof ConditionRules>[] = [
+		...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
+			const text = ruleText();
+			const label = `when ${text}`;
+			return {
+				key,
+				value: key as ConditionRuleType,
+				label,
+				typeaheadLabel: label,
+			};
+		}),
+	];
 
 	return (
-		<>
+		<div>
 			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
 				{toRuleText(state.value)}
 			</AppButton>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition">
-				<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />
-				<hr className="my-1" />
-				{toEditor(state)}
-				<AppButton className="w-full" onClick={() => setOpen(false)}>
-					Close
-				</AppButton>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition" options={{ resizable: true }}>
+				<div className="min-h-64 flex flex-col">
+					<div className="flex-grow">
+						<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />
+						<hr className="my-1" />
+						{toEditor(state)}
+					</div>
+					<AppButton className="w-full" onClick={() => setOpen(false)}>
+						Close
+					</AppButton>
+				</div>
 			</Modal>
-		</>
+		</div>
 	);
 }
 
