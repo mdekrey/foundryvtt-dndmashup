@@ -73,6 +73,7 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 								{text}
 							</RulesText>
 						))}
+						{itemData.special && <RulesText label="Special">{itemData.special}</RulesText>}
 					</>
 				),
 				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info leading-snug" />))

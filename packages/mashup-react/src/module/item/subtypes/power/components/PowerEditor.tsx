@@ -26,6 +26,8 @@ import {
 	newEffectLens,
 	sourceIdLens,
 	powerTriggerLens,
+	isBasicAttackLens,
+	powerSpecialTextLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerData, PowerEffect } from '../dataSourceData';
@@ -87,6 +89,11 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<AttackRollFields {...firstEffectLens.combine(attackRollLens).apply(documentState)} />
 
+				<FormInput.Inline>
+					<FormInput.Checkbox {...isBasicAttackLens.apply(documentState)} className="self-center" />
+					<span>is Basic Attack?</span>
+				</FormInput.Inline>
+
 				<FormInput
 					className={classNames({
 						'opacity-50 focus-within:opacity-100': !documentState.value.data.requirement,
@@ -109,6 +116,14 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 					})}>
 					<FormInput.TextField {...powerTriggerLens.apply(documentState)} />
 					<FormInput.Label>Trigger</FormInput.Label>
+				</FormInput>
+
+				<FormInput
+					className={classNames({
+						'opacity-50 focus-within:opacity-100': !documentState.value.data.special,
+					})}>
+					<FormInput.TextField {...powerSpecialTextLens.apply(documentState)} />
+					<FormInput.Label>Special</FormInput.Label>
 				</FormInput>
 
 				<HitAndMissFields {...firstEffectLens.apply(documentState)} />
