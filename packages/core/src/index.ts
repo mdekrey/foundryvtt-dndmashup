@@ -1,5 +1,6 @@
 export * from './jsx';
 export * from './lens';
+export * from './deferredPromise';
 export * from './ensureSign';
 export * from './functions';
 export * from './neverEver';

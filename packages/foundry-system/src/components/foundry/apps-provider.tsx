@@ -1,3 +1,4 @@
+import { deferredPromise } from '@foundryvtt-dndmashup/core';
 import {
 	ApplicationSettings,
 	ModalDispatcherContext,
@@ -19,20 +20,12 @@ export const applicationDispatcher: ApplicationDispatcherContext = {
 		messageType: T,
 		param: MashupApplication[T]
 	): Promise<{ dialog: SimpleApplication; result: Promise<MashupApplicationResultType<T>> }> {
-		let tempResolve: ((value: MashupApplicationResultType<T>) => void) | undefined = undefined;
-		let tempReject: ((reason?: any) => void) | undefined = undefined;
-
-		const resultPromise = new Promise<MashupApplicationResultType<T>>((resolve, reject) => {
-			tempResolve = resolve;
-			tempReject = reject;
-		});
-		if (!tempResolve || !tempReject) throw new Error(`Promise didn't provide callbacks.`);
-
-		const { content, title, options } = await applicationRegistry[messageType](param, tempResolve, tempReject);
-		const dialog = new JsxDialog(content, { title, close: () => tempReject?.() }, options);
+		const { promise, resolve, reject } = deferredPromise<MashupApplicationResultType<T>>();
+		const { content, title, options } = await applicationRegistry[messageType](param, resolve, reject);
+		const dialog = new JsxDialog(content, { title, close: () => reject?.() }, options);
 		dialog.render(true);
 
-		resultPromise
+		promise
 			.finally(() => {
 				dialog.close();
 			})
@@ -41,7 +34,7 @@ export const applicationDispatcher: ApplicationDispatcherContext = {
 
 		return {
 			dialog,
-			result: resultPromise,
+			result: promise,
 		};
 	},
 };
