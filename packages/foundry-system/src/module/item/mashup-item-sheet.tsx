@@ -11,6 +11,7 @@ import { ParagonPathSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocumentByType } from '@foundryvtt-dndmashup/mashup-react';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
+import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] }> } = {
 	class: ({ item }) => <ClassSheet items={item.items.contents} {...documentAsState(item)} />,
@@ -38,6 +39,13 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 			height: 720,
 			dragDrop: [{ dragSelector: null, dropSelector: null }],
 		});
+	}
+
+	protected override _getHeaderButtons(): Application.HeaderButton[] {
+		const result = super._getHeaderButtons();
+		result.unshift(...getImportExportButtons(this.item));
+		console.log(result);
+		return result;
 	}
 
 	protected override _getJsx(): JSX.Element {
