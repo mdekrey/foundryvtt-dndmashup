@@ -1,3 +1,4 @@
+import { ensureSign } from '@foundryvtt-dndmashup/core';
 import { ItemSlotInfo } from '../types';
 import { defaultEquipmentInfo } from './armorEquipmentInfo';
 import { allArmorCategories } from './config';
@@ -6,12 +7,25 @@ import { ArmorDetails } from './details';
 export const ArmorInfo: ItemSlotInfo<'armor'> = {
 	display: 'Armor',
 	optionLabel: 'Armor',
-	bonuses: ({ armorBonus }) => [{ type: 'armor', target: 'defense-ac', amount: armorBonus, condition: null }],
+	bonuses: ({ armorBonus, speedPenalty, checkPenalty }) => [
+		{ type: 'armor', target: 'defense-ac', amount: armorBonus, condition: null },
+		{ type: 'armor', target: 'speed', amount: speedPenalty, condition: null },
+		{
+			type: 'armor',
+			target: 'check',
+			amount: checkPenalty,
+			condition: { rule: 'manual', parameter: { conditionText: 'armor check penalty applies' } },
+		},
+	],
 	equippedSlots: ['body'],
 	slotsNeeded: () => 1,
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
-		<>{`${input.type} ${input.category}, armor bonus +${input.armorBonus}, check penalty ${input.checkPenalty}, speed penalty ${input.speedPenalty}`}</>
+		<>{`${input.type} ${input.category}, armor bonus ${ensureSign(input.armorBonus)}, check ${
+			input.checkPenalty <= 0 ? 'penalty' : 'bonus'
+		} ${ensureSign(input.checkPenalty)}, speed  ${input.speedPenalty <= 0 ? 'penalty' : 'bonus'} ${ensureSign(
+			input.speedPenalty
+		)}`}</>
 	),
 	details: ArmorDetails,
 	inventoryTableHeader: () => (
