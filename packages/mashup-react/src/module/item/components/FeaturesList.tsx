@@ -1,4 +1,5 @@
 import { ItemTable, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { isPower } from '../subtypes';
 import { FeatureData } from '../subtypes/feature/dataSourceData';
 import { isFeature } from '../subtypes/feature/isFeature';
 
@@ -42,6 +43,11 @@ const features: {
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
 		header: FeatureHeader,
 		body: FeatureBody as React.FC<{ item: SimpleDocument }>,
+	},
+	{
+		key: 'powers',
+		label: 'Powers',
+		filter: (item) => isPower(item),
 	},
 ];
 

@@ -4,26 +4,36 @@ import {
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { FeatureDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { FeatureDocument, PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 
 export class MashupItemFeature extends MashupItem<'feature'> implements FeatureDocument {
 	override allGrantedBonuses(): FeatureBonusWithSource[] {
-		return this.data.data.grantedBonuses.map((b) => ({ ...b, source: this }));
+		return [
+			...this.items.contents.flatMap((item) => item.allGrantedBonuses()),
+			...this.data.data.grantedBonuses.map((b) => ({ ...b, source: this })),
+		];
 	}
 	override allDynamicList(): DynamicListEntryWithSource[] {
-		return this.data.data.dynamicList.map((b) => ({ ...b, source: this }));
+		return [
+			...this.items.contents.flatMap((item) => item.allDynamicList()),
+			...this.data.data.dynamicList.map((b) => ({ ...b, source: this })),
+		];
 	}
 	override allGrantedPools(): SourcedPoolLimits[] {
-		return this.data.data.grantedPools ? this.data.data.grantedPools.map((b) => ({ ...b, source: [this] })) : [];
+		return [
+			...this.items.contents.flatMap((item) => item.allGrantedPools()),
+			...(this.data.data.grantedPools?.map((b) => ({ ...b, source: [this] })) ?? []),
+		];
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
-		return this.data.data.grantedPoolBonuses
-			? this.data.data.grantedPoolBonuses.map((b) => ({ ...b, source: this }))
-			: [];
+		return [
+			...this.items.contents.flatMap((item) => item.allGrantedPoolBonuses()),
+			...(this.data.data.grantedPoolBonuses?.map((b) => ({ ...b, source: this })) ?? []),
+		];
 	}
 
-	override canEmbedItem(): boolean {
-		return false;
+	override canEmbedItem(type: PossibleItemType): boolean {
+		return type === 'feature' || type === 'power';
 	}
 }

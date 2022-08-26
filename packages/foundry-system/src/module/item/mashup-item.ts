@@ -6,7 +6,7 @@ import {
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { isPower, ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import Document, {
@@ -253,5 +253,11 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	abstract override allDynamicList(): DynamicListEntryWithSource[];
 	abstract override allGrantedPools(): SourcedPoolLimits[];
 	abstract override allGrantedPoolBonuses(): SourcedPoolBonus[];
+	override allGrantedPowers(): PowerDocument[] {
+		return [
+			...(this.items.contents.filter(isPower) as PowerDocument[]),
+			...this.items.contents.flatMap((item) => item.allGrantedPowers()),
+		];
+	}
 	abstract override canEmbedItem(type: PossibleItemType): boolean;
 }
