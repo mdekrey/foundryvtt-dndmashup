@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import { pipeJsx, neverEver, oxfordComma } from '@foundryvtt-dndmashup/core';
+import { pipeJsx, neverEver } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
-import { ApplicableEffect, DamageEffect, HealingEffect } from '../../../../../effects';
+import { toText } from '../../../../../effects';
 import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
@@ -101,8 +101,8 @@ function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | Rule
 
 	const target = effect.target;
 	const attackRoll = effect.attackRoll && toAttackRollText(effect.attackRoll);
-	const hit = toNestedEffects(effect.hit);
-	const miss = effect.attackRoll && effect.miss ? toNestedEffects(effect.miss) : '';
+	const hit = toText(effect.hit);
+	const miss = effect.attackRoll && effect.miss ? toText(effect.miss) : '';
 
 	return [
 		!isFirst && attackRoll ? { label: `${prefix}Attack`, text: attackRoll } : null,
@@ -111,31 +111,6 @@ function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | Rule
 		hit ? { label: attackRoll ? `${prefix}Hit` : `${prefix}Effect`, text: hit } : null,
 		miss ? { label: `${prefix}Miss`, text: miss } : null,
 	];
-}
-
-function toNestedEffects(effect: ApplicableEffect): string {
-	return [
-		effect.damage && damageEffectText(effect.damage),
-		effect.healing && healingEffectText(effect.healing),
-		effect.text,
-	]
-		.filter(Boolean)
-		.join(' ');
-}
-
-function damageEffectText(effect: DamageEffect) {
-	return [effect.damage, oxfordComma(effect.damageTypes ?? []), 'damage.'].filter(Boolean).join(' ');
-}
-
-function healingEffectText(effect: HealingEffect) {
-	const prefix = effect.spendHealingSurge
-		? 'The target may spend a healing surge. If they do, the target'
-		: 'The target';
-	const verb = effect.isTemporary ? 'gains temporary hit points' : 'regains hit points';
-	const link = 'equal to';
-	const amount = [effect.healingSurge ? 'its healing surge value' : '', effect.healing].filter(Boolean).join(' plus ');
-
-	return `${prefix} ${verb} ${link} ${amount}.`;
 }
 
 function toAttackRollText(attackRoll: AttackRoll) {
