@@ -1,8 +1,8 @@
 import { RulesText, TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { ensureSign, Lens } from '@foundryvtt-dndmashup/core';
-import { AttackEffects } from '../../../../../../effects';
+import { ensureSign, Lens, oxfordComma } from '@foundryvtt-dndmashup/core';
+import { AttackEffects, toText } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
-import { weaponGroups, weaponCategories } from './config';
+import { weaponGroups, weaponCategories, weaponProperties, weaponHands } from './config';
 import { WeaponDetails } from './details';
 import { WeaponItemSlotTemplate } from './types';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
@@ -23,7 +23,7 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 				`${input.damage}`,
 				`prof. ${ensureSign(input.proficiencyBonus)}`,
 				input.range,
-				...input.properties,
+				...input.properties.map((p) => weaponProperties[p]),
 			]
 				.filter(Boolean)
 				.join(', ')}
@@ -56,8 +56,21 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<RulesText label={`Weapon`}>
 				{weaponGroups[equipmentProperties.group]} ✦ {weaponCategories[equipmentProperties.category]}
 			</RulesText>
+			<RulesText label={weaponHands[equipmentProperties.hands]} />
 			<RulesText label={`Base Damage`}>{equipmentProperties.damage}</RulesText>
 			<RulesText label={`Proficiency`}>{ensureSign(equipmentProperties.proficiencyBonus)}</RulesText>
+			<RulesText label={`Range`}>{equipmentProperties.range}</RulesText>
+			<RulesText label={`Properties`}>
+				{oxfordComma(equipmentProperties.properties.map((p) => weaponProperties[p]))}
+			</RulesText>
+			{equipmentProperties.additionalEffects?.hit && (
+				<RulesText label={`Hit`}>{toText(equipmentProperties.additionalEffects.hit, { bonus: true })}</RulesText>
+			)}
+			{equipmentProperties.additionalEffects?.['critical-hit'] && (
+				<RulesText label={`Critical Hit`}>
+					{toText(equipmentProperties.additionalEffects['critical-hit'], { bonus: true })}
+				</RulesText>
+			)}
 		</>
 	),
 };
