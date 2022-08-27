@@ -52,9 +52,15 @@ function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<str
 		<Table.Body>
 			<tr className="border-b-2 border-transparent">
 				<td className="w-10 h-10 px-1">
-					{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
+					<button type="button" className="block w-full h-full" onClick={edit}>
+						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
+					</button>
 				</td>
-				<td className="pl-1">{item.name}</td>
+				<td className="pl-1">
+					<button type="button" className="block w-full h-full text-left" onClick={edit}>
+						{item.name}
+					</button>
+				</td>
 				{TableBody && <TableBody item={item} {...passedProps} />}
 				<td
 					className={classNames('text-right', {
