@@ -12,6 +12,7 @@ import { PowerSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { ItemDocumentByType } from '@foundryvtt-dndmashup/mashup-react';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
+import { getParentButtons } from '../../core/foundry/getParentButtons';
 
 const sheets: { [K in PossibleItemType]: React.FC<{ item: ItemDocumentByType[K] }> } = {
 	class: ({ item }) => <ClassSheet items={item.items.contents} {...documentAsState(item)} />,
@@ -44,6 +45,7 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 	protected override _getHeaderButtons(): Application.HeaderButton[] {
 		const result = super._getHeaderButtons();
 		result.unshift(...getImportExportButtons(this.item));
+		result.unshift(...getParentButtons(this.item));
 		console.log(result);
 		return result;
 	}
