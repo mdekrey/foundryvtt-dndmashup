@@ -255,7 +255,7 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	abstract override allGrantedPoolBonuses(): SourcedPoolBonus[];
 	override allGrantedPowers(): PowerDocument[] {
 		return [
-			...(this.items.contents.filter(isPower) as PowerDocument[]),
+			...(this.items.contents as SimpleDocument[]).filter(isPower),
 			...this.items.contents.flatMap((item) => item.allGrantedPowers()),
 		];
 	}

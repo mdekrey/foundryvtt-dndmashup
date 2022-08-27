@@ -66,4 +66,7 @@ export type AttackRoll = {
 	defense: Defense;
 };
 
-export type PowerDocument = SimpleDocument<PowerData> & CommonItemDocumentProperties;
+export type PowerDocument = SimpleDocument<PowerData> &
+	CommonItemDocumentProperties & {
+		readonly powerGroupId: string | null;
+	};

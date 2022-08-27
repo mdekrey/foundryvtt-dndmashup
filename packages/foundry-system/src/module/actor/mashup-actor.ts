@@ -20,6 +20,7 @@ import {
 	getEquipmentProperties,
 	ItemDocument,
 	ComputableEffectDurationInfo,
+	PowerUsage,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -330,22 +331,28 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	isReady(power: PowerDocument) {
 		if (!this.data.data.powerUsage) return true;
-		if (!power.id) return false;
+		if (!power.powerGroupId) return false;
+
 		const pools = power.data.data.usedPools;
 		if (pools && pools.some((poolName) => this.isPoolDrained(poolName))) return false;
-		return !this.data.data.powerUsage[power.id];
+
+		if (power.data.data.usage === 'item' && this.data.data.magicItemUse.used >= this.data.data.magicItemUse.usesPerDay)
+			return false;
+
+		return !this.data.data.powerUsage[power.powerGroupId];
 	}
 	async toggleReady(power: PowerDocument): Promise<boolean> {
 		// intentionally does not update pools
-		await this.update({ [`data.powerUsage.${power.id}`]: this.isReady(power) ? 1 : 0 });
+		await this.update({ [`data.powerUsage.${power.powerGroupId}`]: this.isReady(power) ? 1 : 0 });
 		return true;
 	}
+	private static readonly trackedPowerUsage: PowerUsage[] = ['encounter', 'daily', 'item', 'item-healing-surge'];
 	async applyUsage(power: PowerDocument): Promise<boolean> {
 		if (!this.isReady(power)) return false;
 
 		const updates: Record<string, unknown> = {};
-		if (power.data.data.usage === 'encounter' || power.data.data.usage === 'daily') {
-			updates[`data.powerUsage.${power.id}`] = this.isReady(power) ? 1 : 0;
+		if (MashupActor.trackedPowerUsage.includes(power.data.data.usage)) {
+			updates[`data.powerUsage.${power.powerGroupId}`] = this.isReady(power) ? 1 : 0;
 		}
 		const pools = power.data.data.usedPools;
 		if (pools) {
@@ -358,6 +365,10 @@ export class MashupActor extends Actor implements ActorDocument {
 					  }
 					: pool;
 			});
+		}
+
+		if (power.data.data.usage === 'item') {
+			updates[`data.magicItemUse.used`] = this.data.data.magicItemUse.used + 1;
 		}
 
 		await this.update(updates);
