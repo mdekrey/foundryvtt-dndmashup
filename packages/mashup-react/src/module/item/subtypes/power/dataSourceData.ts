@@ -36,7 +36,14 @@ export type PowerEffect = {
 	miss: ApplicableEffect | null;
 };
 
-export type PowerUsage = 'at-will' | 'encounter' | 'daily' | 'item' | 'other' | `recharge-${2 | 3 | 4 | 5 | 6}`;
+export type PowerUsage =
+	| 'at-will'
+	| 'encounter'
+	| 'daily'
+	| 'item'
+	| 'item-healing-surge'
+	| 'other'
+	| `recharge-${2 | 3 | 4 | 5 | 6}`;
 export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate' | 'none';
 
 export type EffectTypeAndRange =

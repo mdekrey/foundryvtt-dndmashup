@@ -194,7 +194,9 @@ function powerUsage(usage: PowerUsage) {
 		case 'daily':
 			return 'Daily';
 		case 'item':
-			return '';
+			return 'Daily (Item)';
+		case 'item-healing-surge':
+			return 'Healing Surge';
 		case 'other':
 			return '';
 		case 'recharge-2':

@@ -35,9 +35,10 @@ const powerGroups: {
 	},
 	{
 		key: 'item-daily-powers',
-		label: 'Item Daily Power',
+		label: 'Item Powers',
 		className: (<i className="theme-orange-dark" />).props.className,
-		filter: (item) => isPower(item) && item.data.data.usage === 'item',
+		filter: (item) =>
+			isPower(item) && (item.data.data.usage === 'item' || item.data.data.usage === 'item-healing-surge'),
 	},
 ];
 
