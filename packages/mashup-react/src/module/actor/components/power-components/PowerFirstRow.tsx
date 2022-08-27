@@ -28,6 +28,7 @@ export function PowerFirstRow({
 	onClickName,
 	onToggleReady,
 	onRoll,
+	onShareToChat,
 	onEdit,
 	onRemove,
 }: {
@@ -41,6 +42,7 @@ export function PowerFirstRow({
 	onClickName?: () => void;
 	onToggleReady?: () => void;
 	onRoll?: () => void;
+	onShareToChat?: () => void;
 	onEdit?: () => void;
 	onRemove?: () => void;
 }) {
@@ -84,6 +86,12 @@ export function PowerFirstRow({
 						title="Roll"
 						onClick={onRoll}
 						src="/icons/svg/d20-black.svg"
+					/>
+					<IconButton
+						className={classNames('w-7 h-7', { invisible: !onShareToChat })}
+						title="Share to Chat"
+						iconClassName="fas fa-comments"
+						onClick={onShareToChat}
 					/>
 					<IconButton
 						className={classNames('w-7 h-7', { invisible: !onEdit })}

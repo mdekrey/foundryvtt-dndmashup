@@ -9,6 +9,7 @@ import { getEquipmentProperties } from '../../item/subtypes/equipment/getEquipme
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentData, EquipmentDocument } from '../../item/subtypes/equipment/dataSourceData';
 import { ActorDocument } from '../documentType';
+import { useChatMessageDispatcher } from '../../chat';
 
 export const orderedItemSlots: ItemSlot[] = [
 	'weapon',
@@ -36,6 +37,7 @@ export function Inventory({ actor }: { actor: ActorDocument }) {
 				orderedItemSlots.map((slot) =>
 					inventoryBySlots[slot] ? (
 						<InventorySlotTable
+							actor={actor}
 							items={inventoryBySlots[slot]}
 							key={slot}
 							slot={slot}
@@ -64,14 +66,17 @@ export function Inventory({ actor }: { actor: ActorDocument }) {
 }
 
 function InventorySlotTable<T extends ItemSlot>({
+	actor,
 	items,
 	slot,
 	onEquip,
 }: {
+	actor: ActorDocument;
 	items: EquipmentDocument<T>[];
 	slot: T;
 	onEquip?: (item: EquipmentDocument<T>, equipSlot: EquippedItemSlot) => void;
 }) {
+	const dispatch = useChatMessageDispatcher();
 	const itemSlotInfo = itemSlots[slot];
 	const { inventoryTableHeader: TableHeader, inventoryTableBody: TableBody, equippedSlots } = itemSlotInfo;
 
@@ -82,6 +87,7 @@ function InventorySlotTable<T extends ItemSlot>({
 			<>
 				<TableHeader />
 				{canEquip ? <th className="w-12">Equip</th> : null}
+				<th className="w-6"></th>
 			</>
 		),
 		[TableHeader, equippedSlots]
@@ -108,6 +114,9 @@ function InventorySlotTable<T extends ItemSlot>({
 						))}
 					</td>
 				) : null}
+				<td>
+					<IconButton title={`Share to Chat`} iconClassName="fas fa-comments" onClick={() => shareToChat(item)} />
+				</td>
 			</>
 		),
 		[TableBody, equippedSlots]
@@ -122,4 +131,7 @@ function InventorySlotTable<T extends ItemSlot>({
 			body={InventorySlotBody}
 		/>
 	);
+	async function shareToChat(item: EquipmentDocument) {
+		dispatch.sendChatMessage('share', actor, { item });
+	}
 }

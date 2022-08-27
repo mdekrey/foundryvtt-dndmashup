@@ -63,4 +63,5 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	additionalTabs?: React.FC<Stateful<ItemSlotTemplate<T>>>;
 	inventoryTableHeader: React.FC;
 	inventoryTableBody: ItemSlotComponent<T>;
+	statsPreview: ItemSlotComponent<T>;
 };

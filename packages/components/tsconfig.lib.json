@@ -9,7 +9,9 @@
 		"../../node_modules/@nrwl/react/typings/image.d.ts",
 		"./src/table/TableBody.tsx",
 		"./src/table/TableHeaderRow.tsx",
-		"./src/table/Table.tsx"
+		"./src/table/Table.tsx",
+		"./src/card-layouts/RulesText.tsx",
+		"./src/card-layouts/FlavorText.tsx"
 	],
 	"exclude": [
 		"jest.config.ts",

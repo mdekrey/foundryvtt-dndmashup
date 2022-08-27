@@ -1,6 +1,6 @@
 import { ArmorInfo } from './armor/info';
 import { ImplementInfo } from './implement/info';
-import { OtherInfo, ItemSlotDefaults } from './other/info';
+import { OtherInfo, itemSlotDefaults } from './other/info';
 import { ShieldInfo } from './shield/info';
 import { ItemSlot, ItemSlotInfo } from './types';
 import { WeaponInfo } from './weapon/info';
@@ -14,46 +14,32 @@ export const itemSlots: {
 	implement: ImplementInfo,
 	armor: ArmorInfo,
 	arms: {
-		display: 'Arms',
-		optionLabel: 'Arms',
 		equippedSlots: ['arms'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Arms'),
 	},
 	feet: {
-		display: 'Feet',
-		optionLabel: 'Feet',
 		equippedSlots: ['feet'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Feet'),
 	},
 	hands: {
-		display: 'Hands',
-		optionLabel: 'Hands',
 		equippedSlots: ['hands'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Hands'),
 	},
 	head: {
-		display: 'Head',
-		optionLabel: 'Head',
 		equippedSlots: ['head'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Head'),
 	},
 	neck: {
-		display: 'Neck',
-		optionLabel: 'Neck',
 		equippedSlots: ['neck'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Neck'),
 	},
 	ring: {
-		display: 'Ring',
-		optionLabel: 'Ring',
 		equippedSlots: ['primary-ring', 'secondary-ring'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Ring'),
 	},
 	waist: {
-		display: 'Waist',
-		optionLabel: 'Waist',
 		equippedSlots: ['waist'],
-		...ItemSlotDefaults,
+		...itemSlotDefaults('Waist'),
 	},
 };
 

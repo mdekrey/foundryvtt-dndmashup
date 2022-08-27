@@ -34,8 +34,9 @@ export function PowerRow({
 					onToggleReady={() => toggleReady()}
 					onClickName={toggle}
 					onEdit={edit}
+					onShareToChat={shareToChat}
 					onRemove={remove}
-					onRoll={shareToChat}
+					onRoll={usePower}
 					isSubPower={isSubPower}
 					hasSubPowers={hasSubPowers}
 				/>
@@ -72,6 +73,9 @@ export function PowerRow({
 		if (result) power.delete();
 	}
 	async function shareToChat() {
+		dispatch.sendChatMessage('share', actor, { item: power });
+	}
+	async function usePower() {
 		if (await actor.applyUsage(power)) {
 			dispatch.sendChatMessage('power', actor, { item: power });
 		}

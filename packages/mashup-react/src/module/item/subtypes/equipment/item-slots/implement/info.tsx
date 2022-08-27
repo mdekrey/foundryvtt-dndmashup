@@ -35,4 +35,5 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 			</TabbedSheet.Tab>
 		</>
 	),
+	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
 };

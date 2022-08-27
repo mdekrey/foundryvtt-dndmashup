@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { pipeJsx, recurse, mergeStyles, neverEver } from '@foundryvtt-dndmashup/core';
+import { pipeJsx, neverEver, oxfordComma } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
@@ -8,6 +8,7 @@ import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';
+import { cardRowFormat, FlavorText, RulesText } from '@foundryvtt-dndmashup/components';
 
 export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: boolean }) {
 	const applications = useApplicationDispatcher();
@@ -76,7 +77,7 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 						{itemData.special && <RulesText label="Special">{itemData.special}</RulesText>}
 					</>
 				),
-				recurse(mergeStyles(<p className="even:bg-gradient-to-r from-tan-fading px-2 font-info leading-snug" />))
+				cardRowFormat
 			)}
 			{!simple && itemData.sourceId ? (
 				<a
@@ -137,48 +138,8 @@ function healingEffectText(effect: HealingEffect) {
 	return `${prefix} ${verb} ${link} ${amount}.`;
 }
 
-function oxfordComma(parts: string[]) {
-	if (parts.length <= 2) return parts.join(' and ');
-	return `${parts.slice(parts.length - 1).join(', ')}, and ${parts[parts.length - 1]}`;
-}
-
 function toAttackRollText(attackRoll: AttackRoll) {
 	return `${attackRoll.attack} vs. ${defense(attackRoll.defense)}`;
-}
-
-export function FlavorText({ children, className, ...props }: JSX.IntrinsicElements['p']) {
-	return (
-		<p className={classNames(className, 'italic font-flavor')} {...props}>
-			{children}
-		</p>
-	);
-}
-
-export function RulesText({
-	label,
-	children,
-	className,
-}: {
-	label?: string;
-	children?: React.ReactNode;
-	className?: string;
-}) {
-	return label && children ? (
-		<div className={className}>
-			<span
-				className={classNames('font-bold float-left pr-1', {
-					'pl-8': label.startsWith('\t\t'),
-					'pl-4': label.startsWith('\t') && !label.startsWith('\t\t'),
-				})}>
-				{label.trimStart()}:
-			</span>
-			{children}
-		</div>
-	) : label ? (
-		<div className={classNames('font-bold', className)}>{label}</div>
-	) : (
-		<div className={className}>{children}</div>
-	);
 }
 
 function defense(defense: Defense) {

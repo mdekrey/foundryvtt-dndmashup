@@ -49,4 +49,5 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			</TabbedSheet.Tab>
 		</>
 	),
+	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
 };

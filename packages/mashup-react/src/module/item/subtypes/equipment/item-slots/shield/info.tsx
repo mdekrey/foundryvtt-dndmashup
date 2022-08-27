@@ -28,4 +28,5 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 			<td className="text-center">{equipmentProperties.checkPenalty}</td>
 		</>
 	),
+	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
 };

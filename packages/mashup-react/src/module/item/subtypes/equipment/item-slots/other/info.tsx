@@ -1,12 +1,11 @@
 import { ItemSlotInfo } from '../types';
-import { ItemSlotDefaults } from './defaults';
+import { itemSlotDefaults } from './defaults';
 
-export { ItemSlotDefaults };
+export { itemSlotDefaults };
 
 export const OtherInfo: ItemSlotInfo<''> = {
-	display: '',
-	optionLabel: 'None',
 	equippedSlots: [],
-	...ItemSlotDefaults,
+	...itemSlotDefaults('None'),
+	display: '',
 	slotsNeeded: () => 0,
 };
