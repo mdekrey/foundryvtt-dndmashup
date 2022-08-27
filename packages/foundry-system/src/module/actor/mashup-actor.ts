@@ -26,7 +26,6 @@ import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource }
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
 import { calculateDerivedData } from './logic/calculateDerivedData';
-import { standardBonuses } from './logic/standardBonuses';
 import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
@@ -85,11 +84,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		return Math.max(1, this.data.data.details.level) - 1;
 	}
 	get tier() {
-		return Math.floor(this.data.data.details.level / 10);
+		return Math.floor((this.data.data.details.level - 1) / 10);
 	}
 
 	get specialBonuses(): FullFeatureBonus[] {
 		return [
+			// all active effects and other linked objects should be loaded here
 			...this.effects.contents.flatMap((effect) =>
 				effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
 			),
@@ -107,14 +107,7 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	private _allBonuses: FullFeatureBonus[] | null = null;
 	get allBonuses(): FullFeatureBonus[] {
-		return (
-			this._allBonuses ??
-			(this._allBonuses = [
-				// all active effects and other linked objects should be loaded here
-				...standardBonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
-				...this.specialBonuses,
-			])
-		);
+		return this._allBonuses ?? (this._allBonuses = this.specialBonuses);
 	}
 
 	private _appliedBonuses: FullFeatureBonus[] | null = null;

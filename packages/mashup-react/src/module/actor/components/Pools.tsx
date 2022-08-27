@@ -3,6 +3,7 @@ import { PoolState, SourcedPoolLimits } from '@foundryvtt-dndmashup/mashup-rules
 import { ResourceLayout } from './ResourceLayout';
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { SourceButton } from './SourceButton';
+import { noop } from 'lodash/fp';
 
 const baseLens = Lens.identity<PoolState[]>().to(
 	(v) => v,
@@ -31,32 +32,61 @@ const lensToPoolState = (poolName: string) => {
 };
 
 export function Pools({
+	magicItemUses,
+	magicItemUsesPerDay,
 	poolLimits,
 	poolsState,
 }: {
+	magicItemUsesPerDay: number;
+	magicItemUses: Stateful<number>;
 	poolLimits: SourcedPoolLimits[];
 	poolsState: Stateful<PoolState[]>;
 }) {
 	return poolLimits.length > 0 ? (
 		<div className="grid grid-cols-3 gap-1 mt-2 items-start justify-items-center">
+			<PoolDetails
+				pool={{
+					max: magicItemUsesPerDay,
+					name: 'Magic Item Daily Power Uses',
+					longRest: null,
+					shortRest: null,
+					maxBetweenRest: null,
+					source: [],
+				}}
+				current={{
+					value: magicItemUsesPerDay - magicItemUses.value,
+					onChangeValue: (mutator) => magicItemUses.onChangeValue((v) => magicItemUsesPerDay - (mutator(v) ?? v)),
+				}}
+				usedSinceRest={{ onChangeValue: noop, value: 0 }}
+			/>
 			{poolLimits.map((pool, index) => (
-				<PoolDetails key={pool.name} pool={pool} state={lensToPoolState(pool.name).apply(poolsState)} />
+				<PoolDetails
+					key={pool.name}
+					pool={pool}
+					current={lensToPoolState(pool.name).toField('value').apply(poolsState)}
+					usedSinceRest={lensToPoolState(pool.name).toField('usedSinceRest').apply(poolsState)}
+				/>
 			))}
 		</div>
 	) : null;
 }
 
-const currentLens = Lens.fromProp<PoolState>()('value');
-const usedSinceRestLens = Lens.fromProp<PoolState>()('usedSinceRest');
-
-function PoolDetails({ pool, state }: { pool: SourcedPoolLimits; state: Stateful<PoolState> }) {
+function PoolDetails({
+	pool,
+	current,
+	usedSinceRest,
+}: {
+	pool: SourcedPoolLimits;
+	current: Stateful<number>;
+	usedSinceRest: Stateful<number>;
+}) {
 	return (
 		<ResourceLayout
 			title={pool.name}
 			body={
 				<>
 					<FormInput className="w-16">
-						<FormInput.NumberField {...currentLens.apply(state)} className="text-center" />
+						<FormInput.NumberField {...current} className="text-center" />
 						<FormInput.Label>Current</FormInput.Label>
 					</FormInput>
 					{typeof pool.max === 'number' ? <span className="text-lg pb-4">/ {pool.max}</span> : null}
@@ -68,7 +98,7 @@ function PoolDetails({ pool, state }: { pool: SourcedPoolLimits; state: Stateful
 						<div className="self-center flex justify-start flex-grow items-baseline gap-1 text-sm">
 							<span>Since rest: </span>
 							<FormInput className="w-12">
-								<FormInput.NumberField {...usedSinceRestLens.apply(state)} className="text-center" />
+								<FormInput.NumberField {...usedSinceRest} className="text-center" />
 								<FormInput.Label>Used</FormInput.Label>
 							</FormInput>
 							<span className="pb-4">/ {pool.maxBetweenRest}</span>

@@ -23,13 +23,13 @@ export type CommonDerivedDataProperties = {
 	size: Size;
 	halfLevel: number;
 	poolLimits: SourcedPoolLimits[];
-};
-
-export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties & {
+	milestones: number;
 	magicItemUse: {
 		usesPerDay: number;
 	};
 };
+
+export type PlayerCharacterDerivedDataProperties = CommonDerivedDataProperties;
 
 export type MonsterDerivedDataProperties = CommonDerivedDataProperties;
 

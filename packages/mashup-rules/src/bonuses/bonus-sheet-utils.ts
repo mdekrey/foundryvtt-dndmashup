@@ -25,6 +25,7 @@ export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string
 	healing: { label: 'Healing' },
 	'saving-throw': { label: 'Saving Throws' },
 	check: { label: 'Skill or Ability Check' },
+	'magic-item-uses': { label: 'Magic Item Daily Power Uses' },
 
 	...toObject(
 		damageTypes,

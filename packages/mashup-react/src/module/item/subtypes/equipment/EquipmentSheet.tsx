@@ -9,6 +9,7 @@ import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { EquipmentData, EquipmentDocument } from './dataSourceData';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { OtherDetails } from './item-slots/other/details';
+import { FeaturesList } from '../../components/FeaturesList';
 
 const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
 	value: key as ItemSlot,
@@ -83,6 +84,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					<Details itemState={equipmentPropertiesState} />
 					<OtherDetails itemState={dataLens.apply(documentState)} />
 				</div>
+				<FeaturesList items={item.items.contents} />
 			</TabbedSheet.Tab>
 			<TabbedSheet.Tab name="description" label="Description">
 				<Description {...dataLens.toField('description').apply(documentState)} isEditor={item.isOwner} />
@@ -90,8 +92,6 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 			<TabbedSheet.Tab name="bonuses" label="Bonuses">
 				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
-			</TabbedSheet.Tab>
-			<TabbedSheet.Tab name="pools" label="Resources">
 				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />
 			</TabbedSheet.Tab>
 			{item.data.data.container ? (

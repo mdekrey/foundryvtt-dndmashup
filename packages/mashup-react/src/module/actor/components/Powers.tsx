@@ -12,26 +12,32 @@ const powerGroups: {
 	{
 		key: 'common-action',
 		label: 'Common Action',
-		className: 'theme-green-blue',
+		className: (<i className="theme-green-blue" />).props.className,
 		filter: (item) => !isPower(item),
 	},
 	{
 		key: 'at-will-power',
 		label: 'At-Will Power',
-		className: 'theme-green-dark',
+		className: (<i className="theme-green-dark" />).props.className,
 		filter: (item) => isPower(item) && item.data.data.usage === 'at-will',
 	},
 	{
 		key: 'encounter-power',
 		label: 'Encounter Power',
-		className: 'theme-red-dark',
+		className: (<i className="theme-red-dark" />).props.className,
 		filter: (item) => isPower(item) && item.data.data.usage === 'encounter',
 	},
 	{
 		key: 'daily-power',
 		label: 'Daily Power',
-		className: 'theme-gray-dark',
+		className: (<i className="theme-gray-dark" />).props.className,
 		filter: (item) => isPower(item) && item.data.data.usage === 'daily',
+	},
+	{
+		key: 'item-daily-powers',
+		label: 'Item Daily Power',
+		className: (<i className="theme-orange-dark" />).props.className,
+		filter: (item) => isPower(item) && item.data.data.usage === 'item',
 	},
 ];
 

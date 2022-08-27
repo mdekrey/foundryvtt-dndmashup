@@ -23,8 +23,8 @@ export const usageOptions: SelectItem<PowerUsage>[] = [
 	{
 		value: 'item',
 		key: 'item',
-		label: 'Item',
-		typeaheadLabel: 'Item',
+		label: 'Item Daily',
+		typeaheadLabel: 'Item Daily',
 	},
 	{
 		value: 'other',

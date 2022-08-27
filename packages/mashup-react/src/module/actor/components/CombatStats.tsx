@@ -6,6 +6,7 @@ import { ActorDocument } from '../documentType';
 import { ActorDerivedData } from '../derivedDataType';
 
 const deathSavingThrowLens = Lens.fromProp<PlayerCharacterDataSourceData>()('health').toField('deathSavesRemaining');
+const encountersSinceLongRest = Lens.fromProp<PlayerCharacterDataSourceData>()('encountersSinceLongRest');
 
 export function CombatStats({
 	actor,
@@ -36,6 +37,9 @@ export function CombatStats({
 			</div>
 			<div className="flex flex-row group items-center">
 				<DeathSavingThrowSection actor={actor} {...deathSavingThrowLens.apply(dataState)} />
+			</div>
+			<div className="flex flex-row group items-center">
+				<EncountersSection milestones={actor.derivedData.milestones} {...encountersSinceLongRest.apply(dataState)} />
 			</div>
 		</div>
 	);
@@ -101,4 +105,16 @@ function DeathSavingThrowSection({ actor, ...deathSavingThrowState }: { actor: A
 			// no need to do anything with a cancellation
 		}
 	}
+}
+
+function EncountersSection({ milestones, ...encountersState }: { milestones: number } & Stateful<number>) {
+	return (
+		<div className="flex flex-col items-center">
+			<FormInput className="w-20">
+				<FormInput.NumberField {...encountersState} className="text-center" />
+				<FormInput.Label>Encounters</FormInput.Label>
+			</FormInput>
+			<p className="text-xs">Milestones: {milestones}</p>
+		</div>
+	);
 }

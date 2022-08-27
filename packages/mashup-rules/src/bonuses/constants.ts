@@ -16,6 +16,7 @@ export const numericBonusTargets = [
 	`saving-throw` as const,
 	`healing` as const,
 	`check` as const,
+	'magic-item-uses' as const,
 ];
 
 export type AbilityBonus = `ability-${Ability}`;

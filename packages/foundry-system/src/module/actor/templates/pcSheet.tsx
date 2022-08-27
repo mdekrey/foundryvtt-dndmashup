@@ -21,6 +21,7 @@ const poolsLens = dataLens.toField('pools').default([]);
 const bonusesLens = dataLens.toField('bonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 const currencyLens = dataLens.toField('currency');
+const magicItemUsesLens = dataLens.toField('magicItemUse').toField('used').default(0);
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
@@ -111,7 +112,12 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 									<ActorComponents.Effects bonusList={actor.specialBonuses} dynamicList={actor.dynamicListResult} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="pools">
-									<ActorComponents.Pools poolLimits={pools} poolsState={poolsLens.apply(documentState)} />
+									<ActorComponents.Pools
+										magicItemUsesPerDay={data.magicItemUse.usesPerDay}
+										magicItemUses={magicItemUsesLens.apply(documentState)}
+										poolLimits={pools}
+										poolsState={poolsLens.apply(documentState)}
+									/>
 								</Tabs.Tab>
 							</section>
 						</Tabs>

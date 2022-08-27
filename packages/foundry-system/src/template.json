@@ -42,8 +42,7 @@
 				},
 
 				"magicItemUse": {
-					"currentRemaining": 1,
-					"usedThisEncounter": false
+					"used": 0
 				},
 
 				"languages": {

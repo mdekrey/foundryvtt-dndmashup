@@ -33,9 +33,9 @@ export type BaseActorTemplateDataSourceData = {
 	abilities: AbilityScores;
 	health: Health;
 	actionPoints: ActionPoints;
+	encountersSinceLongRest: number;
 	magicItemUse: {
-		currentRemaining: number;
-		usedThisEncounter: boolean;
+		used: number;
 	};
 	senses: {
 		vision: { value: string[] };

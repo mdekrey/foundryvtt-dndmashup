@@ -26,6 +26,8 @@ export const standardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis.total', type: 'ability' },
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha.total', type: 'ability' },
 	{ ...base, target: 'initiative', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
+	{ ...base, target: 'magic-item-uses', amount: '@actor.tier + 1' },
+	{ ...base, target: 'magic-item-uses', amount: '@actor.derivedData.milestones' },
 
 	{ ...manual('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
 	{ ...manual('you are charging'), target: 'attack-roll', amount: 1 },

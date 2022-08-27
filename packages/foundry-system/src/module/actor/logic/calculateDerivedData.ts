@@ -18,11 +18,16 @@ import {
 	ruleResultIndeterminate,
 	sumFinalBonuses,
 	Vulnerability,
+	PoolBonus,
+	SourcedPoolBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
 import { uniq } from 'lodash/fp';
+import { standardBonuses } from './standardBonuses';
+
+const standardPoolBonus: PoolBonus[] = [];
 
 const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number) => void> = {
 	...toObject(
@@ -50,6 +55,7 @@ const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number
 	'surges-value': (data, value) => (data.health.surgesValue = value),
 	speed: (data, value) => (data.speed = value),
 	initiative: (data, value) => (data.initiative = value),
+	'magic-item-uses': (data, value) => (data.magicItemUse.usesPerDay = value),
 
 	check: noop,
 	'attack-roll': noop,
@@ -70,7 +76,10 @@ export function calculateDerivedData(
 	}) => void
 ): ActorDerivedData {
 	// TODO: this would be better as a proxy object
-	const allBonuses = this.allBonuses;
+	const allBonuses = [
+		...standardBonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
+		...this.allBonuses,
+	];
 
 	const resultData: ActorDerivedData = {
 		abilities: toObject(
@@ -101,6 +110,10 @@ export function calculateDerivedData(
 		halfLevel: Math.floor(this.data.data.details.level / 2),
 		size: this.appliedRace?.data.data.size ?? 'medium',
 		poolLimits: [],
+		milestones: Math.floor((this.data.data.encountersSinceLongRest ?? 0) / 2),
+		magicItemUse: {
+			usesPerDay: 0,
+		},
 	};
 	const appliedBonuses: FullFeatureBonus[] = [];
 	const indeterminateBonuses: FullFeatureBonus[] = [];
@@ -143,7 +156,7 @@ export function calculateDerivedData(
 
 	const pools = this.items.contents.flatMap((item) => item.allGrantedPools());
 	this.items.contents
-		.flatMap((item) => item.allGrantedPoolBonuses())
+		.flatMap<PoolBonus | SourcedPoolBonus>((item) => [...standardPoolBonus, ...item.allGrantedPoolBonuses()])
 		.reduce((prev, next) => {
 			const idx = prev.findIndex((pool) => pool.name === next.name);
 			if (idx === -1) console.warn(`Unknown pool: ${next.name}`);
@@ -155,7 +168,10 @@ export function calculateDerivedData(
 							? next.amount
 							: new Roll(next.amount, { actor: this }).roll({ async: false })._total,
 				};
-				prev[idx] = { ...combinePoolLimits(prev[idx], resolved), source: uniq([...prev[idx].source, next.source]) };
+				prev[idx] = {
+					...combinePoolLimits(prev[idx], resolved),
+					source: 'source' in next ? uniq([...prev[idx].source, next.source]) : prev[idx].source,
+				};
 			}
 			return prev;
 		}, pools);
