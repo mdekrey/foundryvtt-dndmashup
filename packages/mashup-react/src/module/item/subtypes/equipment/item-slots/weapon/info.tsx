@@ -1,8 +1,8 @@
-import { TabbedSheet } from '@foundryvtt-dndmashup/components';
-import { Lens } from '@foundryvtt-dndmashup/core';
+import { RulesText, TabbedSheet } from '@foundryvtt-dndmashup/components';
+import { ensureSign, Lens } from '@foundryvtt-dndmashup/core';
 import { AttackEffects } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
-import { weaponGroups } from './config';
+import { weaponGroups, weaponCategories } from './config';
 import { WeaponDetails } from './details';
 import { WeaponItemSlotTemplate } from './types';
 import { defaultEquipmentInfo } from './weaponEquipmentInfo';
@@ -19,7 +19,9 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	buildSummary: ({ equipmentProperties: input }) => (
 		<>
 			{[
-				`${input.hands}-handed ${input.category} ${input.group}, ${input.damage}, prof. +${input.proficiencyBonus}`,
+				`${input.hands}-handed ${weaponCategories[input.category]} ${weaponGroups[input.group]}`,
+				`${input.damage}`,
+				`prof. ${ensureSign(input.proficiencyBonus)}`,
 				input.range,
 				...input.properties,
 			]
@@ -49,5 +51,13 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			</TabbedSheet.Tab>
 		</>
 	),
-	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
+	statsPreview: ({ equipmentProperties }) => (
+		<>
+			<RulesText label={`Weapon`}>
+				{weaponGroups[equipmentProperties.group]} ✦ {weaponCategories[equipmentProperties.category]}
+			</RulesText>
+			<RulesText label={`Base Damage`}>{equipmentProperties.damage}</RulesText>
+			<RulesText label={`Proficiency`}>{ensureSign(equipmentProperties.proficiencyBonus)}</RulesText>
+		</>
+	),
 };

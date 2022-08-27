@@ -1,4 +1,6 @@
+import { RulesText } from '@foundryvtt-dndmashup/components';
 import { ItemSlotInfo } from '../types';
+import { allShieldTypes } from './config';
 import { ShieldDetails } from './details';
 import { defaultEquipmentInfo } from './sheildEquipmentInfo';
 
@@ -13,7 +15,7 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 	],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
-		<>{`${input.type}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`}</>
+		<>{`${allShieldTypes[input.type]}, shield bonus +${input.shieldBonus}, check penalty ${input.checkPenalty}`}</>
 	),
 	details: ShieldDetails,
 	inventoryTableHeader: () => (
@@ -28,5 +30,9 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 			<td className="text-center">{equipmentProperties.checkPenalty}</td>
 		</>
 	),
-	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
+	statsPreview: ({ equipmentProperties }) => (
+		<>
+			<RulesText label={`Shield (${allShieldTypes[equipmentProperties.type]})`} />
+		</>
+	),
 };

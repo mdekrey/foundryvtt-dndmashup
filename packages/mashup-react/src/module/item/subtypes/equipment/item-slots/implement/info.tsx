@@ -1,4 +1,4 @@
-import { TabbedSheet } from '@foundryvtt-dndmashup/components';
+import { RulesText, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { AttackEffects } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
@@ -16,7 +16,7 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 	slotsNeeded: () => 1,
 	bonuses: () => [],
 	defaultEquipmentInfo,
-	buildSummary: ({ equipmentProperties: input }) => <>{`${input.group}`}</>,
+	buildSummary: ({ equipmentProperties: input }) => <>{`${implementGroups[input.group]}`}</>,
 	details: ImplementDetails,
 	inventoryTableHeader: () => (
 		<>
@@ -35,5 +35,9 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 			</TabbedSheet.Tab>
 		</>
 	),
-	statsPreview: ({ equipmentProperties }) => <div>{/* TODO */}</div>,
+	statsPreview: ({ equipmentProperties }) => (
+		<>
+			<RulesText label={`Implement ${implementGroups[equipmentProperties.group]}`} />
+		</>
+	),
 };
