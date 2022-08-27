@@ -23,6 +23,8 @@ export function PowerFirstRow({
 	img,
 	hint,
 	isReady,
+	isSubPower = false,
+	hasSubPowers = false,
 	onClickName,
 	onToggleReady,
 	onRoll,
@@ -34,6 +36,8 @@ export function PowerFirstRow({
 	img: string;
 	hint?: string;
 	isReady: boolean;
+	isSubPower?: boolean;
+	hasSubPowers?: boolean;
 	onClickName?: () => void;
 	onToggleReady?: () => void;
 	onRoll?: () => void;
@@ -43,11 +47,16 @@ export function PowerFirstRow({
 	return (
 		<tr>
 			<td
-				className={classNames(
-					twMerge('flex justify-center items-center w-10 h-10 rounded', usage && usageTypeColors[usage]),
-					{ 'opacity-50': !isReady }
-				)}>
-				{img ? <img src={img} alt="" className="w-8 h-8" /> : null}
+				className={classNames(twMerge('flex justify-center items-center', usage && usageTypeColors[usage]), {
+					'opacity-50': !isReady,
+					'w-10 h-10': !isSubPower,
+					'ml-2 w-8 h-8': isSubPower,
+					rounded: !isSubPower && !hasSubPowers,
+					'rounded-t rounded-bl': !isSubPower && hasSubPowers,
+				})}>
+				{img ? (
+					<img src={img} alt="" className={classNames({ 'w-8 h-8': !isSubPower, 'w-6 h-6': isSubPower })} />
+				) : null}
 			</td>
 			<td className={classNames('px-1 whitespace-nowrap', { 'opacity-50': !isReady })}>
 				{onClickName ? (

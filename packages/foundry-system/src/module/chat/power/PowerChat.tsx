@@ -16,6 +16,20 @@ type PowerEffectTemplateProps = {
 };
 
 export function PowerChat({
+	...props
+}: {
+	item: PowerDocument;
+	actor: ActorDocument;
+	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+} & PowerEffectTemplateProps) {
+	return (
+		<div className="flex flex-col items-center">
+			<PowerChatContents {...props} />
+		</div>
+	);
+}
+
+function PowerChatContents({
 	item,
 	actor,
 	...effectProps
@@ -24,13 +38,19 @@ export function PowerChat({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string) => void;
 } & PowerEffectTemplateProps) {
+	const subPowers = item.allGrantedPowers();
 	return (
-		<div className="flex flex-col items-center">
+		<>
 			<div className="w-full border-4 border-white">
 				<PowerPreview item={item} simple />
 			</div>
 			{actor.isOwner ? <PowerOptions power={item} actor={actor} {...effectProps} /> : null}
-		</div>
+			<div className="ml-4">
+				{subPowers.map((subPower, index) => (
+					<PowerChatContents actor={actor} item={subPower} {...effectProps} key={subPower.id ?? index} />
+				))}
+			</div>
+		</>
 	);
 }
 

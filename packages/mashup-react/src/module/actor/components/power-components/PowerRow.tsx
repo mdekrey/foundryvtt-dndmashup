@@ -7,37 +7,55 @@ import { PowerDocument } from '../../../item/subtypes/power/dataSourceData';
 import { PowerFirstRow } from './PowerFirstRow';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 
-export function PowerRow({ actor, power }: { actor: ActorDocument; power: PowerDocument }) {
+export function PowerRow({
+	actor,
+	power,
+	isSubPower = false,
+}: {
+	actor: ActorDocument;
+	power: PowerDocument;
+	isSubPower?: boolean;
+}) {
 	const detailRef = useRef<HTMLDivElement | null>(null);
 	const dispatch = useChatMessageDispatcher();
 	const apps = useApplicationDispatcher();
+	const subPowers = power.allGrantedPowers();
+	const hasSubPowers = subPowers.length > 0;
 
 	return (
-		<Table.Body>
-			<PowerFirstRow
-				name={power.name ?? ''}
-				usage={power.data.data.usage}
-				img={power.img ?? ''}
-				hint=""
-				isReady={actor.isReady(power)}
-				onToggleReady={() => toggleReady()}
-				onClickName={toggle}
-				onEdit={edit}
-				onRemove={remove}
-				onRoll={shareToChat}
-			/>
-			<tr>
-				<td></td>
-				<td colSpan={2}>
-					<div ref={detailRef} className="overflow-hidden max-h-0 transition-all duration-300">
-						<div className="max-w-md mx-auto border-4 border-white">
-							<PowerPreview item={power} />
+		<>
+			<Table.Body>
+				<PowerFirstRow
+					name={power.name ?? ''}
+					usage={power.data.data.usage}
+					img={power.img ?? ''}
+					hint=""
+					isReady={actor.isReady(power)}
+					onToggleReady={() => toggleReady()}
+					onClickName={toggle}
+					onEdit={edit}
+					onRemove={remove}
+					onRoll={shareToChat}
+					isSubPower={isSubPower}
+					hasSubPowers={hasSubPowers}
+				/>
+				<tr>
+					<td></td>
+					<td colSpan={2}>
+						<div ref={detailRef} className="overflow-hidden max-h-0 transition-all duration-300">
+							<div className="max-w-md mx-auto border-4 border-white">
+								<PowerPreview item={power} />
+							</div>
 						</div>
-					</div>
-				</td>
-				<td></td>
-			</tr>
-		</Table.Body>
+					</td>
+					<td></td>
+				</tr>
+			</Table.Body>
+
+			{subPowers.map((subPower, index) => (
+				<PowerRow actor={actor} power={subPower} isSubPower={true} key={subPower.id ?? index} />
+			))}
+		</>
 	);
 
 	function edit() {

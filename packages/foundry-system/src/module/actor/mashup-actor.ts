@@ -204,7 +204,6 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	async createActiveEffect(effect: ActiveEffectDataConstructorData, duration: ComputableEffectDurationInfo) {
-		console.log({ effect, duration });
 		await ActiveEffect.create(createFinalEffectConstructorData(effect, duration, this), { parent: this });
 	}
 
@@ -225,8 +224,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
-	allPowers() {
-		return this.items.contents.flatMap((item: ItemDocument) => (isPower(item) ? item : item.allGrantedPowers()));
+	allPowers(includeNestedPowers = true) {
+		return this.items.contents.flatMap((item: ItemDocument) =>
+			isPower(item) && (!includeNestedPowers || (item.data.data.effects?.length ?? 0) > 0)
+				? item
+				: item.allGrantedPowers()
+		);
 	}
 
 	/** When adding a new embedded document, clean up others of the same type */
@@ -379,11 +382,9 @@ export class MashupActor extends Actor implements ActorDocument {
 	isPoolDrained(poolName: string) {
 		const pool = this.data.data.pools.find((p) => p.name === poolName);
 		const poolMaxes = this.derivedData.poolLimits.find((p) => p.name === poolName);
-		console.log(poolName, { pool, poolMaxes });
 		if (!pool || !poolMaxes) return true;
 		if (pool.value === 0) return true;
 		if (poolMaxes.maxBetweenRest !== null && pool.usedSinceRest >= poolMaxes.maxBetweenRest) return true;
-		console.log(poolName, 'not drained');
 		return false;
 	}
 }

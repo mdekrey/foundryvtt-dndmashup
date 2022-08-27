@@ -43,7 +43,7 @@ const powerGroups: {
 ];
 
 export function Powers({ actor }: { actor: ActorDocument }) {
-	const powers = [...commonActions, ...actor.allPowers()];
+	const powers = [...commonActions, ...actor.allPowers(false)];
 	const groups = powerGroups
 		.map(({ filter, ...others }) => ({
 			...others,

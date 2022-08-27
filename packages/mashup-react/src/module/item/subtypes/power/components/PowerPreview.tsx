@@ -264,7 +264,7 @@ function actionType(actionType: ActionType) {
 		case 'opportunity':
 			return 'Opportunity action';
 		case 'none':
-			return 'None';
+			return 'No Action';
 		default:
 			return neverEver(actionType);
 	}

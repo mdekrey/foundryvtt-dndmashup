@@ -28,7 +28,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	get appliedDynamicList(): DynamicListEntryWithContext[];
 	get indeterminateDynamicList(): DynamicListEntryWithContext[];
 
-	allPowers(): PowerDocument[];
+	allPowers(includeNestedPowers?: boolean): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;
 	isReady(power: PowerDocument): boolean;
 	toggleReady(power: PowerDocument): Promise<boolean>;
