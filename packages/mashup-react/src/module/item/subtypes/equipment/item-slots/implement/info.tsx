@@ -1,6 +1,6 @@
 import { RulesText, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { Lens } from '@foundryvtt-dndmashup/core';
-import { AttackEffects } from '../../../../../../effects';
+import { AttackEffects, toText } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
 import { ImplementItemSlotTemplate } from './types';
 import { defaultEquipmentInfo } from './defaultEquipmentInfo';
@@ -38,6 +38,14 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 	statsPreview: ({ equipmentProperties }) => (
 		<>
 			<RulesText label={`Implement ${implementGroups[equipmentProperties.group]}`} />
+			{equipmentProperties.additionalEffects?.hit && (
+				<RulesText label={`Hit`}>{toText(equipmentProperties.additionalEffects.hit, { bonus: true })}</RulesText>
+			)}
+			{equipmentProperties.additionalEffects?.['critical-hit'] && (
+				<RulesText label={`Critical Hit`}>
+					{toText(equipmentProperties.additionalEffects['critical-hit'], { bonus: true })}
+				</RulesText>
+			)}
 		</>
 	),
 };
