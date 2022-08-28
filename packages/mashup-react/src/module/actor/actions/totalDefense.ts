@@ -31,7 +31,7 @@ export const totalDefense: CommonAction = {
 	hint: '+2 to all Defenses until your next turn',
 	isReady: () => true,
 
-	use: async (actor, chatDispatch) => {
+	use: async (actor, { chatDispatch }) => {
 		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration);
 		chatDispatch.sendChatMessage('plain-text', actor, '... steels their defenses!!');
 	},

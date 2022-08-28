@@ -11,7 +11,7 @@ export const secondWind: CommonAction = {
 	setReady: (actor, ready) => {
 		actor.update({ 'data.health.secondWindUsed': !ready }, {});
 	},
-	use: async (actor, chatDispatch) => {
+	use: async (actor, { chatDispatch }) => {
 		if (actor.data.data.health.secondWindUsed) return;
 		await actor.applyHealing({
 			addHealingSurgeValue: true,

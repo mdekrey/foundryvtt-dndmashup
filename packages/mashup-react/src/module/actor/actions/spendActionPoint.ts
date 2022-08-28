@@ -10,7 +10,7 @@ export const spendActionPoint: CommonAction = {
 	setReady: (actor, ready) => {
 		actor.update({ 'data.actionPoints.usedThisEncounter': !ready }, {});
 	},
-	use: async (actor, chatDispatch) => {
+	use: async (actor, { chatDispatch }) => {
 		if (actor.data.data.actionPoints.usedThisEncounter) return;
 		if (actor.data.data.actionPoints.value < 1) return;
 		await actor.update(

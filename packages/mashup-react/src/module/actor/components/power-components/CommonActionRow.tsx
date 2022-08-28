@@ -1,3 +1,4 @@
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { useChatMessageDispatcher } from '../../../chat';
 import { CommonAction } from '../../actions';
 import { ActorDocument } from '../../documentType';
@@ -6,7 +7,8 @@ import { PowerFirstRow } from './PowerFirstRow';
 export function CommonActionRow({ actor, power }: { actor: ActorDocument; power: CommonAction }) {
 	const isReady = power.isReady(actor);
 	const setReady = power.setReady;
-	const dispatch = useChatMessageDispatcher();
+	const chatDispatch = useChatMessageDispatcher();
+	const appDispatch = useApplicationDispatcher();
 
 	return (
 		<PowerFirstRow
@@ -16,7 +18,7 @@ export function CommonActionRow({ actor, power }: { actor: ActorDocument; power:
 			usage={power.usage}
 			isReady={isReady}
 			onToggleReady={setReady && (() => setReady(actor, !isReady))}
-			onRoll={() => power.use(actor, dispatch)}
+			onRoll={() => power.use(actor, { chatDispatch, appDispatch })}
 		/>
 	);
 }
