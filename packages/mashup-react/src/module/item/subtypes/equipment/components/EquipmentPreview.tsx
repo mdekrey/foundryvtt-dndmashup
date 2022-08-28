@@ -1,9 +1,11 @@
 // import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import classNames from 'classnames';
-import { cardRowFormat, FlavorText } from '@foundryvtt-dndmashup/components';
-import { pipeJsx } from '@foundryvtt-dndmashup/core';
+import { cardRowFormat, FlavorText, RulesText } from '@foundryvtt-dndmashup/components';
+import { oxfordComma, pipeJsx } from '@foundryvtt-dndmashup/core';
 import { EquipmentDocument } from '../dataSourceData';
 import { itemSlots } from '../item-slots';
+import { bonusToText, DynamicListTarget, dynamicListTargetNames } from '@foundryvtt-dndmashup/mashup-rules';
+import { groupBy } from 'lodash/fp';
 
 export function EquipmentPreview({ item, simple }: { item: EquipmentDocument; simple?: boolean }) {
 	const { name, data: itemData } = item.data;
@@ -32,6 +34,16 @@ export function EquipmentPreview({ item, simple }: { item: EquipmentDocument; si
 						<div>
 							<StatsPreview equipmentProperties={item.data.data.equipmentProperties as never} />
 						</div>
+						{item.data.data.grantedBonuses.map(bonusToText).map((text) => (
+							<RulesText label="Bonus" key={text}>
+								{text}
+							</RulesText>
+						))}
+						{Object.entries(groupBy((e) => e.target, item.data.data.dynamicList)).map(([target, entries]) => (
+							<RulesText label={dynamicListTargetNames[target as DynamicListTarget].label} key={target}>
+								{oxfordComma(entries.map((e) => e.entry))}
+							</RulesText>
+						))}
 					</>
 				),
 				cardRowFormat

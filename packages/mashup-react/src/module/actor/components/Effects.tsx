@@ -1,11 +1,10 @@
 import classNames from 'classnames';
-import { ensureSign } from '@foundryvtt-dndmashup/core';
 import {
-	numericBonusTargetNames,
 	FeatureBonusWithSource,
 	getRuleText,
 	DynamicListEntryWithSource,
 	dynamicListTargetNames,
+	bonusToText,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { sortBy } from 'lodash/fp';
 import { SourceButton } from './SourceButton';
@@ -28,8 +27,6 @@ export function Effects({
 				</thead>
 				<tbody>
 					{bonusList.map((bonus, idx) => {
-						const condition = bonus.condition;
-						const conditionText = condition ? getRuleText(condition) : null;
 						return (
 							<tr
 								key={idx}
@@ -38,10 +35,7 @@ export function Effects({
 									'border-b-2 border-transparent',
 									{ 'opacity-75': bonus.disabled }
 								)}>
-								<td className="px-1">
-									{ensureSign(bonus.amount)} {bonus.type} bonus to {numericBonusTargetNames[bonus.target].label}{' '}
-									{conditionText ? `when ${conditionText}` : null}
-								</td>
+								<td className="px-1">{bonusToText(bonus)}</td>
 								<td>{bonus.source ? <SourceButton source={bonus.source} /> : null}</td>
 							</tr>
 						);

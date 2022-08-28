@@ -1,3 +1,4 @@
+export * from './bonus-to-text';
 export * from './bonuses-editor';
 export * from './constants';
 export * from './types';
