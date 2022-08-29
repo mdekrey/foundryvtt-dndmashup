@@ -415,9 +415,31 @@ export class MashupActor extends Actor implements ActorDocument {
 		data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - healingSurges;
 		data['data.health.secondWindUsed'] = false;
 		data['data.actionPoints.usedThisEncounter'] = false;
+		data['data.health.deathSavesRemaining'] = 3;
 
 		this.updatePoolRests('shortRest', data);
 		this.updatePowersForShortRest(data);
+
+		// TODO: what else? bonuses "until you rest"?
+
+		await this.update(data);
+
+		return true;
+	}
+
+	async applyLongRest() {
+		const data: Record<string, unknown> = {};
+		data['data.health.hp.value'] = this.data.data.health.hp.max;
+		data['data.health.surgesRemaining.value'] = this.derivedData.health.surgesRemaining.max;
+		data['data.health.secondWindUsed'] = false;
+		data['data.actionPoints.usedThisEncounter'] = false;
+		data['data.health.deathSavesRemaining'] = 3;
+		data['data.actionPoints.value'] = 1;
+		data['data.encountersSinceLongRest'] = 0;
+		data['data.magicItemUse.used'] = 0;
+
+		this.updatePoolRests('longRest', data);
+		this.updatePowersForLongRest(data);
 
 		// TODO: what else? bonuses "until you rest"?
 
@@ -436,7 +458,8 @@ export class MashupActor extends Actor implements ActorDocument {
 			}
 			poolValue.usedSinceRest = 0;
 
-			const logic = pool[restType];
+			let logic = pool[restType];
+			if (logic === null && restType === 'longRest') logic = pool.shortRest;
 			if (logic === null) continue;
 			let newValue = poolValue.value;
 			if (isRegainPoolRecharge(logic)) {
@@ -453,6 +476,11 @@ export class MashupActor extends Actor implements ActorDocument {
 		for (const power of this.allPowers(true)) {
 			if (power.data.data.usage === 'encounter' || power.data.data.usage.startsWith('recharge-'))
 				data[`data.powerUsage.${power.powerGroupId}`] = 0;
+		}
+	}
+	updatePowersForLongRest(data: Record<string, unknown>) {
+		for (const power of this.allPowers(true)) {
+			data[`data.powerUsage.${power.powerGroupId}`] = 0;
 		}
 	}
 }

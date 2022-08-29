@@ -15,7 +15,7 @@ export function LongRestConfiguration({ actor, onClose }: { actor: ActorDocument
 	);
 
 	async function onUseLongRest() {
-		// if (!(await actor.applyLongRest())) return;
+		if (!(await actor.applyLongRest())) return;
 		chatDispatch.sendChatMessage('plain-text', actor, `takes a long rest.`);
 		onClose();
 	}

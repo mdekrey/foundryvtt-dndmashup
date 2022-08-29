@@ -48,4 +48,5 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	): Promise<void>;
 
 	applyShortRest(healingSurges: number, healingBonusByType: BonusByType): Promise<boolean>;
+	applyLongRest(): Promise<boolean>;
 };

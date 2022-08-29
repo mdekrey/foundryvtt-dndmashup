@@ -20,7 +20,6 @@ export const applicationDispatcher: ApplicationDispatcherContext = {
 		messageType: T,
 		param: MashupApplication[T]
 	): Promise<{ dialog: SimpleApplication; result: Promise<MashupApplicationResultType<T>> }> {
-		console.log(applicationRegistry);
 		const { promise, resolve, reject } = deferredPromise<MashupApplicationResultType<T>>();
 		const { content, title, options } = await applicationRegistry[messageType](param, resolve, reject);
 		const dialog = new JsxDialog(content, { title, close: () => reject?.() }, options);
