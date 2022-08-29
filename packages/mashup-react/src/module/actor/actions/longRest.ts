@@ -1,4 +1,3 @@
-import { noop } from 'lodash/fp';
 import { CommonAction } from './common-action';
 
 export const longRest: CommonAction = {
@@ -8,5 +7,7 @@ export const longRest: CommonAction = {
 	usage: 'daily',
 	hint: '',
 	isReady: () => true,
-	use: noop,
+	use: (actor, { appDispatch }) => {
+		appDispatch.launchApplication('longRest', { actor });
+	},
 };

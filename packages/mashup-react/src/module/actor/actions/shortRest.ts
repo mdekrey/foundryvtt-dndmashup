@@ -1,4 +1,3 @@
-import { noop } from 'lodash/fp';
 import { CommonAction } from './common-action';
 
 export const shortRest: CommonAction = {
@@ -8,5 +7,7 @@ export const shortRest: CommonAction = {
 	usage: 'encounter',
 	hint: '',
 	isReady: () => true,
-	use: noop,
+	use: (actor, { appDispatch }) => {
+		appDispatch.launchApplication('shortRest', { actor });
+	},
 };

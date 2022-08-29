@@ -2,7 +2,14 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { FullFeatureBonus, FullDynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	FullFeatureBonus,
+	FullDynamicListEntry,
+	BonusByType,
+	combineRollComponents,
+	fromBonusesToFormula,
+	isRegainPoolRecharge,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	isClass,
@@ -386,6 +393,67 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (pool.value === 0) return true;
 		if (poolMaxes.maxBetweenRest !== null && pool.usedSinceRest >= poolMaxes.maxBetweenRest) return true;
 		return false;
+	}
+
+	async applyShortRest(healingSurges: number, healingBonusByType: BonusByType) {
+		const health = this.data.data.health;
+		if (healingSurges > health.surgesRemaining.value) return false;
+
+		const effectiveHealingSurgeValue = combineRollComponents(
+			this.derivedData.health.surgesValue,
+			fromBonusesToFormula(healingBonusByType)
+		);
+
+		if (typeof effectiveHealingSurgeValue === 'string') {
+			// TODO: do we need to support non-deterministic healing surge values?
+			return false;
+		}
+		const effectiveAmount = healingSurges * effectiveHealingSurgeValue;
+
+		const data: Record<string, unknown> = {};
+		data['data.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
+		data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - healingSurges;
+		data['data.health.secondWindUsed'] = false;
+		data['data.actionPoints.usedThisEncounter'] = false;
+
+		this.updatePoolRests('shortRest', data);
+		this.updatePowersForShortRest(data);
+
+		// TODO: what else? bonuses "until you rest"?
+
+		await this.update(data);
+
+		return true;
+	}
+
+	updatePoolRests(restType: 'shortRest' | 'longRest', data: Record<string, unknown>) {
+		const poolsResult = deepClone(this.data.data.pools ?? []);
+		for (const pool of this.derivedData.poolLimits) {
+			let poolValue = poolsResult.find((p) => p.name === pool.name);
+			if (poolValue === undefined) {
+				poolValue = { name: pool.name, value: pool.max ?? 0, usedSinceRest: 0 };
+				poolsResult.push(poolValue);
+			}
+			poolValue.usedSinceRest = 0;
+
+			const logic = pool[restType];
+			if (logic === null) continue;
+			let newValue = poolValue.value;
+			if (isRegainPoolRecharge(logic)) {
+				newValue += logic.regain;
+			} else {
+				newValue = logic.reset;
+			}
+			poolValue.value = pool.max === null ? newValue : Math.max(pool.max, newValue);
+		}
+		data['data.pools'] = poolsResult;
+	}
+
+	updatePowersForShortRest(data: Record<string, unknown>) {
+		for (const power of this.allPowers(true)) {
+			if (power.data.data.usage === 'encounter' || power.data.data.usage.startsWith('recharge-'))
+				data[`data.powerUsage.${power.powerGroupId}`] = 0;
+		}
 	}
 }
 
