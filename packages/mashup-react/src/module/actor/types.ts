@@ -1,5 +1,12 @@
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Ability, Currency, DynamicListEntry, PoolState } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	Ability,
+	Currency,
+	DynamicListEntry,
+	MonsterPowerLevel,
+	PoolState,
+	Size,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type AbilityScores = {
@@ -71,10 +78,18 @@ export type PcActorTemplateDataSourceData = {
 	skills?: SkillEntry[];
 };
 
+export type MonsterDetails = ActorDetails & {
+	size: Size;
+	origin: string;
+	type: string;
+	keywords: string[];
+	power: MonsterPowerLevel;
+	role: string;
+	leader: boolean;
+};
+
 export type MonsterActorTemplateDataSourceData = {
-	details: {
-		role: string;
-	};
+	details: MonsterDetails;
 };
 
 export type PlayerCharacterDataSourceData = BaseActorTemplateDataSourceData & PcActorTemplateDataSourceData;

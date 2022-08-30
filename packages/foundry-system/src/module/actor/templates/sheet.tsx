@@ -2,6 +2,7 @@ import { isGame } from '../../../core/foundry';
 import { SpecificActor } from '../mashup-actor';
 import { MashupActorSheet } from '../mashup-actor-sheet';
 import { PossibleActorData } from '../types';
+import { MonsterSheet } from './MonsterSheet';
 import { PcSheet } from './pcSheet';
 
 function isActorType<T extends PossibleActorData['type']>(actor: SpecificActor, type: T): actor is SpecificActor<T> {
@@ -11,7 +12,11 @@ function isActorType<T extends PossibleActorData['type']>(actor: SpecificActor, 
 export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
 	const actor = sheet.actor as SpecificActor;
 
-	return isActorType(actor, 'pc') ? <PcSheet actor={actor} onRollInitiative={onRollInitiative} /> : null;
+	return isActorType(actor, 'pc') ? (
+		<PcSheet actor={actor} onRollInitiative={onRollInitiative} />
+	) : isActorType(actor, 'monster') ? (
+		<MonsterSheet actor={actor} />
+	) : null;
 
 	function onRollInitiative() {
 		if (!isGame(game)) return;
