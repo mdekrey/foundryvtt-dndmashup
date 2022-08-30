@@ -2,7 +2,6 @@ import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { defenses, DynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
 import capitalize from 'lodash/fp/capitalize';
-import { ActorDerivedData } from '../derivedDataType';
 import { MonsterDataSourceData } from '../types';
 
 const base = Lens.fromProp<MonsterDataSourceData>();
@@ -30,13 +29,7 @@ const sensesLens = Lens.from<MonsterDataSourceData, string>(getSenses, (mutator)
 	];
 });
 
-export function MonsterVitals({
-	documentState,
-	derivedData,
-}: {
-	documentState: Stateful<MonsterDataSourceData>;
-	derivedData: ActorDerivedData;
-}) {
+export function MonsterVitals({ documentState }: { documentState: Stateful<MonsterDataSourceData> }) {
 	return (
 		<div className="grid grid-cols-12 grid-rows-2 gap-x-1">
 			<FormInput className="col-span-2">

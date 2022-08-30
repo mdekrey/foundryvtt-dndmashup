@@ -1,3 +1,4 @@
+import { BlockHeader } from '@foundryvtt-dndmashup/components';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { documentAsState } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorComponents } from '@foundryvtt-dndmashup/mashup-react';
@@ -9,8 +10,8 @@ const baseLens = Lens.identity<SpecificActorData<'monster'>>();
 export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 	const documentState = documentAsState<SpecificActorData<'monster'>>(actor);
 	return (
-		<article className="flex flex-col h-full">
-			<header className="flex flex-row gap-1">
+		<article className="flex flex-col h-full theme-olive-dark">
+			<header className="flex flex-row gap-1 bg-theme text-white p-2">
 				<ActorComponents.MonsterHeader
 					nameState={baseLens.toField('name').apply(documentState)}
 					imageState={baseLens.toField('img').apply(documentState)}
@@ -18,10 +19,11 @@ export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 					detailsState={baseLens.toField('data').toField('details').apply(documentState)}
 				/>
 			</header>
-			<ActorComponents.MonsterVitals
-				derivedData={actor.derivedData}
-				documentState={baseLens.toField('data').apply(documentState)}
-			/>
+			<ActorComponents.MonsterVitals documentState={baseLens.toField('data').apply(documentState)} />
+			<BlockHeader>Actions</BlockHeader>
+			<div>TODO</div>
+			<BlockHeader>Details</BlockHeader>
+			<ActorComponents.MonsterDetails documentState={baseLens.toField('data').apply(documentState)} />
 		</article>
 	);
 }

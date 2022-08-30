@@ -73,7 +73,7 @@ export function MonsterHeader({
 					<FormInput.Select {...detailsLens.toField('role').apply(detailsState)} options={roleOptions} />
 					<FormInput.Label>Role</FormInput.Label>
 				</FormInput>
-				<FormInput.Inline className="col-span-2">
+				<FormInput.Inline className="col-span-2 self-center">
 					<FormInput.Checkbox {...detailsLens.toField('leader').apply(detailsState)} />
 					<FormInput.Label>is leader</FormInput.Label>
 				</FormInput.Inline>
