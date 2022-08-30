@@ -28,7 +28,7 @@ const sizeOptions = sizes.map(
 	})
 );
 
-export const keywordsLens = Lens.from<MonsterDetails, string>(
+const keywordsLens = Lens.from<MonsterDetails, string>(
 	(details) => (details.keywords ?? []).map(capitalize).join(', '),
 	(mutator) => (draft) => {
 		const keywords = mutator((draft.keywords ?? []).map(capitalize).join(', '));
@@ -42,10 +42,12 @@ export const keywordsLens = Lens.from<MonsterDetails, string>(
 export function MonsterHeader({
 	nameState,
 	imageState,
+	sizeState,
 	detailsState,
 }: {
 	nameState: Stateful<string>;
 	imageState: Stateful<string | null>;
+	sizeState: Stateful<Size>;
 	detailsState: Stateful<MonsterDetails>;
 }) {
 	return (
@@ -78,7 +80,7 @@ export function MonsterHeader({
 
 				{/* size, origin, type */}
 				<FormInput className="col-span-2">
-					<FormInput.Select {...detailsLens.toField('size').apply(detailsState)} options={sizeOptions} />
+					<FormInput.Select {...sizeState} options={sizeOptions} />
 					<FormInput.Label>Size</FormInput.Label>
 				</FormInput>
 				<FormInput className="col-span-2">

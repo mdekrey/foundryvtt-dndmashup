@@ -25,7 +25,8 @@ import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
 import { uniq } from 'lodash/fp';
-import { standardBonuses } from './standardBonuses';
+import { pcStandardBonuses, monsterStandardBonuses } from './standardBonuses';
+import { isActorType } from '../templates/isActorType';
 
 const standardPoolBonus: PoolBonus[] = [];
 
@@ -77,7 +78,11 @@ export function calculateDerivedData(
 ): ActorDerivedData {
 	// TODO: this would be better as a proxy object
 	const allBonuses = [
-		...standardBonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
+		...(this.type === 'pc' ? pcStandardBonuses : monsterStandardBonuses).map((bonus) => ({
+			...bonus,
+			source: this,
+			context: { actor: this },
+		})),
 		...this.allBonuses,
 	];
 
@@ -108,7 +113,11 @@ export function calculateDerivedData(
 		speed: 0,
 		initiative: 0,
 		halfLevel: Math.floor(this.data.data.details.level / 2),
-		size: this.appliedRace?.data.data.size ?? 'medium',
+		size: isActorType(this, 'pc')
+			? this.appliedRace?.data.data.size ?? 'medium'
+			: isActorType(this, 'monster')
+			? this.data._source.data.size
+			: 'medium',
 		poolLimits: [],
 		milestones: Math.floor((this.data.data.encountersSinceLongRest ?? 0) / 2),
 		magicItemUse: {
@@ -176,6 +185,10 @@ export function calculateDerivedData(
 			return prev;
 		}, pools);
 	resultData.poolLimits = pools;
+
+	if (isActorType(this, 'monster')) {
+		resultData.size = this.data._source.data.size;
+	}
 
 	return resultData;
 }

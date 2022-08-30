@@ -1,13 +1,9 @@
 import { isGame } from '../../../core/foundry';
 import { SpecificActor } from '../mashup-actor';
 import { MashupActorSheet } from '../mashup-actor-sheet';
-import { PossibleActorData } from '../types';
+import { isActorType } from './isActorType';
 import { MonsterSheet } from './MonsterSheet';
 import { PcSheet } from './pcSheet';
-
-function isActorType<T extends PossibleActorData['type']>(actor: SpecificActor, type: T): actor is SpecificActor<T> {
-	return actor.data.type === type;
-}
 
 export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
 	const actor = sheet.actor as SpecificActor;

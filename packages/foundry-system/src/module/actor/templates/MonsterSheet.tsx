@@ -14,9 +14,14 @@ export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 				<ActorComponents.MonsterHeader
 					nameState={baseLens.toField('name').apply(documentState)}
 					imageState={baseLens.toField('img').apply(documentState)}
+					sizeState={baseLens.toField('data').toField('size').apply(documentState)}
 					detailsState={baseLens.toField('data').toField('details').apply(documentState)}
 				/>
 			</header>
+			<ActorComponents.MonsterVitals
+				derivedData={actor.derivedData}
+				documentState={baseLens.toField('data').apply(documentState)}
+			/>
 		</article>
 	);
 }

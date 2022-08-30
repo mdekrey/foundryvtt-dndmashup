@@ -16,4 +16,7 @@ export const dynamicListTargetNames: Record<DynamicListTarget, { label: string }
 	criticalDamageTypes: {
 		label: 'Critical Damage Type',
 	},
+	senses: {
+		label: 'Senses',
+	},
 };

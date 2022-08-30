@@ -2,6 +2,7 @@ import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	Ability,
 	Currency,
+	Defense,
 	DynamicListEntry,
 	MonsterPowerLevel,
 	PoolState,
@@ -58,7 +59,6 @@ export type BaseActorTemplateDataSourceData = {
 
 export type PcDetails = ActorDetails & {
 	exp: number;
-	size: string;
 	age: string;
 	pronouns: string;
 	height: string;
@@ -79,7 +79,6 @@ export type PcActorTemplateDataSourceData = {
 };
 
 export type MonsterDetails = ActorDetails & {
-	size: Size;
 	origin: string;
 	type: string;
 	keywords: string[];
@@ -88,8 +87,19 @@ export type MonsterDetails = ActorDetails & {
 	leader: boolean;
 };
 
+export type MonsterHealth = {
+	hp: { maxBase: number };
+};
+
 export type MonsterActorTemplateDataSourceData = {
 	details: MonsterDetails;
+	size: Size;
+	initiativeBase: number;
+	speedBase: number;
+	health: MonsterHealth;
+	baseDefenses: {
+		[defense in Defense]: number;
+	};
 };
 
 export type PlayerCharacterDataSourceData = BaseActorTemplateDataSourceData & PcActorTemplateDataSourceData;

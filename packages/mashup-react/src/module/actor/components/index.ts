@@ -14,6 +14,7 @@ import { CombatStats } from './CombatStats';
 import { Skills } from './Skills';
 import { Pools } from './Pools';
 import { MonsterHeader } from './MonsterHeader';
+import { MonsterVitals } from './MonsterVitals';
 
 export const ActorComponents = {
 	Abilities,
@@ -24,6 +25,7 @@ export const ActorComponents = {
 	Features,
 	Header,
 	MonsterHeader,
+	MonsterVitals,
 	HealingSurges,
 	HitPoints,
 	Inventory,

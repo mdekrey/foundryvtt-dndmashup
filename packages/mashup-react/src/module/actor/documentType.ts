@@ -16,6 +16,14 @@ export type TokenDocument = {
 	control?(options?: { releaseOthers?: boolean }): boolean;
 };
 
+export type HealingOptions = {
+	amount?: number;
+	isTemporary?: boolean;
+	addHealingSurgeValue?: boolean;
+	spendHealingSurge?: boolean;
+	additionalUpdates?: Record<string, unknown>;
+};
+
 export type ActorDocument<T extends PossibleActorType = PossibleActorType> = SimpleDocument<ActorDataSource<T>> & {
 	readonly derivedData: ActorDerivedData<T>;
 	readonly token: null | TokenDocument;
@@ -34,13 +42,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	toggleReady(power: PowerDocument): Promise<boolean>;
 	applyUsage(power: PowerDocument): Promise<boolean>;
 
-	applyHealing(options: {
-		amount?: number;
-		isTemporary?: boolean;
-		addHealingSurgeValue?: boolean;
-		spendHealingSurge?: boolean;
-		additionalUpdates?: Record<string, unknown>;
-	}): Promise<void>;
+	applyHealing(options: HealingOptions): Promise<void>;
 
 	createActiveEffect(
 		effect: ActiveEffectDocumentConstructorData,
