@@ -9,6 +9,7 @@ const initiativeLens = base('initiativeBase');
 const speedLens = base('speedBase');
 const healthLens = base('health');
 const defensesLens = base('baseDefenses').default({ ac: 10, fort: 10, refl: 10, will: 10 });
+const actionPointsLens = base('actionPoints');
 
 function getSenses(data: MonsterDataSourceData) {
 	return (data.dynamicList ?? [])
@@ -73,6 +74,11 @@ export function MonsterVitals({ documentState }: { documentState: Stateful<Monst
 			<FormInput className="col-span-3">
 				<FormInput.NumberField {...speedLens.apply(documentState)} />
 				<FormInput.Label>Speed</FormInput.Label>
+			</FormInput>
+
+			<FormInput className="col-span-3">
+				<FormInput.NumberField {...actionPointsLens.toField('value').apply(documentState)} className="text-center" />
+				<FormInput.Label>Action Points</FormInput.Label>
 			</FormInput>
 		</div>
 	);

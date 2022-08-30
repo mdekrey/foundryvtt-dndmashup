@@ -21,9 +21,13 @@ export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 			</header>
 			<ActorComponents.MonsterVitals documentState={baseLens.toField('data').apply(documentState)} />
 			<BlockHeader>Actions</BlockHeader>
-			<div>TODO</div>
+			<div className="theme-blue-dark">
+				<ActorComponents.Powers actor={actor} />
+			</div>
 			<BlockHeader>Details</BlockHeader>
 			<ActorComponents.MonsterDetails documentState={baseLens.toField('data').apply(documentState)} />
+			<BlockHeader>Inventory</BlockHeader>
+			<ActorComponents.Inventory actor={actor} />
 		</article>
 	);
 }

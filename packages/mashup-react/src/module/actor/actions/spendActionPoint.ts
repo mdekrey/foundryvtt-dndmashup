@@ -6,12 +6,14 @@ export const spendActionPoint: CommonAction = {
 	action: 'free',
 	usage: 'encounter',
 	hint: 'Once per encounter, spend an action point to gain an extra turn',
-	isReady: (actor) => !actor.data.data.actionPoints.usedThisEncounter,
+	isReady: (actor) =>
+		actor.data.data.actionPoints.value > 0 &&
+		(actor.type === 'monster' || !actor.data.data.actionPoints.usedThisEncounter),
 	setReady: (actor, ready) => {
 		actor.update({ 'data.actionPoints.usedThisEncounter': !ready }, {});
 	},
 	use: async (actor, { chatDispatch }) => {
-		if (actor.data.data.actionPoints.usedThisEncounter) return;
+		if (actor.type !== 'monster' && actor.data.data.actionPoints.usedThisEncounter) return;
 		if (actor.data.data.actionPoints.value < 1) return;
 		await actor.update(
 			{
