@@ -28,6 +28,7 @@ import {
 	ItemDocument,
 	ComputableEffectDurationInfo,
 	PowerUsage,
+	PossibleItemType,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -37,6 +38,7 @@ import { calculateDerivedData } from './logic/calculateDerivedData';
 import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
+import { importNewChildItem } from '../../core/foundry/importNewChildItem';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -482,6 +484,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		for (const power of this.allPowers(true)) {
 			data[`data.powerUsage.${power.powerGroupId}`] = 0;
 		}
+	}
+
+	async importChildItem(type?: PossibleItemType): Promise<void> {
+		importNewChildItem(this, type);
 	}
 }
 

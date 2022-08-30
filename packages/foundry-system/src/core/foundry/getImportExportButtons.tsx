@@ -55,7 +55,7 @@ export function getImportExportButtons(target: SimpleDocument): Application.Head
 	}
 }
 
-class ImportDialog extends ReactApplicationMixin(Dialog) {
+export class ImportDialog extends ReactApplicationMixin(Dialog) {
 	constructor(
 		public json: string,
 		private setNewJson: (newContent: string) => void,

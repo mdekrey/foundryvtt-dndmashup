@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash/fp';
 import classNames from 'classnames';
-import { IconButton, Table } from '@foundryvtt-dndmashup/components';
+import { AppButton, IconButton, Table } from '@foundryvtt-dndmashup/components';
 import { EquippedItemSlot, equippedItemSlots, ItemSlot, itemSlots } from '../../item/subtypes/equipment/item-slots';
 import { isEquipment } from '../../item/subtypes/equipment/isEquipment';
 import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
@@ -87,7 +87,11 @@ function InventorySlotTable<T extends ItemSlot>({
 			<>
 				<TableHeader />
 				{canEquip ? <th className="w-12">Equip</th> : null}
-				<th className="w-6"></th>
+				<th className="w-6">
+					<AppButton className="border-0" onClick={() => actor.importChildItem('equipment')}>
+						New
+					</AppButton>
+				</th>
 			</>
 		),
 		[TableHeader, equippedSlots]

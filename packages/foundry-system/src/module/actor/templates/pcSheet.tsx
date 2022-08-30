@@ -1,5 +1,5 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { Tabs } from '@foundryvtt-dndmashup/components';
+import { AppButton, Tabs } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	ActiveEffectDocument,
@@ -101,6 +101,9 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 									<ActorComponents.Powers actor={actor} />
 								</Tabs.Tab>
 								<Tabs.Tab tabName="features">
+									<div className="flex gap-1 justify-end">
+										<AppButton onClick={() => actor.importChildItem('feature')}>New</AppButton>
+									</div>
 									<ActorComponents.Features
 										effects={actor.effects.contents as ActiveEffectDocument[]}
 										items={actor.items.contents as SimpleDocument<PossibleItemData>[]}
