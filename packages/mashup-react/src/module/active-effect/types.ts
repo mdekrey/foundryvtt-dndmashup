@@ -1,6 +1,6 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDocument } from '../actor';
+import type { ActorDocument } from '../actor';
 
 export type EffectDurationType = 'endOfTurn' | 'startOfTurn' | 'saveEnds' | 'shortRest' | 'longRest' | 'other';
 
@@ -15,8 +15,8 @@ export type EffectDurationInfo<T extends EffectDurationType = EffectDurationType
 }[T];
 
 interface ComputableEffectDurationTypeData {
-	endOfTurn: { rounds: number; actor?: ActorDocument };
-	startOfTurn: { rounds: number; actor?: ActorDocument };
+	endOfTurn: { actor?: ActorDocument };
+	startOfTurn: { actor?: ActorDocument };
 	other: EffectDurationTypeData['other'];
 }
 
@@ -27,8 +27,8 @@ export type ComputableEffectDurationInfo<T extends EffectDurationType = EffectDu
 }[T];
 
 interface TemplateEffectDurationTypeData {
-	endOfTurn: { rounds: number; useTargetActor: boolean };
-	startOfTurn: { rounds: number; useTargetActor: boolean };
+	endOfTurn: { useTargetActor: boolean };
+	startOfTurn: { useTargetActor: boolean };
 	other: EffectDurationTypeData['other'];
 }
 
@@ -44,7 +44,11 @@ export type ActiveEffectFlags = {
 	};
 	mashup?: {
 		bonuses?: FeatureBonus[];
+		afterEffect?: ActiveEffectDocumentConstructorParams;
+		afterFailedSave?: ActiveEffectDocumentConstructorParams;
 		effectDuration?: EffectDurationInfo;
+		// TODO: beginning of round ApplicableEffect
+		// TODO: end of round ApplicableEffect
 	};
 };
 
@@ -53,6 +57,11 @@ export type ActiveEffectDocumentConstructorData = {
 	label: string;
 	flags?: ActiveEffectFlags;
 };
+
+export type ActiveEffectDocumentConstructorParams = [
+	effect: ActiveEffectDocumentConstructorData,
+	duration: ComputableEffectDurationInfo
+];
 
 export type ActiveEffectDocument = BaseDocument & {
 	data: {

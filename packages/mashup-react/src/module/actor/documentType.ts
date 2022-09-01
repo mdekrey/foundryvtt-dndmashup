@@ -1,7 +1,6 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { BonusByType, DynamicListEntryWithContext, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
-import { ComputableEffectDurationInfo } from '../active-effect/types';
-import { ActiveEffectDocumentConstructorData } from '../active-effect/types';
+import { ActiveEffectDocumentConstructorParams } from '../active-effect/types';
 import { PossibleItemType } from '../item';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
@@ -45,10 +44,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 
 	applyHealing(options: HealingOptions): Promise<void>;
 
-	createActiveEffect(
-		effect: ActiveEffectDocumentConstructorData,
-		duration: ComputableEffectDurationInfo
-	): Promise<void>;
+	createActiveEffect(...params: ActiveEffectDocumentConstructorParams): Promise<void>;
 
 	applyShortRest(healingSurges: number, healingBonusByType: BonusByType): Promise<boolean>;
 	applyLongRest(): Promise<boolean>;

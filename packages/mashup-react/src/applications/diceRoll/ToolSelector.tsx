@@ -1,6 +1,7 @@
 import { DocumentSelector } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentDocument } from '../../module/item';
 
+// TODO: use a normal select box for this?
 export function ToolSelector({
 	possibleTools,
 	tool,

@@ -1,5 +1,6 @@
 import { ActorDocument } from '../module/actor';
 import {
+	ActiveEffectDocumentConstructorParams,
 	ComputableEffectDurationInfo,
 	EffectDurationType,
 	TemplateEffectDurationInfo,
@@ -15,8 +16,8 @@ type Convert<T extends EffectDurationType> = (
 const toComputableDuration: {
 	[T in EffectDurationType]: Convert<T>;
 } = {
-	endOfTurn: (template, caster) => ({ rounds: template.rounds, actor: template.useTargetActor ? undefined : caster }),
-	startOfTurn: (template, caster) => ({ rounds: template.rounds, actor: template.useTargetActor ? undefined : caster }),
+	endOfTurn: (template, caster) => ({ actor: template.useTargetActor ? undefined : caster }),
+	startOfTurn: (template, caster) => ({ actor: template.useTargetActor ? undefined : caster }),
 	saveEnds: (template) => template,
 	shortRest: (template) => template,
 	longRest: (template) => template,
@@ -27,7 +28,7 @@ export function toComputable(
 	template: ActiveEffectTemplate,
 	caster: ActorDocument,
 	image: string
-): Parameters<ActorDocument['createActiveEffect']> {
+): ActiveEffectDocumentConstructorParams {
 	const duration: ComputableEffectDurationInfo = {
 		durationType: template.duration.durationType,
 		...toComputableDuration[template.duration.durationType](template.duration as any, caster),
@@ -37,10 +38,8 @@ export function toComputable(
 		({ amount, ...bonus }): FeatureBonus => ({ amount: caster.evaluateAmount(amount), ...bonus })
 	);
 
-	const afterEffect = template.afterEffect ? toComputable(template.afterEffect, caster, image) : null;
-	const afterFailedSave = template.afterFailedSave ? toComputable(template.afterFailedSave, caster, image) : null;
-
-	console.log('TODO', { afterEffect, afterFailedSave });
+	const afterEffect = template.afterEffect ? toComputable(template.afterEffect, caster, image) : undefined;
+	const afterFailedSave = template.afterFailedSave ? toComputable(template.afterFailedSave, caster, image) : undefined;
 
 	return [
 		{
@@ -49,8 +48,8 @@ export function toComputable(
 			flags: {
 				mashup: {
 					bonuses,
-					// afterEffect,
-					// afterFailedSave,
+					afterEffect,
+					afterFailedSave,
 				},
 			},
 		},

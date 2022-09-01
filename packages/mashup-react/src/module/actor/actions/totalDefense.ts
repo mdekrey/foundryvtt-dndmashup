@@ -19,7 +19,6 @@ export const totalDefenseEffect: ActiveEffectDocumentConstructorData = {
 	// TODO: duration
 };
 export const totalDefenseDuration: ComputableEffectDurationInfo = {
-	rounds: 1,
 	durationType: 'startOfTurn',
 };
 

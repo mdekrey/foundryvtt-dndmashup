@@ -89,7 +89,10 @@ export function ApplicableEffectOptions({
 
 	function applyActiveEffect(activeEffectTemplate: ActiveEffectTemplate) {
 		return () => {
-			console.log(activeEffectTemplate, toComputable(activeEffectTemplate, actor, power?.img ?? '')); // TODO - better image
+			applications.launchApplication('applyEffect', {
+				// TODO - better image
+				effectParams: toComputable(activeEffectTemplate, actor, power?.img ?? ''),
+			});
 		};
 	}
 }

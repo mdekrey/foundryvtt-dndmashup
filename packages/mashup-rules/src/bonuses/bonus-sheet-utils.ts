@@ -19,7 +19,7 @@ export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string
 	maxHp: { label: 'Maximum HP', ruleText: 'maximum hit points' },
 	speed: { label: 'Speed', ruleText: 'their speed' },
 	initiative: { label: 'Initiative', ruleText: 'Initiative' },
-	'attack-roll': { label: 'Attack Roll', ruleText: 'attackRolls' },
+	'attack-roll': { label: 'Attack Roll', ruleText: 'attack rolls' },
 	damage: { label: 'Damage', ruleText: 'damage rolls' },
 	'critical-damage': { label: 'Critical Damage', ruleText: 'damage rolls for critical hits' },
 	healing: { label: 'Healing', ruleText: 'healing' },

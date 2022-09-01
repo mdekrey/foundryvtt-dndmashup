@@ -4,7 +4,7 @@ import { ActiveEffectTemplate } from './types';
 const defaultActiveEffectTemplate: ActiveEffectTemplate = {
 	label: '',
 	image: null,
-	duration: { durationType: 'endOfTurn', rounds: 1, useTargetActor: true },
+	duration: { durationType: 'endOfTurn', useTargetActor: true },
 	bonuses: [],
 	afterEffect: null,
 	afterFailedSave: null,
@@ -18,7 +18,6 @@ export const activeEffectTemplateDefaultLens = Lens.identity<ActiveEffectTemplat
 		value.afterEffect === null &&
 		value.afterFailedSave === null &&
 		value.duration.durationType === 'endOfTurn' &&
-		value.duration.rounds === 1 &&
 		value.startOfTurn === null &&
 		value.endOfTurn === null
 );

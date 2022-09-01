@@ -13,18 +13,16 @@ const durationTypeOptions: SelectItem<EffectDurationType>[] = [
 ];
 
 const durationTypeDefaults: { [T in EffectDurationType]: Omit<TemplateEffectDurationInfo<T>, 'durationType'> } = {
-	endOfTurn: { rounds: 1, useTargetActor: true },
-	startOfTurn: { rounds: 1, useTargetActor: true },
+	endOfTurn: { useTargetActor: true },
+	startOfTurn: { useTargetActor: true },
 	saveEnds: {},
 	shortRest: {},
 	longRest: {},
 	other: { description: '' },
 };
 
-const endOfTurnRoundsLens = Lens.fromProp<TemplateEffectDurationInfo<'endOfTurn'>>()('rounds');
 const endOfTurnUseTargetLens = Lens.fromProp<TemplateEffectDurationInfo<'endOfTurn'>>()('useTargetActor');
 
-const startOfTurnRoundsLens = Lens.fromProp<TemplateEffectDurationInfo<'startOfTurn'>>()('rounds');
 const startOfTurnUseTargetLens = Lens.fromProp<TemplateEffectDurationInfo<'startOfTurn'>>()('useTargetActor');
 
 const otherDescriptionLens = Lens.fromProp<TemplateEffectDurationInfo<'other'>>()('description');
@@ -32,10 +30,6 @@ const otherDescriptionLens = Lens.fromProp<TemplateEffectDurationInfo<'other'>>(
 const durationTypeEditors: { [T in EffectDurationType]: React.FC<Stateful<TemplateEffectDurationInfo<T>>> } = {
 	endOfTurn: (props) => (
 		<>
-			<FormInput>
-				<FormInput.NumberField {...endOfTurnRoundsLens.apply(props)} />
-				<FormInput.Label>Number of Rounds</FormInput.Label>
-			</FormInput>
 			<FormInput.Inline>
 				<FormInput.Checkbox {...endOfTurnUseTargetLens.apply(props)} />
 				<FormInput.Label>use Target's Turns</FormInput.Label>
@@ -44,10 +38,6 @@ const durationTypeEditors: { [T in EffectDurationType]: React.FC<Stateful<Templa
 	),
 	startOfTurn: (props) => (
 		<>
-			<FormInput>
-				<FormInput.NumberField {...startOfTurnRoundsLens.apply(props)} />
-				<FormInput.Label>Number of Rounds</FormInput.Label>
-			</FormInput>
 			<FormInput.Inline>
 				<FormInput.Checkbox {...startOfTurnUseTargetLens.apply(props)} />
 				<FormInput.Label>use Target's Turns</FormInput.Label>
