@@ -15,6 +15,7 @@ const options: SelectItem<AfterEffectType>[] = [
 	{ key: 'after-failed', value: 'after-failed', label: 'Failed Save', typeaheadLabel: 'Failed Save' },
 ];
 
+const labelLens = activeEffectTemplateFieldLens('label');
 const durationLens = activeEffectTemplateFieldLens('duration');
 const bonusesLens = activeEffectTemplateFieldLens('bonuses');
 const toAfterEffectType = (t: ActiveEffectTemplate) =>
@@ -38,6 +39,10 @@ export function ActiveEffectTemplateEditor(props: Stateful<ActiveEffectTemplate>
 
 	return (
 		<>
+			<FormInput>
+				<FormInput.TextField {...labelLens.apply(props)} />
+				<FormInput.Label>Label</FormInput.Label>
+			</FormInput>
 			<DurationEditor {...durationLens.apply(props)} />
 			<BonusesEditor bonuses={bonusesLens.apply(props)} />
 			<FormInput>

@@ -22,8 +22,13 @@ export type HealingEffect = {
 };
 
 export type ActiveEffectTemplate = {
+	label: string;
+	image: string | null;
 	duration: TemplateEffectDurationInfo;
 	bonuses: FeatureBonus[];
 	afterEffect: ActiveEffectTemplate | null;
 	afterFailedSave: ActiveEffectTemplate | null;
+
+	startOfTurn: ApplicableEffect | null;
+	endOfTurn: ApplicableEffect | null;
 };

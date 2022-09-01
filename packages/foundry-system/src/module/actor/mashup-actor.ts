@@ -489,6 +489,10 @@ export class MashupActor extends Actor implements ActorDocument {
 	async importChildItem(type?: PossibleItemType): Promise<void> {
 		importNewChildItem(this, type);
 	}
+
+	evaluateAmount(amount: string | number) {
+		return typeof amount === 'number' ? amount : new Roll(amount, { actor: this }).roll({ async: false })._total;
+	}
 }
 
 export type SpecificActor<T extends PossibleActorData['type'] = PossibleActorData['type']> = MashupActor & {

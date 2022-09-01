@@ -54,4 +54,6 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	applyLongRest(): Promise<boolean>;
 
 	importChildItem(type?: PossibleItemType): Promise<void>;
+
+	evaluateAmount(amount: string | number): number;
 };

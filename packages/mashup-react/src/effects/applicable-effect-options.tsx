@@ -2,9 +2,10 @@ import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
-import { ApplicableEffect, DamageEffect, HealingEffect } from './types';
+import { ActiveEffectTemplate, ApplicableEffect, DamageEffect, HealingEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { LightningBoltIcon } from '@heroicons/react/solid';
+import { toComputable } from './toComputable';
 
 export type ApplicableEffectOptionsProps = {
 	effect: ApplicableEffect;
@@ -41,8 +42,13 @@ export function ApplicableEffectOptions({
 					title={`${mode} Healing`}
 				/>
 			)}
-			{/* TODO: effect */}
-			{false && <SvgButton icon={LightningBoltIcon} title={`Apply ${mode} Effects`} />}
+			{effect.activeEffectTemplate && (
+				<SvgButton
+					icon={LightningBoltIcon}
+					title={`Apply ${mode} Effects`}
+					onClick={applyActiveEffect(effect.activeEffectTemplate)}
+				/>
+			)}
 		</>
 	);
 
@@ -78,6 +84,12 @@ export function ApplicableEffectOptions({
 				healingSurge: healingEffect.healingSurge,
 				isTemporary: healingEffect.isTemporary,
 			});
+		};
+	}
+
+	function applyActiveEffect(activeEffectTemplate: ActiveEffectTemplate) {
+		return () => {
+			console.log(activeEffectTemplate, toComputable(activeEffectTemplate, actor, power?.img ?? '')); // TODO - better image
 		};
 	}
 }
