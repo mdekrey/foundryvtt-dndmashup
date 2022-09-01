@@ -1,10 +1,10 @@
-import classNames from 'classnames';
-import { IconButton } from '@foundryvtt-dndmashup/components';
+import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import { ApplicableEffect, DamageEffect, HealingEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
+import { LightningBoltIcon } from '@heroicons/react/solid';
 
 export type ApplicableEffectOptionsProps = {
 	effect: ApplicableEffect;
@@ -31,15 +31,8 @@ export function ApplicableEffectOptions({
 	return (
 		<>
 			{effect.damage && (
-				<button
-					className={classNames('p-1', 'focus:ring-blue-bright-600 focus:ring-1')}
-					title={`${mode} Damage`}
-					onClick={damageRoll(effect.damage)}
-					type="button">
-					<DropIcon className="w-5 h-5" />
-				</button>
+				<SvgButton icon={DropIcon} title={`${mode} Damage`} onClick={damageRoll(effect.damage)} type="button" />
 			)}
-			{/* TODO: healing */}
 			{effect.healing && (
 				<IconButton
 					className="text-lg"
@@ -49,7 +42,7 @@ export function ApplicableEffectOptions({
 				/>
 			)}
 			{/* TODO: effect */}
-			{false && <IconButton className="text-lg" iconClassName="fas fa-bullseye" title={`Apply ${mode} Effects`} />}
+			{false && <SvgButton icon={LightningBoltIcon} title={`Apply ${mode} Effects`} />}
 		</>
 	);
 

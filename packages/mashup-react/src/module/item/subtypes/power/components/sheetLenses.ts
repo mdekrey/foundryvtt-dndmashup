@@ -35,7 +35,7 @@ export const firstEffectLens = effectsLens.toField(0).default({
 	target: 'One creature',
 	typeAndRange: { type: 'melee', range: 'weapon' },
 	attackRoll: null,
-	hit: { text: '', healing: null, damage: null },
+	hit: { text: '', healing: null, damage: null, activeEffectTemplate: null },
 	miss: null,
 });
 const defaultNewEffect: PowerEffect = Object.freeze({
@@ -45,7 +45,7 @@ const defaultNewEffect: PowerEffect = Object.freeze({
 	target: '',
 	typeAndRange: { type: 'within', size: 'sight' },
 	attackRoll: null,
-	hit: { text: '', healing: null, damage: null },
+	hit: { text: '', healing: null, damage: null, activeEffectTemplate: null },
 	miss: null,
 });
 export const newEffectLens = Lens.from<PowerEffect[], PowerEffect>(

@@ -11,3 +11,4 @@ export * from './tabbed-sheet';
 export * from './modal';
 export * from './table';
 export * from './card-layouts';
+export * from './svg-button';

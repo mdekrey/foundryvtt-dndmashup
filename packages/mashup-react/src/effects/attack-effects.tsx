@@ -6,7 +6,7 @@ export type AttackEffectTrigger = 'hit' | 'critical-hit';
 
 const lensStarter = Lens.fromProp<Partial<Record<AttackEffectTrigger, ApplicableEffect>>>();
 const defaulter = Lens.identity<ApplicableEffect | undefined>().default(
-	{ damage: null, healing: null, text: '' },
+	{ damage: null, healing: null, text: '', activeEffectTemplate: null },
 	(effect): effect is Exclude<typeof effect, ApplicableEffect> =>
 		effect.damage === null && effect.healing === null && effect.text === ''
 );
