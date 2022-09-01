@@ -5,10 +5,11 @@ import { ActorDocument } from '../../module/actor/documentType';
 
 export function ApplyEffectDisplay({
 	effectParams,
+	targets,
 	onClose,
 }: {
 	effectParams: ActiveEffectDocumentConstructorParams;
-	targets?: ActorDocument[];
+	targets: ActorDocument[];
 	onClose: () => void;
 }) {
 	return (
@@ -17,6 +18,18 @@ export function ApplyEffectDisplay({
 			<EffectPreview effectParams={effectParams} />
 
 			<BlockHeader>Targets</BlockHeader>
+			{targets.length === 0 ? (
+				<p>No targets selected</p>
+			) : (
+				<div>
+					{targets.map((target, index) => (
+						<div key={target.id ?? index}>
+							{/* TODO */}
+							{target.name}
+						</div>
+					))}
+				</div>
+			)}
 
 			<div className="grid grid-cols-2 gap-1">
 				<AppButton onClick={onClose}>Cancel</AppButton>
@@ -26,6 +39,9 @@ export function ApplyEffectDisplay({
 	);
 
 	async function onApplyEffect() {
+		for (const target of targets) {
+			target.createActiveEffect(...effectParams);
+		}
 		onClose();
 	}
 }

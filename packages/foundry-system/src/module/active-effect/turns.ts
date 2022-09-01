@@ -38,7 +38,7 @@ function shouldRemove(
 		if (e.data.duration.rounds === undefined || nextInit === null) {
 			return false;
 		}
-		return combatTime(e.data.duration.rounds, effectData.durationTurnInit) < combatTime(nextRound, nextInit);
+		return combatTime(e.data.duration.rounds, effectData.durationTurnInit) <= combatTime(nextRound, nextInit);
 	} else if (effectData?.durationType === 'startOfTurn') {
 		if (e.data.duration.rounds === undefined || nextInit === null) {
 			return false;

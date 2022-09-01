@@ -12,7 +12,7 @@ export function createFinalEffectConstructorData(
 	if (duration.durationType === 'endOfTurn' || duration.durationType === 'startOfTurn') {
 		const current = getCurrentInitiative(duration.actor);
 		if (current !== undefined) {
-			rounds = current.currentInitiative > current.combatantInitiative ? current.round + 1 : current.round;
+			rounds = current.currentInitiative <= current.combatantInitiative ? current.round + 1 : current.round;
 			resultDurationInfo = {
 				durationType: duration.durationType,
 				durationTurnInit: current.combatantInitiative,
