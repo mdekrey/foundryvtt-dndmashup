@@ -4,7 +4,6 @@ import { AppButton, IconButton, Table } from '@foundryvtt-dndmashup/components';
 import { EquippedItemSlot, equippedItemSlots, ItemSlot, itemSlots } from '../../item/subtypes/equipment/item-slots';
 import { isEquipment } from '../../item/subtypes/equipment/isEquipment';
 import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
-import { useCallback } from 'react';
 import { getEquipmentProperties } from '../../item/subtypes/equipment/getEquipmentProperties';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentData, EquipmentDocument } from '../../item/subtypes/equipment/dataSourceData';
@@ -82,57 +81,47 @@ function InventorySlotTable<T extends ItemSlot>({
 
 	const canEquip = equippedSlots.length;
 
-	const InventorySlotHeader = useCallback(
-		() => (
-			<>
-				<TableHeader />
-				{canEquip ? <th className="w-12">Equip</th> : null}
-				<th className="w-6">
-					<AppButton className="border-0" onClick={() => actor.importChildItem('equipment')}>
-						New
-					</AppButton>
-				</th>
-			</>
-		),
-		[TableHeader, equippedSlots]
-	);
-
-	const InventorySlotBody = useCallback<React.FC<{ item: EquipmentDocument<T> }>>(
-		({ item }) => (
-			<>
-				<TableBody equipmentProperties={getEquipmentProperties<T>(item.data)} />
-				{canEquip ? (
-					<td className="text-center w-12">
-						{equippedSlots.map((equipSlot) => (
-							<IconButton
-								key={equipSlot}
-								title={`Equip ${equippedItemSlots[equipSlot].label}`}
-								className={classNames({
-									'opacity-25': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) === -1,
-									// fade out opposite hand
-									'opacity-50': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) >= 1,
-								})}
-								iconClassName="fas fa-shield-alt"
-								onClick={onEquip && (() => onEquip(item, equipSlot))}
-							/>
-						))}
-					</td>
-				) : null}
-				<td>
-					<IconButton title={`Share to Chat`} iconClassName="fas fa-comments" onClick={() => shareToChat(item)} />
-				</td>
-			</>
-		),
-		[TableBody, equippedSlots]
-	);
-
 	return (
 		<ItemTable
 			className="theme-orange-dark"
 			items={items}
 			title={itemSlots[slot].display}
-			header={InventorySlotHeader}
-			body={InventorySlotBody}
+			header={() => (
+				<>
+					<TableHeader />
+					{canEquip ? <th className="w-12">Equip</th> : null}
+					<th className="w-6">
+						<AppButton className="border-0" onClick={() => actor.importChildItem('equipment')}>
+							New
+						</AppButton>
+					</th>
+				</>
+			)}
+			body={(item) => (
+				<>
+					<TableBody equipmentProperties={getEquipmentProperties<T>(item.data)} />
+					{canEquip ? (
+						<td className="text-center w-12">
+							{equippedSlots.map((equipSlot) => (
+								<IconButton
+									key={equipSlot}
+									title={`Equip ${equippedItemSlots[equipSlot].label}`}
+									className={classNames({
+										'opacity-25': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) === -1,
+										// fade out opposite hand
+										'opacity-50': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) >= 1,
+									})}
+									iconClassName="fas fa-shield-alt"
+									onClick={onEquip && (() => onEquip(item, equipSlot))}
+								/>
+							))}
+						</td>
+					) : null}
+					<td>
+						<IconButton title={`Share to Chat`} iconClassName="fas fa-comments" onClick={() => shareToChat(item)} />
+					</td>
+				</>
+			)}
 		/>
 	);
 	async function shareToChat(item: EquipmentDocument) {

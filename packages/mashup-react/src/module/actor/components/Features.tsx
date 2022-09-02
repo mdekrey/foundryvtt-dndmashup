@@ -11,8 +11,8 @@ const features: {
 	key: React.Key;
 	label: string;
 	filter: (item: SimpleDocument<PossibleItemSourceData>) => boolean;
-	header?: React.FC;
-	body?: React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>;
+	header?: () => React.ReactNode;
+	body?: (item: SimpleDocument<PossibleItemSourceData>) => React.ReactNode;
 }[] = [
 	{
 		key: 'character-details',
@@ -24,36 +24,36 @@ const features: {
 		key: 'race-feature',
 		label: 'Racial Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
-		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		header: () => <FeatureHeader />,
+		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'class-feature',
 		label: 'Class Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
-		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		header: () => <FeatureHeader />,
+		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'paragon-feature',
 		label: 'Paragon Path Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
-		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		header: () => <FeatureHeader />,
+		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
-		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		header: () => <FeatureHeader />,
+		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'feats',
 		label: 'Feat',
 		filter: (item) => isFeature(item) && item.data.data.featureType === 'feat',
-		header: FeatureHeader,
-		body: FeatureBody as React.FC<{ item: SimpleDocument<PossibleItemSourceData> }>,
+		header: () => <FeatureHeader />,
+		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 ];
 

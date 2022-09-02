@@ -8,19 +8,17 @@ type ItemTableDocument = BaseDocument & {
 	showEditDialog(): void;
 };
 
-export function ItemTable<T extends ItemTableDocument, ChildProps extends Record<string, unknown>>({
+export function ItemTable<T extends ItemTableDocument>({
 	title,
 	items,
-	passedProps,
-	header: TableHeader,
+	header,
 	body,
 	className,
 }: {
 	title: string;
 	items: T[];
-	passedProps?: ChildProps;
-	header?: React.FC<ChildProps>;
-	body?: React.FC<{ item: T } & ChildProps>;
+	header?: () => React.ReactNode;
+	body?: (item: T) => React.ReactNode;
 	className?: string;
 }) {
 	return (
@@ -28,24 +26,22 @@ export function ItemTable<T extends ItemTableDocument, ChildProps extends Record
 			<Table.HeaderRow>
 				<th className="w-10" />
 				<th className="pl-1 text-left">{title}</th>
-				{TableHeader && <TableHeader {...(passedProps as any)} />}
+				{header && header()}
 				<th className="w-0" />
 			</Table.HeaderRow>
 			{items.map((item) => (
-				<ItemTableRow key={item.id} item={item} passedProps={(passedProps ?? {}) as any} body={body} />
+				<ItemTableRow key={item.id} item={item} body={body} />
 			))}
 		</Table>
 	);
 }
 
-function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<string, unknown>>({
+function ItemTableRow<T extends ItemTableDocument>({
 	item,
-	passedProps,
-	body: TableBody,
+	body,
 }: {
 	item: T;
-	passedProps: ChildProps;
-	body: undefined | React.FC<{ item: T } & ChildProps>;
+	body: undefined | ((item: T) => React.ReactNode);
 }) {
 	const apps = useApplicationDispatcher();
 	return (
@@ -61,7 +57,7 @@ function ItemTableRow<T extends ItemTableDocument, ChildProps extends Record<str
 						{item.name}
 					</button>
 				</td>
-				{TableBody && <TableBody item={item} {...passedProps} />}
+				{body && body(item)}
 				<td
 					className={classNames('text-right', {
 						'w-6': !item.isOwner,
