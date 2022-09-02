@@ -19,7 +19,7 @@ export function proficientIn({ actor, item }: ConditionRuleContext) {
 
 declare global {
 	interface ConditionRules {
-		proficientIn: never;
+		proficientIn: null;
 	}
 }
 

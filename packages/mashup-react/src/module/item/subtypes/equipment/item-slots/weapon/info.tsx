@@ -14,7 +14,14 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 	optionLabel: 'Weapon',
 	equippedSlots: ['primary-hand', 'off-hand'],
 	slotsNeeded: (inputData) => inputData.hands,
-	bonuses: () => [],
+	bonuses: (inputData) => [
+		{
+			amount: inputData.proficiencyBonus,
+			target: 'attack-roll',
+			condition: { rule: 'proficientIn', parameter: null },
+			type: 'proficiency',
+		},
+	],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
 		<>
