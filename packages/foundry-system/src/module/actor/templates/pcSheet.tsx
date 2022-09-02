@@ -105,6 +105,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 										<AppButton onClick={() => actor.importChildItem('feature')}>New</AppButton>
 									</div>
 									<ActorComponents.Features
+										actor={actor}
 										effects={actor.effects.contents as ActiveEffectDocument[]}
 										items={actor.items.contents as SimpleDocument<PossibleItemData>[]}
 										bonuses={bonusesLens.apply(documentState)}

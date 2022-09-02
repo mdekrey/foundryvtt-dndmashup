@@ -1,11 +1,13 @@
 import { isFeature } from '../../item/subtypes/feature/isFeature';
-import { ItemTable } from '@foundryvtt-dndmashup/foundry-compat';
+import { ItemTable, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { PossibleItemSourceData } from '../../item/item-data-types-template';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
 import { BonusesEditor, DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { Stateful } from '@foundryvtt-dndmashup/core';
 import { ActiveEffectDocument } from '../../active-effect';
+import { ImageButton } from '@foundryvtt-dndmashup/components';
+import { ActorDocument } from '../documentType';
 
 const features: {
 	key: React.Key;
@@ -58,16 +60,19 @@ const features: {
 ];
 
 export function Features({
+	actor,
 	effects,
 	items,
 	bonuses,
 	dynamicList,
 }: {
+	actor: ActorDocument;
 	effects: ActiveEffectDocument[];
 	items: SimpleDocument<PossibleItemSourceData>[];
 	bonuses: Stateful<FeatureBonus[]>;
 	dynamicList: Stateful<DynamicListEntry[]>;
 }) {
+	const apps = useApplicationDispatcher();
 	const nonEquipment = items.filter(
 		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.data.data.featureType !== 'feat')
 	);
@@ -80,7 +85,25 @@ export function Features({
 	const other = nonEquipment.filter((item) => !features.some(({ filter }) => filter(item)));
 	return (
 		<>
-			{effects.length > 0 ? <ItemTable items={effects} title="Effects" /> : null}
+			{effects.length > 0 ? (
+				<ItemTable
+					items={effects}
+					title="Effects"
+					header={() => <th className="w-7" />}
+					body={(item) => (
+						<td>
+							{item.data.flags.mashup?.effectDuration?.durationType === 'saveEnds' ? (
+								<ImageButton
+									className="w-7 h-7"
+									title="Roll Saving Throw"
+									src="/icons/svg/d20-black.svg"
+									onClick={onSave(item)}
+								/>
+							) : null}
+						</td>
+					)}
+				/>
+			) : null}
 			{groups.map(({ key, label, items, header, body }) => (
 				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
@@ -89,6 +112,25 @@ export function Features({
 			<DynamicList dynamicList={dynamicList} />
 		</>
 	);
+
+	function onSave(item: ActiveEffectDocument) {
+		return async () => {
+			const { result: resultPromise } = await apps.launchApplication('diceRoll', {
+				actor,
+				baseDice: 'd20',
+				rollType: 'saving-throw',
+				allowToolSelection: false,
+				source: actor,
+				sendToChat: true,
+				title: `Saving Throw vs. ${item.name}`,
+				flavor: `... makes a saving throw vs. ${item.name}`,
+			});
+			const result = await resultPromise;
+			if (result >= 10) {
+				item.delete();
+			}
+		};
+	}
 }
 
 function FeatureHeader() {
