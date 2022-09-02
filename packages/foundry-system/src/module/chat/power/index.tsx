@@ -1,7 +1,7 @@
-import { fromMashupId, isGame } from '../../../core/foundry';
+import { fromMashupId, isGame, toMashupId } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
-import { toMashupId, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	ActorDocument,
 	AttackRoll,

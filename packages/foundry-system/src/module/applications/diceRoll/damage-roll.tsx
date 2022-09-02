@@ -1,10 +1,11 @@
-import { applicationRegistry, RollJson, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { applicationRegistry, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
 import {
 	EquipmentDocument,
 	DamageRollDetails,
 	DamageRollApplicationParametersBase,
 } from '@foundryvtt-dndmashup/mashup-react';
+import { toMashupId } from '../../../core/foundry';
 import { applicationDispatcher } from '../../../components/foundry/apps-provider';
 import { sendChatMessage } from '../../chat/sendChatMessage';
 import { roll } from './roll';

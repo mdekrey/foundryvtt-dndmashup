@@ -39,7 +39,7 @@ const colors = {
 		dark: 'rgb(38, 59, 92)',
 	},
 	green: {
-		dark: 'rgb(114, 149, 105)',
+		dark: 'rgb(96, 151, 104)', // This was 'rgb(114, 149, 105)', but I don't know where that color came from. 'rgb(96, 151, 104)' matches the PHB "at-will" color.
 	},
 	orange: {
 		dark: 'rgb(198, 153, 40)',

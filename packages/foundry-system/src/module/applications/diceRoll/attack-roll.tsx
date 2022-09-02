@@ -1,7 +1,7 @@
-import { applicationRegistry, toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
+import { applicationRegistry } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { BonusByType, combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
-import { isGame } from '../../../core/foundry';
+import { isGame, toMashupId } from '../../../core/foundry';
 import { sendChatMessage } from '../../chat/sendChatMessage';
 import { displayDialog } from './displayDialog';
 import { roll } from './roll';

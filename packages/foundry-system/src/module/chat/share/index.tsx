@@ -1,6 +1,5 @@
-import { fromMashupId, isGame } from '../../../core/foundry';
+import { fromMashupId, isGame, toMashupId } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
-import { toMashupId } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	ActorDocument,
 	chatMessageRegistry,
