@@ -20,7 +20,7 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 		create(effect, actorSize) {
 			return effect.shape === 'blast'
 				? {
-						t: 'rect',
+						t: 'cone',
 						// distance + direction is the angle of the rectangle
 						distance: effect.size,
 						direction: 0,
@@ -40,7 +40,7 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 		create(effect) {
 			return effect.shape === 'burst'
 				? {
-						t: 'circle',
+						t: 'cone',
 						distance: effect.size + 0.5,
 						direction: 0,
 						flags: { [systemName]: { rotate: undefined } },
@@ -77,8 +77,12 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		);
 		if (constructorData === null) return null;
 
+		console.log(constructorData);
+
 		const cls = CONFIG.MeasuredTemplate.documentClass;
 		const template = new cls({ ...partialData, ...constructorData }, { parent: canvas?.scene ?? undefined });
+
+		console.log(template);
 
 		return new this(template);
 	}
@@ -168,7 +172,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		PowerEffectTemplate.onCancel = handlers.rightClick;
 	}
 
-	static getSquareShape(distance: number) {
+	static getBurstShape(distance: number) {
 		const r = Ray.fromAngle(0, 0, 0, distance),
 			dx = r.dx - r.dy,
 			dy = r.dy + r.dx;
@@ -177,18 +181,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		return new PIXI.Polygon(points);
 	}
 
-	static _getCircleSquareShape(
-		this: MeasuredTemplate,
-		wrapper: (distance: number) => PIXI.Polygon,
-		distance: number
-	): PIXI.Polygon {
-		if (this.data.t === 'circle') {
-			return PowerEffectTemplate.getSquareShape(distance);
-		}
-		return wrapper(distance);
-	}
-
-	protected override _getRectShape(direction: number, distance: number): NormalizedRectangle {
+	static getBlastShape(direction: number, distance: number): NormalizedRectangle {
 		if (direction < (1 * Math.PI) / 2) return new NormalizedRectangle(0, 0, distance, distance);
 		if (direction < (2 * Math.PI) / 2) return new NormalizedRectangle(-distance, 0, distance, distance);
 		if (direction < (3 * Math.PI) / 2) return new NormalizedRectangle(-distance, -distance, distance, distance);
@@ -232,7 +225,6 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 	getBaseShape(): PIXI.Polygon | PIXI.Circle | PIXI.Ellipse | PIXI.Rectangle | PIXI.RoundedRectangle {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const d = canvas!.dimensions!;
-		const { angle } = this.data;
 		let { direction, distance, width } = this.data;
 		distance *= d.size / d.distance;
 		width *= d.size / d.distance;
@@ -242,9 +234,9 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 
 		switch (this.data.t) {
 			case 'circle':
-				return PowerEffectTemplate.getSquareShape(distance);
+				return PowerEffectTemplate.getBurstShape(distance);
 			case 'cone':
-				return this._getConeShape(direction, angle, distance);
+				return PowerEffectTemplate.getBlastShape(direction, distance);
 			case 'rect':
 				return this._getRectShape(direction, distance);
 			case 'ray':

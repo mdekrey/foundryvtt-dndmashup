@@ -93,12 +93,11 @@ Hooks.on('getSceneControlButtons', function (controls) {
 	const measureControls = controls.find((ctrl) => ctrl.name === 'measure');
 	if (measureControls) {
 		removeMeasure(measureControls.tools, 'circle');
-		removeMeasure(measureControls.tools, 'cone');
 
 		measureControls.tools.splice(0, 0, {
-			name: 'rectCenter',
+			name: 'circle',
 			title: 'Square Template from the Center',
-			icon: 'fas fa-external-link-square-alt',
+			icon: 'fas fa-expand-arrows-alt',
 		});
 	}
 
