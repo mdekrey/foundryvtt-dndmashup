@@ -47,8 +47,8 @@ export type ActiveEffectFlags = {
 		afterEffect?: ActiveEffectDocumentConstructorParams;
 		afterFailedSave?: ActiveEffectDocumentConstructorParams;
 		effectDuration?: EffectDurationInfo;
-		// TODO: beginning of round ApplicableEffect
-		// TODO: end of round ApplicableEffect
+		// TODO: beginning of round InstantaneousEffect
+		// TODO: end of round InstantaneousEffect
 	};
 };
 

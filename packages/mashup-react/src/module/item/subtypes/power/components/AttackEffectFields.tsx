@@ -1,6 +1,6 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { ApplicableEffect, ApplicableEffectFields } from '../../../../../effects';
+import { InstantaneousEffect, InstantaneousEffectFields } from '../../../../../effects';
 import { AttackRoll, PowerEffect } from '../dataSourceData';
 import { AttackRollFields } from './AttackRollFields';
 import { TypeAndRange } from './TypeAndRange';
@@ -25,7 +25,7 @@ export const attackRollLens = Lens.from<PowerEffect, AttackRoll | null>(
 	}
 );
 
-const missEffectLens = Lens.from<PowerEffect, ApplicableEffect>(
+const missEffectLens = Lens.from<PowerEffect, InstantaneousEffect>(
 	(e) => e.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null },
 	(mutator) => (draft) => {
 		const result = mutator(draft.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null });
@@ -66,8 +66,11 @@ export function PowerEffectFields(props: Stateful<PowerEffect>) {
 export function HitAndMissFields(props: Stateful<PowerEffect>) {
 	return (
 		<>
-			<ApplicableEffectFields prefix={props.value.miss === null ? 'Effect' : 'Hit'} {...hitEffectLens.apply(props)} />
-			{props.value.miss === null ? null : <ApplicableEffectFields prefix="Miss" {...missEffectLens.apply(props)} />}
+			<InstantaneousEffectFields
+				prefix={props.value.miss === null ? 'Effect' : 'Hit'}
+				{...hitEffectLens.apply(props)}
+			/>
+			{props.value.miss === null ? null : <InstantaneousEffectFields prefix="Miss" {...missEffectLens.apply(props)} />}
 		</>
 	);
 }

@@ -2,13 +2,13 @@ import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
-import { ActiveEffectTemplate, ApplicableEffect, DamageEffect, HealingEffect } from './types';
+import { ActiveEffectTemplate, InstantaneousEffect, DamageEffect, HealingEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
 
-export type ApplicableEffectOptionsProps = {
-	effect: ApplicableEffect;
+export type InstantaneousEffectOptionsProps = {
+	effect: InstantaneousEffect;
 	prefix?: string;
 	mode: string;
 	actor: ActorDocument;
@@ -18,7 +18,7 @@ export type ApplicableEffectOptionsProps = {
 	allowCritical: boolean;
 };
 
-export function ApplicableEffectOptions({
+export function InstantaneousEffectOptions({
 	effect,
 	prefix,
 	mode,
@@ -27,7 +27,7 @@ export function ApplicableEffectOptions({
 	power,
 	allowToolSelection,
 	allowCritical,
-}: ApplicableEffectOptionsProps) {
+}: InstantaneousEffectOptionsProps) {
 	const applications = useApplicationDispatcher();
 	return (
 		<>

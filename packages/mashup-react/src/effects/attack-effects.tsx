@@ -1,23 +1,23 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { ApplicableEffectFields } from './applicable-effect-fields';
-import { ApplicableEffect } from './types';
+import { InstantaneousEffectFields } from './instantaneous-effect-fields';
+import { InstantaneousEffect } from './types';
 
 export type AttackEffectTrigger = 'hit' | 'critical-hit';
 
-const lensStarter = Lens.fromProp<Partial<Record<AttackEffectTrigger, ApplicableEffect>>>();
-const defaulter = Lens.identity<ApplicableEffect | undefined>().default(
+const lensStarter = Lens.fromProp<Partial<Record<AttackEffectTrigger, InstantaneousEffect>>>();
+const defaulter = Lens.identity<InstantaneousEffect | undefined>().default(
 	{ damage: null, healing: null, text: '', activeEffectTemplate: null },
-	(effect): effect is Exclude<typeof effect, ApplicableEffect> =>
+	(effect): effect is Exclude<typeof effect, InstantaneousEffect> =>
 		effect.damage === null && effect.healing === null && effect.text === ''
 );
 const hitLens = lensStarter('hit').combine(defaulter);
 const criticalHitLens = lensStarter('critical-hit').combine(defaulter);
 
-export function AttackEffects(state: Stateful<Partial<Record<AttackEffectTrigger, ApplicableEffect>>>) {
+export function AttackEffects(state: Stateful<Partial<Record<AttackEffectTrigger, InstantaneousEffect>>>) {
 	return (
 		<div>
-			<ApplicableEffectFields prefix="Hit" {...hitLens.apply(state)} />
-			<ApplicableEffectFields prefix="Critical Hit" {...criticalHitLens.apply(state)} />
+			<InstantaneousEffectFields prefix="Hit" {...hitLens.apply(state)} />
+			<InstantaneousEffectFields prefix="Critical Hit" {...criticalHitLens.apply(state)} />
 		</div>
 	);
 }

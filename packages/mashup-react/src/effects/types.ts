@@ -1,7 +1,7 @@
 import { DamageType, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { TemplateEffectDurationInfo } from '../module/active-effect/types';
 
-export type ApplicableEffect = {
+export type InstantaneousEffect = {
 	text: string;
 	healing: HealingEffect | null;
 	damage: DamageEffect | null;
@@ -29,6 +29,6 @@ export type ActiveEffectTemplate = {
 	afterEffect: ActiveEffectTemplate | null;
 	afterFailedSave: ActiveEffectTemplate | null;
 
-	startOfTurn: ApplicableEffect | null;
-	endOfTurn: ApplicableEffect | null;
+	startOfTurn: InstantaneousEffect | null;
+	endOfTurn: InstantaneousEffect | null;
 };

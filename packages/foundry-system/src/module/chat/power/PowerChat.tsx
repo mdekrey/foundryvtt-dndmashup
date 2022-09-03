@@ -1,7 +1,7 @@
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import {
 	ActorDocument,
-	ApplicableEffectSection,
+	InstantaneousEffectSection,
 	AttackRoll,
 	EffectTypeAndRange,
 	PowerEffect,
@@ -122,7 +122,7 @@ function PowerEffectOptions({
 				)}
 			</div>
 			<div className="text-gray-800">
-				<ApplicableEffectSection
+				<InstantaneousEffectSection
 					effect={effect.hit}
 					mode={effect.attackRoll ? 'Hit' : 'Effect'}
 					{...effectProps}
@@ -130,7 +130,7 @@ function PowerEffectOptions({
 					allowCritical={true}
 				/>
 				{effect.miss && (effect.miss.damage || effect.miss.healing) ? (
-					<ApplicableEffectSection
+					<InstantaneousEffectSection
 						effect={effect.miss}
 						mode="Miss"
 						{...effectProps}

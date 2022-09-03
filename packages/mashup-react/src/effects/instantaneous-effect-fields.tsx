@@ -3,23 +3,23 @@ import { BlockHeader, FormInput, IconButton, Modal } from '@foundryvtt-dndmashup
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { DamageFields } from './DamageFields';
 import { HealingFields } from './HealingFields';
-import { ApplicableEffect } from './types';
+import { InstantaneousEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { HeartIcon, LightningBoltIcon } from '@heroicons/react/solid';
 import { ActiveEffectTemplateEditor } from './ActiveEffectTemplateEditor';
 import { activeEffectTemplateDefaultLens } from './lenses';
 
-const applicableEffectFieldLens = Lens.fromProp<ApplicableEffect>();
+const instantaneousEffectFieldLens = Lens.fromProp<InstantaneousEffect>();
 
-const damageEffectLens = applicableEffectFieldLens('damage');
-const effectTextLens = applicableEffectFieldLens('text');
-const healingEffectLens = applicableEffectFieldLens('healing');
+const damageEffectLens = instantaneousEffectFieldLens('damage');
+const effectTextLens = instantaneousEffectFieldLens('text');
+const healingEffectLens = instantaneousEffectFieldLens('healing');
 
-const activeEffectTemplateLens = applicableEffectFieldLens('activeEffectTemplate').combine(
+const activeEffectTemplateLens = instantaneousEffectFieldLens('activeEffectTemplate').combine(
 	activeEffectTemplateDefaultLens
 );
 
-export function ApplicableEffectFields({ prefix, ...props }: { prefix?: string } & Stateful<ApplicableEffect>) {
+export function InstantaneousEffectFields({ prefix, ...props }: { prefix?: string } & Stateful<InstantaneousEffect>) {
 	const [editingEffect, setEditingEffect] = useState(false);
 	return (
 		<>
@@ -41,7 +41,7 @@ export function ApplicableEffectFields({ prefix, ...props }: { prefix?: string }
 				<IconButton iconClassName="fas fa-edit" title="Edit Effect" onClick={() => setEditingEffect(true)} />
 			</div>
 			<Modal
-				title={`Edit ${prefix} Applicable Effect`}
+				title={`Edit ${prefix} Instantaneous Effect`}
 				isOpen={editingEffect}
 				onClose={() => setEditingEffect(false)}
 				options={{ resizable: true, width: 400 }}>

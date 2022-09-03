@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { AttackRollResult, RollInfo, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument, TokenDocument } from '../../actor';
 import { EquipmentDocument, PowerDocument } from '../../item';
-import { ApplicableEffect, ApplicableEffectSection, AttackEffectTrigger } from '../../../effects';
+import { InstantaneousEffect, InstantaneousEffectSection, AttackEffectTrigger } from '../../../effects';
 
 export type AttackResultEntryProps = {
 	tokenId: string | null;
@@ -118,7 +118,7 @@ function ToolExtraEffects({
 	power,
 	actor,
 }: {
-	additionalEffects: Partial<Record<AttackEffectTrigger, ApplicableEffect>>;
+	additionalEffects: Partial<Record<AttackEffectTrigger, InstantaneousEffect>>;
 	tool: EquipmentDocument<'weapon' | 'implement'>;
 	power?: PowerDocument;
 	actor: ActorDocument;
@@ -128,7 +128,7 @@ function ToolExtraEffects({
 		<>
 			<p>Additional effects:</p>
 			{additionalEffects.hit && (
-				<ApplicableEffectSection
+				<InstantaneousEffectSection
 					effect={additionalEffects.hit}
 					mode="Hit"
 					source={tool}
@@ -139,7 +139,7 @@ function ToolExtraEffects({
 				/>
 			)}
 			{additionalEffects['critical-hit'] && (
-				<ApplicableEffectSection
+				<InstantaneousEffectSection
 					effect={additionalEffects['critical-hit']}
 					mode="Critical Hit"
 					source={tool}
