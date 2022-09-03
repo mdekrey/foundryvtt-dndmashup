@@ -1,4 +1,5 @@
 import {
+	SourcedAura,
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
 	SourcedPoolBonus,
@@ -23,5 +24,8 @@ export class MashupParagonPath extends MashupItem<'paragonPath'> implements Para
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return this.items.contents.flatMap((item) => item.allGrantedAuras());
 	}
 }

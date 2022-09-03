@@ -1,4 +1,4 @@
-import { PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
+import { Aura, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { BaseItemTemplateDataSourceData, ItemDescriptionItemTemplateDataSourceData } from '../../templates/bases';
 import { ItemDocument } from '../../item-data-types-template';
@@ -11,6 +11,7 @@ export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 
 		grantedPools?: PoolLimits[];
 		grantedPoolBonuses?: PoolBonus[];
+		grantedAuras?: Aura[];
 	};
 
 export type FeatureData = TypedData<'feature', FeatureDataSourceData>;

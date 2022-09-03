@@ -1,6 +1,7 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
+	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
@@ -35,5 +36,11 @@ export class MashupItemFeature extends MashupItem<'feature'> implements FeatureD
 
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'feature' || type === 'power';
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return [
+			...this.items.contents.flatMap((item) => item.allGrantedAuras()),
+			...(this.data.data.grantedAuras?.map((b) => ({ ...b, source: this })) ?? []),
+		];
 	}
 }

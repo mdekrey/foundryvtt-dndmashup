@@ -6,7 +6,7 @@ import {
 } from '../../templates/bases';
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import { ItemDocument } from '../../item-data-types-template';
-import { DynamicListEntry, FeatureBonus, PoolBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { Aura, DynamicListEntry, FeatureBonus, PoolBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = BaseItemTemplateDataSourceData &
 	ItemDescriptionItemTemplateDataSourceData &
@@ -18,6 +18,7 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Bas
 		equipped: EquippedItemSlot[];
 		container: boolean;
 		grantedPoolBonuses?: PoolBonus[];
+		grantedAuras?: Aura[];
 	};
 
 export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<

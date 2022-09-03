@@ -1,4 +1,5 @@
 import {
+	SourcedAura,
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
 	SourcedPoolBonus,
@@ -34,5 +35,8 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 			return parent.id;
 		}
 		return this.id;
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return [];
 	}
 }

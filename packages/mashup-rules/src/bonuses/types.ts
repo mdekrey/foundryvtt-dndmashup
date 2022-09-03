@@ -1,4 +1,5 @@
 import { ConditionRuleContext, SimpleConditionRule } from '../conditions';
+import { Source } from '../sources/types';
 import { NumericBonusTarget } from './constants';
 
 export type FeatureBonus = {
@@ -10,7 +11,7 @@ export type FeatureBonus = {
 };
 
 export type FeatureBonusWithSource = FeatureBonus & {
-	source: { id: string | null; name: string | null; img: string | null; showEditDialog(): void };
+	source: Source;
 };
 
 export type FeatureBonusWithContext = FeatureBonus & {

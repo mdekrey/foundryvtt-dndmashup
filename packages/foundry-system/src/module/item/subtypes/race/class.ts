@@ -1,4 +1,5 @@
 import {
+	SourcedAura,
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
 	SourcedPoolBonus,
@@ -36,5 +37,8 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return this.items.contents.flatMap((item) => item.allGrantedAuras());
 	}
 }

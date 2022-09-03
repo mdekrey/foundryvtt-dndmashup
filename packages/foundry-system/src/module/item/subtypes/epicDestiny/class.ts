@@ -1,6 +1,7 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
+	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
@@ -23,5 +24,8 @@ export class MashupEpicDestiny extends MashupItem<'epicDestiny'> implements Epic
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return this.items.contents.flatMap((item) => item.allGrantedAuras());
 	}
 }

@@ -1,4 +1,4 @@
-import { ConditionRule, ConditionRuleContext, ConditionRuleType } from './constants';
+import { ConditionRule, ConditionRuleContext, ConditionRuleType } from './types';
 import { ConditionRuleRegistryEntry, conditionsRegistry } from './registry';
 
 export function getRuleText<TType extends ConditionRuleType>(

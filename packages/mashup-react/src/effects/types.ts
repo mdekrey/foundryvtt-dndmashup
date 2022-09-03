@@ -1,4 +1,4 @@
-import { DamageType, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { ConditionRule, DamageType, FeatureBonus, Trigger } from '@foundryvtt-dndmashup/mashup-rules';
 import { TemplateEffectDurationInfo } from '../module/active-effect/types';
 
 export type InstantaneousEffect = {
@@ -21,6 +21,12 @@ export type HealingEffect = {
 	isTemporary: boolean;
 };
 
+export type TriggeredEffect = {
+	effect: InstantaneousEffect;
+	trigger: Trigger;
+	condition: ConditionRule;
+};
+
 export type ActiveEffectTemplate = {
 	label: string;
 	image: string | null;
@@ -29,6 +35,5 @@ export type ActiveEffectTemplate = {
 	afterEffect: ActiveEffectTemplate | null;
 	afterFailedSave: ActiveEffectTemplate | null;
 
-	startOfTurn: InstantaneousEffect | null;
-	endOfTurn: InstantaneousEffect | null;
+	triggeredEffects: TriggeredEffect[];
 };

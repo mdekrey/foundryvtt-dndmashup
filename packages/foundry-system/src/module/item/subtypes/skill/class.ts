@@ -3,6 +3,7 @@ import {
 	DynamicListEntryWithSource,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedAura,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SkillDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -22,6 +23,9 @@ export class MashupSkill extends MashupItem<'skill'> implements SkillDocument {
 		return [];
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
+		return [];
+	}
+	override allGrantedAuras(): SourcedAura[] {
 		return [];
 	}
 }

@@ -1,6 +1,7 @@
 import {
 	DynamicListEntryWithSource,
 	FeatureBonusWithSource,
+	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
@@ -43,5 +44,8 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return this.items.contents.flatMap((item) => item.allGrantedPoolBonuses());
+	}
+	override allGrantedAuras(): SourcedAura[] {
+		return this.items.contents.flatMap((item) => item.allGrantedAuras());
 	}
 }

@@ -4,3 +4,6 @@ export * from './dynamic-lists';
 export * from './monsters';
 export * from './pools';
 export * from './types';
+export * from './triggers';
+export * from './auras';
+export * from './sources';
