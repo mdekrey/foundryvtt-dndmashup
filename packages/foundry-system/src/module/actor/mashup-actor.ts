@@ -9,6 +9,7 @@ import {
 	combineRollComponents,
 	fromBonusesToFormula,
 	isRegainPoolRecharge,
+	SourcedAura,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -239,6 +240,10 @@ export class MashupActor extends Actor implements ActorDocument {
 				? item
 				: item.allGrantedPowers()
 		);
+	}
+
+	get allAuras(): SourcedAura[] {
+		return this.items.contents.flatMap((item: ItemDocument) => item.allGrantedAuras());
 	}
 
 	/** When adding a new embedded document, clean up others of the same type */

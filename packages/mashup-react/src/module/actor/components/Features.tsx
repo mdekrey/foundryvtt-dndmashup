@@ -3,7 +3,7 @@ import { ItemTable, useApplicationDispatcher } from '@foundryvtt-dndmashup/found
 import { PossibleItemSourceData } from '../../item/item-data-types-template';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
-import { BonusesEditor, DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 import { Stateful } from '@foundryvtt-dndmashup/core';
 import { ActiveEffectDocument } from '../../active-effect';
 import { ImageButton } from '@foundryvtt-dndmashup/components';
@@ -108,7 +108,6 @@ export function Features({
 				<ItemTable key={key} items={items} title={label} header={header} body={body} />
 			))}
 			{other.length ? <ItemTable items={other} title="Other" /> : null}
-			<BonusesEditor bonuses={bonuses} />
 			<DynamicList dynamicList={dynamicList} />
 		</>
 	);

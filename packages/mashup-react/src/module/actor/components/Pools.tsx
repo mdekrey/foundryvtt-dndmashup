@@ -42,7 +42,7 @@ export function Pools({
 	poolLimits: SourcedPoolLimits[];
 	poolsState: Stateful<PoolState[]>;
 }) {
-	return poolLimits.length > 0 ? (
+	return (
 		<div className="grid grid-cols-3 gap-1 mt-2 items-start justify-items-center">
 			<PoolDetails
 				pool={{
@@ -68,7 +68,7 @@ export function Pools({
 				/>
 			))}
 		</div>
-	) : null;
+	);
 }
 
 function PoolDetails({

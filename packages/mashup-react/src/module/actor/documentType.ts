@@ -1,5 +1,10 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { BonusByType, DynamicListEntryWithContext, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	BonusByType,
+	DynamicListEntryWithContext,
+	FeatureBonusWithContext,
+	SourcedAura,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams } from '../active-effect/types';
 import { PossibleItemType } from '../item';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
@@ -35,6 +40,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	get allDynamicListResult(): DynamicListEntryWithContext[];
 	get appliedDynamicList(): DynamicListEntryWithContext[];
 	get indeterminateDynamicList(): DynamicListEntryWithContext[];
+	get allAuras(): SourcedAura[];
 
 	allPowers(includeNestedPowers?: boolean): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;
