@@ -35,7 +35,7 @@
 	"changelog": "",
 	"initiative": "",
 	"gridDistance": 1,
-	"gridUnits": "",
+	"gridUnits": "sq.",
 	"primaryTokenAttribute": "health.hp",
 	"secondaryTokenAttribute": "health.temporaryHp"
 }

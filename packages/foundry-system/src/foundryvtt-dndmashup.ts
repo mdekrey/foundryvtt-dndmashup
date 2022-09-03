@@ -81,17 +81,7 @@ Hooks.once('init', async () => {
 		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon },
 	];
 
-	libWrapper.register(
-		systemName,
-		'MeasuredTemplate.prototype._getCircleShape',
-		PowerEffectTemplate._getCircleSquareShape
-	);
-
-	libWrapper.register(
-		systemName,
-		'MeasuredTemplate.prototype._refreshRulerText',
-		PowerEffectTemplate._refreshRulerBurst
-	);
+	CONFIG.MeasuredTemplate.objectClass = PowerEffectTemplate;
 
 	libWrapper.register(systemName, 'Combat.prototype.nextTurn', onNextTurn);
 
@@ -102,17 +92,19 @@ Hooks.on('getSceneControlButtons', function (controls) {
 	//create addtioanl button in measure templates for burst
 	const measureControls = controls.find((ctrl) => ctrl.name === 'measure');
 	if (measureControls) {
-		let index = measureControls.tools.findIndex((tool) => tool.name === 'cone');
-		if (index !== -1) measureControls.tools.splice(index, 1);
-		// index = measureControls.tools.findIndex((tool) => tool.name === 'ray');
-		// if (index !== -1) measureControls.tools.splice(index, 1);
-		index = measureControls.tools.findIndex((tool) => tool.name === 'clear');
-		if (index === -1) index = measureControls.tools.length;
-		measureControls.tools.splice(index, 0, {
+		removeMeasure(measureControls.tools, 'circle');
+		removeMeasure(measureControls.tools, 'cone');
+
+		measureControls.tools.splice(0, 0, {
 			name: 'rectCenter',
 			title: 'Square Template from the Center',
 			icon: 'fas fa-external-link-square-alt',
 		});
+	}
+
+	function removeMeasure(tools: SceneControlTool[], name: string) {
+		const index = tools.findIndex((tool) => tool.name === name);
+		if (index !== -1) tools.splice(index, 1);
 	}
 });
 
