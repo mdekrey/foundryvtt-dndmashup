@@ -18,7 +18,7 @@ export function documentAsState<TData>(
 			delete draft._id;
 			let result = mutator(draft);
 			if (result === undefined) result = draft;
-			document.update(result, { overwrite: true, diff: !deleteData, recursive: !deleteData });
+			document.update(result, { overwrite: true, diff: !deleteData, recursive: !deleteData, ignoreEmbedded: true });
 		},
 	};
 }

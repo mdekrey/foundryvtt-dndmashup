@@ -259,15 +259,17 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	override async update(
 		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
-		context?: DocumentModificationContext & MergeObjectOptions
+		context?: DocumentModificationContext & MergeObjectOptions & { ignoreEmbedded?: boolean }
 	): Promise<this | undefined> {
 		// TODO: For Foundry v9, this is necessary. This appears to be fixed in v10
 		const resultData = {
 			...(expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData),
 		};
-		// Use embedded document creation process instead of update - this does weird/bad things. Plus, it's a huge recursive tree.
-		if (resultData.items) delete resultData.items;
-		if (resultData.effects) delete resultData.effects;
+		if (context?.ignoreEmbedded) {
+			// Use embedded document creation process instead of update - this does weird/bad things. Plus, it's a huge recursive tree.
+			if (resultData.items) delete resultData.items;
+			if (resultData.effects) delete resultData.effects;
+		}
 
 		if (!(this.parent instanceof Actor)) return super.update(resultData, context);
 		await (this.parent as MashupActor).updateEmbeddedDocuments('Actor', [{ ...resultData, _id: this.id }]);

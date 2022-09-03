@@ -20,7 +20,10 @@ export type BaseDocument = {
 
 	sheet: SimpleApplication | null;
 
-	update(newData: unknown, options: { overwrite?: boolean; diff?: boolean; recursive?: boolean }): void;
+	update(
+		newData: unknown,
+		options: { overwrite?: boolean; diff?: boolean; recursive?: boolean; ignoreEmbedded?: boolean }
+	): void;
 	delete(): void;
 };
 

@@ -20,6 +20,7 @@ import { AnyDocument } from '../../core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { not } from '@foundryvtt-dndmashup/core';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
@@ -261,7 +262,7 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	override allGrantedPowers(): PowerDocument[] {
 		return [
 			...(this.items.contents as SimpleDocument[]).filter(isPower),
-			...this.items.contents.flatMap((item) => item.allGrantedPowers()),
+			...this.items.contents.filter((i) => !isPower(i)).flatMap((item) => item.allGrantedPowers()),
 		];
 	}
 	abstract override canEmbedItem(type: PossibleItemType): boolean;
