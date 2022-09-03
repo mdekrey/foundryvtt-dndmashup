@@ -3,6 +3,7 @@ import { ReactApplicationMixin } from '../../core/react/react-application-mixin'
 import { ItemDataSource } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
 import { MashupItemBase } from '../item/mashup-item';
 import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
+import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
@@ -19,6 +20,12 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 				},
 			],
 		});
+	}
+
+	protected override _getHeaderButtons(): Application.HeaderButton[] {
+		const result = super._getHeaderButtons();
+		result.unshift(...getImportExportButtons(this.actor));
+		return result;
 	}
 
 	protected override _getJsx(): JSX.Element {

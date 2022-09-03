@@ -46,7 +46,6 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 		const result = super._getHeaderButtons();
 		result.unshift(...getImportExportButtons(this.item));
 		result.unshift(...getParentButtons(this.item));
-		console.log(result);
 		return result;
 	}
 
