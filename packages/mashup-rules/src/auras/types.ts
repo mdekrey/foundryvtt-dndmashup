@@ -7,5 +7,5 @@ export type Aura = {
 };
 
 export type SourcedAura = Aura & {
-	source: Source;
+	sources: Source[];
 };

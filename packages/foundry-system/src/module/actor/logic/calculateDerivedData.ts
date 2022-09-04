@@ -140,11 +140,15 @@ export function calculateDerivedData(
 	});
 	damageTypes.forEach((damageType) => {
 		const finalResistances = totalFiltered(
-			filterConditions([...groupedByTarget[`${damageType}-resistance`], ...groupedByTarget[`all-resistance`]], {}, true)
+			filterConditions(
+				[...(groupedByTarget[`${damageType}-resistance`] ?? []), ...(groupedByTarget[`all-resistance`] ?? [])],
+				{},
+				true
+			)
 		);
 		const finalVulnerabilities = totalFiltered(
 			filterConditions(
-				[...groupedByTarget[`${damageType}-vulnerability`], ...groupedByTarget[`all-vulnerability`]],
+				[...(groupedByTarget[`${damageType}-vulnerability`] ?? []), ...(groupedByTarget[`all-vulnerability`] ?? [])],
 				{},
 				true
 			)

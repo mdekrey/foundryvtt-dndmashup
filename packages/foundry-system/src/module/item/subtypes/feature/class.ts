@@ -40,7 +40,7 @@ export class MashupItemFeature extends MashupItem<'feature'> implements FeatureD
 	override allGrantedAuras(): SourcedAura[] {
 		return [
 			...this.items.contents.flatMap((item) => item.allGrantedAuras()),
-			...(this.data.data.grantedAuras?.map((b) => ({ ...b, source: this })) ?? []),
+			...(this.data.data.grantedAuras?.map((b) => ({ ...b, sources: [this] })) ?? []),
 		];
 	}
 }

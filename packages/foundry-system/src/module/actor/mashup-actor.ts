@@ -40,6 +40,7 @@ import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
 import { importNewChildItem } from '../../core/foundry/importNewChildItem';
+// import { getAuras } from '../aura/getAuras';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -98,6 +99,16 @@ export class MashupActor extends Actor implements ActorDocument {
 		return Math.floor((this.data.data.details.level - 1) / 10);
 	}
 
+	private _appliedAuras: FullFeatureBonus[] | null = null;
+	get appliedAuras(): FullFeatureBonus[] {
+		// TODO: this is needed to enable auras, but recurses
+		// if (this._appliedAuras === null)
+		// 	if (this.isToken && this.token && this.token.parent) {
+		// 		this._appliedAuras = getAuras(this.token, this.token.parent);
+		// 	}
+		return this._appliedAuras ?? [];
+	}
+
 	get specialBonuses(): FullFeatureBonus[] {
 		return [
 			// all active effects and other linked objects should be loaded here
@@ -108,6 +119,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			...this.data.items.contents.flatMap((item) =>
 				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
 			),
+			...this.appliedAuras,
 		];
 	}
 
@@ -163,10 +175,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	override prepareDerivedData() {
+		console.log(`prepare derived ${this.name}`);
 		this._allBonuses = null;
 		this._derivedData = null;
 		this._appliedBonuses = null;
 		this._indeterminateBonuses = null;
+		this._appliedAuras = null;
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
 		if (this.isOwner) {

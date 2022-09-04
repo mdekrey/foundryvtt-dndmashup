@@ -26,6 +26,7 @@ import { libWrapper } from './libwrapper-shim';
 import { PowerEffectTemplate } from './module/power-effect-template';
 import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
 import { onNextTurn } from './module/active-effect/turns';
+import { handleUpdateAuras } from './module/aura/handleUpdateAuras';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -107,6 +108,8 @@ Hooks.on('getSceneControlButtons', function (controls) {
 	}
 });
 
+// CONFIG.debug.hooks = true;
+
 // Setup system
 Hooks.once('setup', async () => {
 	// Do anything after initialization but before
@@ -122,3 +125,5 @@ Hooks.once('ready', async () => {
 Hooks.on('renderChatMessage', (app: ChatLog, html: JQuery<HTMLElement>, data: ChatMessage.MessageData) => {
 	attachToChat(html, data);
 });
+
+handleUpdateAuras();
