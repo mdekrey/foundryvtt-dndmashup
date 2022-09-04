@@ -1,18 +1,11 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	EffectDurationInfo,
+	EffectDurationType,
+	EffectDurationTypeData,
+	FeatureBonus,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import type { ActorDocument } from '../actor';
-
-export type EffectDurationType = 'endOfTurn' | 'startOfTurn' | 'saveEnds' | 'shortRest' | 'longRest' | 'other';
-
-interface EffectDurationTypeData {
-	endOfTurn: { durationTurnInit: number };
-	startOfTurn: { durationTurnInit: number };
-	other: { description: string };
-}
-
-export type EffectDurationInfo<T extends EffectDurationType = EffectDurationType> = {
-	[K in T]: { durationType: K } & (K extends keyof EffectDurationTypeData ? EffectDurationTypeData[K] : unknown);
-}[T];
 
 interface ComputableEffectDurationTypeData {
 	endOfTurn: { actor?: ActorDocument };
@@ -23,18 +16,6 @@ interface ComputableEffectDurationTypeData {
 export type ComputableEffectDurationInfo<T extends EffectDurationType = EffectDurationType> = {
 	[K in T]: { durationType: K } & (K extends keyof ComputableEffectDurationTypeData
 		? ComputableEffectDurationTypeData[K]
-		: unknown);
-}[T];
-
-interface TemplateEffectDurationTypeData {
-	endOfTurn: { useTargetActor: boolean };
-	startOfTurn: { useTargetActor: boolean };
-	other: EffectDurationTypeData['other'];
-}
-
-export type TemplateEffectDurationInfo<T extends EffectDurationType = EffectDurationType> = {
-	[K in T]: { durationType: K } & (K extends keyof TemplateEffectDurationTypeData
-		? TemplateEffectDurationTypeData[K]
 		: unknown);
 }[T];
 

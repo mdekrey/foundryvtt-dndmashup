@@ -1,7 +1,6 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { EffectDurationType } from '.';
-import { TemplateEffectDurationInfo } from './types';
+import { EffectDurationType, TemplateEffectDurationInfo } from './duration-types';
 
 const durationTypeOptions: SelectItem<EffectDurationType>[] = [
 	{ key: 'endOfTurn', value: 'endOfTurn', label: 'End of Turn', typeaheadLabel: 'End of Turn' },

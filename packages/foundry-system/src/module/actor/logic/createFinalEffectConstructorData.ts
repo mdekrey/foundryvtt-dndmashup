@@ -1,4 +1,5 @@
-import { ActorDocument, ComputableEffectDurationInfo, EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-react';
+import { EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-rules';
+import { ActorDocument, ComputableEffectDurationInfo } from '@foundryvtt-dndmashup/mashup-react';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import { isGame } from '../../../core/foundry';
 

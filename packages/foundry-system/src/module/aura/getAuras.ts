@@ -1,5 +1,8 @@
-import { Aura, FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { FeatureBonus, FullFeatureBonus, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { fromMashupId } from '../../core/foundry';
+import { MashupActor } from '../actor/mashup-actor';
 import { systemName } from '../constants';
+import { MashupItem } from '../item/mashup-item';
 import { getBounds } from './getBounds';
 
 export function getAuras(token: TokenDocument, scene: Scene): FullFeatureBonus[] {
@@ -12,7 +15,6 @@ export function getAuras(token: TokenDocument, scene: Scene): FullFeatureBonus[]
 				return source.allAuras
 					.filter((aura) => {
 						const bounds = getBounds({ auraSize: aura.range, token: otherToken });
-						console.log(aura, otherToken);
 						if (!bounds) return false;
 						return originalBounds.intersects(bounds);
 					})
@@ -20,15 +22,30 @@ export function getAuras(token: TokenDocument, scene: Scene): FullFeatureBonus[]
 					.map((bonus): FullFeatureBonus => ({ ...bonus, source, context: { actor: source } }));
 			return [];
 		}),
-		// TODO: auras from templates
-		// ...scene.templates.contents.flatMap(
-		// 	(template) =>
-		// 		template.data.flags[systemName].grantedAuras.filter((aura) =>
-		// 			{
-		// 				return originalBounds.intersects(getBounds({ auraSize: aura.range, token: otherToken }));
-		// 			}
-		// 		).map((aura) => ) ?? []
-		// ),
+		...scene.templates.contents.flatMap((template): FullFeatureBonus[] => {
+			const systemInfo = template.data.flags[systemName] ?? {};
+			if (!systemInfo.grantedAuras) return [];
+			if (!systemInfo.source) return [];
+			const bounds = getBounds(template);
+			if (!bounds || !originalBounds.intersects(bounds)) return [];
+
+			const source = fromMashupId(systemInfo.source);
+			if (!source) return [];
+
+			const actor = ((systemInfo.actor && fromMashupId(systemInfo.actor)) as MashupActor) ?? undefined;
+			const item = ((systemInfo.item && fromMashupId(systemInfo.item)) as MashupItem) ?? undefined;
+
+			return systemInfo.grantedAuras.map(
+				(bonus): FullFeatureBonus => ({
+					...bonus,
+					source: source as unknown as FullFeatureBonus['source'],
+					context: {
+						actor,
+						item,
+					},
+				})
+			);
+		}),
 	];
 }
 
@@ -36,7 +53,11 @@ declare global {
 	interface FlagConfig {
 		MeasuredTemplate: {
 			[systemName]?: {
-				grantedAuras?: Aura[];
+				grantedAuras?: FeatureBonus[];
+				triggeredEffects?: TriggeredEffect[];
+				source?: string; // mashup id
+				actor?: string; // mashup id
+				item?: string; // mashup id
 			};
 		};
 	}

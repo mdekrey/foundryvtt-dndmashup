@@ -2,8 +2,13 @@ import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
 import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
-import { ActiveEffectTemplate, InstantaneousEffect, DamageEffect, HealingEffect } from './types';
-import { ReactComponent as DropIcon } from './drop.svg';
+import {
+	ActiveEffectTemplate,
+	InstantaneousEffect,
+	DamageEffect,
+	HealingEffect,
+	DropIcon,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
 

@@ -1,6 +1,6 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { InstantaneousEffect, InstantaneousEffectFields } from '../../../../../effects';
+import { InstantaneousEffect, InstantaneousEffectFields } from '@foundryvtt-dndmashup/mashup-rules';
 import { AttackRoll, PowerEffect } from '../dataSourceData';
 import { AttackRollFields } from './AttackRollFields';
 import { TypeAndRange } from './TypeAndRange';

@@ -1,5 +1,5 @@
 import { ensureSign, oxfordComma } from '@foundryvtt-dndmashup/core';
-import { InstantaneousEffect, DamageEffect, HealingEffect } from './types';
+import { InstantaneousEffect, DamageEffect, HealingEffect } from '@foundryvtt-dndmashup/mashup-rules';
 
 export function toText(effect: InstantaneousEffect, { bonus = false }: { bonus?: boolean } = {}): string {
 	return [

@@ -1,4 +1,5 @@
-import { AttackEffectTrigger, InstantaneousEffect } from '../../../../../../effects';
+import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { AttackEffectTrigger } from '../../../../../../effects';
 
 export type ImplementGroup = 'holy symbol' | 'ki focus' | 'orb' | 'rod' | 'staff' | 'tome' | 'totem' | 'wand';
 

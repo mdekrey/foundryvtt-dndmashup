@@ -1,6 +1,5 @@
-import { Aura, PoolBonus, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
+import { Aura, PoolBonus, PoolLimits, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { TriggeredEffect } from '../../../../effects';
 import { BaseItemTemplateDataSourceData, ItemDescriptionItemTemplateDataSourceData } from '../../templates/bases';
 import { ItemDocument } from '../../item-data-types-template';
 import { FeatureType } from './config';

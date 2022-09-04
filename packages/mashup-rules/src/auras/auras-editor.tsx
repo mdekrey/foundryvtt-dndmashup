@@ -19,6 +19,7 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 			draft.push({
 				range: auras.value[auras.value.length - 1]?.range ?? 1,
 				bonuses: [],
+				triggeredEffects: [],
 			});
 		});
 	}

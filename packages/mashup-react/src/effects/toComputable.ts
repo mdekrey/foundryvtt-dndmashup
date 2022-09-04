@@ -1,12 +1,11 @@
 import { ActorDocument } from '../module/actor';
+import { ActiveEffectDocumentConstructorParams, ComputableEffectDurationInfo } from '../module/active-effect/types';
 import {
-	ActiveEffectDocumentConstructorParams,
-	ComputableEffectDurationInfo,
+	ActiveEffectTemplate,
 	EffectDurationType,
+	FeatureBonus,
 	TemplateEffectDurationInfo,
-} from '../module/active-effect/types';
-import { ActiveEffectTemplate } from './types';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+} from '@foundryvtt-dndmashup/mashup-rules';
 
 type Convert<T extends EffectDurationType> = (
 	template: Omit<TemplateEffectDurationInfo<T>, 'durationType'>,

@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { AttackRollResult, RollInfo, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
+import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument, TokenDocument } from '../../actor';
 import { EquipmentDocument, PowerDocument } from '../../item';
-import { InstantaneousEffect, InstantaneousEffectSection, AttackEffectTrigger } from '../../../effects';
+import { InstantaneousEffectSection, AttackEffectTrigger } from '../../../effects';
 
 export type AttackResultEntryProps = {
 	tokenId: string | null;

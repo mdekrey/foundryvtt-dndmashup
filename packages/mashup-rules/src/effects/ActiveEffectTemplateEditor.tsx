@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { BonusesEditor } from '@foundryvtt-dndmashup/mashup-rules';
-import { DurationEditor } from '../module/active-effect/DurationEditor';
+import { DurationEditor } from './DurationEditor';
 import { ActiveEffectTemplate } from './types';
 import { activeEffectTemplateDefaultLens } from './lenses';
+import { BonusesEditor } from '../bonuses';
 
 const activeEffectTemplateFieldLens = Lens.fromProp<ActiveEffectTemplate>();
 

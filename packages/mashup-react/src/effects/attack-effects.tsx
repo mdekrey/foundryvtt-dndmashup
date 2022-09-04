@@ -1,6 +1,5 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { InstantaneousEffectFields } from './instantaneous-effect-fields';
-import { InstantaneousEffect } from './types';
+import { InstantaneousEffect, InstantaneousEffectFields } from '@foundryvtt-dndmashup/mashup-rules';
 
 export type AttackEffectTrigger = 'hit' | 'critical-hit';
 

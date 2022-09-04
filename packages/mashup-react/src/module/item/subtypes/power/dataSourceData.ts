@@ -1,6 +1,5 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { InstantaneousEffect } from '../../../../effects';
-import { Defense, PoolLimits } from '@foundryvtt-dndmashup/mashup-rules';
+import { Defense, PoolLimits, InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 

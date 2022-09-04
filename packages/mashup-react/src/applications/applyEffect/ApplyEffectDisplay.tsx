@@ -1,6 +1,6 @@
 import { AppButton, BlockHeader } from '@foundryvtt-dndmashup/components';
-import { bonusToText } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActiveEffectDocumentConstructorParams, ComputableEffectDurationInfo, EffectDurationType } from '../../module';
+import { bonusToText, EffectDurationType } from '@foundryvtt-dndmashup/mashup-rules';
+import { ActiveEffectDocumentConstructorParams, ComputableEffectDurationInfo } from '../../module';
 import { ActorDocument } from '../../module/actor/documentType';
 
 export function ApplyEffectDisplay({

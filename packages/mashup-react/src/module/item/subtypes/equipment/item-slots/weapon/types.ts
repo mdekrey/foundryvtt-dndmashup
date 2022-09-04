@@ -1,4 +1,5 @@
-import { AttackEffectTrigger, InstantaneousEffect } from '../../../../../../effects';
+import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { AttackEffectTrigger } from '../../../../../../effects';
 
 export type WeaponCategory = 'simple' | 'military' | 'superior';
 export type WeaponGroup =

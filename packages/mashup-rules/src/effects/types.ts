@@ -1,5 +1,8 @@
-import { ConditionRule, DamageType, FeatureBonus, Trigger } from '@foundryvtt-dndmashup/mashup-rules';
-import { TemplateEffectDurationInfo } from '../module/active-effect/types';
+import { FeatureBonus } from '../bonuses/types';
+import { ConditionRule } from '../conditions/types';
+import { Trigger } from '../triggers/types';
+import { DamageType } from '../types';
+import { TemplateEffectDurationInfo } from './duration-types';
 
 export type InstantaneousEffect = {
 	text: string;
