@@ -17,7 +17,6 @@ import {
 	ResolvedPoolBonus,
 	ruleResultIndeterminate,
 	sumFinalBonuses,
-	Vulnerability,
 	PoolBonus,
 	SourcedPoolBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
@@ -30,7 +29,11 @@ import { isActorType } from '../templates/isActorType';
 
 const standardPoolBonus: PoolBonus[] = [];
 
-const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number) => void> = {
+type NonAggregateNumericBonus = Exclude<NumericBonusTarget, 'all-resistance' | `${string}-vulnerability`>;
+function isNotAggregate(numericBonus: NumericBonusTarget): numericBonus is NonAggregateNumericBonus {
+	return numericBonus !== 'all-resistance' && !numericBonus.endsWith('-vulnerability');
+}
+const setters: Record<NonAggregateNumericBonus, (data: ActorDerivedData, value: number) => void> = {
 	...toObject(
 		abilities,
 		(abil): AbilityBonus => `ability-${abil}`,
@@ -45,11 +48,6 @@ const setters: Record<NumericBonusTarget, (data: ActorDerivedData, value: number
 		damageTypes,
 		(dmg): Resistance => `${dmg}-resistance`,
 		(dmg) => (data, value) => (data.damageTypes[dmg].resistance = value)
-	),
-	...toObject(
-		damageTypes,
-		(dmg): Vulnerability => `${dmg}-vulnerability`,
-		(dmg) => (data, value) => (data.damageTypes[dmg].vulnerability = value)
 	),
 	maxHp: (data, value) => (data.health.hp.max = value),
 	'surges-max': (data, value) => (data.health.surgesRemaining.max = value),
@@ -134,17 +132,37 @@ export function calculateDerivedData(
 		indeterminateDynamicList: [],
 	});
 	const groupedByTarget = byTarget(allBonuses);
-	numericBonusTargets.forEach((target) => {
+
+	numericBonusTargets.filter(isNotAggregate).forEach((target) => {
 		const filtered = filterConditions(groupedByTarget[target] ?? [], {}, true);
+		const final = totalFiltered(filtered);
+		setters[target](resultData, final);
+	});
+	damageTypes.forEach((damageType) => {
+		const finalResistances = totalFiltered(
+			filterConditions([...groupedByTarget[`${damageType}-resistance`], ...groupedByTarget[`all-resistance`]], {}, true)
+		);
+		const finalVulnerabilities = totalFiltered(
+			filterConditions(
+				[...groupedByTarget[`${damageType}-vulnerability`], ...groupedByTarget[`all-vulnerability`]],
+				{},
+				true
+			)
+		);
+
+		const final = finalResistances - finalVulnerabilities;
+		setters[`${damageType}-resistance`](resultData, final);
+	});
+
+	function totalFiltered(filtered: (readonly [FullFeatureBonus, boolean | typeof ruleResultIndeterminate])[]) {
 		indeterminateBonuses.push(
 			...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)
 		);
 		const applicable = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
 		appliedBonuses.push(...applicable);
 		const evaluatedBonuses = evaluateAndRoll(applicable);
-		const final = sumFinalBonuses(evaluatedBonuses);
-		setters[target](resultData, final);
-	});
+		return sumFinalBonuses(evaluatedBonuses);
+	}
 
 	this.subActorFunctions.prepare(resultData, this);
 

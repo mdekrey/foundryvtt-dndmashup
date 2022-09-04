@@ -16,7 +16,7 @@ export type CommonDerivedDataProperties = {
 		[defense in Defense]: number;
 	};
 	damageTypes: {
-		[damageType in DamageType]: { resistance: number; vulnerability: number };
+		[damageType in DamageType]: { resistance: number };
 	};
 	speed: number;
 	initiative: number;

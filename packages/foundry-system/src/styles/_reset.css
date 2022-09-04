@@ -103,6 +103,7 @@
 		border-color: inherit; /* 2 */
 		border-collapse: collapse; /* 3 */
 
+		margin: 0;
 		background: initial;
 	}
 

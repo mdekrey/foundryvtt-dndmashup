@@ -37,4 +37,7 @@ export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string
 		(dmg): Vulnerability => `${dmg}-vulnerability`,
 		(dmg) => ({ label: `${capitalize(dmg)} Vulnerability`, ruleText: `${dmg} vulnerability` })
 	),
+
+	'all-resistance': { label: 'All Resistances', ruleText: 'resistance to all damage' },
+	'all-vulnerability': { label: 'All Vulnerabilitys', ruleText: 'vulnerability to all damage' },
 };

@@ -1,5 +1,11 @@
-import { BonusesEditor, DynamicList, PoolBonusEditor, PoolsEditor } from '@foundryvtt-dndmashup/mashup-rules';
-import { FormInput, SelectItem, TabbedSheet } from '@foundryvtt-dndmashup/components';
+import {
+	AurasEditor,
+	BonusesEditor,
+	DynamicList,
+	PoolBonusEditor,
+	PoolsEditor,
+} from '@foundryvtt-dndmashup/mashup-rules';
+import { BlockHeader, FormInput, SelectItem, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeaturesList } from '../../components/FeaturesList';
 import { FeatureType, featureTypes } from './config';
@@ -23,6 +29,8 @@ const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 const grantedPoolsLens = dataLens.toField('grantedPools').default([]);
 const grantedPoolBonusesLens = dataLens.toField('grantedPoolBonuses').default([]);
+const aurasLens = dataLens.toField('grantedAuras').default([]);
+// const triggeredEffectsLens = dataLens.toField('triggeredEffects').default([]);
 
 export function FeatureSheet({ item }: { item: FeatureDocument }) {
 	const [activeTab, setActiveTab] = useState('bonuses');
@@ -54,8 +62,14 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 				</div>
 			}>
 			<TabbedSheet.Tab name="bonuses" label="Bonuses">
+				<BlockHeader className="theme-green-dark">Bonuses</BlockHeader>
 				<BonusesEditor bonuses={bonusesLens.apply(documentState)} className="flex-grow" />
+				<BlockHeader className="theme-green-dark">Feature List</BlockHeader>
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
+				<BlockHeader className="theme-green-dark">Auras</BlockHeader>
+				<AurasEditor auras={aurasLens.apply(documentState)} />
+				<BlockHeader className="theme-green-dark">Triggered Effects</BlockHeader>
+				{/* <TriggeredEffectsEditor triggeredEffects={triggeredEffectsLens.apply(documentState)} /> */}
 			</TabbedSheet.Tab>
 			<TabbedSheet.Tab name="pools" label="Resources">
 				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />

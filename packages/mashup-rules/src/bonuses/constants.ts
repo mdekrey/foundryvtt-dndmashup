@@ -3,7 +3,9 @@ import { abilities, Ability, Defense, defenses, DamageType, damageTypes } from '
 export const numericBonusTargets = [
 	...abilities.map((ability) => `ability-${ability}` as const),
 	...defenses.map((defense) => `defense-${defense}` as const),
+	`all-resistance` as const,
 	...damageTypes.map((damageType) => `${damageType}-resistance` as const),
+	`all-vulnerability` as const,
 	...damageTypes.map((damageType) => `${damageType}-vulnerability` as const),
 	`maxHp` as const,
 	`surges-value` as const,
@@ -21,8 +23,8 @@ export const numericBonusTargets = [
 
 export type AbilityBonus = `ability-${Ability}`;
 export type DefenseBonus = `defense-${Defense}`;
-export type Resistance = `${DamageType}-resistance`;
-export type Vulnerability = `${DamageType}-vulnerability`;
+export type Resistance = `${DamageType}-resistance` | `all-resistance`;
+export type Vulnerability = `${DamageType}-vulnerability` | `all-vulnerability`;
 export type NumericBonusTarget = typeof numericBonusTargets[number];
 
 export function isAbilityBonus(bonusTarget: NumericBonusTarget): bonusTarget is AbilityBonus {
