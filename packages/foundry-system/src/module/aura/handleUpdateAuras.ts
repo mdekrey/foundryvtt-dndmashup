@@ -55,13 +55,19 @@ export function handleUpdateAuras() {
 			// console.log('createMeasuredTemplate', arg);
 		}
 	);
+	Hooks.on('canvasInit', () => {
+		if (isGame(game)) {
+			console.error('update scene');
+			game.actors?.forEach((actor) => actor.updateAuras());
+		}
+	});
 
 	function updateAllTokens(scene: Scene | null) {
 		scene?.tokens.contents.forEach((token) => {
-			token.actor?.prepareDerivedData();
+			token.actor?.updateAuras();
 		});
 	}
 	function updateToken(token: TokenDocument) {
-		token.actor?.prepareDerivedData();
+		token.actor?.updateAuras();
 	}
 }

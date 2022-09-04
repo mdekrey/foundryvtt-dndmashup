@@ -31,7 +31,7 @@ import {
 	PowerUsage,
 	PossibleItemType,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { expandObjectsAndArrays } from '../../core/foundry';
+import { expandObjectsAndArrays, isGame } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
@@ -40,7 +40,7 @@ import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
 import { importNewChildItem } from '../../core/foundry/importNewChildItem';
-// import { getAuras } from '../aura/getAuras';
+import { getAuras } from '../aura/getAuras';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -58,9 +58,11 @@ const tokenHpColors = {
 };
 
 export class MashupActor extends Actor implements ActorDocument {
+	private isInitialized!: true | undefined; // will be undefined for first initialization
 	private prevHealth: number | undefined;
 	override data!: PossibleActorData & { data: ActorDerivedData };
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
+
 	/*
 	A few more methods:
 	- prepareData - performs:
@@ -101,26 +103,46 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	private _appliedAuras: FullFeatureBonus[] | null = null;
 	get appliedAuras(): FullFeatureBonus[] {
-		// TODO: this is needed to enable auras, but recurses
-		// if (this._appliedAuras === null)
-		// 	if (this.isToken && this.token && this.token.parent) {
-		// 		this._appliedAuras = getAuras(this.token, this.token.parent);
-		// 	}
+		if (this._appliedAuras === null) {
+			const tokenAndScene = this.getTokenAndScene();
+			if (tokenAndScene) {
+				const [token, scene] = tokenAndScene;
+				this._appliedAuras = getAuras(token, scene);
+			}
+		}
 		return this._appliedAuras ?? [];
 	}
 
-	get specialBonuses(): FullFeatureBonus[] {
-		return [
-			// all active effects and other linked objects should be loaded here
-			...this.effects.contents.flatMap((effect) =>
-				effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
-			),
-			...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
-			...this.data.items.contents.flatMap((item) =>
-				item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
-			),
-			...this.appliedAuras,
-		];
+	private getTokenAndScene(): [TokenDocument, Scene] | null {
+		if (this.isToken && this.token && this.token.parent) {
+			return [this.token, this.token.parent];
+		}
+
+		if (canvas?.scene) {
+			const token = canvas.scene.tokens.find((t) => t.actor === this);
+			if (token) {
+				return [token, canvas.scene];
+			}
+		}
+
+		return null;
+	}
+
+	private _internalBonuses: FullFeatureBonus[] | null = null;
+	get internalBonuses(): FullFeatureBonus[] {
+		return (
+			this._internalBonuses ??
+			(this._internalBonuses = [
+				// all active effects and other linked objects should be loaded here
+				...this.effects.contents.flatMap((effect) =>
+					effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
+				),
+				...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
+				...this.data.items.contents.flatMap((item) =>
+					item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
+				),
+			])
+		);
 	}
 
 	private _derivedData: ActorDerivedData | null = null;
@@ -128,9 +150,8 @@ export class MashupActor extends Actor implements ActorDocument {
 		return this._derivedData ?? (this._derivedData = this.calculateDerivedData());
 	}
 
-	private _allBonuses: FullFeatureBonus[] | null = null;
 	get allBonuses(): FullFeatureBonus[] {
-		return this._allBonuses ?? (this._allBonuses = this.specialBonuses);
+		return [...this.internalBonuses, ...this.appliedAuras];
 	}
 
 	private _appliedBonuses: FullFeatureBonus[] | null = null;
@@ -174,17 +195,30 @@ export class MashupActor extends Actor implements ActorDocument {
 		return this._indeterminateDynamicList;
 	}
 
+	protected override _initialize(): void {
+		super._initialize();
+		this.isInitialized = true;
+	}
+
 	override prepareDerivedData() {
-		console.log(`prepare derived ${this.name}`);
-		this._allBonuses = null;
+		this._internalBonuses = null;
 		this._derivedData = null;
 		this._appliedBonuses = null;
 		this._indeterminateBonuses = null;
 		this._appliedAuras = null;
 		const derived = this.calculateDerivedData();
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
-		if (this.isOwner) {
+		if (isGame(game) ? game.user?.isGM : this.isOwner) {
 			updateBloodied.call(this);
+		}
+	}
+
+	updateAuras() {
+		this._appliedAuras = null;
+		const derived = this.calculateDerivedData();
+		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
+		if (this.sheet?.rendered) {
+			this.sheet.render(true);
 		}
 	}
 
@@ -235,9 +269,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
 	}
 
-	private calculateDerivedData() {
+	private calculateDerivedData(internalOnly: boolean | undefined = undefined) {
 		return calculateDerivedData.call(
 			this,
+			internalOnly ?? !this.isInitialized,
 			({ derivedData, appliedBonuses, indeterminateBonuses, appliedDynamicList, indeterminateDynamicList }) => {
 				this._derivedData = derivedData;
 				this._appliedBonuses = appliedBonuses;

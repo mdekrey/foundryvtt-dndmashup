@@ -3,7 +3,6 @@ import { systemName } from '../constants';
 import { getBounds } from './getBounds';
 
 export function getAuras(token: TokenDocument, scene: Scene): FullFeatureBonus[] {
-	console.log(token, scene);
 	const originalBounds = getBounds(token);
 	if (!originalBounds) return [];
 	return [
@@ -21,6 +20,7 @@ export function getAuras(token: TokenDocument, scene: Scene): FullFeatureBonus[]
 					.map((bonus): FullFeatureBonus => ({ ...bonus, source, context: { actor: source } }));
 			return [];
 		}),
+		// TODO: auras from templates
 		// ...scene.templates.contents.flatMap(
 		// 	(template) =>
 		// 		template.data.flags[systemName].grantedAuras.filter((aura) =>

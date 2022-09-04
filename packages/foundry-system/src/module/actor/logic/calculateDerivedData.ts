@@ -66,6 +66,7 @@ const setters: Record<NonAggregateNumericBonus, (data: ActorDerivedData, value: 
 
 export function calculateDerivedData(
 	this: MashupActor,
+	internalOnly: boolean,
 	setPrivates: (data: {
 		derivedData: ActorDerivedData;
 		appliedBonuses: FullFeatureBonus[];
@@ -81,7 +82,7 @@ export function calculateDerivedData(
 			source: this,
 			context: { actor: this },
 		})),
-		...this.allBonuses,
+		...(internalOnly ? this.internalBonuses : this.allBonuses),
 	];
 
 	const resultData: ActorDerivedData = {
