@@ -3,8 +3,7 @@ import { pipeJsx, neverEver } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
-import { toText } from '../../../../../effects';
-import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
+import { Defense, getEffectText } from '@foundryvtt-dndmashup/mashup-rules';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';
@@ -101,8 +100,8 @@ function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | Rule
 
 	const target = effect.target;
 	const attackRoll = effect.attackRoll && toAttackRollText(effect.attackRoll);
-	const hit = toText(effect.hit);
-	const miss = effect.attackRoll && effect.miss ? toText(effect.miss) : '';
+	const hit = getEffectText(effect.hit);
+	const miss = effect.attackRoll && effect.miss ? getEffectText(effect.miss) : '';
 
 	return [
 		!isFirst && attackRoll ? { label: `${prefix}Attack`, text: attackRoll } : null,

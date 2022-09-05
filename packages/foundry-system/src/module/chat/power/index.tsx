@@ -11,6 +11,7 @@ import {
 	PowerChatMessage,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerEffectTemplate } from '../../aura/power-effect-template';
+import { MashupActor } from '../../actor/mashup-actor';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;
@@ -20,17 +21,18 @@ async function powerChatMessage(actor: ActorDocument | null, { item }: PowerChat
 
 	return {
 		flags: {
+			actor: toMashupId(actor),
 			item: toMashupId(item),
 		},
 	};
 }
 
-function PowerChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: ChatMessageProps) {
+function PowerChatRef({ flags: { item: itemId, actor: actorId } }: ChatMessageProps) {
 	if (!isGame(game)) {
 		console.error('no game', game);
 		throw new Error('Could not attach');
 	}
-	const actor = actorId === null ? null : game.actors?.get(actorId);
+	const actor = typeof actorId !== 'string' ? null : (fromMashupId(actorId) as MashupActor);
 	const item = typeof itemId !== 'string' ? null : fromMashupId(itemId);
 
 	if (!actor || !item) {

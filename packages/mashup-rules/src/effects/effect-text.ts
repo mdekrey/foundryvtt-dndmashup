@@ -1,7 +1,9 @@
 import { ensureSign, oxfordComma } from '@foundryvtt-dndmashup/core';
-import { InstantaneousEffect, DamageEffect, HealingEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { getRuleText } from '../conditions';
+import { getTriggerText } from '../triggers';
+import { DamageEffect, HealingEffect, InstantaneousEffect, TriggeredEffect } from './types';
 
-export function toText(effect: InstantaneousEffect, { bonus = false }: { bonus?: boolean } = {}): string {
+export function getEffectText(effect: InstantaneousEffect, { bonus = false }: { bonus?: boolean } = {}): string {
 	return [
 		effect.damage && damageEffectText(effect.damage, bonus),
 		effect.healing && healingEffectText(effect.healing, bonus),
@@ -39,4 +41,14 @@ function healingEffectText(effect: HealingEffect, bonus: boolean) {
 
 		return `${prefix} ${verb} ${link} ${amount}.`;
 	}
+}
+
+export function getTriggeredEffectText(triggeredEffect: TriggeredEffect) {
+	const trigger = triggeredEffect.trigger;
+	const triggerText = getTriggerText(trigger);
+	const condition = triggeredEffect.condition;
+	const conditionText = condition ? getRuleText(condition) : null;
+	const effectText = getEffectText(triggeredEffect.effect);
+
+	return `${triggerText}${conditionText ? ` ` : ''}${conditionText}: ${effectText}`;
 }

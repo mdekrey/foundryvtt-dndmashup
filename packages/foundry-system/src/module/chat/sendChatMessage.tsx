@@ -31,6 +31,7 @@ export async function sendChatMessage<T extends MashupChatMessageType>(
 		},
 		...result,
 	} as ChatMessageProps;
+	console.log('pre-html', messageInfo);
 
 	try {
 		const html = await renderReactToHtml(<FoundryWrapper>{chatAttachments[messageType](messageInfo)}</FoundryWrapper>);

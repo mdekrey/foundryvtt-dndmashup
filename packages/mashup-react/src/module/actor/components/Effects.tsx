@@ -6,21 +6,27 @@ import {
 	dynamicListTargetNames,
 	bonusToText,
 	FullTriggeredEffect,
-	getTriggerText,
+	TriggeredEffect,
+	getTriggeredEffectText,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { sortBy } from 'lodash/fp';
 import { SourceButton } from './SourceButton';
-import { toText } from '../../../effects';
+import { ImageButton } from '@foundryvtt-dndmashup/components';
+import { useChatMessageDispatcher } from '../../chat';
+import { ActorDocument } from '../documentType';
 
 export function Effects({
+	actor,
 	bonusList,
 	triggeredEffects,
 	dynamicList,
 }: {
+	actor: ActorDocument;
 	bonusList: FeatureBonusWithSource[];
 	triggeredEffects: FullTriggeredEffect[];
 	dynamicList: DynamicListEntryWithSource[];
 }) {
+	const dispatch = useChatMessageDispatcher();
 	return (
 		<>
 			<table>
@@ -108,10 +114,7 @@ export function Effects({
 				</thead>
 				<tbody>
 					{sortBy((l) => [l.trigger.trigger], triggeredEffects).map((entry, idx) => {
-						const trigger = entry.trigger;
-						const triggerText = getTriggerText(trigger);
-						const condition = entry.condition;
-						const conditionText = condition ? getRuleText(condition) : null;
+						const text = getTriggeredEffectText(entry);
 
 						return (
 							<tr
@@ -121,9 +124,8 @@ export function Effects({
 									'border-b-2 border-transparent'
 								)}>
 								<td className="px-1">
-									{triggerText}
-									{conditionText ? ` ` : ''}
-									{conditionText}: {toText(entry.effect)}
+									{text}
+									<ImageButton className="ml-1" src="/icons/svg/d20-black.svg" onClick={onRollTriggeredEffect(entry)} />
 								</td>
 								<td>
 									{entry.sources.map((source, index) => (
@@ -148,4 +150,10 @@ export function Effects({
 			</table>
 		</>
 	);
+
+	function onRollTriggeredEffect(entry: TriggeredEffect) {
+		return () => {
+			dispatch.sendChatMessage('triggered-effect', actor, { triggeredEffect: entry });
+		};
+	}
 }

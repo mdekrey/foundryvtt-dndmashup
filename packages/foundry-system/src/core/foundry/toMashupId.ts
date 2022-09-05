@@ -2,7 +2,6 @@ import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 
 export function toMashupId(target: BaseDocument): string {
 	const result = innerToMashupId(target);
-	console.log('toMashupId', target, result);
 	return result;
 }
 

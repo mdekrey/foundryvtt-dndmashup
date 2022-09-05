@@ -1,6 +1,7 @@
 import { RulesText, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { ensureSign, Lens, oxfordComma } from '@foundryvtt-dndmashup/core';
-import { AttackEffects, toText } from '../../../../../../effects';
+import { getEffectText } from '@foundryvtt-dndmashup/mashup-rules';
+import { AttackEffects } from '../../../../../../effects';
 import { ItemSlotInfo } from '../types';
 import { weaponGroups, weaponCategories, weaponProperties, weaponHands } from './config';
 import { WeaponDetails } from './details';
@@ -71,11 +72,11 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 				{oxfordComma(equipmentProperties.properties.map((p) => weaponProperties[p]))}
 			</RulesText>
 			{equipmentProperties.additionalEffects?.hit && (
-				<RulesText label={`Hit`}>{toText(equipmentProperties.additionalEffects.hit, { bonus: true })}</RulesText>
+				<RulesText label={`Hit`}>{getEffectText(equipmentProperties.additionalEffects.hit, { bonus: true })}</RulesText>
 			)}
 			{equipmentProperties.additionalEffects?.['critical-hit'] && (
 				<RulesText label={`Critical Hit`}>
-					{toText(equipmentProperties.additionalEffects['critical-hit'], { bonus: true })}
+					{getEffectText(equipmentProperties.additionalEffects['critical-hit'], { bonus: true })}
 				</RulesText>
 			)}
 		</>

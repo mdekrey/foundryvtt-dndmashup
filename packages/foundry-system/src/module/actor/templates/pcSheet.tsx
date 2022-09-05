@@ -114,6 +114,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								</Tabs.Tab>
 								<Tabs.Tab tabName="effects">
 									<ActorComponents.Effects
+										actor={actor}
 										bonusList={actor.allBonuses}
 										triggeredEffects={actor.allTriggeredEffects}
 										dynamicList={actor.dynamicListResult}
