@@ -31,7 +31,7 @@ export function HealingFields({
 			</FormInput>
 			<div
 				className={classNames('col-span-9 flex flex-col', {
-					'opacity-50 focus-within:opacity-100': !healingState.value,
+					'opacity-50 focus-within:opacity-100': !props.value,
 				})}>
 				<FormInput.Inline>
 					<FormInput.Checkbox {...isTemporaryLens.apply(props)} className="self-center" />
