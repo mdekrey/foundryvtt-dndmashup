@@ -12,7 +12,7 @@ export type DisplayDialogProps = DiceRollApplicationParametersBase & {
 };
 
 export function displayDialog(
-	{ baseDice, actor, power, source, rollType, extraBonuses, tool, allowToolSelection }: DisplayDialogProps,
+	{ baseDice, actor, power, rollType, extraBonuses, tool, allowToolSelection }: DisplayDialogProps,
 	onComplete: (rollProps: RollDetails) => void
 ) {
 	const possibleTools = !allowToolSelection

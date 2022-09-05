@@ -57,7 +57,7 @@ export function handleUpdateAuras() {
 	);
 	Hooks.on('canvasInit', () => {
 		if (isGame(game)) {
-			console.error('update scene');
+			// TODO: this does not need to be all actors in the entire game
 			game.actors?.forEach((actor) => actor.updateAuras());
 		}
 	});

@@ -32,7 +32,7 @@ applicationRegistry.healing = async ({ spendHealingSurge, healingSurge, isTempor
 			result,
 			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
 			toolId: tool ? toMashupId(tool) : undefined,
-			flavor: `${baseParams.source.name} ${baseParams.title} Healing${tool ? ` using ${tool.name}` : ''}`.trim(),
+			flavor: `${baseParams.title} Healing${tool ? ` using ${tool.name}` : ''}`.trim(),
 			spendHealingSurge,
 			healingSurge,
 			isTemporary,

@@ -19,7 +19,7 @@ export type DisplayDialogProps = DamageRollApplicationParametersBase & {
 applicationRegistry.damage = async ({ allowCritical, ...baseParams }, resolve, reject) => {
 	return {
 		content: displayDamageDialog(baseParams, onRoll, allowCritical ? onCritical : undefined),
-		title: `${baseParams.title} Critical Damage`,
+		title: `${baseParams.title} Damage`,
 		options: { resizable: true },
 	};
 
@@ -34,9 +34,7 @@ applicationRegistry.damage = async ({ allowCritical, ...baseParams }, resolve, r
 			result,
 			damageTypes,
 			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
-			flavor: `${baseParams.source.name} ${baseParams.title} ${oxfordComma(damageTypes)} damage${
-				tool ? ` using ${tool.name}` : ''
-			}`.trim(),
+			flavor: `${baseParams.title} ${oxfordComma(damageTypes)} damage${tool ? ` using ${tool.name}` : ''}`.trim(),
 		});
 		resolve(null);
 	}

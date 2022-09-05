@@ -71,7 +71,7 @@ export function DynamicListSelector({
 						className="self-center"
 					/>
 					<span>
-						{e.entry} if {e.condition ? getRuleText(e.condition) : '...?'}
+						{e.entry} {e.condition ? getRuleText(e.condition) : '...?'}
 					</span>
 				</FormInput.Inline>
 			))}

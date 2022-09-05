@@ -97,7 +97,7 @@ function PowerEffectOptions({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string) => void;
 } & PowerEffectTemplateProps) {
-	const effectProps = { prefix: effect.name, actor, power, source: power };
+	const effectProps = { prefix: `${power.name} ${effect.name}`, actor, power, source: power };
 
 	return (
 		<div className={classNames('grid grid-cols-1 w-full')}>

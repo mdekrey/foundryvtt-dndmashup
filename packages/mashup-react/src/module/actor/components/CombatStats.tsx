@@ -60,9 +60,8 @@ function SavingThrowSection({ actor }: { actor: ActorDocument }) {
 			baseDice: 'd20',
 			rollType: 'saving-throw',
 			allowToolSelection: false,
-			source: actor,
 			sendToChat: true,
-			title: 'Saving Throw',
+			title: `${actor.name}'s Saving Throw`,
 			flavor: '... makes a saving throw',
 		});
 	}
@@ -92,10 +91,9 @@ function DeathSavingThrowSection({ actor, ...deathSavingThrowState }: { actor: A
 				baseDice: 'd20',
 				rollType: 'saving-throw',
 				allowToolSelection: false,
-				source: actor,
 				sendToChat: true,
-				title: 'Death Saving Throw',
-				flavor: 'Death Saving Throw',
+				title: `${actor.name}'s Death Saving Throw`,
+				flavor: `${actor.name} is in the throws of death`,
 			});
 			const rollResult = await result;
 			if (rollResult < 10) {

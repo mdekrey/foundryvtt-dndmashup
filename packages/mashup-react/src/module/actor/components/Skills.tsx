@@ -39,7 +39,6 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 			baseDice: `d20`,
 			rollType: 'check',
 			sendToChat: true,
-			source: actor,
 			title: `${skill.name} Check`,
 			flavor: `uses the skill ${skill.name}`,
 

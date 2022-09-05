@@ -1,5 +1,5 @@
 import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
-import { SimpleDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import {
@@ -17,7 +17,6 @@ export type InstantaneousEffectOptionsProps = {
 	prefix?: string;
 	mode: string;
 	actor: ActorDocument;
-	source: SimpleDocument;
 	power?: PowerDocument;
 	allowToolSelection: boolean;
 	allowCritical: boolean;
@@ -28,7 +27,6 @@ export function InstantaneousEffectOptions({
 	prefix,
 	mode,
 	actor,
-	source,
 	power,
 	allowToolSelection,
 	allowCritical,
@@ -63,7 +61,6 @@ export function InstantaneousEffectOptions({
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
-				source,
 				power,
 				rollType: 'damage',
 				listType: 'damageTypes',
@@ -80,7 +77,6 @@ export function InstantaneousEffectOptions({
 				baseDice: healingEffect.healing,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
-				source,
 				power,
 				rollType: 'healing',
 				allowToolSelection,

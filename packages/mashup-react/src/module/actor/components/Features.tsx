@@ -119,9 +119,8 @@ export function Features({
 				baseDice: 'd20',
 				rollType: 'saving-throw',
 				allowToolSelection: false,
-				source: actor,
 				sendToChat: true,
-				title: `Saving Throw vs. ${item.name}`,
+				title: `${actor.name}'s Saving Throw vs. ${item.name}`,
 				flavor: `... makes a saving throw vs. ${item.name}`,
 			});
 			const result = await resultPromise;

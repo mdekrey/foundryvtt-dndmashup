@@ -25,7 +25,7 @@ applicationRegistry.criticalDamage = async ({ ...baseParams }, resolve) => {
 			result,
 			damageTypes,
 			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
-			flavor: `${baseParams.source.name} ${baseParams.title} critical ${oxfordComma(damageTypes)} damage${
+			flavor: `${baseParams.title} critical ${oxfordComma(damageTypes)} damage${
 				tool ? ` using ${tool.name}` : ''
 			}`.trim(),
 		});

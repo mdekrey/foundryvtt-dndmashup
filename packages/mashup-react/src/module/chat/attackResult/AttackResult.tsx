@@ -132,7 +132,7 @@ function ToolExtraEffects({
 				<InstantaneousEffectSection
 					effect={additionalEffects.hit}
 					mode="Hit"
-					source={tool}
+					prefix={tool.name ?? undefined}
 					power={power}
 					actor={actor}
 					allowToolSelection={false}
@@ -143,7 +143,7 @@ function ToolExtraEffects({
 				<InstantaneousEffectSection
 					effect={additionalEffects['critical-hit']}
 					mode="Critical Hit"
-					source={tool}
+					prefix={tool.name ?? undefined}
 					power={power}
 					actor={actor}
 					allowToolSelection={false}

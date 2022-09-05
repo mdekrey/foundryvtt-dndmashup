@@ -49,7 +49,6 @@ export function Abilities({
 			baseDice: `d20`,
 			rollType: 'check',
 			sendToChat: true,
-			source: actor,
 			title: `${ability.toUpperCase()} Check`,
 			flavor: `uses ${ability.toUpperCase()}`,
 			extraBonuses: [

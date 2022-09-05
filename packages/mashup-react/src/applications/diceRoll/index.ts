@@ -1,4 +1,3 @@
-import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { DamageType, Defense, DynamicListTarget, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { NumericBonusTarget } from '@foundryvtt-dndmashup/mashup-rules';
@@ -11,7 +10,6 @@ export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
 	actor: ActorDocument;
-	source: SimpleDocument;
 	power?: PowerDocument;
 	rollType: NumericBonusTarget;
 	allowToolSelection: boolean;
@@ -24,7 +22,6 @@ export type DamageRollApplicationParametersBase = {
 	baseDamageTypes: DamageType[];
 	title: string;
 	actor: ActorDocument;
-	source: SimpleDocument;
 	power?: PowerDocument;
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;

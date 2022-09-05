@@ -1,6 +1,6 @@
-import { ActorDocument, chatMessageRegistry } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDocument, chatMessageRegistry, InstantaneousEffectSection } from '@foundryvtt-dndmashup/mashup-react';
 import { getEffectText, getTriggerText, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
-import { isGame, toMashupId } from 'packages/foundry-system/src/core/foundry';
+import { isGame, toMashupId } from '../../../core/foundry';
 import { chatAttachments } from '../attach';
 
 chatMessageRegistry['triggered-effect'] = async (actor, { triggeredEffect }) => {
@@ -36,13 +36,14 @@ function TriggeredEffectChat({ actor, triggeredEffect }: { actor: ActorDocument;
 			<p>
 				Has a trigger at {getTriggerText(triggeredEffect.trigger)} that: {getEffectText(triggeredEffect.effect)}
 			</p>
-			{/* <InstantaneousEffectSection
-					effect={triggeredEffect.effect}
-					mode="Trigger"
-					actor={actor}
-					allowToolSelection={true}
-					allowCritical={true}
-				/> */}
+			<InstantaneousEffectSection
+				effect={triggeredEffect.effect}
+				prefix="Trigger"
+				mode="Trigger"
+				actor={actor}
+				allowToolSelection={true}
+				allowCritical={true}
+			/>
 		</>
 	);
 }

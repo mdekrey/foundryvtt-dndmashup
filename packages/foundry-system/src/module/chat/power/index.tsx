@@ -68,9 +68,8 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 	function rollAttack(attackRoll: AttackRoll, title: string) {
 		applications.launchApplication('attackRoll', {
 			baseDice: `1d20 + ${attackRoll.attack}`,
-			title,
+			title: `${item.name} ${title}`.trim(),
 			actor,
-			source: item,
 			power: item,
 			rollType: 'attack-roll',
 			defense: attackRoll.defense,

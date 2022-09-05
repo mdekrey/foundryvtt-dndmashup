@@ -14,7 +14,11 @@ function innerToMashupId(target: BaseDocument): string {
 			return `${parentMashupId}:${current}`;
 		}
 		// not a standard embedded document
-		else if (target.parent instanceof Token && target instanceof Actor && (target.parent as any).actor === target) {
+		else if (
+			target.parent instanceof TokenDocument &&
+			target instanceof Actor &&
+			(target.parent as any).actor === target
+		) {
 			return `${parentMashupId}:actor`;
 		}
 	}
