@@ -16,3 +16,4 @@ export const ruleResultIndeterminate = Symbol('indeterminate');
 export type ConditionRuleIndeterminateResult = typeof ruleResultIndeterminate;
 
 export type SimpleConditionRule = Exclude<ConditionRule, ConditionRule<''>> | null;
+export type SimpleConditionRules = Exclude<ConditionRule, ConditionRule<''>>[];

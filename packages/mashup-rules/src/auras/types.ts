@@ -1,11 +1,12 @@
 import { FeatureBonus } from '../bonuses';
-import { ConditionRuleContext } from '../conditions/types';
+import { ConditionRuleContext, SimpleConditionRule } from '../conditions/types';
 import { TriggeredEffect } from '../effects/types';
 import { Source } from '../sources/types';
 
 export type Aura = {
 	range: number;
 	bonuses: FeatureBonus[];
+	condition: SimpleConditionRule;
 	triggeredEffects: TriggeredEffect[];
 };
 
@@ -13,6 +14,12 @@ export type SourcedAura = Aura & {
 	sources: Source[];
 };
 
-export type FullAura = SourcedAura & {
+export type FullAura = AuraEffect & Aura;
+
+export type AuraEffect = {
+	bonuses: FeatureBonus[];
+	triggeredEffects: TriggeredEffect[];
+	sources: Source[];
+	condition: SimpleConditionRule;
 	context: Partial<ConditionRuleContext>;
 };

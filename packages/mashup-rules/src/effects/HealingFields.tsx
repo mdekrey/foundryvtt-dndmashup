@@ -5,7 +5,11 @@ import classNames from 'classnames';
 
 const baseLens = Lens.identity<HealingEffect | null>().default(
 	{ healing: '', healingSurge: false, spendHealingSurge: false, isTemporary: false },
-	(effect) => effect.healing === '' && effect.healingSurge === false && effect.isTemporary === false
+	(effect) =>
+		effect.healing === '' &&
+		effect.healingSurge === false &&
+		effect.isTemporary === false &&
+		effect.spendHealingSurge === false
 );
 
 export const healingDiceLens = baseLens.toField('healing');

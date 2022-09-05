@@ -7,7 +7,7 @@ declare global {
 
 export type TriggerRegistryEntry<TType extends keyof Triggers> = {
 	defaultParameter: Triggers[TType];
-	text: (parameter: Triggers[TType]) => string;
+	text: (parameter?: Triggers[TType]) => string;
 	editor: React.FC<Stateful<Triggers[TType] | undefined>>;
 };
 

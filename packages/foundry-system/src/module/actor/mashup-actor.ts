@@ -9,7 +9,8 @@ import {
 	combineRollComponents,
 	fromBonusesToFormula,
 	isRegainPoolRecharge,
-	SourcedAura,
+	FullAura,
+	AuraEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -101,8 +102,8 @@ export class MashupActor extends Actor implements ActorDocument {
 		return Math.floor((this.data.data.details.level - 1) / 10);
 	}
 
-	private _appliedAuras: FullFeatureBonus[] | null = null;
-	get appliedAuras(): FullFeatureBonus[] {
+	private _appliedAuras: AuraEffect[] | null = null;
+	get appliedAuras(): AuraEffect[] {
 		if (this._appliedAuras === null) {
 			const tokenAndScene = this.getTokenAndScene();
 			if (tokenAndScene) {
@@ -151,7 +152,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	get allBonuses(): FullFeatureBonus[] {
-		return [...this.internalBonuses, ...this.appliedAuras];
+		return [
+			...this.internalBonuses,
+			...this.appliedAuras.flatMap((aura) =>
+				aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: aura.context }))
+			),
+		];
 	}
 
 	private _appliedBonuses: FullFeatureBonus[] | null = null;
@@ -291,8 +297,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
-	get allAuras(): SourcedAura[] {
-		return this.items.contents.flatMap((item: ItemDocument) => item.allGrantedAuras());
+	get allAuras(): FullAura[] {
+		return this.items.contents.flatMap((item: ItemDocument) =>
+			item
+				.allGrantedAuras()
+				.map((aura): FullAura => ({ ...aura, sources: [this, ...aura.sources], context: { actor: this, item } }))
+		);
 	}
 
 	/** When adding a new embedded document, clean up others of the same type */

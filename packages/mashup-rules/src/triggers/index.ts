@@ -1,4 +1,5 @@
 import './manual';
+import './turnTriggers';
 
 export * from './types';
 export * from './registry';

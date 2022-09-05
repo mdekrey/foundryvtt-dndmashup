@@ -1,15 +1,19 @@
 import classNames from 'classnames';
-import { FormInput } from '@foundryvtt-dndmashup/components';
+import { BlockHeader, FormInput } from '@foundryvtt-dndmashup/components';
 import { Aura } from './types';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { BonusesEditor } from '../bonuses';
+import { ConditionSelector } from '../conditions/ConditionSelector';
+import { TriggeredEffectsEditor } from '../effects/TriggeredEffectsEditor';
 
 const baseLens = Lens.identity<Aura[]>();
 
 const rangeLens = Lens.fromProp<Aura>()('range');
 const bonusesLens = Lens.fromProp<Aura>()('bonuses');
+const triggeredEffectsLens = Lens.fromProp<Aura>()('triggeredEffects');
+const conditionRuleLens = Lens.fromProp<Aura>()('condition');
 
 export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; className?: string }) {
 	const apps = useApplicationDispatcher();
@@ -18,6 +22,7 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 		auras.onChangeValue((draft) => {
 			draft.push({
 				range: auras.value[auras.value.length - 1]?.range ?? 1,
+				condition: null,
 				bonuses: [],
 				triggeredEffects: [],
 			});
@@ -45,8 +50,7 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 			<table className="w-full border-collapse">
 				<thead className="bg-theme text-white">
 					<tr>
-						<th className="px-1">Range</th>
-						<th>Bonuses</th>
+						<th>Details</th>
 						<th>
 							<IconButton iconClassName="fa fa-plus" text="Add" onClick={onAdd} />
 						</th>
@@ -61,14 +65,8 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 								'text-sm',
 								'h-10'
 							)}>
-							<td className="px-1 w-0">
-								<FormInput.NumberField
-									{...baseLens.toField(idx).combine(rangeLens).apply(auras)}
-									className="text-center"
-								/>
-							</td>
-							<td className="px-1">
-								<BonusesEditor bonuses={baseLens.toField(idx).combine(bonusesLens).apply(auras)} />
+							<td className="px-8">
+								<AuraDetails aura={baseLens.toField(idx).apply(auras)} />
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
 								<IconButton iconClassName="fas fa-trash" title="Click to Delete" onClick={onDelete(idx)} />
@@ -88,6 +86,30 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 					) : null}
 				</tbody>
 			</table>
+		</div>
+	);
+}
+
+const auraLens = Lens.identity<Aura>();
+
+function AuraDetails({ aura }: { aura: Stateful<Aura> }) {
+	return (
+		<div className="flex flex-col">
+			<FormInput>
+				<FormInput.NumberField {...auraLens.combine(rangeLens).apply(aura)} className="text-center" />
+				<FormInput.Label>Range</FormInput.Label>
+			</FormInput>
+
+			<FormInput>
+				<ConditionSelector {...auraLens.combine(conditionRuleLens).apply(aura)} />
+				<FormInput.Label>Condition</FormInput.Label>
+			</FormInput>
+
+			<BlockHeader>Bonuses</BlockHeader>
+			<BonusesEditor bonuses={auraLens.combine(bonusesLens).apply(aura)} />
+
+			<BlockHeader>Triggered Effects</BlockHeader>
+			<TriggeredEffectsEditor triggeredEffects={auraLens.combine(triggeredEffectsLens).apply(aura)} />
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { FeatureBonus } from '../bonuses/types';
-import { ConditionRule } from '../conditions/types';
+import { SimpleConditionRule } from '../conditions/types';
 import { Trigger } from '../triggers/types';
 import { DamageType } from '../types';
 import { TemplateEffectDurationInfo } from './duration-types';
@@ -27,7 +27,7 @@ export type HealingEffect = {
 export type TriggeredEffect = {
 	effect: InstantaneousEffect;
 	trigger: Trigger;
-	condition: ConditionRule;
+	condition: SimpleConditionRule;
 };
 
 export type ActiveEffectTemplate = {

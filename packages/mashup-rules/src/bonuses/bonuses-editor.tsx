@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import classNames from 'classnames';
-import { AppButton, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { conditionsRegistry, ConditionRule, ConditionRuleType, SimpleConditionRule } from '../conditions';
+import { FormInput } from '@foundryvtt-dndmashup/components';
 import { FeatureBonus } from './types';
 import { NumericBonusTarget } from './constants';
 import { numericBonusTargetNames } from './bonus-sheet-utils';
-import { IconButton, Modal } from '@foundryvtt-dndmashup/components';
+import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { ConditionSelector } from '../conditions';
 
 const selectTargets = Object.entries(numericBonusTargetNames).map(([key, { label }]) => ({
 	key,
@@ -18,19 +17,7 @@ const selectTargets = Object.entries(numericBonusTargetNames).map(([key, { label
 
 const baseLens = Lens.identity<FeatureBonus[]>();
 
-const ruleLens = Lens.from<SimpleConditionRule, SimpleConditionRule>(
-	(rule) => rule,
-	(mutator) =>
-		(draft): any => {
-			const result = mutator(draft);
-			if (!result?.rule) return null;
-			return result;
-		}
-);
-type NoRule = { rule: ''; parameter?: undefined } & Partial<Omit<ConditionRule, 'rule'>>;
-const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition')
-	.combine(ruleLens)
-	.default<NoRule>({ rule: '' }, (r): r is NoRule => r.rule === '' || (r as any) === '');
+const conditionRuleLens = Lens.fromProp<FeatureBonus>()('condition');
 
 export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<FeatureBonus[]>; className?: string }) {
 	const apps = useApplicationDispatcher();
@@ -152,52 +139,4 @@ export function BonusesEditor({ bonuses, className }: { bonuses: Stateful<Featur
 			</table>
 		</div>
 	);
-}
-
-const ruleTypeLens = Lens.fromProp<ConditionRule | NoRule>()('rule');
-function ConditionSelector(state: Stateful<ConditionRule | NoRule>) {
-	const [isOpen, setOpen] = useState(false);
-	const selectConditions: SelectItem<keyof ConditionRules>[] = [
-		...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
-			const text = ruleText();
-			const label = `when ${text}`;
-			return {
-				key,
-				value: key as ConditionRuleType,
-				label,
-				typeaheadLabel: label,
-			};
-		}),
-	];
-
-	return (
-		<div>
-			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
-				{toRuleText(state.value)}
-			</AppButton>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition" options={{ resizable: true }}>
-				<div className="min-h-64 flex flex-col">
-					<div className="flex-grow">
-						<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />
-						<hr className="my-1" />
-						{toEditor(state)}
-					</div>
-					<AppButton className="w-full" onClick={() => setOpen(false)}>
-						Close
-					</AppButton>
-				</div>
-			</Modal>
-		</div>
-	);
-}
-
-function toRuleText(configuredRule: ConditionRule | NoRule) {
-	console.log(configuredRule);
-	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
-}
-
-const parameterLens = Lens.fromProp<ConditionRule | NoRule>()('parameter');
-function toEditor(state: Stateful<ConditionRule | NoRule>) {
-	const Editor = conditionsRegistry[state.value.rule].ruleEditor;
-	return <Editor {...(parameterLens.apply(state) as never)} />;
 }

@@ -10,7 +10,7 @@ import {
 	PowerDocument,
 	PowerChatMessage,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerEffectTemplate } from '../../power-effect-template';
+import { PowerEffectTemplate } from '../../aura/power-effect-template';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;

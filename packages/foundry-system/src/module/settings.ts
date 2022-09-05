@@ -4,12 +4,16 @@ import { MashupItemProxy } from './item/mashup-item-proxy';
 import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';
 import { MashupActiveEffect } from './active-effect';
+import { PowerEffectTemplate } from './aura/power-effect-template';
 
 declare global {
 	interface DocumentClassConfig {
 		ActiveEffect: typeof MashupActiveEffect;
 		Actor: typeof MashupActor;
 		Item: typeof MashupItemBase;
+	}
+	interface PlaceableObjectClassConfig {
+		MeasuredTemplate: typeof PowerEffectTemplate;
 	}
 }
 
@@ -24,6 +28,7 @@ export function registerSettings(): void {
 	CONFIG.Actor.documentClass = MashupActor;
 	CONFIG.Item.documentClass = MashupItemProxy as any;
 	CONFIG.ActiveEffect.documentClass = MashupActiveEffect;
+	CONFIG.MeasuredTemplate.objectClass = PowerEffectTemplate;
 }
 
 export function registerCustomSheets() {

@@ -19,7 +19,7 @@ const textLens = baseLens.toField('triggerText');
 
 triggersRegistry.manual = {
 	defaultParameter: { triggerText: 'when <trigger>' as const },
-	text: (params) => params.triggerText ?? 'when <trigger>',
+	text: (params) => params?.triggerText ?? 'when <trigger>',
 	editor: function ManualConditionParameterEditor(state) {
 		return (
 			<FormInput className="text-lg">

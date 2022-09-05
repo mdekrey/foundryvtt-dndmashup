@@ -4,6 +4,7 @@ import {
 	DynamicList,
 	PoolBonusEditor,
 	PoolsEditor,
+	TriggeredEffectsEditor,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { BlockHeader, FormInput, SelectItem, TabbedSheet } from '@foundryvtt-dndmashup/components';
 import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
@@ -30,7 +31,7 @@ const dynamicListLens = dataLens.toField('dynamicList');
 const grantedPoolsLens = dataLens.toField('grantedPools').default([]);
 const grantedPoolBonusesLens = dataLens.toField('grantedPoolBonuses').default([]);
 const aurasLens = dataLens.toField('grantedAuras').default([]);
-// const triggeredEffectsLens = dataLens.toField('triggeredEffects').default([]);
+const triggeredEffectsLens = dataLens.toField('triggeredEffects').default([]);
 
 export function FeatureSheet({ item }: { item: FeatureDocument }) {
 	const [activeTab, setActiveTab] = useState('bonuses');
@@ -69,7 +70,7 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 				<BlockHeader className="theme-green-dark">Auras</BlockHeader>
 				<AurasEditor auras={aurasLens.apply(documentState)} />
 				<BlockHeader className="theme-green-dark">Triggered Effects</BlockHeader>
-				{/* <TriggeredEffectsEditor triggeredEffects={triggeredEffectsLens.apply(documentState)} /> */}
+				<TriggeredEffectsEditor triggeredEffects={triggeredEffectsLens.apply(documentState)} />
 			</TabbedSheet.Tab>
 			<TabbedSheet.Tab name="pools" label="Resources">
 				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />

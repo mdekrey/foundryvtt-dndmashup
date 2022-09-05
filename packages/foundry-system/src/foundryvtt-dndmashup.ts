@@ -23,7 +23,6 @@ import { attachToChat } from './module/chat';
 import './styles/foundryvtt-dndmashup.css';
 import './module/chat/power';
 import { libWrapper } from './libwrapper-shim';
-import { PowerEffectTemplate } from './module/power-effect-template';
 import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
 import { onNextTurn } from './module/active-effect/turns';
 import { handleUpdateAuras } from './module/aura/handleUpdateAuras';
@@ -81,8 +80,6 @@ Hooks.once('init', async () => {
 		CONFIG.statusEffects.find((se) => se.id === 'unconscious')!,
 		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon },
 	];
-
-	CONFIG.MeasuredTemplate.objectClass = PowerEffectTemplate;
 
 	libWrapper.register(systemName, 'Combat.prototype.nextTurn', onNextTurn);
 

@@ -1,4 +1,4 @@
-import { PowerEffectTemplate } from '../power-effect-template';
+import { PowerEffectTemplate } from './power-effect-template';
 
 export function getTemplateBoundingBox(template: MeasuredTemplateDocument) {
 	if (!(template.object instanceof PowerEffectTemplate)) return null;

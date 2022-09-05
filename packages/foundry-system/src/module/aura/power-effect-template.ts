@@ -1,19 +1,44 @@
-import { Size, sizeToTokenSize } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	AuraEffect,
+	FeatureBonus,
+	SimpleConditionRule,
+	Size,
+	sizeToTokenSize,
+	Source,
+	TriggeredEffect,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
 import { MeasuredTemplateDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/measuredTemplateData';
-import { isGame } from '../core/foundry';
-import { systemName } from './constants';
+import { fromMashupId, isGame } from '../../core/foundry';
+import { systemName } from '../constants';
 import { neverEver } from '@foundryvtt-dndmashup/core';
+import { getBounds } from './getBounds';
+import { MashupActor } from '../actor/mashup-actor';
+import { MashupItem } from '../item/mashup-item';
 
 type MeasuredTemplateFactory<T extends EffectTypeAndRange['type'] = EffectTypeAndRange['type']> = {
 	create: (typeAndRange: EffectTypeAndRange & { type: T }, size: Size) => MeasuredTemplateDataConstructorData | null;
 };
 
-type MeasuredTemplateSystemFlags = {
-	rotate?: number;
-	closeBurst?: Size;
-	text?: string;
-};
+declare global {
+	interface FlagConfig {
+		MeasuredTemplate: {
+			[systemName]?: {
+				rotate?: number;
+				closeBurst?: Size;
+				text?: string;
+				auras?: {
+					bonuses: FeatureBonus[];
+					triggeredEffects: TriggeredEffect[];
+					condition: SimpleConditionRule;
+					sources: string[]; // mashup ids
+					actor: string; // mashup id
+					item: string; // mashup id
+				}[];
+			};
+		};
+	}
+}
 
 const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactory<K> } = {
 	close: {
@@ -156,7 +181,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			if (event.ctrlKey) event.preventDefault(); // Avoid zooming the browser window
 			event.stopPropagation();
 
-			const rotate = (this.data.flags?.[systemName] as MeasuredTemplateSystemFlags)?.rotate;
+			const rotate = this.data.flags?.[systemName]?.rotate;
 			if (rotate) {
 				const delta = rotate;
 				this.data.update({ direction: this.data.direction + delta * Math.sign(event.deltaY) });
@@ -278,7 +303,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			let d;
 			let text;
 
-			const closeBurst = (this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.closeBurst ?? 'not-close';
+			const closeBurst = this.data.flags[systemName]?.closeBurst ?? 'not-close';
 
 			switch (closeBurst) {
 				case 'not-close':
@@ -295,12 +320,42 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 				this.hud.ruler.text = text;
 				// this.hud.ruler.position.set(this.ray.dx + 10, this.ray.dy + 5);
 			}
-		} else if ((this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.text) {
+		} else if (this.data.flags[systemName]?.text) {
 			if (this.hud.ruler) {
-				this.hud.ruler.text = (this.data.flags[systemName] as MeasuredTemplateSystemFlags)?.text as string;
+				this.hud.ruler.text = this.data.flags[systemName]?.text as string;
 			}
 		} else {
 			return super._refreshRulerText();
 		}
+	}
+
+	getAurasAt(originalBounds: NormalizedRectangle): AuraEffect[] {
+		const systemInfo = this.data.flags[systemName] ?? {};
+		if (!systemInfo.auras?.length) return [];
+
+		return systemInfo.auras
+			.map((aura): AuraEffect | null => {
+				if (!aura.sources.length) return null;
+				const bounds = getBounds(this.document);
+				if (!bounds || !originalBounds.intersects(bounds)) return null;
+
+				const sources = aura.sources.map((s) => fromMashupId(s) as unknown as Source);
+				if (sources.some((s) => !s)) return null;
+
+				const actor = ((aura.actor && fromMashupId(aura.actor)) as MashupActor) ?? undefined;
+				const item = ((aura.item && fromMashupId(aura.item)) as MashupItem) ?? undefined;
+
+				return {
+					bonuses: aura.bonuses,
+					triggeredEffects: aura.triggeredEffects,
+					condition: aura.condition,
+					sources: sources,
+					context: {
+						actor,
+						item,
+					},
+				};
+			})
+			.filter((a): a is AuraEffect => !!a);
 	}
 }
