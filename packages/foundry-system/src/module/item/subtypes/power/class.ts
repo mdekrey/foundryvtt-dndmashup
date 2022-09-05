@@ -4,6 +4,7 @@ import {
 	FeatureBonusWithSource,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { isEquipment, isPower, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
@@ -37,6 +38,9 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 		return this.id;
 	}
 	override allGrantedAuras(): SourcedAura[] {
+		return [];
+	}
+	override allTriggeredEffects(): SourcedTriggeredEffect[] {
 		return [];
 	}
 }

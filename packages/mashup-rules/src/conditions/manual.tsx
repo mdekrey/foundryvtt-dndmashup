@@ -23,7 +23,7 @@ const baseLens = Lens.identity<ManualConditionParameter | undefined>().default(
 const textLens = baseLens.toField('conditionText');
 
 conditionsRegistry.manual = {
-	ruleText: (params) => params?.conditionText ?? '<condition>',
+	ruleText: (params) => (params?.conditionText ? `when ${params.conditionText}` : 'when <condition>'),
 	ruleEditor: function ManualConditionParameterEditor(state) {
 		return (
 			<FormInput className="text-lg">

@@ -4,6 +4,7 @@ import {
 	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ClassDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -47,5 +48,8 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 	}
 	override allGrantedAuras(): SourcedAura[] {
 		return this.items.contents.flatMap((item) => item.allGrantedAuras());
+	}
+	override allTriggeredEffects(): SourcedTriggeredEffect[] {
+		return this.items.contents.flatMap((item) => item.allTriggeredEffects());
 	}
 }

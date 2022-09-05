@@ -11,7 +11,7 @@ declare global {
 
 conditionsRegistry.swordmageEquipment = {
 	ruleText: () =>
-		'you are wielding a blade in one hand and have your other hand free (not carrying a shield, an off-hand weapon, a two-handed weapon, or anything else).',
+		'when you are wielding a blade in one hand and have your other hand free (not carrying a shield, an off-hand weapon, a two-handed weapon, or anything else).',
 	ruleEditor: () => null,
 	rule: (input) => {
 		const equipment = input.actor.items.contents.filter(isEquipment);

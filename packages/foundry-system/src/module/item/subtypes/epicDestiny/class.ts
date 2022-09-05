@@ -4,6 +4,7 @@ import {
 	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { EpicDestinyDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -27,5 +28,8 @@ export class MashupEpicDestiny extends MashupItem<'epicDestiny'> implements Epic
 	}
 	override allGrantedAuras(): SourcedAura[] {
 		return this.items.contents.flatMap((item) => item.allGrantedAuras());
+	}
+	override allTriggeredEffects(): SourcedTriggeredEffect[] {
+		return this.items.contents.flatMap((item) => item.allTriggeredEffects());
 	}
 }

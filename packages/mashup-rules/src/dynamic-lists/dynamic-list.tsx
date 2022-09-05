@@ -17,8 +17,7 @@ const selectTargets = Object.entries(dynamicListTargetNames).map(([key, { label 
 }));
 const selectConditions: SelectItem<keyof ConditionRules>[] = [
 	...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
-		const text = ruleText();
-		const label = `when ${text}`;
+		const label = ruleText();
 		return {
 			key,
 			value: key as ConditionRuleType,

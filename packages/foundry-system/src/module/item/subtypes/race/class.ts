@@ -4,6 +4,7 @@ import {
 	FeatureBonusWithSource,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { RaceDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
@@ -40,5 +41,8 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 	}
 	override allGrantedAuras(): SourcedAura[] {
 		return this.items.contents.flatMap((item) => item.allGrantedAuras());
+	}
+	override allTriggeredEffects(): SourcedTriggeredEffect[] {
+		return this.items.contents.flatMap((item) => item.allTriggeredEffects());
 	}
 }

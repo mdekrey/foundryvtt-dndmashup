@@ -6,6 +6,7 @@ import {
 	SourcedAura,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { isPower, ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
@@ -20,7 +21,6 @@ import { AnyDocument } from '../../core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { not } from '@foundryvtt-dndmashup/core';
 
 export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
 
@@ -53,6 +53,9 @@ export class MashupItemBase extends Item implements ItemDocument {
 		return [];
 	}
 	allGrantedAuras(): SourcedAura[] {
+		return [];
+	}
+	allTriggeredEffects(): SourcedTriggeredEffect[] {
 		return [];
 	}
 	override get type(): PossibleItemType {
@@ -259,6 +262,7 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	abstract override allGrantedPools(): SourcedPoolLimits[];
 	abstract override allGrantedPoolBonuses(): SourcedPoolBonus[];
 	abstract override allGrantedAuras(): SourcedAura[];
+	abstract override allTriggeredEffects(): SourcedTriggeredEffect[];
 	override allGrantedPowers(): PowerDocument[] {
 		return [
 			...(this.items.contents as SimpleDocument[]).filter(isPower),

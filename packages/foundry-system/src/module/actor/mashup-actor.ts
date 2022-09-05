@@ -11,6 +11,7 @@ import {
 	isRegainPoolRecharge,
 	FullAura,
 	AuraEffect,
+	FullTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -146,6 +147,14 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
+	get internalTriggeredEffects(): FullTriggeredEffect[] {
+		return [
+			...this.data.items.contents.flatMap((item) =>
+				item.allTriggeredEffects().map((effect) => ({ ...effect, context: { actor: this, item } }))
+			),
+		];
+	}
+
 	private _derivedData: ActorDerivedData | null = null;
 	get derivedData(): ActorDerivedData {
 		return this._derivedData ?? (this._derivedData = this.calculateDerivedData());
@@ -156,6 +165,18 @@ export class MashupActor extends Actor implements ActorDocument {
 			...this.internalBonuses,
 			...this.appliedAuras.flatMap((aura) =>
 				aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: aura.context }))
+			),
+		];
+	}
+
+	get allTriggeredEffects(): FullTriggeredEffect[] {
+		return [
+			...this.internalTriggeredEffects,
+			...this.appliedAuras.flatMap(
+				(aura) =>
+					aura.triggeredEffects?.map(
+						(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: aura.context })
+					) ?? []
 			),
 		];
 	}

@@ -36,7 +36,7 @@ export function InstantaneousEffectFields({ prefix, ...props }: { prefix?: strin
 				<LightningBoltIcon className="h-5 w-5" />
 				<FormInput className="flex-grow">
 					<FormInput.TextField {...effectTextLens.apply(props)} />
-					<FormInput.Label>{prefix}</FormInput.Label>
+					<FormInput.Label>{prefix || 'Effect'}</FormInput.Label>
 				</FormInput>
 				<IconButton iconClassName="fas fa-edit" title="Edit Effect" onClick={() => setEditingEffect(true)} />
 			</div>

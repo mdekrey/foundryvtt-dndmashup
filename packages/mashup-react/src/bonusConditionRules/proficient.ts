@@ -24,7 +24,7 @@ declare global {
 }
 
 conditionsRegistry.proficientIn = {
-	ruleText: () => 'you are proficient with the item',
+	ruleText: () => 'when you are proficient with the item',
 	ruleEditor: () => null,
 	rule: proficientIn,
 };

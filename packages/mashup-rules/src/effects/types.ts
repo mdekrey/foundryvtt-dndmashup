@@ -1,5 +1,6 @@
 import { FeatureBonus } from '../bonuses/types';
-import { SimpleConditionRule } from '../conditions/types';
+import { ConditionRuleContext, SimpleConditionRule } from '../conditions/types';
+import { Source } from '../sources';
 import { Trigger } from '../triggers/types';
 import { DamageType } from '../types';
 import { TemplateEffectDurationInfo } from './duration-types';
@@ -28,6 +29,14 @@ export type TriggeredEffect = {
 	effect: InstantaneousEffect;
 	trigger: Trigger;
 	condition: SimpleConditionRule;
+};
+
+export type SourcedTriggeredEffect = TriggeredEffect & {
+	sources: Source[];
+};
+
+export type FullTriggeredEffect = SourcedTriggeredEffect & {
+	context: Partial<ConditionRuleContext>;
 };
 
 export type ActiveEffectTemplate = {

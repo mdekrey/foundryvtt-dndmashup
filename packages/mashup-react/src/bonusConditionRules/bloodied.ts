@@ -12,4 +12,4 @@ declare global {
 	}
 }
 
-conditionsRegistry.bloodied = { ruleText: () => 'you are bloodied', ruleEditor: () => null, rule: bloodied };
+conditionsRegistry.bloodied = { ruleText: () => 'when you are bloodied', ruleEditor: () => null, rule: bloodied };
