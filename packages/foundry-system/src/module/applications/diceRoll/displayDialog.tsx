@@ -23,17 +23,18 @@ export function displayDialog(
 		? getToolsForPower(actor, power)
 		: undefined;
 
+	console.log(power);
+
 	return (
 		<DiceRoller
 			actor={actor}
 			rollType={rollType}
 			baseDice={baseDice}
 			onRoll={onComplete}
-			runtimeBonusParameters={
-				{
-					/* TODO - parameters for passing to bonuses to determine if they apply or not */
-				}
-			}
+			runtimeBonusParameters={{
+				power,
+				/* TODO - parameters for passing to bonuses to determine if they apply or not */
+			}}
 			extraBonuses={extraBonuses}
 			evaluateBonuses={(bonuses) => evaluateAndRoll(bonuses)}
 			possibleTools={possibleTools}

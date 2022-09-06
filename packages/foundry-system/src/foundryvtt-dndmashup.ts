@@ -105,7 +105,7 @@ Hooks.on('getSceneControlButtons', function (controls) {
 	}
 });
 
-CONFIG.debug.hooks = true;
+// CONFIG.debug.hooks = true;
 
 // Setup system
 Hooks.once('setup', async () => {
