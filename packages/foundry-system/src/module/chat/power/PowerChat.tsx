@@ -8,6 +8,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
+import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 
 type PowerEffectTemplateProps = {
@@ -65,25 +66,25 @@ function PowerOptions({
 } & PowerEffectTemplateProps) {
 	return (
 		<>
-			{power.data.data.effects.filter(hasEffectInfo).map((effect, index) => (
-				<PowerEffectOptions key={index} effect={effect} {...effectProps} actor={actor} power={power} />
-			))}
+			{power.data.data.effects
+				.filter((e) => hasEffectInfo(e, effectProps.canCreateEffect))
+				.map((effect, index) => (
+					<PowerEffectOptions key={index} effect={effect} {...effectProps} actor={actor} power={power} />
+				))}
 		</>
 	);
 }
 
-function hasEffectInfo(effect: PowerEffect): boolean {
+function hasEffectInfo(effect: PowerEffect, canCreateEffect: (typeAndRange: EffectTypeAndRange) => boolean): boolean {
 	return Boolean(
-		effect.attackRoll ||
-			effect.hit.damage ||
-			effect.hit.healing ||
-			effect.miss?.damage ||
-			effect.miss?.healing ||
-			effect.typeAndRange.type === 'close' ||
-			effect.typeAndRange.type === 'area' ||
-			effect.typeAndRange.type === 'within'
+		effect.attackRoll || showSection(effect.hit) || showSection(effect.miss) || canCreateEffect(effect.typeAndRange)
 	);
 }
+
+function showSection(effect: InstantaneousEffect | null): effect is InstantaneousEffect {
+	return !!(effect && (effect.damage || effect.healing || effect.activeEffectTemplate));
+}
+
 function PowerEffectOptions({
 	actor,
 	power,
@@ -98,46 +99,52 @@ function PowerEffectOptions({
 	rollAttack: (attackRoll: AttackRoll, title: string) => void;
 } & PowerEffectTemplateProps) {
 	const effectProps = { prefix: `${power.name} ${effect.name}`, actor, power, source: power };
+	const missSection = showSection(effect.miss) ? (
+		<InstantaneousEffectSection
+			effect={effect.miss}
+			mode="Miss"
+			{...effectProps}
+			allowToolSelection={true}
+			allowCritical={true}
+		/>
+	) : null;
+	const placeTemplateButton = canCreate(effect.typeAndRange) && (
+		<IconButton
+			className="text-lg"
+			iconClassName="fas fa-ruler-combined"
+			title="Place Template"
+			onClick={() => createEffect(effect.typeAndRange)}
+		/>
+	);
+	const attackRollButton = effect.attackRoll && (
+		<IconButton
+			className="text-lg"
+			iconClassName="fas fa-dice-d20"
+			title="Roll Attack"
+			onClick={attackRoll(effect.attackRoll)}
+		/>
+	);
+	const hasRow1 = missSection || canCreate(effect.typeAndRange) || attackRollButton;
 
 	return (
 		<div className={classNames('grid grid-cols-1 w-full')}>
-			<div className="flex flex-row items-center bg-gradient-to-r from-transparent to-white text-black h-7">
-				<span className="flex-1 font-bold pl-1">{effect.name}</span>
+			{hasRow1 && (
+				<div className="flex flex-row items-center bg-gradient-to-r from-transparent to-white text-black h-7">
+					<span className="flex-1 font-bold pl-1">{effect.name}</span>
 
-				{canCreate(effect.typeAndRange) && (
-					<IconButton
-						className="text-lg"
-						iconClassName="fas fa-ruler-combined"
-						title="Place Template"
-						onClick={() => createEffect(effect.typeAndRange)}
-					/>
-				)}
-				{effect.attackRoll && (
-					<IconButton
-						className="text-lg"
-						iconClassName="fas fa-dice-d20"
-						title="Roll Attack"
-						onClick={attackRoll(effect.attackRoll)}
-					/>
-				)}
-			</div>
+					{placeTemplateButton}
+					{attackRollButton}
+				</div>
+			)}
 			<div className="text-gray-800">
 				<InstantaneousEffectSection
 					effect={effect.hit}
-					mode={effect.attackRoll ? 'Hit' : 'Effect'}
+					mode={(effect.attackRoll ? 'Hit' : 'Effect') + (hasRow1 ? '' : ` ${effect.name}`)}
 					{...effectProps}
 					allowToolSelection={true}
 					allowCritical={true}
 				/>
-				{effect.miss && (effect.miss.damage || effect.miss.healing) ? (
-					<InstantaneousEffectSection
-						effect={effect.miss}
-						mode="Miss"
-						{...effectProps}
-						allowToolSelection={true}
-						allowCritical={true}
-					/>
-				) : null}
+				{missSection}
 			</div>
 		</div>
 	);
