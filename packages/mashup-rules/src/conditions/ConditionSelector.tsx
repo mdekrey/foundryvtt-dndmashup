@@ -22,12 +22,11 @@ export function ConditionSelector(state: Stateful<SimpleConditionRule>) {
 	const selectConditions: SelectItem<keyof ConditionRules>[] = [
 		...Object.entries(conditionsRegistry).map(([key, { ruleText }]): SelectItem<keyof ConditionRules> => {
 			const text = ruleText();
-			const label = `when ${text}`;
 			return {
 				key,
 				value: key as ConditionRuleType,
-				label,
-				typeaheadLabel: label,
+				label: text,
+				typeaheadLabel: text,
 			};
 		}),
 	];

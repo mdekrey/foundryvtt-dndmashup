@@ -44,6 +44,12 @@ export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 				bonuses={bonusesLens.apply(documentState)}
 				dynamicList={dynamicListLens.apply(documentState)}
 			/>
+			<ActorComponents.Effects
+				actor={actor}
+				bonusList={actor.allBonuses}
+				triggeredEffects={actor.allTriggeredEffects}
+				dynamicList={actor.dynamicListResult}
+			/>
 		</article>
 	);
 }

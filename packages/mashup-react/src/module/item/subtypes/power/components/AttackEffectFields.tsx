@@ -35,7 +35,12 @@ const missEffectLens = Lens.from<PowerEffect, InstantaneousEffect>(
 	}
 );
 
-export function PowerEffectFields(props: Stateful<PowerEffect>) {
+export function PowerEffectFields({
+	fallbackImage,
+	...props
+}: {
+	fallbackImage?: string | null;
+} & Stateful<PowerEffect>) {
 	return (
 		<>
 			<FormInput>
@@ -58,19 +63,27 @@ export function PowerEffectFields(props: Stateful<PowerEffect>) {
 				<TypeAndRange {...typeAndRangeLens.apply(props)} />
 			</div>
 			<AttackRollFields {...attackRollLens.apply(props)} />
-			<HitAndMissFields {...props} />
+			<HitAndMissFields fallbackImage={fallbackImage} {...props} />
 		</>
 	);
 }
 
-export function HitAndMissFields(props: Stateful<PowerEffect>) {
+export function HitAndMissFields({
+	fallbackImage,
+	...props
+}: {
+	fallbackImage?: string | null;
+} & Stateful<PowerEffect>) {
 	return (
 		<>
 			<InstantaneousEffectFields
+				fallbackImage={fallbackImage}
 				prefix={props.value.miss === null ? 'Effect' : 'Hit'}
 				{...hitEffectLens.apply(props)}
 			/>
-			{props.value.miss === null ? null : <InstantaneousEffectFields prefix="Miss" {...missEffectLens.apply(props)} />}
+			{props.value.miss === null ? null : (
+				<InstantaneousEffectFields fallbackImage={fallbackImage} prefix="Miss" {...missEffectLens.apply(props)} />
+			)}
 		</>
 	);
 }

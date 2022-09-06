@@ -13,9 +13,11 @@ const conditionRuleLens = Lens.fromProp<TriggeredEffect>()('condition');
 
 export function TriggeredEffectsEditor({
 	triggeredEffects,
+	fallbackImage,
 	className,
 }: {
 	triggeredEffects: Stateful<TriggeredEffect[]>;
+	fallbackImage?: string | null;
 	className?: string;
 }) {
 	const apps = useApplicationDispatcher();
@@ -83,7 +85,10 @@ export function TriggeredEffectsEditor({
 								<ConditionSelector {...baseLens.toField(idx).combine(conditionRuleLens).apply(triggeredEffects)} />
 							</td>
 							<td className="px-1">
-								<InstantaneousEffectFields {...baseLens.toField(idx).toField('effect').apply(triggeredEffects)} />
+								<InstantaneousEffectFields
+									fallbackImage={fallbackImage}
+									{...baseLens.toField(idx).toField('effect').apply(triggeredEffects)}
+								/>
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
 								<IconButton iconClassName="fas fa-trash" title="Click to Delete" onClick={onDelete(idx)} />

@@ -1,13 +1,12 @@
-import { useState } from 'react';
-import { BlockHeader, FormInput, IconButton, Modal } from '@foundryvtt-dndmashup/components';
+import { BlockHeader, FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { DamageFields } from './DamageFields';
 import { HealingFields } from './HealingFields';
 import { InstantaneousEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
 import { HeartIcon, LightningBoltIcon } from '@heroicons/react/solid';
-import { ActiveEffectTemplateEditor } from './ActiveEffectTemplateEditor';
 import { activeEffectTemplateDefaultLens } from './lenses';
+import { ActiveEffectTemplateEditorButton } from './ActiveEffectTemplateEditorButton';
 
 const instantaneousEffectFieldLens = Lens.fromProp<InstantaneousEffect>();
 
@@ -19,8 +18,11 @@ const activeEffectTemplateLens = instantaneousEffectFieldLens('activeEffectTempl
 	activeEffectTemplateDefaultLens
 );
 
-export function InstantaneousEffectFields({ prefix, ...props }: { prefix?: string } & Stateful<InstantaneousEffect>) {
-	const [editingEffect, setEditingEffect] = useState(false);
+export function InstantaneousEffectFields({
+	fallbackImage,
+	prefix,
+	...props
+}: { prefix?: string; fallbackImage?: string | null } & Stateful<InstantaneousEffect>) {
 	return (
 		<>
 			{prefix ? <BlockHeader>{prefix}</BlockHeader> : null}
@@ -38,18 +40,14 @@ export function InstantaneousEffectFields({ prefix, ...props }: { prefix?: strin
 					<FormInput.TextField {...effectTextLens.apply(props)} />
 					<FormInput.Label>{prefix || 'Effect'}</FormInput.Label>
 				</FormInput>
-				<IconButton iconClassName="fas fa-edit" title="Edit Effect" onClick={() => setEditingEffect(true)} />
+				<ActiveEffectTemplateEditorButton
+					fallbackImage={fallbackImage}
+					iconClassName="fas fa-edit"
+					title={`Edit ${prefix} Effect`}
+					description={props.value.text}
+					activeEffectTemplate={activeEffectTemplateLens.apply(props)}
+				/>
 			</div>
-			<Modal
-				title={`Edit ${prefix} Instantaneous Effect`}
-				isOpen={editingEffect}
-				onClose={() => setEditingEffect(false)}
-				options={{ resizable: true, width: 400 }}>
-				<div className="grid grid-cols-1 min-h-64">
-					<p>{props.value.text}</p>
-					<ActiveEffectTemplateEditor {...activeEffectTemplateLens.apply(props)} />
-				</div>
-			</Modal>
 		</>
 	);
 }

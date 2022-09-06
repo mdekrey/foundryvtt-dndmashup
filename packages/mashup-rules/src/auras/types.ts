@@ -2,8 +2,11 @@ import { FeatureBonus } from '../bonuses';
 import { ConditionRuleContext, SimpleConditionRule } from '../conditions/types';
 import { TriggeredEffect } from '../effects/types';
 import { Source } from '../sources/types';
+import { DispositionType } from './filterDisposition';
 
 export type Aura = {
+	dispositionType: DispositionType | null;
+	excludeSelf: boolean;
 	range: number;
 	bonuses: FeatureBonus[];
 	condition: SimpleConditionRule;

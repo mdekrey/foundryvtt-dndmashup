@@ -45,6 +45,9 @@ export function toComputable(
 			label: template.label,
 			icon: template.image ?? image,
 			flags: {
+				core: {
+					statusId: template.coreStatusId || undefined,
+				},
 				mashup: {
 					bonuses,
 					afterEffect,

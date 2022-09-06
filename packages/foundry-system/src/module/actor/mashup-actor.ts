@@ -32,6 +32,7 @@ import {
 	ComputableEffectDurationInfo,
 	PowerUsage,
 	PossibleItemType,
+	toComputable,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -164,7 +165,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		return [
 			...this.internalBonuses,
 			...this.appliedAuras.flatMap((aura) =>
-				aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: aura.context }))
+				aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: this } }))
 			),
 		];
 	}
@@ -175,7 +176,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			...this.appliedAuras.flatMap(
 				(aura) =>
 					aura.triggeredEffects?.map(
-						(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: aura.context })
+						(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: { actor: this } })
 					) ?? []
 			),
 		];
@@ -289,6 +290,19 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	async createActiveEffect(effect: ActiveEffectDataConstructorData, duration: ComputableEffectDurationInfo) {
+		// TODO: remove existing one if it has the same core id
+		if (effect.flags?.core?.statusId) {
+			const toRemove = this.effects.filter(
+				(oldEffect) => oldEffect.data.flags?.core?.statusId === effect.flags?.core?.statusId
+			);
+			if (toRemove.length) {
+				console.log(toRemove);
+				await this.deleteEmbeddedDocuments(
+					'ActiveEffect',
+					toRemove.map((e) => e.id).filter((id): id is string => !!id)
+				);
+			}
+		}
 		await ActiveEffect.create(createFinalEffectConstructorData(effect, duration, this), { parent: this });
 	}
 
@@ -472,6 +486,10 @@ export class MashupActor extends Actor implements ActorDocument {
 
 		await this.update(updates);
 
+		if (power.data.data.selfApplied) {
+			await this.createActiveEffect(...toComputable(power.data.data.selfApplied, this, power.img ?? ''));
+		}
+
 		return true;
 	}
 
@@ -509,9 +527,15 @@ export class MashupActor extends Actor implements ActorDocument {
 		this.updatePoolRests('shortRest', data);
 		this.updatePowersForShortRest(data);
 
-		// TODO: what else? bonuses "until you rest"?
+		// TODO: what else?
 
 		await this.update(data);
+
+		const toRemove = this.effects
+			.filter((e) => e.data.flags?.mashup?.effectDuration?.durationType === 'shortRest')
+			.map((e) => e.id)
+			.filter((id): id is string => !!id);
+		await this.deleteEmbeddedDocuments('ActiveEffect', toRemove);
 
 		return true;
 	}
@@ -530,9 +554,19 @@ export class MashupActor extends Actor implements ActorDocument {
 		this.updatePoolRests('longRest', data);
 		this.updatePowersForLongRest(data);
 
-		// TODO: what else? bonuses "until you rest"?
+		// TODO: what else?
 
 		await this.update(data);
+
+		const toRemove = this.effects
+			.filter(
+				(e) =>
+					e.data.flags?.mashup?.effectDuration?.durationType === 'shortRest' ||
+					e.data.flags?.mashup?.effectDuration?.durationType === 'longRest'
+			)
+			.map((e) => e.id)
+			.filter((id): id is string => !!id);
+		await this.deleteEmbeddedDocuments('ActiveEffect', toRemove);
 
 		return true;
 	}

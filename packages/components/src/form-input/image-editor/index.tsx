@@ -11,10 +11,12 @@ export function ImageEditor({
 	title,
 	className,
 	value,
+	defaultImage,
 	onChangeValue,
 }: {
 	title: string | null;
 	className?: string;
+	defaultImage?: string;
 } & Stateful<string | null>) {
 	const showFilePickerWithState = useImageEditor();
 	const showFilePicker = useCallback(() => {
@@ -23,7 +25,7 @@ export function ImageEditor({
 
 	return (
 		<img
-			src={value ?? ''}
+			src={value ?? defaultImage ?? ''}
 			onClick={showFilePicker}
 			title={title ?? ''}
 			className={className ?? 'w-24 h-24 border-2 border-black p-px'}

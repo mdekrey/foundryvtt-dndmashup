@@ -68,9 +68,9 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 				<BlockHeader className="theme-green-dark">Feature List</BlockHeader>
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 				<BlockHeader className="theme-green-dark">Auras</BlockHeader>
-				<AurasEditor auras={aurasLens.apply(documentState)} />
+				<AurasEditor fallbackImage={item.img} auras={aurasLens.apply(documentState)} />
 				<BlockHeader className="theme-green-dark">Triggered Effects</BlockHeader>
-				<TriggeredEffectsEditor triggeredEffects={triggeredEffectsLens.apply(documentState)} />
+				<TriggeredEffectsEditor fallbackImage={item.img} triggeredEffects={triggeredEffectsLens.apply(documentState)} />
 			</TabbedSheet.Tab>
 			<TabbedSheet.Tab name="pools" label="Resources">
 				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />

@@ -12,11 +12,18 @@ const defaulter = Lens.identity<InstantaneousEffect | undefined>().default(
 const hitLens = lensStarter('hit').combine(defaulter);
 const criticalHitLens = lensStarter('critical-hit').combine(defaulter);
 
-export function AttackEffects(state: Stateful<Partial<Record<AttackEffectTrigger, InstantaneousEffect>>>) {
+export function AttackEffects({
+	fallbackImage,
+	...state
+}: { fallbackImage?: string | null } & Stateful<Partial<Record<AttackEffectTrigger, InstantaneousEffect>>>) {
 	return (
 		<div>
-			<InstantaneousEffectFields prefix="Hit" {...hitLens.apply(state)} />
-			<InstantaneousEffectFields prefix="Critical Hit" {...criticalHitLens.apply(state)} />
+			<InstantaneousEffectFields fallbackImage={fallbackImage} prefix="Hit" {...hitLens.apply(state)} />
+			<InstantaneousEffectFields
+				fallbackImage={fallbackImage}
+				prefix="Critical Hit"
+				{...criticalHitLens.apply(state)}
+			/>
 		</div>
 	);
 }

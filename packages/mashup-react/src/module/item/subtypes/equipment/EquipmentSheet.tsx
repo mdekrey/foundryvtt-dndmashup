@@ -99,7 +99,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 					<Contents item={item} />
 				</TabbedSheet.Tab>
 			) : null}
-			{additionalTabs?.(equipmentPropertiesState)}
+			{additionalTabs?.(equipmentPropertiesState, item)}
 		</TabbedSheet>
 	);
 }

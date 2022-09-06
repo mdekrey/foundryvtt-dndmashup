@@ -1,5 +1,5 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Defense, PoolLimits, InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { Defense, PoolLimits, InstantaneousEffect, ActiveEffectTemplate } from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
@@ -15,6 +15,8 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	prerequisite?: string | null;
 	requirement?: string | null; // TODO: should this be a condition?
 	isBasic: boolean;
+
+	selfApplied: ActiveEffectTemplate | null;
 
 	effects: PowerEffect[];
 

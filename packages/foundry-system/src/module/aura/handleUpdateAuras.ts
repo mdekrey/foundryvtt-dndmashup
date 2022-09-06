@@ -56,9 +56,18 @@ export function handleUpdateAuras() {
 		}
 	);
 	Hooks.on('canvasInit', () => {
-		if (isGame(game)) {
-			// TODO: this does not need to be all actors in the entire game
-			game.actors?.forEach((actor) => actor.updateAuras());
+		if (canvas?.scene) {
+			updateAllTokens(canvas.scene);
+		}
+	});
+	Hooks.on('deleteActiveEffect', () => {
+		if (canvas?.scene) {
+			updateAllTokens(canvas.scene);
+		}
+	});
+	Hooks.on('createActiveEffect', () => {
+		if (canvas?.scene) {
+			updateAllTokens(canvas.scene);
 		}
 	});
 

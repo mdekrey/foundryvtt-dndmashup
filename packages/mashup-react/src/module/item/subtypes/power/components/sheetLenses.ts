@@ -2,6 +2,7 @@ import capitalize from 'lodash/fp/capitalize';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { PowerData, PowerEffect } from '../dataSourceData';
+import { activeEffectTemplateDefaultLens } from '@foundryvtt-dndmashup/mashup-rules';
 
 export const isNull = (e: any): e is null => e === null;
 
@@ -20,6 +21,9 @@ export const powerTypeLens = powerSourceDataLens.toField('type');
 export const powerFlavorTextLens = powerSourceDataLens.toField('flavorText');
 export const powerSpecialTextLens = powerSourceDataLens.toField('special');
 export const isBasicAttackLens = powerSourceDataLens.toField('isBasic');
+export const selfAppliedTemplateLens = powerSourceDataLens
+	.toField('selfApplied')
+	.combine(activeEffectTemplateDefaultLens);
 export const powerUsageLens = powerSourceDataLens.toField('usage');
 export const powerActionTypeLens = powerSourceDataLens.toField('actionType');
 export const powerRequirementLens = powerSourceDataLens.toField('requirement').combine(undefinedString);

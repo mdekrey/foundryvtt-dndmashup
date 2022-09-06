@@ -29,7 +29,6 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	}
 
 	protected override _getJsx(): JSX.Element {
-		console.log('sheet rendered for:', this.actor.id, this.actor);
 		return <ActorSheetJsx sheet={this} />;
 	}
 

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { BlockHeader, FormInput } from '@foundryvtt-dndmashup/components';
+import { BlockHeader, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Aura } from './types';
 import { IconButton } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
@@ -7,6 +7,7 @@ import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { BonusesEditor } from '../bonuses';
 import { ConditionSelector } from '../conditions/ConditionSelector';
 import { TriggeredEffectsEditor } from '../effects/TriggeredEffectsEditor';
+import { DispositionType } from './filterDisposition';
 
 const baseLens = Lens.identity<Aura[]>();
 
@@ -14,13 +15,35 @@ const rangeLens = Lens.fromProp<Aura>()('range');
 const bonusesLens = Lens.fromProp<Aura>()('bonuses');
 const triggeredEffectsLens = Lens.fromProp<Aura>()('triggeredEffects');
 const conditionRuleLens = Lens.fromProp<Aura>()('condition');
+const dispositionTypeLens = Lens.fromProp<Aura>()('dispositionType').default(null, (v): v is null => v !== null);
+const excludeSelfLens = Lens.fromProp<Aura>()('excludeSelf').default(false);
 
-export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; className?: string }) {
+const dispositionTypeOptions: SelectItem<DispositionType | null>[] = [
+	{ key: '', value: null, label: '(all)', typeaheadLabel: '(all)' },
+	{ key: 'ally', value: 'ally', label: 'all allies', typeaheadLabel: 'all allies' },
+	{ key: 'enemy', value: 'enemy', label: 'all enemies', typeaheadLabel: 'all enemies' },
+	{ key: 'not allies', value: 'not allies', label: 'enemies and neutral', typeaheadLabel: 'enemies and neutral' },
+	{ key: 'not enemies', value: 'not enemies', label: 'allies and neutral', typeaheadLabel: 'allies and neutral' },
+	{ key: 'hostile', value: 'hostile', label: 'monsters', typeaheadLabel: 'monsters' },
+	{ key: 'friendly', value: 'friendly', label: 'PCs', typeaheadLabel: 'PCs' },
+];
+
+export function AurasEditor({
+	fallbackImage,
+	auras,
+	className,
+}: {
+	fallbackImage?: string | null;
+	auras: Stateful<Aura[]>;
+	className?: string;
+}) {
 	const apps = useApplicationDispatcher();
 
 	function onAdd() {
 		auras.onChangeValue((draft) => {
 			draft.push({
+				dispositionType: null,
+				excludeSelf: false,
 				range: auras.value[auras.value.length - 1]?.range ?? 1,
 				condition: null,
 				bonuses: [],
@@ -66,7 +89,7 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 								'h-10'
 							)}>
 							<td className="px-8">
-								<AuraDetails aura={baseLens.toField(idx).apply(auras)} />
+								<AuraDetails fallbackImage={fallbackImage} aura={baseLens.toField(idx).apply(auras)} />
 							</td>
 							<td className="text-right px-1 whitespace-nowrap">
 								<IconButton iconClassName="fas fa-trash" title="Click to Delete" onClick={onDelete(idx)} />
@@ -92,12 +115,22 @@ export function AurasEditor({ auras, className }: { auras: Stateful<Aura[]>; cla
 
 const auraLens = Lens.identity<Aura>();
 
-function AuraDetails({ aura }: { aura: Stateful<Aura> }) {
+function AuraDetails({ aura, fallbackImage }: { aura: Stateful<Aura>; fallbackImage?: string | null }) {
 	return (
 		<div className="flex flex-col">
 			<FormInput>
 				<FormInput.NumberField {...auraLens.combine(rangeLens).apply(aura)} className="text-center" />
 				<FormInput.Label>Range</FormInput.Label>
+			</FormInput>
+
+			<FormInput.Inline>
+				<FormInput.Checkbox {...auraLens.combine(excludeSelfLens).apply(aura)} />
+				Aura excludes self?
+			</FormInput.Inline>
+
+			<FormInput>
+				<FormInput.Select options={dispositionTypeOptions} {...auraLens.combine(dispositionTypeLens).apply(aura)} />
+				<FormInput.Label>Disposition Type</FormInput.Label>
 			</FormInput>
 
 			<FormInput>
@@ -109,7 +142,10 @@ function AuraDetails({ aura }: { aura: Stateful<Aura> }) {
 			<BonusesEditor bonuses={auraLens.combine(bonusesLens).apply(aura)} />
 
 			<BlockHeader>Triggered Effects</BlockHeader>
-			<TriggeredEffectsEditor triggeredEffects={auraLens.combine(triggeredEffectsLens).apply(aura)} />
+			<TriggeredEffectsEditor
+				fallbackImage={fallbackImage}
+				triggeredEffects={auraLens.combine(triggeredEffectsLens).apply(aura)}
+			/>
 		</div>
 	);
 }

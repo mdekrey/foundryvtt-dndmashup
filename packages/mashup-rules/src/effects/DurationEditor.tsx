@@ -67,12 +67,12 @@ const durationTypeLens = Lens.from<TemplateEffectDurationInfo, EffectDurationTyp
 
 export function DurationEditor(props: Stateful<TemplateEffectDurationInfo>) {
 	return (
-		<>
+		<div className="grid grid-cols-2 gap-x-1">
 			<FormInput>
 				<FormInput.Select options={durationTypeOptions} {...durationTypeLens.apply(props)} />
 				<FormInput.Label>Duration Type</FormInput.Label>
 			</FormInput>
 			{durationTypeEditors[props.value.durationType](props as any)}
-		</>
+		</div>
 	);
 }

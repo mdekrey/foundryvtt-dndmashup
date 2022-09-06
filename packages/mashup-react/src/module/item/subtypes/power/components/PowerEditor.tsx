@@ -28,12 +28,14 @@ import {
 	powerTriggerLens,
 	isBasicAttackLens,
 	powerSpecialTextLens,
+	selfAppliedTemplateLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerData, PowerEffect } from '../dataSourceData';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AttackTypeInfo } from './AttackTypeInfo';
 import { useEffect, useReducer, useRef, useState } from 'react';
+import { ActiveEffectTemplateEditorButton } from '@foundryvtt-dndmashup/mashup-rules';
 
 export function PowerEditor({ itemState: documentState }: { itemState: Stateful<SimpleDocumentData<PowerData>> }) {
 	return (
@@ -89,10 +91,25 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<AttackRollFields {...firstEffectLens.combine(attackRollLens).apply(documentState)} />
 
-				<FormInput.Inline>
-					<FormInput.Checkbox {...isBasicAttackLens.apply(documentState)} className="self-center" />
-					<span>is Basic Attack?</span>
-				</FormInput.Inline>
+				<div className="grid grid-cols-12 gap-x-1 items-baseline">
+					<FormInput.Inline className="col-span-6">
+						<FormInput.Checkbox {...isBasicAttackLens.apply(documentState)} className="self-center" />
+						<span>is Basic Attack?</span>
+					</FormInput.Inline>
+					<FormInput.Inline
+						className={classNames('col-span-6', {
+							'opacity-50 focus-within:opacity-100': !documentState.value.data.selfApplied,
+						})}>
+						<span>Apply to User:</span>
+						<ActiveEffectTemplateEditorButton
+							fallbackImage={documentState.value.img}
+							className="col-span-2"
+							activeEffectTemplate={selfAppliedTemplateLens.apply(documentState)}
+							title="Self-applied Effect"
+							description={`When using ${documentState.value.name}, apply to the user...`}
+						/>
+					</FormInput.Inline>
+				</div>
 
 				<FormInput
 					className={classNames({
@@ -126,15 +143,20 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 					<FormInput.Label>Special</FormInput.Label>
 				</FormInput>
 
-				<HitAndMissFields {...firstEffectLens.apply(documentState)} />
+				<HitAndMissFields fallbackImage={documentState.value.img} {...firstEffectLens.apply(documentState)} />
 
-				<EffectsTable {...effectsLens.apply(documentState)} />
+				<EffectsTable fallbackImage={documentState.value.img} {...effectsLens.apply(documentState)} />
 			</div>
 		</>
 	);
 }
 
-function EffectsTable(props: Stateful<PowerEffect[]>) {
+function EffectsTable({
+	fallbackImage,
+	...props
+}: {
+	fallbackImage?: string | null;
+} & Stateful<PowerEffect[]>) {
 	const effects = props.value;
 	const indexes = [...effects.map((_, idx) => idx), effects.length];
 
@@ -152,6 +174,7 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 			{indexes.map((idx) => (
 				<EffectRow
 					key={idx}
+					fallbackImage={fallbackImage}
 					onRemove={onRemove(idx)}
 					{...(idx === effects.length ? newEffectLens : toIndex(idx)).apply(props)}
 					isNew={idx === effects.length}
@@ -169,7 +192,16 @@ function EffectsTable(props: Stateful<PowerEffect[]>) {
 	}
 }
 
-function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew: boolean } & Stateful<PowerEffect>) {
+function EffectRow({
+	fallbackImage,
+	onRemove,
+	isNew,
+	...props
+}: {
+	fallbackImage?: string | null;
+	onRemove: () => void;
+	isNew: boolean;
+} & Stateful<PowerEffect>) {
 	const [isExpanded, toggle] = useReducer((prev) => !prev, isNew ?? false);
 	const [height, setHeight] = useState<number>();
 	const detailRef = useRef<HTMLDivElement | null>(null);
@@ -212,7 +244,7 @@ function EffectRow({ onRemove, isNew, ...props }: { onRemove: () => void; isNew:
 							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
 						})}>
 						<div className={classNames('p-4', { 'focus-within:opacity-100 opacity-75': isNew })}>
-							<PowerEffectFields {...props} />
+							<PowerEffectFields fallbackImage={fallbackImage} {...props} />
 						</div>
 					</div>
 				</td>

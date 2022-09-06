@@ -29,10 +29,10 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 			<td className="text-center">{implementGroups[equipmentProperties.group]}</td>
 		</>
 	),
-	additionalTabs: (stateful) => (
+	additionalTabs: (stateful, item) => (
 		<>
 			<TabbedSheet.Tab name="attackEffects" label="Attack Effects">
-				<AttackEffects {...additionalEffectsLens.apply(stateful)} />
+				<AttackEffects fallbackImage={item.img} {...additionalEffectsLens.apply(stateful)} />
 			</TabbedSheet.Tab>
 		</>
 	),

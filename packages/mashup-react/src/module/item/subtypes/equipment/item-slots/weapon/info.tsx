@@ -52,10 +52,10 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			<td className="text-center">{equipmentProperties.range || <>&mdash;</>}</td>
 		</>
 	),
-	additionalTabs: (stateful) => (
+	additionalTabs: (stateful, item) => (
 		<>
 			<TabbedSheet.Tab name="attackEffects" label="Attack Effects">
-				<AttackEffects {...additionalEffectsLens.apply(stateful)} />
+				<AttackEffects {...additionalEffectsLens.apply(stateful)} fallbackImage={item.img} />
 			</TabbedSheet.Tab>
 		</>
 	),

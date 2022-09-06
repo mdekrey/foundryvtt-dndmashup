@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
+import { BlockHeader, FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { DurationEditor } from './DurationEditor';
 import { ActiveEffectTemplate } from './types';
@@ -15,7 +15,9 @@ const options: SelectItem<AfterEffectType>[] = [
 	{ key: 'after-failed', value: 'after-failed', label: 'Failed Save', typeaheadLabel: 'Failed Save' },
 ];
 
+const imageLens = activeEffectTemplateFieldLens('image');
 const labelLens = activeEffectTemplateFieldLens('label');
+const coreStatusIdLens = activeEffectTemplateFieldLens('coreStatusId').default('', (v) => !v);
 const durationLens = activeEffectTemplateFieldLens('duration');
 const bonusesLens = activeEffectTemplateFieldLens('bonuses');
 const toAfterEffectType = (t: ActiveEffectTemplate) =>
@@ -23,7 +25,10 @@ const toAfterEffectType = (t: ActiveEffectTemplate) =>
 const afterEffectLens = activeEffectTemplateFieldLens('afterEffect').combine(activeEffectTemplateDefaultLens);
 const afterFailedSaveLens = activeEffectTemplateFieldLens('afterFailedSave').combine(activeEffectTemplateDefaultLens);
 
-export function ActiveEffectTemplateEditor(props: Stateful<ActiveEffectTemplate>) {
+export function ActiveEffectTemplateEditor({
+	fallbackImage,
+	...props
+}: { fallbackImage?: string | null } & Stateful<ActiveEffectTemplate>) {
 	const actualAfterEffectType = toAfterEffectType(props.value);
 	const [afterEffectType, setAfterEffectType] = useState<AfterEffectType>(actualAfterEffectType);
 
@@ -38,13 +43,31 @@ export function ActiveEffectTemplateEditor(props: Stateful<ActiveEffectTemplate>
 	}, [afterEffectType, actualAfterEffectType]);
 
 	return (
-		<>
-			<FormInput>
-				<FormInput.TextField {...labelLens.apply(props)} />
-				<FormInput.Label>Label</FormInput.Label>
-			</FormInput>
+		<div>
+			<div className="flex flex-row gap-1">
+				<FormInput.ImageEditor
+					title="Effect Image"
+					{...imageLens.apply(props)}
+					defaultImage={fallbackImage ?? undefined}
+				/>
+				<div className="flex-grow">
+					<FormInput>
+						<FormInput.TextField {...labelLens.apply(props)} />
+						<FormInput.Label>Label</FormInput.Label>
+					</FormInput>
+					<FormInput>
+						<FormInput.TextField {...coreStatusIdLens.apply(props)} />
+						<FormInput.Label>Unique Id</FormInput.Label>
+						<span className="text-2xs">(others with same ID get removed when applied)</span>
+					</FormInput>
+				</div>
+			</div>
+			<BlockHeader className="my-1">Duration</BlockHeader>
 			<DurationEditor {...durationLens.apply(props)} />
+			<BlockHeader className="mt-1">Bonuses</BlockHeader>
 			<BonusesEditor bonuses={bonusesLens.apply(props)} />
+
+			<BlockHeader className="my-1">Changes over time</BlockHeader>
 			<FormInput>
 				<FormInput.Select options={options} value={afterEffectType} onChange={setAfterEffectType} />
 				<FormInput.Label>After Effect Type</FormInput.Label>
@@ -52,9 +75,10 @@ export function ActiveEffectTemplateEditor(props: Stateful<ActiveEffectTemplate>
 			{afterEffectType === 'none' ? null : (
 				<ActiveEffectTemplateEditor
 					key={afterEffectType}
+					fallbackImage={props.value.image ?? fallbackImage}
 					{...(afterEffectType === 'after-save' ? afterEffectLens : afterFailedSaveLens).apply(props)}
 				/>
 			)}
-		</>
+		</div>
 	);
 }
