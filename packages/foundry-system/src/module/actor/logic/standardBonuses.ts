@@ -50,6 +50,13 @@ export const pcStandardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'defense-will', amount: 10 },
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.wis.total', type: 'ability' },
 	{ ...base, target: 'defense-will', amount: '@actor.derivedData.abilities.cha.total', type: 'ability' },
+
+	{ ...base, target: 'attack-roll', amount: '@actor.derivedData.halfLevel' },
+	{ ...base, target: 'defense-ac', amount: '@actor.derivedData.halfLevel' },
+	{ ...base, target: 'defense-fort', amount: '@actor.derivedData.halfLevel' },
+	{ ...base, target: 'defense-refl', amount: '@actor.derivedData.halfLevel' },
+	{ ...base, target: 'defense-will', amount: '@actor.derivedData.halfLevel' },
+
 	{ ...base, target: 'initiative', amount: '@actor.derivedData.abilities.dex.total', type: 'ability' },
 	{ ...base, target: 'magic-item-uses', amount: '@actor.tier + 1' },
 	{ ...base, target: 'magic-item-uses', amount: '@actor.derivedData.milestones' },
