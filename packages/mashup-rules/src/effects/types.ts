@@ -9,7 +9,6 @@ export type InstantaneousEffect = {
 	text: string;
 	healing: HealingEffect | null;
 	damage: DamageEffect | null;
-	// TODO: effect template to drag/drop to apply ongoing effects
 	activeEffectTemplate: ActiveEffectTemplate | null;
 };
 
