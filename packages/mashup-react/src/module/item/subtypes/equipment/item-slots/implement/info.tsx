@@ -16,6 +16,7 @@ export const ImplementInfo: ItemSlotInfo<'implement'> = {
 	equippedSlots: ['primary-hand', 'off-hand'],
 	slotsNeeded: () => 1,
 	bonuses: () => [],
+	keywords: (inputData) => ['implement', inputData.group, ...(inputData.keywords ?? [])],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => <>{`${implementGroups[input.group]}`}</>,
 	details: ImplementDetails,

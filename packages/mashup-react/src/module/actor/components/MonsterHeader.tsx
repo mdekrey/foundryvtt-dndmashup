@@ -1,5 +1,5 @@
 import { FormInput, SelectItem } from '@foundryvtt-dndmashup/components';
-import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
+import { keywordsAsStringLens, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import {
 	calculateMonsterXp,
 	MonsterPowerLevel,
@@ -8,7 +8,6 @@ import {
 	Size,
 	sizes,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import capitalize from 'lodash/fp/capitalize';
 import { MonsterDetails } from '../types';
 
 const detailsLens = Lens.identity<MonsterDetails>();
@@ -28,16 +27,7 @@ const sizeOptions = sizes.map(
 	})
 );
 
-const keywordsLens = Lens.from<MonsterDetails, string>(
-	(details) => (details.keywords ?? []).map(capitalize).join(', '),
-	(mutator) => (draft) => {
-		const keywords = mutator((draft.keywords ?? []).map(capitalize).join(', '));
-		draft.keywords = keywords
-			.split(',')
-			.map((k) => k.toLowerCase().trim())
-			.filter((v) => v.length > 0);
-	}
-);
+const keywordsLens = Lens.fromProp<MonsterDetails>()('keywords').combine(keywordsAsStringLens);
 
 export function MonsterHeader({
 	nameState,

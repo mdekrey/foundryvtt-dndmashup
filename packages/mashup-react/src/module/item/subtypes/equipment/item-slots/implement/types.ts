@@ -5,6 +5,7 @@ export type ImplementGroup = 'holy symbol' | 'ki focus' | 'orb' | 'rod' | 'staff
 
 export type ImplementItemSlotTemplate = {
 	group: ImplementGroup;
+	keywords: string[];
 
 	additionalEffects: Partial<Record<AttackEffectTrigger, InstantaneousEffect>>;
 };

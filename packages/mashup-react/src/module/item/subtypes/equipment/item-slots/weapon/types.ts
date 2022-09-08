@@ -33,6 +33,7 @@ export type WeaponItemSlotTemplate = {
 	range: string;
 	group: WeaponGroup;
 	properties: WeaponProperty[];
+	keywords: string[];
 	category: WeaponCategory;
 	hands: 1 | 2;
 

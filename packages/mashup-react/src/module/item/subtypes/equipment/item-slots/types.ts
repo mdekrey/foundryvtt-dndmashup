@@ -40,8 +40,12 @@ export type ItemSlotTemplates = {
 	implement: ImplementItemSlotTemplate;
 };
 
+export type OtherItemSlotTemplate = {
+	keywords: string[];
+};
+
 export type ItemSlotTemplate<T extends ItemSlot = ItemSlot> = {
-	[K in T]: T extends keyof ItemSlotTemplates ? ItemSlotTemplates[T] : Record<string, never>;
+	[K in T]: T extends keyof ItemSlotTemplates ? ItemSlotTemplates[T] : OtherItemSlotTemplate;
 }[T];
 
 export type MutableItemSlotComponent<T extends ItemSlot = ItemSlot> = React.FC<{
@@ -58,6 +62,7 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	equippedSlots: EquippedItemSlot[];
 	slotsNeeded: (inputData: ItemSlotTemplate<T>) => number;
 	bonuses: (inputData: ItemSlotTemplate<T>) => FeatureBonus[];
+	keywords: (inputData: ItemSlotTemplate<T>) => string[];
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;
 	details: MutableItemSlotComponent<T>;

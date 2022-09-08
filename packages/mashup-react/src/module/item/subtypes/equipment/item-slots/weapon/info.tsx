@@ -23,6 +23,13 @@ export const WeaponInfo: ItemSlotInfo<'weapon'> = {
 			type: 'proficiency',
 		},
 	],
+	keywords: (inputData) => [
+		'weapon',
+		inputData.category,
+		inputData.group,
+		...inputData.properties,
+		...(inputData.keywords ?? []),
+	],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
 		<>

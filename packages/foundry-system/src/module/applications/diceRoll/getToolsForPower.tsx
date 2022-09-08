@@ -5,8 +5,7 @@ import {
 	ActorDocument,
 	PowerDocument,
 	EquippedItemSlot,
-	WeaponItemSlotTemplate,
-	ImplementItemSlotTemplate,
+	itemSlots,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { intersection } from 'lodash/fp';
 
@@ -36,12 +35,16 @@ function isWeapon(item: EquipmentDocument): item is EquipmentDocument<'weapon' |
 	return item.data.data.itemSlot === 'weapon';
 }
 
+const kebab = /[^A-Za-z]+/g;
 function isImplement(allowedImplements: string[]) {
+	const implementKeywords = allowedImplements.map((keyword) => keyword.toLowerCase().replace(kebab, '-'));
 	return (item: EquipmentDocument): item is EquipmentDocument<'weapon' | 'implement'> => {
-		if (item.data.data.itemSlot === 'implement' || item.data.data.itemSlot === 'weapon')
-			return allowedImplements.includes(
-				(item.data.data.equipmentProperties as WeaponItemSlotTemplate | ImplementItemSlotTemplate).group
-			);
+		if (item.data.data.itemSlot === 'implement' || item.data.data.itemSlot === 'weapon') {
+			const keywords = itemSlots[item.data.data.itemSlot]
+				.keywords(item.data.data.equipmentProperties as never)
+				.map((keyword) => keyword.toLowerCase().replace(kebab, '-'));
+			return keywords.some((k) => implementKeywords.includes(k));
+		}
 		return false;
 	};
 }

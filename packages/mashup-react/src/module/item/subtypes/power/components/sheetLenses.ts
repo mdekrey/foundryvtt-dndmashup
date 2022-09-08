@@ -1,6 +1,5 @@
-import capitalize from 'lodash/fp/capitalize';
 import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Lens } from '@foundryvtt-dndmashup/core';
+import { keywordsAsStringLens, Lens } from '@foundryvtt-dndmashup/core';
 import { PowerData, PowerEffect } from '../dataSourceData';
 import { activeEffectTemplateDefaultLens } from '@foundryvtt-dndmashup/mashup-rules';
 
@@ -59,13 +58,6 @@ export const newEffectLens = Lens.from<PowerEffect[], PowerEffect>(
 	}
 ).default(defaultNewEffect);
 
-export const keywordsLens = Lens.from<SimpleDocumentData<PowerData>, string>(
-	(power) => power.data.keywords.map(capitalize).join(', '),
-	(mutator) => (draft) => {
-		const keywords = mutator(draft.data.keywords.map(capitalize).join(', '));
-		draft.data.keywords = keywords
-			.split(',')
-			.map((k) => k.toLowerCase().trim())
-			.filter((v) => v.length > 0);
-	}
-);
+export const keywordsLens = Lens.fromProp<SimpleDocumentData<PowerData>>()('data')
+	.toField('keywords')
+	.combine(keywordsAsStringLens);

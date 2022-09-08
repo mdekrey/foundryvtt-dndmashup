@@ -11,7 +11,7 @@ import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/found
 import { OtherDetails } from './item-slots/other/details';
 import { FeaturesList } from '../../components/FeaturesList';
 
-const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
+export const itemSlotOptions = Object.entries(itemSlots).map(([key, { optionLabel: label }]) => ({
 	value: key as ItemSlot,
 	key,
 	label,

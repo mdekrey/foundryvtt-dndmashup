@@ -18,6 +18,7 @@ export const ArmorInfo: ItemSlotInfo<'armor'> = {
 			condition: { rule: 'manual', parameter: { conditionText: 'armor check penalty applies' } },
 		},
 	],
+	keywords: (equipmentProperties) => ['armor', equipmentProperties.category, equipmentProperties.type],
 	equippedSlots: ['body'],
 	slotsNeeded: () => 1,
 	defaultEquipmentInfo,

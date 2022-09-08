@@ -14,6 +14,7 @@ export const ShieldInfo: ItemSlotInfo<'shield'> = {
 		{ amount: shieldBonus, condition: null, target: 'defense-ac', type: 'shield' },
 		{ amount: shieldBonus, condition: null, target: 'defense-refl', type: 'shield' },
 	],
+	keywords: ({ type }) => ['shield', type],
 	defaultEquipmentInfo,
 	buildSummary: ({ equipmentProperties: input }) => (
 		<>{`${allShieldTypes[input.type]}, shield bonus ${ensureSign(input.shieldBonus)}, check penalty ${ensureSign(
