@@ -1,3 +1,4 @@
+import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { isGame } from '../../../core/foundry';
 import { SpecificActor } from '../mashup-actor';
 import { MashupActorSheet } from '../mashup-actor-sheet';
@@ -6,6 +7,7 @@ import { MonsterSheet } from './MonsterSheet';
 import { PcSheet } from './pcSheet';
 
 export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
+	const apps = useApplicationDispatcher();
 	const actor = sheet.actor as SpecificActor;
 
 	return isActorType(actor, 'pc') ? (
@@ -19,7 +21,15 @@ export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
 
 		const combatant = game.combat?.combatants.find((c) => c.actor === actor);
 		if (!game.combat || !combatant?.id) {
-			ui.notifications?.warn('Not in combat.');
+			apps.launchApplication('diceRoll', {
+				actor,
+				baseDice: 'd20',
+				rollType: 'initiative',
+				title: 'Non-combat Initiative',
+				allowToolSelection: false,
+				sendToChat: true,
+				flavor: `${actor.name} rolls for initiative!`,
+			});
 			return;
 		}
 
