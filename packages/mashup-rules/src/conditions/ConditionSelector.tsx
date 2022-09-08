@@ -54,7 +54,6 @@ export function ConditionSelector(state: Stateful<SimpleConditionRule>) {
 }
 
 export function toRuleText(configuredRule: ConditionRule) {
-	console.log(configuredRule);
 	return conditionsRegistry[configuredRule.rule].ruleText(configuredRule.parameter as never);
 }
 

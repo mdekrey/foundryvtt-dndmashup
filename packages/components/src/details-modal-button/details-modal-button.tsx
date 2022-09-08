@@ -82,7 +82,6 @@ export function DetailsModalButton({
 	function onBlur() {
 		setTimeout(() => {
 			if (ignoreFocusRef.current) return;
-			console.log('onBlur', divRef.current, document.activeElement, depth);
 			if (!divRef.current?.contains(document.activeElement)) {
 				setOpen(false);
 			}
@@ -100,7 +99,6 @@ export function DetailsModalButton({
 	}
 
 	function setOpen(isOpen: boolean) {
-		console.log('setOpen', isOpen, depth);
 		ignoreFocusChange(isOpen);
 		innerSetOpen(isOpen);
 		if (!isOpen) {
