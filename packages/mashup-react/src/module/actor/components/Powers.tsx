@@ -35,10 +35,16 @@ const powerGroups: {
 	},
 	{
 		key: 'item-daily-powers',
-		label: 'Item Powers',
+		label: 'Item Daily Powers (or Item Healing Surge)',
 		className: (<i className="theme-orange-dark" />).props.className,
 		filter: (item) =>
 			isPower(item) && (item.data.data.usage === 'item' || item.data.data.usage === 'item-healing-surge'),
+	},
+	{
+		key: 'item-consumable',
+		label: 'Consumables',
+		className: (<i className="theme-orange-dark" />).props.className,
+		filter: (item) => isPower(item) && item.data.data.usage === 'item-consumable',
 	},
 ];
 

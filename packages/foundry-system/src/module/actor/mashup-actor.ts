@@ -44,6 +44,7 @@ import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/fo
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
 import { importNewChildItem } from '../../core/foundry/importNewChildItem';
 import { getAuras } from '../aura/getAuras';
+import { MashupItemEquipment } from '../item/subtypes/equipment/class';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -452,6 +453,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (power.data.data.usage === 'item' && this.data.data.magicItemUse.used >= this.data.data.magicItemUse.usesPerDay)
 			return false;
 
+		if (
+			power.data.data.usage === 'item-consumable' &&
+			(!(power.parent instanceof MashupItemEquipment) || (power.parent as MashupItemEquipment).data.data.quantity < 1)
+		)
+			return false;
+
 		return !this.data.data.powerUsage[power.powerGroupId];
 	}
 	async toggleReady(power: PowerDocument): Promise<boolean> {
@@ -484,7 +491,10 @@ export class MashupActor extends Actor implements ActorDocument {
 			updates[`data.magicItemUse.used`] = this.data.data.magicItemUse.used + 1;
 		}
 
-		await this.update(updates);
+		if (Object.keys(updates).length) await this.update(updates);
+
+		if (power.data.data.usage === 'item-consumable' && power.parent instanceof MashupItemEquipment)
+			await (power.parent as MashupItemEquipment).decreaseQuantity(1);
 
 		if (power.data.data.selfApplied) {
 			await this.createActiveEffect(...toComputable(power.data.data.selfApplied, this, power.img ?? ''));

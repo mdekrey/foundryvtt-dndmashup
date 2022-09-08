@@ -15,8 +15,15 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 	extends MashupItem<'equipment'>
 	implements EquipmentDocument<TItemSlot>
 {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
+
+	override get name() {
+		if (this.data.data.quantity !== 1) {
+			return `${super.name} x${this.data.data.quantity}`;
+		}
+		return super.name;
+	}
+
 	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonusWithSource[] {
 		if (!this.canApplyBonuses(isForPowerUse)) return [];
 		return [
@@ -56,5 +63,9 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 	}
 	override allTriggeredEffects(): SourcedTriggeredEffect[] {
 		return this.items.contents.flatMap((item) => item.allTriggeredEffects());
+	}
+
+	async decreaseQuantity(count: number) {
+		return this.update({ 'data.quantity': this.data.data.quantity - count });
 	}
 }

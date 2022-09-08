@@ -8,6 +8,7 @@ const usageTypeColors: Record<PowerUsage, string> = {
 	encounter: (<i className="bg-red-dark" />).props.className,
 	daily: (<i className="bg-gray-dark" />).props.className,
 	item: (<i className="bg-orange-dark" />).props.className,
+	'item-consumable': (<i className="bg-orange-dark" />).props.className,
 	'item-healing-surge': (<i className="bg-orange-dark" />).props.className,
 	other: (<i className="bg-blue-dark" />).props.className,
 	'recharge-2': (<i className="bg-blue-dark" />).props.className,

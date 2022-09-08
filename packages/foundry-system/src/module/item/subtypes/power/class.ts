@@ -10,8 +10,18 @@ import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { isEquipment, isPower, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupItem } from '../../mashup-item';
 import { PossibleItemType } from '../../types';
+import { MashupItemEquipment } from '../equipment/class';
 
 export class MashupPower extends MashupItem<'power'> implements PowerDocument {
+	override get name() {
+		if (this.data.data.usage === 'item-consumable') {
+			if (this.parent instanceof MashupItemEquipment)
+				return `${super.name} x${(this.parent as MashupItemEquipment).data.data.quantity}`;
+			else return `${super.name} x0`;
+		}
+		return super.name;
+	}
+
 	override canEmbedItem(type: PossibleItemType): boolean {
 		return type === 'power';
 	}

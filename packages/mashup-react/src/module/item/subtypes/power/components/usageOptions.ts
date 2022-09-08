@@ -27,6 +27,12 @@ export const usageOptions: SelectItem<PowerUsage>[] = [
 		typeaheadLabel: 'Item Daily',
 	},
 	{
+		value: 'item-consumable',
+		key: 'item-consumable',
+		label: 'Consumable',
+		typeaheadLabel: 'Consumable',
+	},
+	{
 		value: 'item-healing-surge',
 		key: 'item-healing-surge',
 		label: 'Healing Surge (Item)',

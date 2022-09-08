@@ -42,6 +42,7 @@ export type PowerUsage =
 	| 'encounter'
 	| 'daily'
 	| 'item'
+	| 'item-consumable'
 	| 'item-healing-surge'
 	| 'other'
 	| `recharge-${2 | 3 | 4 | 5 | 6}`;

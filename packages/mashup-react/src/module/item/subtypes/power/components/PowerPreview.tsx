@@ -21,20 +21,21 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 		applications.launchApplication('powerDetails', { power: item });
 	}
 	return (
-		<section className={classNames('bg-white', { 'cursor-pointer': simple })} onClick={simple ? onDetails : undefined}>
+		<section
+			className={classNames('bg-white theme-blue-dark', { 'cursor-pointer': simple })}
+			onClick={simple ? onDetails : undefined}>
 			<header
 				className={classNames(
 					{
-						'bg-green-dark': itemData.usage === 'at-will',
-						'bg-red-dark': itemData.usage === 'encounter',
-						'bg-gray-dark': itemData.usage === 'daily',
-						'bg-orange-dark': itemData.usage === 'item',
-						'bg-blue-dark':
-							itemData.usage !== 'at-will' &&
-							itemData.usage !== 'encounter' &&
-							itemData.usage !== 'daily' &&
-							itemData.usage !== 'item',
+						'theme-green-dark': itemData.usage === 'at-will',
+						'theme-red-dark': itemData.usage === 'encounter',
+						'theme-gray-dark': itemData.usage === 'daily',
+						'theme-orange-dark':
+							itemData.usage === 'item' ||
+							itemData.usage === 'item-consumable' ||
+							itemData.usage === 'item-healing-surge',
 					},
+					'bg-theme',
 					'font-header text-white',
 					'flex justify-between items-baseline px-2 pt-0.5'
 				)}>
@@ -130,6 +131,8 @@ function powerUsage(usage: PowerUsage) {
 			return 'Daily';
 		case 'item':
 			return 'Daily (Item)';
+		case 'item-consumable':
+			return 'Consumable';
 		case 'item-healing-surge':
 			return 'Healing Surge';
 		case 'other':
