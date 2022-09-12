@@ -1,7 +1,6 @@
 import { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
-import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import {
 	FullFeatureBonus,
 	FullDynamicListEntry,
@@ -33,6 +32,7 @@ import {
 	PowerUsage,
 	PossibleItemType,
 	toComputable,
+	ActiveEffectDocumentConstructorData,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -290,7 +290,11 @@ export class MashupActor extends Actor implements ActorDocument {
 		}
 	}
 
-	async createActiveEffect(effect: ActiveEffectDataConstructorData, duration: ComputableEffectDurationInfo) {
+	async createActiveEffect(
+		effect: ActiveEffectDocumentConstructorData,
+		duration: ComputableEffectDurationInfo,
+		useStandardStats: boolean
+	) {
 		// TODO: remove existing one if it has the same core id
 		if (effect.flags?.core?.statusId) {
 			const toRemove = this.effects.filter(
@@ -304,7 +308,9 @@ export class MashupActor extends Actor implements ActorDocument {
 				);
 			}
 		}
-		await ActiveEffect.create(createFinalEffectConstructorData(effect, duration, this), { parent: this });
+		await ActiveEffect.create(createFinalEffectConstructorData([effect, duration, useStandardStats], this), {
+			parent: this,
+		});
 	}
 
 	isStatus(statusToCheck: string): boolean {

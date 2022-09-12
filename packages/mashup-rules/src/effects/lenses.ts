@@ -3,6 +3,7 @@ import { ActiveEffectTemplate } from './types';
 
 const defaultActiveEffectTemplate: ActiveEffectTemplate = {
 	label: '',
+	useStandard: false,
 	coreStatusId: null,
 	image: null,
 	duration: { durationType: 'endOfTurn', useTargetActor: true },
@@ -16,6 +17,7 @@ export const activeEffectTemplateDefaultLens = Lens.identity<ActiveEffectTemplat
 	(value) => {
 		const result =
 			!value.label &&
+			!value.useStandard &&
 			!value.coreStatusId &&
 			!value.image &&
 			value.bonuses.length === 0 &&
@@ -24,7 +26,6 @@ export const activeEffectTemplateDefaultLens = Lens.identity<ActiveEffectTemplat
 			value.duration.durationType === 'endOfTurn' &&
 			value.duration.useTargetActor &&
 			!value.triggeredEffects?.length;
-		console.log(result, value);
 		return result;
 	}
 );

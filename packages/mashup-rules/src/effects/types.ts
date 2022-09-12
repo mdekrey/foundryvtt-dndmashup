@@ -41,6 +41,7 @@ export type FullTriggeredEffect = SourcedTriggeredEffect & {
 export type ActiveEffectTemplate = {
 	label: string;
 	coreStatusId: string | null;
+	useStandard: boolean;
 	image: string | null;
 	duration: TemplateEffectDurationInfo;
 	bonuses: FeatureBonus[];

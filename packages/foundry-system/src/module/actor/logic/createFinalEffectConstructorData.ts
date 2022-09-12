@@ -1,13 +1,27 @@
 import { EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDocument, ComputableEffectDurationInfo } from '@foundryvtt-dndmashup/mashup-react';
+import { ActiveEffectDocumentConstructorParams, ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import { isGame } from '../../../core/foundry';
 
 export function createFinalEffectConstructorData(
-	effect: ActiveEffectDataConstructorData,
-	duration: ComputableEffectDurationInfo,
+	[effect, duration, useStandardStats]: ActiveEffectDocumentConstructorParams,
 	actor: ActorDocument
 ): ActiveEffectDataConstructorData {
+	let result: ActiveEffectDataConstructorData;
+
+	if (effect.flags?.core?.statusId && useStandardStats) {
+		result = deepClone(CONFIG.statusEffects.find((e) => e.id === effect.flags?.core?.statusId) ?? effect);
+		result.flags ??= {};
+		result.flags.core ??= {};
+		result.flags.core.statusId = effect.flags?.core?.statusId;
+		result.flags.mashup ??= {};
+		result.flags.mashup.bonuses = [...(result.flags.mashup.bonuses ?? []), ...(effect.flags.mashup?.bonuses ?? [])];
+	} else {
+		result = deepClone(effect);
+		result.flags ??= {};
+		result.flags.mashup ??= {};
+	}
+
 	let rounds: number | undefined;
 	let resultDurationInfo: EffectDurationInfo | undefined;
 	if (duration.durationType === 'endOfTurn' || duration.durationType === 'startOfTurn') {
@@ -26,17 +40,15 @@ export function createFinalEffectConstructorData(
 	}
 
 	if (rounds !== undefined) {
-		effect.duration = { ...effect.duration };
-		effect.duration.rounds = rounds;
+		result.duration = { ...result.duration };
+		result.duration.rounds = rounds;
 	}
 
 	if (resultDurationInfo) {
-		effect.flags ??= {};
-		effect.flags.mashup ??= {};
-		effect.flags.mashup.effectDuration = resultDurationInfo;
+		result.flags.mashup.effectDuration = resultDurationInfo;
 	}
 
-	return effect;
+	return result;
 }
 
 function getCurrentInitiative(
@@ -57,7 +69,7 @@ function getCurrentInitiative(
 	}
 	const currentInitiative = combat.turns[combat.turn].initiative;
 	if (currentInitiative === null) {
-		ui.notifications?.warn(`Combat was not started.`);
+		ui.notifications?.warn(`Initiative was not rolled.`);
 		return undefined;
 	}
 

@@ -56,5 +56,6 @@ export function toComputable(
 			},
 		},
 		duration,
+		template.useStandard ?? false,
 	];
 }

@@ -17,6 +17,7 @@ const options: SelectItem<AfterEffectType>[] = [
 
 const imageLens = activeEffectTemplateFieldLens('image');
 const labelLens = activeEffectTemplateFieldLens('label');
+const useStandardLens = activeEffectTemplateFieldLens('useStandard');
 const coreStatusIdLens = activeEffectTemplateFieldLens('coreStatusId').default('', (v) => !v);
 const durationLens = activeEffectTemplateFieldLens('duration');
 const bonusesLens = activeEffectTemplateFieldLens('bonuses');
@@ -24,6 +25,41 @@ const toAfterEffectType = (t: ActiveEffectTemplate) =>
 	t.afterEffect !== null ? 'after-save' : t.afterFailedSave !== null ? 'after-failed' : 'none';
 const afterEffectLens = activeEffectTemplateFieldLens('afterEffect').combine(activeEffectTemplateDefaultLens);
 const afterFailedSaveLens = activeEffectTemplateFieldLens('afterFailedSave').combine(activeEffectTemplateDefaultLens);
+
+const standardEffects: SelectItem<string>[] = [
+	{ key: 'dead', value: 'dead', label: 'Dead', typeaheadLabel: 'Dead' },
+	{ key: 'bloodied', value: 'bloodied', label: 'Bloodied', typeaheadLabel: 'Bloodied' },
+
+	{ key: 'blinded', value: 'blinded', label: 'Blinded', typeaheadLabel: 'Blinded' },
+	{ key: 'dazed', value: 'dazed', label: 'Dazed', typeaheadLabel: 'Dazed' },
+	{ key: 'deafened', value: 'deafened', label: 'Deafened', typeaheadLabel: 'Deafened' },
+	{ key: 'dominated', value: 'dominated', label: 'Dominated', typeaheadLabel: 'Dominated' },
+	{ key: 'dying', value: 'dying', label: 'Dying', typeaheadLabel: 'Dying' },
+	{ key: 'helpless', value: 'helpless', label: 'Helpless', typeaheadLabel: 'Helpless' },
+	{ key: 'immobilized', value: 'immobilized', label: 'Immobilized', typeaheadLabel: 'Immobilized' },
+
+	{ key: 'petrified', value: 'petrified', label: 'Petrified', typeaheadLabel: 'Petrified' },
+	{ key: 'prone', value: 'prone', label: 'Prone', typeaheadLabel: 'Prone' },
+	{ key: 'restrained', value: 'restrained', label: 'Restrained', typeaheadLabel: 'Restrained' },
+	{ key: 'slowed', value: 'slowed', label: 'Slowed', typeaheadLabel: 'Slowed' },
+	{ key: 'stunned', value: 'stunned', label: 'Stunned', typeaheadLabel: 'Stunned' },
+	{ key: 'surprised', value: 'surprised', label: 'Surprised', typeaheadLabel: 'Surprised' },
+	{ key: 'unconscious', value: 'unconscious', label: 'Unconscious', typeaheadLabel: 'Unconscious' },
+	{ key: 'weakened', value: 'weakened', label: 'Weakened', typeaheadLabel: 'Weakened' },
+];
+
+const coreStatusIdWithLabelLens = Lens.from<ActiveEffectTemplate, string>(
+	(s) => s.coreStatusId ?? 'none',
+	(mutator) => (draft) => {
+		const resultStatusId = mutator(draft.coreStatusId ?? 'none');
+		draft.coreStatusId = resultStatusId;
+		const status = standardEffects.find(({ value }) => value === resultStatusId);
+		if (status) {
+			draft.label = status.typeaheadLabel;
+		}
+		return draft;
+	}
+);
 
 export function ActiveEffectTemplateEditor({
 	fallbackImage,
@@ -55,8 +91,16 @@ export function ActiveEffectTemplateEditor({
 						<FormInput.TextField {...labelLens.apply(props)} />
 						<FormInput.Label>Label</FormInput.Label>
 					</FormInput>
+					<FormInput.Inline className="whitespace-nowrap items-baseline">
+						<FormInput.Checkbox {...useStandardLens.apply(props)} />
+						<span>is PHB Condition</span>
+					</FormInput.Inline>
 					<FormInput>
-						<FormInput.TextField {...coreStatusIdLens.apply(props)} />
+						{props.value.useStandard ? (
+							<FormInput.Select {...coreStatusIdWithLabelLens.apply(props)} options={standardEffects} />
+						) : (
+							<FormInput.TextField {...coreStatusIdLens.apply(props)} />
+						)}
 						<FormInput.Label>Unique Id</FormInput.Label>
 						<span className="text-2xs">(others with same ID get removed when applied)</span>
 					</FormInput>

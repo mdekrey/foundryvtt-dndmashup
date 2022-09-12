@@ -31,7 +31,7 @@ export const totalDefense: CommonAction = {
 	isReady: () => true,
 
 	use: async (actor, { chatDispatch }) => {
-		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration);
+		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration, false);
 		chatDispatch.sendChatMessage('plain-text', actor, '... steels their defenses!!');
 	},
 };

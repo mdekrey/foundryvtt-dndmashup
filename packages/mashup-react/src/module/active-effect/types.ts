@@ -41,7 +41,8 @@ export type ActiveEffectDocumentConstructorData = {
 
 export type ActiveEffectDocumentConstructorParams = [
 	effect: ActiveEffectDocumentConstructorData,
-	duration: ComputableEffectDurationInfo
+	duration: ComputableEffectDurationInfo,
+	useStandardStats: boolean
 ];
 
 export type ActiveEffectDocument = BaseDocument & {

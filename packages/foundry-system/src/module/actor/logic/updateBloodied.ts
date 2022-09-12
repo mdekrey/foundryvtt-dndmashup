@@ -14,18 +14,19 @@ export async function updateBloodied(this: MashupActor) {
 		const status = CONFIG.statusEffects.find((x) => x.id === statusToCheck);
 		if (!status) return;
 
-		const { _id, id, ...params } = status;
+		const { _id, id, icon, label, ...params } = status;
 
 		const effect = {
+			icon: icon ?? undefined,
 			...params,
-			label: status.label && game.i18n.localize(status.label),
+			label: (label && game.i18n.localize(label)) ?? '<unknown>',
 			flags: {
 				core: {
 					statusId: statusToCheck,
 				},
 			},
 		};
-		await this.createActiveEffect(effect, { durationType: 'other', description: 'while HP ≤ Bloodied Value' });
+		await this.createActiveEffect(effect, { durationType: 'other', description: 'while HP ≤ Bloodied Value' }, false);
 	};
 
 	const calculated = this.derivedData;
