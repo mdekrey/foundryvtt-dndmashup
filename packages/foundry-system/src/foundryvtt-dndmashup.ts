@@ -62,7 +62,8 @@ Hooks.once('init', async () => {
 		CONFIG.statusEffects.find((se) => se.id === 'dead')!,
 		{ id: 'bloodied', label: 'Bloodied', icon: bloodiedIcon },
 
-		// The following are actual statuses in 4e:
+		// TODO: add standard effects. See #55
+		// The following are actual conditions in 4e:
 		{ id: 'blinded', label: 'Blinded', icon: CONFIG.statusEffects.find((se) => se.id === 'blind')!.icon },
 		{ id: 'dazed', label: 'Dazed', icon: dazedIcon },
 		{ id: 'deafened', label: 'Deafened', icon: CONFIG.statusEffects.find((se) => se.id === 'deaf')!.icon },
@@ -72,7 +73,13 @@ Hooks.once('init', async () => {
 		{ id: 'immobilized', label: 'Immobilized', icon: immobilizedIcon },
 		// marked is a different effect since it needs the marking character id
 		{ id: 'petrified', label: 'Petrified', icon: petrifiedIcon },
-		{ id: 'prone', label: 'Prone', icon: CONFIG.statusEffects.find((se) => se.id === 'prone')!.icon },
+		{
+			id: 'prone',
+			label: 'Prone',
+			icon: CONFIG.statusEffects.find((se) => se.id === 'prone')!.icon,
+			// TODO: bonus to ranged defenses, etc.
+			flags: { mashup: { bonuses: [{ target: 'attack-roll', amount: -2, condition: null }] } },
+		},
 		{ id: 'restrained', label: 'Restrained', icon: CONFIG.statusEffects.find((se) => se.id === 'restrain')!.icon },
 		{ id: 'slowed', label: 'Slowed', icon: slowedIcon },
 		{ id: 'stunned', label: 'Stunned', icon: stunnedIcon },
