@@ -1,5 +1,5 @@
 import { ActiveEffectDocument, ActiveEffectFlags } from '@foundryvtt-dndmashup/mashup-react';
-import { FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { FeatureBonus, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
 
 declare global {
 	interface FlagConfig {
@@ -12,6 +12,10 @@ declare global {
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
 	allBonuses(): FeatureBonus[] {
 		return this.data.flags.mashup?.bonuses ?? [];
+	}
+
+	allTriggeredEffects(): TriggeredEffect[] {
+		return this.data.flags.mashup?.triggers ?? [];
 	}
 
 	get img(): string | null {

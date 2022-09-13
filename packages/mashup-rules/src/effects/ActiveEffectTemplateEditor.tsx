@@ -5,6 +5,7 @@ import { DurationEditor } from './DurationEditor';
 import { ActiveEffectTemplate } from './types';
 import { activeEffectTemplateDefaultLens } from './lenses';
 import { BonusesEditor } from '../bonuses';
+import { TriggeredEffectsEditor } from './TriggeredEffectsEditor';
 
 const activeEffectTemplateFieldLens = Lens.fromProp<ActiveEffectTemplate>();
 
@@ -21,6 +22,7 @@ const useStandardLens = activeEffectTemplateFieldLens('useStandard');
 const coreStatusIdLens = activeEffectTemplateFieldLens('coreStatusId').default('', (v) => !v);
 const durationLens = activeEffectTemplateFieldLens('duration');
 const bonusesLens = activeEffectTemplateFieldLens('bonuses');
+const triggersLens = activeEffectTemplateFieldLens('triggeredEffects').default([]);
 const toAfterEffectType = (t: ActiveEffectTemplate) =>
 	t.afterEffect !== null ? 'after-save' : t.afterFailedSave !== null ? 'after-failed' : 'none';
 const afterEffectLens = activeEffectTemplateFieldLens('afterEffect').combine(activeEffectTemplateDefaultLens);
@@ -110,6 +112,9 @@ export function ActiveEffectTemplateEditor({
 			<DurationEditor {...durationLens.apply(props)} />
 			<BlockHeader className="mt-1">Bonuses</BlockHeader>
 			<BonusesEditor bonuses={bonusesLens.apply(props)} />
+
+			<BlockHeader className="mt-1">Triggers</BlockHeader>
+			<TriggeredEffectsEditor triggeredEffects={triggersLens.apply(props)} />
 
 			<BlockHeader className="my-1">Changes over time</BlockHeader>
 			<FormInput>

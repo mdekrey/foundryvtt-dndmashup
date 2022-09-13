@@ -50,6 +50,7 @@ export function toComputable(
 				},
 				mashup: {
 					bonuses,
+					triggers: template.triggeredEffects,
 					afterEffect,
 					afterFailedSave,
 				},

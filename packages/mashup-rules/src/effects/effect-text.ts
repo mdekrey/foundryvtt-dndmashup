@@ -47,7 +47,7 @@ export function getTriggeredEffectText(triggeredEffect: TriggeredEffect) {
 	const trigger = triggeredEffect.trigger;
 	const triggerText = getTriggerText(trigger);
 	const condition = triggeredEffect.condition;
-	const conditionText = condition ? getRuleText(condition) : null;
+	const conditionText = condition ? getRuleText(condition) : '';
 	const effectText = getEffectText(triggeredEffect.effect);
 
 	return `${triggerText}${conditionText ? ` ` : ''}${conditionText}: ${effectText}`;

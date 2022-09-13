@@ -2,6 +2,7 @@ import { EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams, ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 import { isGame } from '../../../core/foundry';
+import { v4 as uuid } from 'uuid';
 
 export function createFinalEffectConstructorData(
 	[effect, duration, useStandardStats]: ActiveEffectDocumentConstructorParams,
@@ -16,9 +17,11 @@ export function createFinalEffectConstructorData(
 		result.flags.core.statusId = effect.flags?.core?.statusId;
 		result.flags.mashup ??= {};
 		result.flags.mashup.bonuses = [...(result.flags.mashup.bonuses ?? []), ...(effect.flags.mashup?.bonuses ?? [])];
+		result.flags.mashup.triggers = [...(result.flags.mashup.triggers ?? []), ...(effect.flags.mashup?.triggers ?? [])];
 	} else {
 		result = deepClone(effect);
 		result.flags ??= {};
+		result.flags.core ??= {};
 		result.flags.mashup ??= {};
 	}
 
@@ -47,6 +50,8 @@ export function createFinalEffectConstructorData(
 	if (resultDurationInfo) {
 		result.flags.mashup.effectDuration = resultDurationInfo;
 	}
+
+	result.flags.core.statusId ??= uuid();
 
 	return result;
 }

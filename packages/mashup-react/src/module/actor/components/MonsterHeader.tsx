@@ -27,7 +27,7 @@ const sizeOptions = sizes.map(
 	})
 );
 
-const keywordsLens = Lens.fromProp<MonsterDetails>()('keywords').combine(keywordsAsStringLens);
+const keywordsLens = Lens.fromProp<MonsterDetails>()('keywords').default([]).combine(keywordsAsStringLens);
 
 export function MonsterHeader({
 	nameState,

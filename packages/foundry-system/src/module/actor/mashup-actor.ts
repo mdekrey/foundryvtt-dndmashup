@@ -137,7 +137,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		return (
 			this._internalBonuses ??
 			(this._internalBonuses = [
-				// all active effects and other linked objects should be loaded here
 				...this.effects.contents.flatMap((effect) =>
 					effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
 				),
@@ -151,6 +150,9 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	get internalTriggeredEffects(): FullTriggeredEffect[] {
 		return [
+			...this.effects.contents.flatMap((effect) =>
+				effect.allTriggeredEffects().map((trigger) => ({ ...trigger, context: { actor: this }, sources: [effect] }))
+			),
 			...this.data.items.contents.flatMap((item) =>
 				item.allTriggeredEffects().map((effect) => ({ ...effect, context: { actor: this, item } }))
 			),

@@ -4,6 +4,7 @@ import {
 	EffectDurationType,
 	EffectDurationTypeData,
 	FeatureBonus,
+	TriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import type { ActorDocument } from '../actor';
 
@@ -25,11 +26,10 @@ export type ActiveEffectFlags = {
 	};
 	mashup?: {
 		bonuses?: FeatureBonus[];
+		triggers?: TriggeredEffect[];
 		afterEffect?: ActiveEffectDocumentConstructorParams;
 		afterFailedSave?: ActiveEffectDocumentConstructorParams;
 		effectDuration?: EffectDurationInfo;
-		// TODO: beginning of round InstantaneousEffect
-		// TODO: end of round InstantaneousEffect
 	};
 };
 
