@@ -65,7 +65,7 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 		create(effect) {
 			return effect.shape === 'burst'
 				? {
-						t: 'cone',
+						t: 'circle',
 						distance: effect.size + 0.5,
 						direction: 0,
 						flags: { [systemName]: { rotate: undefined } },
