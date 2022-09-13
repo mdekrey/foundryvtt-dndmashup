@@ -5,5 +5,6 @@ export const dynamicLists = [
 	`damageTypes` as const,
 	`criticalDamageTypes` as const,
 	`senses` as const,
+	`origin` as const,
 ];
 export type DynamicListTarget = typeof dynamicLists[number];

@@ -19,4 +19,7 @@ export const dynamicListTargetNames: Record<DynamicListTarget, { label: string }
 	senses: {
 		label: 'Senses',
 	},
+	origin: {
+		label: 'Origin',
+	},
 };
