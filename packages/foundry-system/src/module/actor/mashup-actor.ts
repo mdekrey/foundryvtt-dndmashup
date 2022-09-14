@@ -343,9 +343,15 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	get allAuras(): FullAura[] {
 		return this.items.contents.flatMap((item: ItemDocument) =>
-			item
-				.allGrantedAuras()
-				.map((aura): FullAura => ({ ...aura, sources: [this, ...aura.sources], context: { actor: this, item } }))
+			item.allGrantedAuras().map(({ range, ...aura }): FullAura => {
+				const computedRange = typeof range === 'string' ? Number(range) : range; // TODO - evaluate instead of parse
+				return {
+					...aura,
+					range: isNaN(computedRange) ? 0 : computedRange,
+					sources: [this, ...aura.sources],
+					context: { actor: this, item },
+				};
+			})
 		);
 	}
 
