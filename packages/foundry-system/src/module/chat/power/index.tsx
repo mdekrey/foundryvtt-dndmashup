@@ -57,7 +57,7 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 	);
 
 	function createEffect(typeAndRange: EffectTypeAndRange) {
-		const template = PowerEffectTemplate.fromTypeAndRange(typeAndRange, actor.derivedData.size);
+		const template = PowerEffectTemplate.fromTypeAndRange(typeAndRange, actor.size);
 		if (actor && actor.sheet) actor.sheet.minimize();
 		if (template)
 			template.drawPreview(() => {

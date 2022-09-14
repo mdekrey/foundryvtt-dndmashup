@@ -37,7 +37,7 @@ export class AbilityTerm extends NumericTerm {
 
 		const [parsedAbility, flavor] = match.slice(1);
 		const ability = parsedAbility.toLowerCase() as Ability;
-		const abilityTotal = data.actor.derivedData.abilities[ability].total;
+		const abilityTotal = data.actor.derivedCache.bonuses.getValue(`ability-${ability}`);
 
 		return new AbilityTerm({ number: abilityTotal, ability, options: { flavor } });
 	}

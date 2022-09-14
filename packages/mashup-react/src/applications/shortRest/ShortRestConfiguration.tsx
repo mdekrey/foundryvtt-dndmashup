@@ -27,7 +27,7 @@ export function ShortRestConfiguration({
 		bonusByType: BonusByType;
 	}>({ bonusFormula: '', bonusByType: {} });
 	const chatDispatch = useChatMessageDispatcher();
-	const currentRoll = combineRollComponents(actor.derivedData.health.surgesValue, bonusFormula);
+	const currentRoll = combineRollComponents(actor.derivedCache.bonuses.getValue('surges-value'), bonusFormula);
 
 	const isDeterministic = typeof currentRoll === 'number';
 	const rollTotal =

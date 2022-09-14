@@ -71,7 +71,7 @@ function toResult(roll: ReturnType<Roll['toJSON']>, tokenId: string | null, defe
 
 	const d20Term = roll.terms.find((t: any): t is DiceTerm => t.faces === 20 && t.number === 1);
 	if (d20Term && d20Term.total === 1) return 'critical-miss';
-	const defenseValue = token?.actor?.derivedData.defenses[defense];
+	const defenseValue = token?.actor?.derivedCache.bonuses.getValue(`defense-${defense}`);
 	if (!defenseValue || roll.total === undefined) return null;
 	if (d20Term && d20Term.number === 20 && roll.total >= defenseValue) return 'critical-hit';
 	if (d20Term && d20Term.number === 20) return 'maybe-critical-hit';

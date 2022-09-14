@@ -46,9 +46,9 @@ export function MonsterSheet({ actor }: { actor: SpecificActor<'monster'> }) {
 			/>
 			<ActorComponents.Effects
 				actor={actor}
-				bonusList={actor.allBonuses}
-				triggeredEffects={actor.allTriggeredEffects}
-				dynamicList={actor.dynamicListResult}
+				bonusList={actor.derivedCache.bonuses.getAll()}
+				triggeredEffects={actor.derivedCache.triggeredEffects.getAll()}
+				dynamicList={actor.derivedCache.lists.getAll()}
 			/>
 		</article>
 	);
