@@ -96,7 +96,6 @@ const areaLens = Lens.from<EffectTypeAndRange, AreaEffectTypeAndRange>(
 
 const areaShapeLens = areaLens.combine(Lens.fromProp('shape'));
 const areaSizeLens = areaLens.combine(Lens.fromProp('size'));
-const areaWithinLens = areaLens.combine(Lens.fromProp('within'));
 
 export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<EffectTypeAndRange>) {
 	return (
@@ -159,7 +158,7 @@ export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<Effect
 					</FormInput>
 					<div>within</div>
 					<FormInput className="self-end">
-						<FormInput.TextField value={`${value.within}`} onChange={changeNumber(areaWithinLens)} />
+						<FormInput.TextField value={`${value.within}`} onChange={(ev) => changeAreaRange(ev.currentTarget.value)} />
 						<FormInput.Label>Range</FormInput.Label>
 					</FormInput>
 				</>
@@ -222,11 +221,21 @@ export function TypeAndRange({ value, onChangeValue: setValue }: Stateful<Effect
 	}
 
 	function changeWithinRange(value: string) {
-		const range = value === 'sight' ? value : Number(value);
+		const range = value === 'weapon' || value === 'sight' ? value : Number(value);
 		if (typeof range === 'number' && isNaN(range)) return;
 		setValue((target) => {
 			if (target.type === 'within') {
 				target.size = range;
+			}
+		});
+	}
+
+	function changeAreaRange(value: string) {
+		const range = value === 'weapon' ? value : Number(value);
+		if (typeof range === 'number' && isNaN(range)) return;
+		setValue((target) => {
+			if (target.type === 'area') {
+				target.within = range;
 			}
 		});
 	}

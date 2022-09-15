@@ -58,9 +58,9 @@ export type EffectTypeAndRange =
 export type MeleeEffectTypeAndRange = { type: 'melee'; range: 'weapon' | 1 | 'touch' };
 export type RangedEffectTypeAndRange = { type: 'ranged'; range: 'weapon' | number | 'sight' };
 /** 'within' isn't a by-the-book type, as evidenced by things like Righteous Brand and Lance of Faith, but is really a close burst type effect that can have a range of sight. */
-export type WithinEffectTypeAndRange = { type: 'within'; size: number | 'sight' };
+export type WithinEffectTypeAndRange = { type: 'within'; size: number | 'sight' | 'weapon' };
 export type CloseEffectTypeAndRange = { type: 'close'; shape: 'burst' | 'blast'; size: number };
-export type AreaEffectTypeAndRange = { type: 'area'; shape: 'burst' | 'wall'; size: number; within: number };
+export type AreaEffectTypeAndRange = { type: 'area'; shape: 'burst' | 'wall'; size: number; within: number | 'weapon' };
 export type PersonalEffectTypeAndRange = { type: 'personal' };
 
 export type AttackRoll = {
