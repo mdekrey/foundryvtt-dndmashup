@@ -45,6 +45,7 @@ import { createFinalEffectConstructorData } from './logic/createFinalEffectConst
 import { importNewChildItem } from '../../core/foundry/importNewChildItem';
 import { MashupItemEquipment } from '../item/subtypes/equipment/class';
 import { isActorType } from './templates/isActorType';
+import { simplifyDice } from '../dice';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -249,6 +250,11 @@ export class MashupActor extends Actor implements ActorDocument {
 			.map(({ range, ...aura }): FullAura => {
 				return {
 					...aura,
+					bonuses:
+						aura.bonuses?.map(({ amount, ...bonus }) => ({
+							...bonus,
+							amount: simplifyDice(`${amount}`, { actor: this }),
+						})) ?? [],
 					range: typeof range === 'string' ? this.evaluateAmount(range) : range,
 					sources: [this, ...aura.sources],
 				};
