@@ -29,7 +29,7 @@ export function Abilities({
 						<FormInput.Label className="uppercase font-bold link">{ability}</FormInput.Label>
 						<div className="group relative self-stretch justify-self-stretch flex items-center justify-center">
 							<span className="group-hover:invisible" title="{{a}}">
-								{ensureSign(actor.derivedData.abilities[ability].total)}
+								{ensureSign(actor.derivedCache.bonuses.getValue(`ability-${ability}`))}
 							</span>
 
 							<div className="absolute inset-0 text-center invisible group-hover:visible">
@@ -53,7 +53,7 @@ export function Abilities({
 			flavor: `uses ${ability.toUpperCase()}`,
 			extraBonuses: [
 				{
-					amount: actor.derivedData.abilities[ability].total,
+					amount: actor.derivedCache.bonuses.getValue(`ability-${ability}`),
 					condition: null,
 					context: { actor },
 					target: 'check',
@@ -63,7 +63,7 @@ export function Abilities({
 					condition: { rule: 'manual', parameter: { conditionText: 'half-level applies' } },
 					type: 'rank',
 					target: 'check',
-					amount: actor.derivedData.halfLevel,
+					amount: actor.halfLevel,
 					context: { actor },
 				},
 			],

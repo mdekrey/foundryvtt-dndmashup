@@ -11,7 +11,7 @@ import { DispositionType } from './filterDisposition';
 
 const baseLens = Lens.identity<Aura[]>();
 
-const rangeLens = Lens.fromProp<Aura>()('range');
+const rangeLens = Lens.fromProp<Aura>()('range').combine(Lens.cast<string | number, string>());
 const bonusesLens = Lens.fromProp<Aura>()('bonuses');
 const triggeredEffectsLens = Lens.fromProp<Aura>()('triggeredEffects');
 const conditionRuleLens = Lens.fromProp<Aura>()('condition');
@@ -119,7 +119,7 @@ function AuraDetails({ aura, fallbackImage }: { aura: Stateful<Aura>; fallbackIm
 	return (
 		<div className="flex flex-col">
 			<FormInput>
-				<FormInput.NumberField {...auraLens.combine(rangeLens).apply(aura)} className="text-center" />
+				<FormInput.TextField {...auraLens.combine(rangeLens).apply(aura)} className="text-center" />
 				<FormInput.Label>Range</FormInput.Label>
 			</FormInput>
 

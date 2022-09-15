@@ -6,9 +6,11 @@ import {
 	ActorComponents,
 	PlayerCharacterDataSourceData,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { SpecificActor } from '../mashup-actor';
+import { MashupActor, SpecificActor } from '../mashup-actor';
 import { SpecificActorData } from '../types';
 import { PossibleItemData } from '../../item/types';
+import { useMemo } from 'react';
+import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 
 const baseLens = Lens.identity<SpecificActorData<'pc'>>();
 const dataLens = baseLens.toField('data');
@@ -23,16 +25,36 @@ const dynamicListLens = dataLens.toField('dynamicList');
 const currencyLens = dataLens.toField('currency');
 const magicItemUsesLens = dataLens.toField('magicItemUse').toField('used').default(0);
 
+function useDefenses(actor: MashupActor): {
+	[defense in Defense]: number;
+} {
+	const bonuses = actor.derivedCache.bonuses;
+	return useMemo(
+		() => ({
+			ac: bonuses.getValue('defense-ac'),
+			fort: bonuses.getValue('defense-fort'),
+			refl: bonuses.getValue('defense-refl'),
+			will: bonuses.getValue('defense-will'),
+		}),
+		[bonuses]
+	);
+}
+
+function usePoolLimits(actor: MashupActor) {
+	const pools = actor.derivedCache.pools;
+	return useMemo(() => pools.getPools().map((poolName) => pools.getValue(poolName)), [pools]);
+}
+
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
 	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
 	const dataState: Stateful<PlayerCharacterDataSourceData> = dataLens.apply(documentState);
 
 	const data = actor.derivedData;
-	const defenses = data.defenses;
+	const defenses = useDefenses(actor);
 	const maxHp = data.health.hp.max;
-	const healingSurgeValue = data.health.surgesValue;
+	const healingSurgeValue = actor.derivedCache.bonuses.getValue('surges-value');
 	const healingSurgesPerDay = data.health.surgesRemaining.max;
-	const pools = data.poolLimits;
+	const pools = usePoolLimits(actor);
 
 	return (
 		<>
@@ -115,14 +137,14 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 								<Tabs.Tab tabName="effects">
 									<ActorComponents.Effects
 										actor={actor}
-										bonusList={actor.allBonuses}
-										triggeredEffects={actor.allTriggeredEffects}
-										dynamicList={actor.dynamicListResult}
+										bonusList={actor.derivedCache.bonuses.getAll()}
+										triggeredEffects={actor.derivedCache.triggeredEffects.getAll()}
+										dynamicList={actor.derivedCache.lists.getAll()}
 									/>
 								</Tabs.Tab>
 								<Tabs.Tab tabName="pools">
 									<ActorComponents.Pools
-										magicItemUsesPerDay={data.magicItemUse.usesPerDay}
+										magicItemUsesPerDay={actor.derivedCache.bonuses.getValue('magic-item-uses')}
 										magicItemUses={magicItemUsesLens.apply(documentState)}
 										poolLimits={pools}
 										poolsState={poolsLens.apply(documentState)}

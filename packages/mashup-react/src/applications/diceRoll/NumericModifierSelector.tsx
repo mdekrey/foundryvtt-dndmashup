@@ -63,19 +63,17 @@ export function NumericModifierSelector({
 		return { indeterminate, applied };
 	}, [extraBonuses]);
 
+	const applied = actor.derivedCache.bonuses.getApplied(rollTarget);
+	const indeterminate = actor.derivedCache.bonuses.getIndeterminate(rollTarget);
 	const indeterminateBonuses = useMemo(
-		() => [
-			...actor.indeterminateBonuses.filter((b) => b.target === rollTarget),
-			...toolBonuses.indeterminate,
-			...extraBonusLists.indeterminate,
-		],
-		[actor.indeterminateBonuses, toolBonuses.indeterminate, extraBonusLists.indeterminate]
+		() => [...indeterminate, ...toolBonuses.indeterminate, ...extraBonusLists.indeterminate],
+		[indeterminate, toolBonuses.indeterminate, extraBonusLists.indeterminate]
 	);
 
 	const { bonusFormula, bonusByType } = useMemo(() => {
 		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
 		const selectedBonuses: FeatureBonusWithContext[] = [
-			...actor.appliedBonuses.filter((b) => b.target === rollTarget),
+			...applied,
 			...toolBonuses.applied,
 			...extraBonusLists.applied,
 			...selectedIndeterminateBonuses,
@@ -96,7 +94,7 @@ export function NumericModifierSelector({
 	}, [
 		selectedBonusesState.value,
 		indeterminateBonuses,
-		actor.appliedBonuses,
+		applied,
 		toolBonuses.applied,
 		extraBonusLists.applied,
 		additionalModifiersState.value,

@@ -2,15 +2,14 @@ import { DocumentModificationOptions } from '@league-of-foundry-developers/found
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData';
 import { MergeObjectOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/utils/helpers.mjs';
 import {
-	FullFeatureBonus,
-	FullDynamicListEntry,
 	BonusByType,
 	combineRollComponents,
 	fromBonusesToFormula,
 	isRegainPoolRecharge,
 	FullAura,
+	Size,
 	AuraEffect,
-	FullTriggeredEffect,
+	isRuleApplicable,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -33,18 +32,19 @@ import {
 	PossibleItemType,
 	toComputable,
 	ActiveEffectDocumentConstructorData,
+	DerivedCache,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
-import { calculateDerivedData } from './logic/calculateDerivedData';
+import { calculateDerivedData, DerivedTotals } from './logic/calculateDerivedData';
 import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
 import { createFinalEffectConstructorData } from './logic/createFinalEffectConstructorData';
 import { importNewChildItem } from '../../core/foundry/importNewChildItem';
-import { getAuras } from '../aura/getAuras';
 import { MashupItemEquipment } from '../item/subtypes/equipment/class';
+import { isActorType } from './templates/isActorType';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -62,10 +62,14 @@ const tokenHpColors = {
 };
 
 export class MashupActor extends Actor implements ActorDocument {
-	private isInitialized!: true | undefined; // will be undefined for first initialization
+	private _isInitialized!: true | undefined; // will be undefined for first initialization
 	private prevHealth: number | undefined;
 	override data!: PossibleActorData & { data: ActorDerivedData };
 	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
+
+	get isInitialized() {
+		return this._isInitialized ?? false;
+	}
 
 	/*
 	A few more methods:
@@ -98,6 +102,20 @@ export class MashupActor extends Actor implements ActorDocument {
 		return (this.items.contents as SimpleDocument[]).find(isEpicDestiny);
 	}
 
+	get halfLevel() {
+		return Math.floor(this.data.data.details.level / 2);
+	}
+	get milestones() {
+		return Math.floor((this.data.data.encountersSinceLongRest ?? 0) / 2);
+	}
+	get size(): Size {
+		return isActorType(this, 'pc')
+			? this.appliedRace?.data.data.size ?? 'medium'
+			: isActorType(this, 'monster')
+			? this.data._source.data.size
+			: 'medium';
+	}
+
 	get extraLevels() {
 		return Math.max(1, this.data.data.details.level) - 1;
 	}
@@ -105,139 +123,30 @@ export class MashupActor extends Actor implements ActorDocument {
 		return Math.floor((this.data.data.details.level - 1) / 10);
 	}
 
-	private _appliedAuras: AuraEffect[] | null = null;
-	get appliedAuras(): AuraEffect[] {
-		if (this._appliedAuras === null) {
-			const tokenAndScene = this.getTokenAndScene();
-			if (tokenAndScene) {
-				const [token, scene] = tokenAndScene;
-				this._appliedAuras = getAuras(token, scene);
-			}
-		}
-		return this._appliedAuras ?? [];
+	private _derivedCache: DerivedCache = new DerivedTotals(this);
+	get derivedCache(): DerivedCache {
+		return this._derivedCache;
 	}
 
-	private getTokenAndScene(): [TokenDocument, Scene] | null {
-		if (this.isToken && this.token && this.token.parent) {
-			return [this.token, this.token.parent];
-		}
-
-		if (canvas?.scene) {
-			const token = canvas.scene.tokens.find((t) => t.actor === this);
-			if (token) {
-				return [token, canvas.scene];
-			}
-		}
-
-		return null;
-	}
-
-	private _internalBonuses: FullFeatureBonus[] | null = null;
-	get internalBonuses(): FullFeatureBonus[] {
-		return (
-			this._internalBonuses ??
-			(this._internalBonuses = [
-				...this.effects.contents.flatMap((effect) =>
-					effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: this }, source: effect }))
-				),
-				...this.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
-				...this.data.items.contents.flatMap((item) =>
-					item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: this, item } }))
-				),
-			])
-		);
-	}
-
-	get internalTriggeredEffects(): FullTriggeredEffect[] {
-		return [
-			...this.effects.contents.flatMap((effect) =>
-				effect.allTriggeredEffects().map((trigger) => ({ ...trigger, context: { actor: this }, sources: [effect] }))
-			),
-			...this.data.items.contents.flatMap((item) =>
-				item.allTriggeredEffects().map((effect) => ({ ...effect, context: { actor: this, item } }))
-			),
-		];
-	}
-
-	private _derivedData: ActorDerivedData | null = null;
+	private _derivedData: ActorDerivedData | undefined;
 	get derivedData(): ActorDerivedData {
-		return this._derivedData ?? (this._derivedData = this.calculateDerivedData());
-	}
-
-	get allBonuses(): FullFeatureBonus[] {
-		return [
-			...this.internalBonuses,
-			...this.appliedAuras.flatMap((aura) =>
-				aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: this } }))
-			),
-		];
-	}
-
-	get allTriggeredEffects(): FullTriggeredEffect[] {
-		return [
-			...this.internalTriggeredEffects,
-			...this.appliedAuras.flatMap(
-				(aura) =>
-					aura.triggeredEffects?.map(
-						(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: { actor: this } })
-					) ?? []
-			),
-		];
-	}
-
-	private _appliedBonuses: FullFeatureBonus[] | null = null;
-	get appliedBonuses(): FullFeatureBonus[] {
-		if (!this._appliedBonuses) this.calculateDerivedData();
-		if (!this._appliedBonuses) throw new Error('Cannot access applied bonuses before loading is finished');
-		return this._appliedBonuses;
-	}
-	private _indeterminateBonuses: FullFeatureBonus[] | null = null;
-	get indeterminateBonuses(): FullFeatureBonus[] {
-		if (!this._indeterminateBonuses) this.calculateDerivedData();
-		if (!this._indeterminateBonuses) throw new Error('Cannot access indeterminate bonuses before loading is finished');
-		return this._indeterminateBonuses;
-	}
-
-	get dynamicListResult(): FullDynamicListEntry[] {
-		return [
-			...this.data._source.data.dynamicList.map((bonus) => ({ ...bonus, source: this, context: { actor: this } })),
-			...this.data.items.contents.flatMap((item) =>
-				item.allDynamicList().map((entry) => ({ ...entry, context: { actor: this, item } }))
-			),
-		];
-	}
-
-	private _allDynamicListResult: FullDynamicListEntry[] | null = null;
-	get allDynamicListResult(): FullDynamicListEntry[] {
-		return this._allDynamicListResult ?? (this._allDynamicListResult = this.dynamicListResult);
-	}
-
-	private _appliedDynamicList: FullDynamicListEntry[] | null = null;
-	get appliedDynamicList(): FullDynamicListEntry[] {
-		if (!this._appliedDynamicList) this.calculateDerivedData();
-		if (!this._appliedDynamicList) throw new Error('Cannot access applied DynamicList before loading is finished');
-		return this._appliedDynamicList;
-	}
-	private _indeterminateDynamicList: FullDynamicListEntry[] | null = null;
-	get indeterminateDynamicList(): FullDynamicListEntry[] {
-		if (!this._indeterminateDynamicList) this.calculateDerivedData();
-		if (!this._indeterminateDynamicList)
-			throw new Error('Cannot access indeterminate DynamicList before loading is finished');
-		return this._indeterminateDynamicList;
+		if (this._derivedData === undefined) {
+			throw new Error('potentially recursive - should not happen');
+		}
+		return this._derivedData;
 	}
 
 	protected override _initialize(): void {
 		super._initialize();
-		this.isInitialized = true;
+		this._isInitialized = true;
 	}
 
 	override prepareDerivedData() {
-		this._internalBonuses = null;
-		this._derivedData = null;
-		this._appliedBonuses = null;
-		this._indeterminateBonuses = null;
-		this._appliedAuras = null;
-		const derived = this.calculateDerivedData();
+		this._derivedCache = new DerivedTotals(this);
+		this._derivedData = undefined;
+		const derived = calculateDerivedData.call(this);
+		this._derivedData = derived;
+
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
 		if (isGame(game) ? game.user?.isGM : this.isOwner) {
 			updateBloodied.call(this);
@@ -245,8 +154,8 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	updateAuras() {
-		this._appliedAuras = null;
-		const derived = this.calculateDerivedData();
+		this._derivedCache = new DerivedTotals(this);
+		const derived = calculateDerivedData.call(this);
 		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
 		if (this.sheet?.rendered) {
 			this.sheet.render(true);
@@ -319,20 +228,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
 	}
 
-	private calculateDerivedData(internalOnly: boolean | undefined = undefined) {
-		return calculateDerivedData.call(
-			this,
-			internalOnly ?? !this.isInitialized,
-			({ derivedData, appliedBonuses, indeterminateBonuses, appliedDynamicList, indeterminateDynamicList }) => {
-				this._derivedData = derivedData;
-				this._appliedBonuses = appliedBonuses;
-				this._indeterminateBonuses = indeterminateBonuses;
-				this._appliedDynamicList = appliedDynamicList;
-				this._indeterminateDynamicList = indeterminateDynamicList;
-			}
-		);
-	}
-
 	allPowers(includeNestedPowers = true) {
 		return this.items.contents.flatMap((item: ItemDocument) =>
 			isPower(item) && (!includeNestedPowers || (item.data.data.effects?.length ?? 0) > 0)
@@ -341,12 +236,24 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
-	get allAuras(): FullAura[] {
-		return this.items.contents.flatMap((item: ItemDocument) =>
-			item
-				.allGrantedAuras()
-				.map((aura): FullAura => ({ ...aura, sources: [this, ...aura.sources], context: { actor: this, item } }))
-		);
+	get hasAuras() {
+		return this.items.contents.flatMap((item: ItemDocument) => item.allGrantedAuras()).some(Boolean);
+	}
+
+	getAuras(predicate: (aura: AuraEffect) => boolean): FullAura[] {
+		return this.items.contents
+			.flatMap((item: ItemDocument) =>
+				item.allGrantedAuras().map((aura) => ({ ...aura, context: { actor: this, item } }))
+			)
+			.filter(predicate)
+			.filter((aura) => aura.condition === null || isRuleApplicable(aura.condition, aura.context, {}))
+			.map(({ range, ...aura }): FullAura => {
+				return {
+					...aura,
+					range: typeof range === 'string' ? this.evaluateAmount(range) : range,
+					sources: [this, ...aura.sources],
+				};
+			});
 	}
 
 	/** When adding a new embedded document, clean up others of the same type */
@@ -433,7 +340,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			return;
 		}
 
-		const effectiveAmount = amount + (addHealingSurgeValue ? health.surgesValue : 0);
+		const effectiveAmount = amount + (addHealingSurgeValue ? this.derivedCache.bonuses.getValue('surges-value') : 0);
 
 		const data: Partial<
 			Record<'data.health.hp.value' | 'data.health.temporaryHp' | 'data.health.surgesRemaining.value', number>
@@ -458,7 +365,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		const pools = power.data.data.usedPools;
 		if (pools && pools.some((poolName) => this.isPoolDrained(poolName))) return false;
 
-		if (power.data.data.usage === 'item' && this.data.data.magicItemUse.used >= this.data.data.magicItemUse.usesPerDay)
+		if (
+			power.data.data.usage === 'item' &&
+			this.data.data.magicItemUse.used >= this.derivedCache.bonuses.getValue('magic-item-uses')
+		)
 			return false;
 
 		if (
@@ -513,7 +423,7 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	isPoolDrained(poolName: string) {
 		const pool = this.data.data.pools.find((p) => p.name === poolName);
-		const poolMaxes = this.derivedData.poolLimits.find((p) => p.name === poolName);
+		const poolMaxes = this.derivedCache.pools.getValue(poolName);
 		if (!pool || !poolMaxes) return true;
 		if (pool.value === 0) return true;
 		if (poolMaxes.maxBetweenRest !== null && pool.usedSinceRest >= poolMaxes.maxBetweenRest) return true;
@@ -525,7 +435,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (healingSurges > health.surgesRemaining.value) return false;
 
 		const effectiveHealingSurgeValue = combineRollComponents(
-			this.derivedData.health.surgesValue,
+			this.derivedCache.bonuses.getValue('surges-value'),
 			fromBonusesToFormula(healingBonusByType)
 		);
 
@@ -591,7 +501,8 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	updatePoolRests(restType: 'shortRest' | 'longRest', data: Record<string, unknown>) {
 		const poolsResult = deepClone(this.data.data.pools ?? []);
-		for (const pool of this.derivedData.poolLimits) {
+		for (const poolName of this.derivedCache.pools.getPools()) {
+			const pool = this.derivedCache.pools.getValue(poolName);
 			let poolValue = poolsResult.find((p) => p.name === pool.name);
 			if (poolValue === undefined) {
 				poolValue = { name: pool.name, value: pool.max ?? 0, usedSinceRest: 0 };

@@ -1,217 +1,184 @@
-import noop from 'lodash/fp/noop';
-import { toObject } from '@foundryvtt-dndmashup/core';
 import {
-	abilities,
-	AbilityBonus,
-	byTarget,
-	combinePoolLimits,
-	damageTypes,
-	DefenseBonus,
-	defenses,
 	FullDynamicListEntry,
 	FullFeatureBonus,
 	filterConditions,
 	NumericBonusTarget,
-	numericBonusTargets,
-	Resistance,
-	ResolvedPoolBonus,
 	ruleResultIndeterminate,
 	sumFinalBonuses,
-	PoolBonus,
 	SourcedPoolBonus,
+	SourcedPoolLimits,
+	DynamicListTarget,
+	FullTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDerivedData, DerivedCache, DerivedCacheType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
-import { uniq } from 'lodash/fp';
 import { pcStandardBonuses, monsterStandardBonuses } from './standardBonuses';
-import { isActorType } from '../templates/isActorType';
+import {
+	getAllBonuses,
+	getAllLists,
+	getBaseGrantedPools,
+	getBonuses,
+	getList,
+	getPoolBonuses,
+	getPoolResult,
+	getTriggeredEffects,
+} from './getBonuses';
 
-const standardPoolBonus: PoolBonus[] = [];
+type DerivedCacheEntry<TResult, TModifier> = { value: TResult; applied: TModifier[]; indeterminate: TModifier[] };
 
-type NonAggregateNumericBonus = Exclude<NumericBonusTarget, 'all-resistance' | `${string}-vulnerability`>;
-function isNotAggregate(numericBonus: NumericBonusTarget): numericBonus is NonAggregateNumericBonus {
-	return numericBonus !== 'all-resistance' && !numericBonus.endsWith('-vulnerability');
+type DerivedBonusCache = DerivedCache['bonuses'];
+type DerivedPoolsCache = DerivedCache['pools'];
+type DerivedListsCache = DerivedCache['lists'];
+type DerivedTriggersCache = DerivedCache['triggeredEffects'];
+
+abstract class AggregateCache<TTarget extends string | symbol, TResult, TModifier>
+	implements DerivedCacheType<TTarget, TResult, TModifier>
+{
+	constructor(protected readonly actor: MashupActor) {}
+
+	private readonly cache: Partial<Record<TTarget, DerivedCacheEntry<TResult, TModifier>>> = {};
+
+	getValue(target: TTarget): TResult {
+		return this.getCache(target).value;
+	}
+
+	getApplied(target: TTarget) {
+		return this.getCache(target).applied;
+	}
+
+	getIndeterminate(target: TTarget) {
+		return this.getCache(target).indeterminate;
+	}
+
+	abstract getAll(): TModifier[];
+
+	private getCache(target: TTarget): DerivedCacheEntry<TResult, TModifier> {
+		let cached = this.cache[target];
+		if (cached) return cached;
+		cached = this.buildCache(target);
+		this.cache[target] = cached;
+		return cached;
+	}
+
+	protected abstract buildCache(target: TTarget): DerivedCacheEntry<TResult, TModifier>;
 }
-const setters: Record<NonAggregateNumericBonus, (data: ActorDerivedData, value: number) => void> = {
-	...toObject(
-		abilities,
-		(abil): AbilityBonus => `ability-${abil}`,
-		(abil) => (data, value) => (data.abilities[abil].total = value)
-	),
-	...toObject(
-		defenses,
-		(def): DefenseBonus => `defense-${def}`,
-		(def) => (data, value) => (data.defenses[def] = value)
-	),
-	...toObject(
-		damageTypes,
-		(dmg): Resistance => `${dmg}-resistance`,
-		(dmg) => (data, value) => (data.damageTypes[dmg].resistance = value)
-	),
-	maxHp: (data, value) => (data.health.hp.max = value),
-	'surges-max': (data, value) => (data.health.surgesRemaining.max = value),
-	'surges-value': (data, value) => (data.health.surgesValue = value),
-	speed: (data, value) => (data.speed = value),
-	initiative: (data, value) => (data.initiative = value),
-	'magic-item-uses': (data, value) => (data.magicItemUse.usesPerDay = value),
 
-	check: noop,
-	'attack-roll': noop,
-	damage: noop,
-	'critical-damage': noop,
-	healing: noop,
-	'saving-throw': noop,
+class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureBonus> implements DerivedBonusCache {
+	private get standardBonuses() {
+		return this.actor.type === 'pc' ? pcStandardBonuses : monsterStandardBonuses;
+	}
+
+	override getAll() {
+		return getAllBonuses(this.actor);
+	}
+
+	protected override buildCache(target: NumericBonusTarget): DerivedCacheEntry<number, FullFeatureBonus> {
+		const bonuses: FullFeatureBonus[] = [
+			...this.standardBonuses
+				.filter((f) => f.target === target)
+				.map((bonus) => ({
+					...bonus,
+					source: this.actor,
+					context: { actor: this.actor },
+				})),
+			...getBonuses(this.actor, target),
+		];
+		const filtered = filterConditions(bonuses, {}, true);
+		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
+		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
+
+		const evaluatedBonuses = evaluateAndRoll(applied);
+		const value = sumFinalBonuses(evaluatedBonuses);
+		return {
+			value,
+			applied,
+			indeterminate,
+		};
+	}
+}
+
+class ListsCache
+	extends AggregateCache<DynamicListTarget, string[], FullDynamicListEntry>
+	implements DerivedListsCache
+{
+	override getAll() {
+		return getAllLists(this.actor);
+	}
+
+	protected override buildCache(target: DynamicListTarget) {
+		const bonuses: FullDynamicListEntry[] = getList(this.actor, target);
+		const filtered = filterConditions(bonuses, {}, true);
+		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
+		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
+
+		return {
+			value: applied.map((entry) => entry.entry),
+			applied,
+			indeterminate,
+		};
+	}
+}
+
+const emptyPool: SourcedPoolLimits = {
+	name: '',
+	max: 0,
+	longRest: null,
+	shortRest: null,
+	maxBetweenRest: null,
+	source: [],
 };
 
-export function calculateDerivedData(
-	this: MashupActor,
-	internalOnly: boolean,
-	setPrivates: (data: {
-		derivedData: ActorDerivedData;
-		appliedBonuses: FullFeatureBonus[];
-		indeterminateBonuses: FullFeatureBonus[];
-		appliedDynamicList: FullDynamicListEntry[];
-		indeterminateDynamicList: FullDynamicListEntry[];
-	}) => void
-): ActorDerivedData {
-	// TODO: this would be better as a proxy object
-	const allBonuses = [
-		...(this.type === 'pc' ? pcStandardBonuses : monsterStandardBonuses).map((bonus) => ({
-			...bonus,
-			source: this,
-			context: { actor: this },
-		})),
-		...(internalOnly ? this.internalBonuses : this.allBonuses),
-	];
+class PoolsCache extends AggregateCache<string, SourcedPoolLimits, SourcedPoolBonus> implements DerivedPoolsCache {
+	getPools(): string[] {
+		return this.baseGrantedPools.map((p) => p.name);
+	}
 
-	const resultData: ActorDerivedData = {
-		abilities: toObject(
-			abilities,
-			(abil) => abil,
-			() => ({ total: 0 })
-		),
+	override getAll() {
+		return this.actor.items.contents.flatMap<SourcedPoolBonus>((item) => item.allGrantedPoolBonuses());
+	}
+
+	protected override buildCache(target: string) {
+		const pool = getBaseGrantedPools(this.actor).find((p) => p.name === target) ?? { ...emptyPool, name: target };
+		const bonuses: SourcedPoolBonus[] = getPoolBonuses(this.actor, target);
+
+		return {
+			value: getPoolResult(this.actor, pool, bonuses),
+			applied: bonuses,
+			indeterminate: [],
+		};
+	}
+
+	private _baseGrantedPools: SourcedPoolLimits[] | null = null;
+	get baseGrantedPools(): SourcedPoolLimits[] {
+		if (this._baseGrantedPools === null) this._baseGrantedPools = getBaseGrantedPools(this.actor);
+		return this._baseGrantedPools;
+	}
+}
+
+class TriggersCache implements DerivedTriggersCache {
+	constructor(readonly actor: MashupActor) {}
+
+	getAll(): FullTriggeredEffect[] {
+		return getTriggeredEffects(this.actor);
+	}
+}
+
+export class DerivedTotals implements DerivedCache {
+	constructor(private actor: MashupActor) {}
+
+	readonly bonuses = new BonusCache(this.actor);
+	readonly lists = new ListsCache(this.actor);
+	readonly pools = new PoolsCache(this.actor);
+	readonly triggeredEffects = new TriggersCache(this.actor);
+}
+
+export function calculateDerivedData(this: MashupActor): ActorDerivedData {
+	return {
 		health: {
-			hp: { max: 0 },
-			bloodied: 0,
-			surgesRemaining: {
-				max: 0,
-			},
-			surgesValue: 0,
+			hp: { max: this.derivedCache.bonuses.getValue('maxHp') },
+			surgesRemaining: { max: this.derivedCache.bonuses.getValue('surges-max') },
 		},
-		defenses: toObject(
-			defenses,
-			(def) => def,
-			() => 0
-		),
-		damageTypes: toObject(
-			damageTypes,
-			(dmg) => dmg,
-			() => ({ resistance: 0, vulnerability: 0 })
-		),
-		speed: 0,
-		initiative: 0,
-		halfLevel: Math.floor(this.data.data.details.level / 2),
-		size: isActorType(this, 'pc')
-			? this.appliedRace?.data.data.size ?? 'medium'
-			: isActorType(this, 'monster')
-			? this.data._source.data.size
-			: 'medium',
-		poolLimits: [],
-		milestones: Math.floor((this.data.data.encountersSinceLongRest ?? 0) / 2),
-		magicItemUse: {
-			usesPerDay: 0,
-		},
+		initiative: this.derivedCache.bonuses.getValue('initiative'),
 	};
-	const appliedBonuses: FullFeatureBonus[] = [];
-	const indeterminateBonuses: FullFeatureBonus[] = [];
-	setPrivates({
-		derivedData: resultData,
-		appliedBonuses: appliedBonuses,
-		indeterminateBonuses: indeterminateBonuses,
-		appliedDynamicList: [],
-		indeterminateDynamicList: [],
-	});
-	const groupedByTarget = byTarget(allBonuses);
-
-	numericBonusTargets.filter(isNotAggregate).forEach((target) => {
-		const filtered = filterConditions(groupedByTarget[target] ?? [], {}, true);
-		const final = totalFiltered(filtered);
-		setters[target](resultData, final);
-	});
-	damageTypes.forEach((damageType) => {
-		const finalResistances = totalFiltered(
-			filterConditions(
-				[...(groupedByTarget[`${damageType}-resistance`] ?? []), ...(groupedByTarget[`all-resistance`] ?? [])],
-				{},
-				true
-			)
-		);
-		const finalVulnerabilities = totalFiltered(
-			filterConditions(
-				[...(groupedByTarget[`${damageType}-vulnerability`] ?? []), ...(groupedByTarget[`all-vulnerability`] ?? [])],
-				{},
-				true
-			)
-		);
-
-		const final = finalResistances - finalVulnerabilities;
-		setters[`${damageType}-resistance`](resultData, final);
-	});
-
-	function totalFiltered(filtered: (readonly [FullFeatureBonus, boolean | typeof ruleResultIndeterminate])[]) {
-		indeterminateBonuses.push(
-			...filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus)
-		);
-		const applicable = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
-		appliedBonuses.push(...applicable);
-		const evaluatedBonuses = evaluateAndRoll(applicable);
-		return sumFinalBonuses(evaluatedBonuses);
-	}
-
-	this.subActorFunctions.prepare(resultData, this);
-
-	resultData.health.bloodied = Math.floor(resultData.health.hp.max / 2);
-	resultData.health.surgesValue = Math.floor(resultData.health.hp.max / 4);
-
-	const filteredLists = filterConditions(this.allDynamicListResult, {}, true);
-
-	setPrivates({
-		derivedData: resultData,
-		appliedBonuses: appliedBonuses,
-		indeterminateBonuses: indeterminateBonuses,
-		appliedDynamicList: filteredLists.filter(([, result]) => result === true).map(([bonus]) => bonus),
-		indeterminateDynamicList: filteredLists
-			.filter(([, result]) => result === ruleResultIndeterminate)
-			.map(([bonus]) => bonus),
-	});
-
-	const pools = this.items.contents.flatMap((item) => item.allGrantedPools());
-	this.items.contents
-		.flatMap<PoolBonus | SourcedPoolBonus>((item) => [...standardPoolBonus, ...item.allGrantedPoolBonuses()])
-		.reduce((prev, next) => {
-			const idx = prev.findIndex((pool) => pool.name === next.name);
-			if (idx === -1) console.warn(`Unknown pool: ${next.name}`);
-			else {
-				const resolved: ResolvedPoolBonus = {
-					...next,
-					amount:
-						typeof next.amount === 'number'
-							? next.amount
-							: new Roll(next.amount, { actor: this }).roll({ async: false })._total,
-				};
-				prev[idx] = {
-					...combinePoolLimits(prev[idx], resolved),
-					source: 'source' in next ? uniq([...prev[idx].source, next.source]) : prev[idx].source,
-				};
-			}
-			return prev;
-		}, pools);
-	resultData.poolLimits = pools;
-
-	if (isActorType(this, 'monster')) {
-		resultData.size = this.data._source.data.size;
-	}
-
-	return resultData;
 }

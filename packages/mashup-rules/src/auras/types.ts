@@ -7,7 +7,7 @@ import { DispositionType } from './filterDisposition';
 export type Aura = {
 	dispositionType: DispositionType | null;
 	excludeSelf: boolean;
-	range: number;
+	range: number | string;
 	bonuses: FeatureBonus[];
 	condition: SimpleConditionRule;
 	triggeredEffects: TriggeredEffect[];
@@ -17,7 +17,10 @@ export type SourcedAura = Aura & {
 	sources: Source[];
 };
 
-export type FullAura = AuraEffect & Aura;
+export type FullAura = AuraEffect &
+	Aura & {
+		range: number;
+	};
 
 export type AuraEffect = {
 	bonuses: FeatureBonus[];

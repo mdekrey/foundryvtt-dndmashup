@@ -41,9 +41,11 @@ export function DynamicListSelector({
 		return { indeterminate, applied };
 	}, [tool]);
 
+	const applied = actor.derivedCache.lists.getApplied(listType);
+	const indeterminate = actor.derivedCache.lists.getIndeterminate(listType);
 	const indeterminateDynamicList = useMemo(
-		() => [...actor.indeterminateDynamicList.filter((b) => b.target === listType), ...toolDynamicList.indeterminate],
-		[actor.indeterminateDynamicList, toolDynamicList.indeterminate]
+		() => [...indeterminate, ...toolDynamicList.indeterminate],
+		[indeterminate, toolDynamicList.indeterminate]
 	);
 
 	const currentDynamicList = useMemo(() => {
@@ -51,12 +53,12 @@ export function DynamicListSelector({
 			(_, index) => selectedDynamicListState.value[index]
 		);
 		const selectedDynamicList: DynamicListEntryWithContext[] = [
-			...actor.appliedDynamicList.filter((b) => b.target === listType),
+			...applied,
 			...toolDynamicList.applied,
 			...selectedIndeterminateDynamicList,
 		];
 		return selectedDynamicList.map((e) => e.entry);
-	}, [selectedDynamicListState.value, indeterminateDynamicList, actor.appliedDynamicList, toolDynamicList.applied]);
+	}, [selectedDynamicListState.value, indeterminateDynamicList, applied, toolDynamicList.applied]);
 
 	useEffect(() => {
 		onListChange(currentDynamicList);

@@ -18,11 +18,7 @@ export function getToolsForPower(actor: ActorDocument, power: PowerDocument) {
 			? (intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
 			: null) ?? null;
 	const isCorrectTool: (heldItem: EquipmentDocument) => heldItem is EquipmentDocument<'weapon' | 'implement'> =
-		toolType === 'weapon'
-			? isWeapon
-			: isImplement(
-					actor.allDynamicListResult.filter((list) => list.target === 'implements').map((list) => list.entry)
-			  );
+		toolType === 'weapon' ? isWeapon : isImplement(actor.derivedCache.lists.getValue('implements'));
 	const usesTool = toolType !== null;
 	if (!usesTool) return undefined;
 	return (actor.items.contents as ItemDocument[])

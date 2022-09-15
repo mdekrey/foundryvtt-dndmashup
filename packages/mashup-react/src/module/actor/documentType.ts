@@ -1,9 +1,14 @@
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	BonusByType,
-	DynamicListEntryWithContext,
-	FeatureBonusWithContext,
-	SourcedAura,
+	DynamicListTarget,
+	FullDynamicListEntry,
+	FullFeatureBonus,
+	FullTriggeredEffect,
+	NumericBonusTarget,
+	Size,
+	SourcedPoolBonus,
+	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams } from '../active-effect/types';
 import { PossibleItemType } from '../item';
@@ -29,18 +34,37 @@ export type HealingOptions = {
 	additionalUpdates?: Record<string, unknown>;
 };
 
+export type DerivedCacheType<TTarget, TResult, TModifier> = {
+	getValue(target: TTarget): TResult;
+	getApplied(target: TTarget): TModifier[];
+	getIndeterminate(target: TTarget): TModifier[];
+
+	// inspection only for display on character sheet
+	getAll(): TModifier[];
+};
+
+export type DerivedCache = {
+	bonuses: DerivedCacheType<NumericBonusTarget, number, FullFeatureBonus>;
+
+	pools: {
+		getPools(): string[];
+	} & DerivedCacheType<string, SourcedPoolLimits, SourcedPoolBonus>;
+
+	lists: DerivedCacheType<DynamicListTarget, string[], FullDynamicListEntry>;
+
+	triggeredEffects: {
+		getAll(): FullTriggeredEffect[];
+	};
+};
+
 export type ActorDocument<T extends PossibleActorType = PossibleActorType> = SimpleDocument<ActorDataSource<T>> & {
 	readonly derivedData: ActorDerivedData<T>;
 	readonly token: null | TokenDocument;
 
-	get allBonuses(): FeatureBonusWithContext[];
-	get appliedBonuses(): FeatureBonusWithContext[];
-	get indeterminateBonuses(): FeatureBonusWithContext[];
-
-	get allDynamicListResult(): DynamicListEntryWithContext[];
-	get appliedDynamicList(): DynamicListEntryWithContext[];
-	get indeterminateDynamicList(): DynamicListEntryWithContext[];
-	get allAuras(): SourcedAura[];
+	get derivedCache(): DerivedCache;
+	get halfLevel(): number;
+	get milestones(): number;
+	get size(): Size;
 
 	allPowers(includeNestedPowers?: boolean): PowerDocument[];
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot): void;

@@ -30,7 +30,7 @@ export function CombatStats({
 				/>
 			</div>
 			<div>
-				<span className="font-bold">{data.speed} sq.</span> Speed
+				<span className="font-bold">{actor.derivedCache.bonuses.getValue('speed')} sq.</span> Speed
 			</div>
 			<div>
 				<SavingThrowSection actor={actor} />
@@ -39,7 +39,7 @@ export function CombatStats({
 				<DeathSavingThrowSection actor={actor} {...deathSavingThrowLens.apply(dataState)} />
 			</div>
 			<div className="flex flex-row group items-center">
-				<EncountersSection milestones={actor.derivedData.milestones} {...encountersSinceLongRest.apply(dataState)} />
+				<EncountersSection milestones={actor.milestones} {...encountersSinceLongRest.apply(dataState)} />
 			</div>
 		</div>
 	);
