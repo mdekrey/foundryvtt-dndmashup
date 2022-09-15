@@ -54,7 +54,7 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 
 	return [
 		...internal,
-		...appliedAuraEffect(actor, (aura) => aura.bonuses.filter((b) => b.target === target).length > 1).flatMap((aura) =>
+		...appliedAuraEffect(actor, (aura) => aura.bonuses.filter((b) => b.target === target).length > 0).flatMap((aura) =>
 			aura.bonuses
 				.filter((b) => b.target === target)
 				.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: actor } }))

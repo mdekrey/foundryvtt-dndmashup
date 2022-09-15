@@ -142,24 +142,23 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	override prepareDerivedData() {
-		this._derivedCache = new DerivedTotals(this);
-		this._derivedData = undefined;
-		const derived = calculateDerivedData.call(this);
-		this._derivedData = derived;
-
-		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
+		this.recalculateDerived();
 		if (isGame(game) ? game.user?.isGM : this.isOwner) {
 			updateBloodied.call(this);
 		}
 	}
 
 	updateAuras() {
-		this._derivedCache = new DerivedTotals(this);
-		const derived = calculateDerivedData.call(this);
-		mergeObject(this.data, { data: derived }, { recursive: true, inplace: true });
+		this.recalculateDerived();
 		if (this.sheet?.rendered) {
 			this.sheet.render(true);
 		}
+	}
+
+	private recalculateDerived() {
+		this._derivedCache = new DerivedTotals(this);
+		this._derivedData = calculateDerivedData.call(this);
+		mergeObject(this.data, { data: this._derivedData }, { recursive: true, inplace: true });
 	}
 
 	private handleHealthUpdate() {
