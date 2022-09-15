@@ -75,7 +75,7 @@ export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 
 	return [
 		...internal,
-		...appliedAuraEffect(actor, (aura) => aura.bonuses.length > 1).flatMap((aura) =>
+		...appliedAuraEffect(actor, (aura) => aura.bonuses.length > 0).flatMap((aura) =>
 			aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: actor } }))
 		),
 	];

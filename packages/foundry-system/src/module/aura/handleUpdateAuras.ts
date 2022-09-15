@@ -17,7 +17,7 @@ export function handleUpdateAuras() {
 	});
 
 	Hooks.on<Hooks.UpdateDocument<TokenConstructor>>('updateToken', (arg: TokenDocument) => {
-		if ((arg.actor?.allAuras.length ?? 0) > 0) updateAllTokens(arg.parent);
+		if (arg.actor?.hasAuras) updateAllTokens(arg.parent);
 		else updateToken(arg);
 		// console.log('updateToken', arg);
 	});
@@ -31,7 +31,7 @@ export function handleUpdateAuras() {
 	);
 
 	Hooks.on<Hooks.DeleteDocument<TokenConstructor>>('deleteToken', (arg: TokenDocument) => {
-		if ((arg.actor?.allAuras.length ?? 0) > 0) updateAllTokens(arg.parent);
+		if (arg.actor?.hasAuras) updateAllTokens(arg.parent);
 		// console.log('deleteToken', arg);
 	});
 
@@ -44,7 +44,7 @@ export function handleUpdateAuras() {
 	);
 
 	Hooks.on<Hooks.CreateDocument<TokenConstructor>>('createToken', (arg: TokenDocument) => {
-		if ((arg.actor?.allAuras.length ?? 0) > 0) updateAllTokens(arg.parent);
+		if (arg.actor?.hasAuras) updateAllTokens(arg.parent);
 		else updateToken(arg);
 		// console.log('createMeasuredToken', arg);
 	});

@@ -8,6 +8,8 @@ import {
 	isRegainPoolRecharge,
 	FullAura,
 	Size,
+	AuraEffect,
+	isRuleApplicable,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -234,18 +236,24 @@ export class MashupActor extends Actor implements ActorDocument {
 		);
 	}
 
-	get allAuras(): FullAura[] {
-		return this.items.contents.flatMap((item: ItemDocument) =>
-			item.allGrantedAuras().map(({ range, ...aura }): FullAura => {
-				const computedRange = typeof range === 'string' ? Number(range) : range; // TODO - evaluate instead of parse
+	get hasAuras() {
+		return this.items.contents.flatMap((item: ItemDocument) => item.allGrantedAuras()).some(Boolean);
+	}
+
+	getAuras(predicate: (aura: AuraEffect) => boolean): FullAura[] {
+		return this.items.contents
+			.flatMap((item: ItemDocument) =>
+				item.allGrantedAuras().map((aura) => ({ ...aura, context: { actor: this, item } }))
+			)
+			.filter(predicate)
+			.filter((aura) => aura.condition === null || isRuleApplicable(aura.condition, aura.context, {}))
+			.map(({ range, ...aura }): FullAura => {
 				return {
 					...aura,
-					range: isNaN(computedRange) ? 0 : computedRange,
+					range: typeof range === 'string' ? this.evaluateAmount(range) : range,
 					sources: [this, ...aura.sources],
-					context: { actor: this, item },
 				};
-			})
-		);
+			});
 	}
 
 	/** When adding a new embedded document, clean up others of the same type */
