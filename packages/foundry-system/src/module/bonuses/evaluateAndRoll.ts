@@ -3,6 +3,7 @@ import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mash
 
 const max = (v: number[]) => Math.max(...v);
 
+// TODO: don't evaluate the dice... somehow.
 export function evaluateAndRoll(
 	bonusesWithContext: FeatureBonusWithContext[],
 	initialBonuses?: BonusByType
