@@ -5,17 +5,22 @@ import { Source } from '../sources/types';
 import { DispositionType } from './filterDisposition';
 
 export type Aura = {
+	// conditions and filters
 	dispositionType: DispositionType | null;
 	excludeSelf: boolean;
 	range: number | string;
-	bonuses: FeatureBonus[];
 	condition: SimpleConditionRule;
+
+	// effects
+	bonuses: FeatureBonus[];
 	triggeredEffects: TriggeredEffect[];
 };
 
 export type SourcedAura = Aura & {
 	sources: Source[];
 };
+
+export type UnappliedAura = AuraEffect & Aura;
 
 export type FullAura = AuraEffect &
 	Aura & {

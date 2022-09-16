@@ -1,3 +1,4 @@
+import { Aura } from '../auras';
 import { FeatureBonus } from '../bonuses/types';
 import { ConditionRuleContext, SimpleConditionRule } from '../conditions/types';
 import { Source } from '../sources';
@@ -45,6 +46,7 @@ export type ActiveEffectTemplate = {
 	image: string | null;
 	duration: TemplateEffectDurationInfo;
 	bonuses: FeatureBonus[];
+	auras: Aura[];
 	afterEffect: ActiveEffectTemplate | null;
 	afterFailedSave: ActiveEffectTemplate | null;
 

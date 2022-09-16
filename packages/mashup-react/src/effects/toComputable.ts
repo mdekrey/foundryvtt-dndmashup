@@ -2,6 +2,7 @@ import { ActorDocument } from '../module/actor';
 import { ActiveEffectDocumentConstructorParams, ComputableEffectDurationInfo } from '../module/active-effect/types';
 import {
 	ActiveEffectTemplate,
+	Aura,
 	EffectDurationType,
 	FeatureBonus,
 	TemplateEffectDurationInfo,
@@ -36,6 +37,9 @@ export function toComputable(
 	const bonuses = template.bonuses.map(
 		({ amount, ...bonus }): FeatureBonus => ({ amount: caster.evaluateAmount(amount), ...bonus })
 	);
+	const auras = (template.auras ?? []).map(
+		({ ...aura }): Aura => ({ ...aura }) // TODO - apply calculations
+	);
 
 	const afterEffect = template.afterEffect ? toComputable(template.afterEffect, caster, image) : undefined;
 	const afterFailedSave = template.afterFailedSave ? toComputable(template.afterFailedSave, caster, image) : undefined;
@@ -51,6 +55,7 @@ export function toComputable(
 				mashup: {
 					bonuses,
 					triggers: template.triggeredEffects,
+					auras,
 					afterEffect,
 					afterFailedSave,
 				},

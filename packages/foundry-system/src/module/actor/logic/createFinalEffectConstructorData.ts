@@ -18,6 +18,7 @@ export function createFinalEffectConstructorData(
 		result.flags.mashup ??= {};
 		result.flags.mashup.bonuses = [...(result.flags.mashup.bonuses ?? []), ...(effect.flags.mashup?.bonuses ?? [])];
 		result.flags.mashup.triggers = [...(result.flags.mashup.triggers ?? []), ...(effect.flags.mashup?.triggers ?? [])];
+		result.flags.mashup.auras = [...(result.flags.mashup.auras ?? []), ...(effect.flags.mashup?.auras ?? [])];
 	} else {
 		result = deepClone(effect);
 		result.flags ??= {};

@@ -1,5 +1,6 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import {
+	Aura,
 	EffectDurationInfo,
 	EffectDurationType,
 	EffectDurationTypeData,
@@ -27,6 +28,7 @@ export type ActiveEffectFlags = {
 	mashup?: {
 		bonuses?: FeatureBonus[];
 		triggers?: TriggeredEffect[];
+		auras?: Aura[];
 		afterEffect?: ActiveEffectDocumentConstructorParams;
 		afterFailedSave?: ActiveEffectDocumentConstructorParams;
 		effectDuration?: EffectDurationInfo;

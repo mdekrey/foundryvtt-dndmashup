@@ -49,6 +49,8 @@ export function AurasEditor({
 				bonuses: [],
 				triggeredEffects: [],
 			});
+			console.log(draft);
+			return draft;
 		});
 	}
 
@@ -103,7 +105,7 @@ export function AurasEditor({
 								'border-b-2 border-transparent'
 							)}>
 							<td className="text-center" colSpan={6}>
-								No bonuses
+								No auras
 							</td>
 						</tr>
 					) : null}

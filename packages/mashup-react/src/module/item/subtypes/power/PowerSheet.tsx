@@ -12,11 +12,13 @@ import { FeaturesList } from '../../components/FeaturesList';
 export function PowerSheet({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
 	const isNew = useRef(item.data.data.flavorText === '' && item.data.data.effects.length === 0);
-	const [activeTab, setActiveTab] = useState(isNew.current ? 'editor' : 'preview');
+	const [activeTab, setActiveTab] = useState(
+		item.items.contents.length !== 0 ? 'sub-powers' : isNew.current ? 'editor' : 'preview'
+	);
 
 	return (
 		<>
-			{isNew.current ? (
+			{isNew.current && item.items.contents.length === 0 ? (
 				<PowerEditor itemState={documentState} />
 			) : (
 				<Tabs.Controlled activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -38,7 +40,6 @@ export function PowerSheet({ item }: { item: PowerDocument }) {
 						<Tabs.Tab tabName="sub-powers">
 							<FeaturesList items={item.items.contents} />
 						</Tabs.Tab>
-						<Tabs.Tab tabName="templates">{/* <FeaturesList item={item} /> */}</Tabs.Tab>
 
 						<Tabs.Tab tabName="pools">
 							<UsePoolsEditor pools={usedPoolsLens.apply(documentState)} />

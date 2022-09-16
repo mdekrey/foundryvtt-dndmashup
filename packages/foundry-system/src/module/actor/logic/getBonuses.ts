@@ -96,7 +96,7 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 	return [
 		...internal,
 		// TODO: auras grant list entries
-		// ...appliedAuraEffect(actor, (aura) => aura.bonuses.filter((b) => b.target === target).length > 1).flatMap((aura) =>
+		// ...appliedAuraEffect(actor, (aura) => aura.bonuses.filter((b) => b.target === target).length > 0).flatMap((aura) =>
 		// 	aura.bonuses
 		// 		.filter((b) => b.target === target)
 		// 		.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: actor } }))
@@ -111,7 +111,7 @@ export function getAllLists(actor: MashupActor): FullDynamicListEntry[] {
 			item.allDynamicList().map((entry) => ({ ...entry, context: { actor: actor, item } }))
 		),
 		// TODO: auras grant list entries
-		// ...appliedAuraEffect(actor, (aura) => aura..length > 1)
+		// ...appliedAuraEffect(actor, (aura) => aura..length > 0)
 	];
 }
 
@@ -155,7 +155,7 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 
 	return [
 		...internal,
-		...appliedAuraEffect(actor, (aura) => aura.triggeredEffects.length > 1).flatMap((aura) =>
+		...appliedAuraEffect(actor, (aura) => aura.triggeredEffects.length > 0).flatMap((aura) =>
 			aura.triggeredEffects.map(
 				(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: { actor: actor } })
 			)

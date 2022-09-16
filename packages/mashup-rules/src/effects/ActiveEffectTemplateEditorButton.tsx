@@ -43,7 +43,7 @@ export function ActiveEffectTemplateEditorButton({
 				title={title}
 				isOpen={editingEffect}
 				onClose={() => setEditingEffect(false)}
-				options={{ resizable: true, width: 400 }}>
+				options={{ resizable: true, width: 750 }}>
 				<div className="grid grid-cols-1 min-h-64">
 					<p>{description}</p>
 					<ActiveEffectTemplateEditor fallbackImage={fallbackImage} {...activeEffectTemplate} />

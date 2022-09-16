@@ -11,6 +11,7 @@ const defaultActiveEffectTemplate: ActiveEffectTemplate = {
 	afterEffect: null,
 	afterFailedSave: null,
 	triggeredEffects: [],
+	auras: [],
 };
 export const activeEffectTemplateDefaultLens = Lens.identity<ActiveEffectTemplate | null>().default(
 	defaultActiveEffectTemplate,
@@ -21,6 +22,7 @@ export const activeEffectTemplateDefaultLens = Lens.identity<ActiveEffectTemplat
 			!value.coreStatusId &&
 			!value.image &&
 			value.bonuses.length === 0 &&
+			value.auras.length === 0 &&
 			value.afterEffect === null &&
 			value.afterFailedSave === null &&
 			value.duration.durationType === 'endOfTurn' &&

@@ -10,6 +10,7 @@ import {
 	Size,
 	AuraEffect,
 	isRuleApplicable,
+	UnappliedAura,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
@@ -241,10 +242,15 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	getAuras(predicate: (aura: AuraEffect) => boolean): FullAura[] {
-		return this.items.contents
-			.flatMap((item: ItemDocument) =>
+		const auras: UnappliedAura[] = [
+			...this.items.contents.flatMap((item: ItemDocument) =>
 				item.allGrantedAuras().map((aura) => ({ ...aura, context: { actor: this, item } }))
-			)
+			),
+			...this.effects.contents.flatMap((effect) =>
+				effect.allAuras().map((aura): UnappliedAura => ({ ...aura, context: { actor: this }, sources: [effect] }))
+			),
+		];
+		return auras
 			.filter(predicate)
 			.filter((aura) => aura.condition === null || isRuleApplicable(aura.condition, aura.context, {}))
 			.map(({ range, ...aura }): FullAura => {

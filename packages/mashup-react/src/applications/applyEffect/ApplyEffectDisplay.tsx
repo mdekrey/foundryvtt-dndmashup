@@ -1,5 +1,10 @@
 import { AppButton, BlockHeader } from '@foundryvtt-dndmashup/components';
-import { bonusToText, EffectDurationType } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	auraToText,
+	bonusToText,
+	EffectDurationType,
+	getTriggeredEffectText,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams, ComputableEffectDurationInfo } from '../../module';
 import { ActorDocument } from '../../module/actor/documentType';
 
@@ -73,6 +78,8 @@ function durationToText(duration: ComputableEffectDurationInfo<EffectDurationTyp
 function EffectPreview({ effectParams }: { effectParams: ActiveEffectDocumentConstructorParams }) {
 	const [{ label, icon, flags = {} }, duration] = effectParams;
 	const bonuses = flags?.mashup?.bonuses ?? [];
+	const triggers = flags?.mashup?.triggers ?? [];
+	const auras = flags?.mashup?.auras ?? [];
 	const afterEffect = flags?.mashup?.afterEffect;
 	const afterFailedSave = flags?.mashup?.afterFailedSave;
 	return (
@@ -90,6 +97,18 @@ function EffectPreview({ effectParams }: { effectParams: ActiveEffectDocumentCon
 
 					{bonuses.map((bonus, index) => (
 						<p key={index}>{bonusToText(bonus)}</p>
+					))}
+
+					<BlockHeader className="theme-green-dark">Triggers</BlockHeader>
+
+					{triggers.map((trigger, index) => (
+						<p key={index}>{getTriggeredEffectText(trigger)}</p>
+					))}
+
+					<BlockHeader className="theme-green-dark">Auras</BlockHeader>
+
+					{auras.map((aura, index) => (
+						<p key={index}>{auraToText(aura)}</p>
 					))}
 				</div>
 			</div>
