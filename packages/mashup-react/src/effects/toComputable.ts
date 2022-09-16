@@ -5,7 +5,9 @@ import {
 	Aura,
 	EffectDurationType,
 	FeatureBonus,
+	InstantaneousEffect,
 	TemplateEffectDurationInfo,
+	TriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
 
 type Convert<T extends EffectDurationType> = (
@@ -34,11 +36,13 @@ export function toComputable(
 		...toComputableDuration[template.duration.durationType](template.duration as any, caster),
 	} as ComputableEffectDurationInfo;
 
-	const bonuses = template.bonuses.map(
-		({ amount, ...bonus }): FeatureBonus => ({ amount: caster.evaluateAmount(amount), ...bonus })
-	);
+	const bonuses = template.bonuses.map(mapBonus);
 	const auras = (template.auras ?? []).map(
-		({ ...aura }): Aura => ({ ...aura }) // TODO - apply calculations
+		({ bonuses, triggeredEffects, ...aura }): Aura => ({
+			...aura,
+			triggeredEffects: triggeredEffects.map(mapTriggeredEffect),
+			bonuses: bonuses.map(mapBonus),
+		})
 	);
 
 	const afterEffect = template.afterEffect ? toComputable(template.afterEffect, caster, image) : undefined;
@@ -54,7 +58,7 @@ export function toComputable(
 				},
 				mashup: {
 					bonuses,
-					triggers: template.triggeredEffects,
+					triggers: template.triggeredEffects?.map(mapTriggeredEffect) ?? [],
 					auras,
 					afterEffect,
 					afterFailedSave,
@@ -64,4 +68,18 @@ export function toComputable(
 		duration,
 		template.useStandard ?? false,
 	];
+
+	function mapBonus({ amount, ...bonus }: FeatureBonus): FeatureBonus {
+		return { amount: caster.simplifyAmount(amount), ...bonus };
+	}
+	function mapTriggeredEffect({ effect, ...trigger }: TriggeredEffect): TriggeredEffect {
+		return { effect: mapEffect(effect), ...trigger };
+	}
+	function mapEffect({ damage, healing, ...effect }: InstantaneousEffect): InstantaneousEffect {
+		return {
+			damage: damage && { ...damage, damage: caster.simplifyAmount(damage.damage) },
+			healing: healing && { ...healing, healing: caster.simplifyAmount(healing.healing) },
+			...effect,
+		};
+	}
 }

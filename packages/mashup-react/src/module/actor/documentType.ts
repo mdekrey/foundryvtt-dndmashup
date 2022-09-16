@@ -82,4 +82,5 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	importChildItem(type?: PossibleItemType): Promise<void>;
 
 	evaluateAmount(amount: string | number): number;
+	simplifyAmount<T extends string | number>(amount: T): T;
 };

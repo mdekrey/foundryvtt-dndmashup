@@ -3,7 +3,7 @@ import { AbilityTerm } from './AbilityTerm';
 export function simplifyDice<D extends object>(expression: string, data?: D) {
 	const roll = new Roll(expression, data);
 
-	return Roll.fromTerms(roll.terms.map(simplifyTerm)).formula.trim();
+	return Roll.fromTerms(roll.terms.map(simplifyTerm)).formula.replace(/ /g, '');
 }
 
 function simplifyTerm(term: RollTerm): RollTerm {

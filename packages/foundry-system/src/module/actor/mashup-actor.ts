@@ -259,7 +259,7 @@ export class MashupActor extends Actor implements ActorDocument {
 					bonuses:
 						aura.bonuses?.map(({ amount, ...bonus }) => ({
 							...bonus,
-							amount: simplifyDice(`${amount}`, { actor: this }),
+							amount: this.simplifyAmount(amount),
 						})) ?? [],
 					range: typeof range === 'string' ? this.evaluateAmount(range) : range,
 					sources: [this, ...aura.sources],
@@ -553,6 +553,10 @@ export class MashupActor extends Actor implements ActorDocument {
 
 	evaluateAmount(amount: string | number) {
 		return typeof amount === 'number' ? amount : new Roll(amount, { actor: this }).roll({ async: false })._total;
+	}
+
+	simplifyAmount<T extends string | number>(amount: T): T {
+		return typeof amount === 'string' ? (simplifyDice(amount, { actor: this }) as T) : amount;
 	}
 }
 
