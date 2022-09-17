@@ -15,7 +15,7 @@ const rangeLens = Lens.fromProp<Aura>()('range').combine(Lens.cast<string | numb
 const bonusesLens = Lens.fromProp<Aura>()('bonuses');
 const triggeredEffectsLens = Lens.fromProp<Aura>()('triggeredEffects');
 const conditionRuleLens = Lens.fromProp<Aura>()('condition');
-const dispositionTypeLens = Lens.fromProp<Aura>()('dispositionType').default(null, (v): v is null => v !== null);
+const dispositionTypeLens = Lens.fromProp<Aura>()('dispositionType').default(null, (v): v is null => v === null);
 const excludeSelfLens = Lens.fromProp<Aura>()('excludeSelf').default(false);
 
 const dispositionTypeOptions: SelectItem<DispositionType | null>[] = [

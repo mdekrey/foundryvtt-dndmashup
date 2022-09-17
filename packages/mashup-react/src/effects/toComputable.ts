@@ -38,7 +38,8 @@ export function toComputable(
 
 	const bonuses = template.bonuses.map(mapBonus);
 	const auras = (template.auras ?? []).map(
-		({ bonuses, triggeredEffects, ...aura }): Aura => ({
+		({ bonuses, triggeredEffects, range, ...aura }): Aura => ({
+			range: caster.simplifyAmount(range),
 			...aura,
 			triggeredEffects: triggeredEffects.map(mapTriggeredEffect),
 			bonuses: bonuses.map(mapBonus),

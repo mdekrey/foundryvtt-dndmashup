@@ -555,8 +555,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		return typeof amount === 'number' ? amount : new Roll(amount, { actor: this }).roll({ async: false })._total;
 	}
 
-	simplifyAmount<T extends string | number>(amount: T): T {
-		return typeof amount === 'string' ? (simplifyDice(amount, { actor: this }) as T) : amount;
+	simplifyAmount(amount: string): string;
+	simplifyAmount(amount: string | number): string | number;
+	simplifyAmount(amount: string | number): string | number {
+		return typeof amount === 'string' ? simplifyDice(amount, { actor: this }) : amount;
 	}
 }
 
