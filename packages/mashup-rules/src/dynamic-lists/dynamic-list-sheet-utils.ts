@@ -22,4 +22,7 @@ export const dynamicListTargetNames: Record<DynamicListTarget, { label: string }
 	origin: {
 		label: 'Origin',
 	},
+	movement: {
+		label: 'Movement',
+	},
 };
