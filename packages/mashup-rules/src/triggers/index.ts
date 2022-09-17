@@ -1,6 +1,7 @@
 import './manual';
 import './turnTriggers';
 import './actionPoints';
+import './hpTriggers';
 
 export * from './types';
 export * from './registry';
