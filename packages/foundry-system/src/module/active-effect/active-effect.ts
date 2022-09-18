@@ -1,5 +1,7 @@
 import { ActiveEffectDocument, ActiveEffectFlags } from '@foundryvtt-dndmashup/mashup-react';
 import { Aura, FeatureBonus, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { createFinalEffectConstructorData } from '../actor/logic/createFinalEffectConstructorData';
+import { MashupActor } from '../actor/mashup-actor';
 
 declare global {
 	interface FlagConfig {
@@ -32,5 +34,24 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 
 	showEditDialog(): void {
 		this.sheet?.render(true, { focus: true });
+	}
+
+	override async delete(context?: DocumentModificationContext): Promise<this | undefined> {
+		if (this.data.flags.mashup?.afterEffect) {
+			return await this.update(
+				createFinalEffectConstructorData(this.data.flags.mashup?.afterEffect, this.parent as MashupActor)
+			);
+		} else {
+			return await super.delete(context);
+		}
+	}
+
+	async handleAfterFailedSave(): Promise<this | undefined> {
+		if (this.data.flags.mashup?.afterFailedSave) {
+			return await this.update(
+				createFinalEffectConstructorData(this.data.flags.mashup.afterFailedSave, this.parent as MashupActor)
+			);
+		}
+		return this;
 	}
 }

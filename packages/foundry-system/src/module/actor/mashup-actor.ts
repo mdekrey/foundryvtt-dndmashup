@@ -34,7 +34,7 @@ import {
 	toComputable,
 	ActiveEffectDocumentConstructorData,
 	DerivedCache,
-	ActiveEffectDocument,
+	ActiveEffectDocumentConstructorParams,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame, toMashupId } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -48,6 +48,7 @@ import { importNewChildItem } from '../../core/foundry/importNewChildItem';
 import { MashupItemEquipment } from '../item/subtypes/equipment/class';
 import { isActorType } from './templates/isActorType';
 import { simplifyDice } from '../dice';
+import { MashupActiveEffect } from '../active-effect';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -207,6 +208,28 @@ export class MashupActor extends Actor implements ActorDocument {
 		}
 	}
 
+	async removeActiveEffects(ids: string[]) {
+		const withAfterEffects = ids
+			.map((id) => this.effects.get(id))
+			.filter((effect): effect is MashupActiveEffect => !!effect)
+			.map((effect) => [effect, effect.data.flags.mashup?.afterEffect] as const);
+		const toDelete = withAfterEffects
+			.filter(([effect, afterEffect]) => !afterEffect)
+			.map(([effect]) => effect.id as string);
+		const toUpdate = withAfterEffects
+			.filter((t): t is [MashupActiveEffect, ActiveEffectDocumentConstructorParams] => !!t[1])
+			.map(([effect, afterEffect]) => [effect, createFinalEffectConstructorData(afterEffect, this)] as const);
+		if (toUpdate.length)
+			for (const [effect, data] of toUpdate) {
+				await effect.update(data, {
+					overwrite: true,
+					diff: false,
+					recursive: false,
+				});
+			}
+		if (toDelete.length) await this.deleteEmbeddedDocuments('ActiveEffect', toDelete);
+	}
+
 	async createActiveEffect(
 		effect: ActiveEffectDocumentConstructorData,
 		duration: ComputableEffectDurationInfo,
@@ -228,19 +251,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		const result = createFinalEffectConstructorData([effect, duration, useStandardStats], this);
 		await ActiveEffect.create(result, {
 			parent: this,
-		});
-	}
-	async updateActiveEffect(
-		activeEffect: ActiveEffectDocument,
-		effect: ActiveEffectDocumentConstructorData,
-		duration: ComputableEffectDurationInfo,
-		useStandardStats: boolean
-	) {
-		const result = createFinalEffectConstructorData([effect, duration, useStandardStats], this);
-		await activeEffect.update(result, {
-			overwrite: true,
-			diff: false,
-			recursive: false,
 		});
 	}
 

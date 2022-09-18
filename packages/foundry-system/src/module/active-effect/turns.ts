@@ -30,16 +30,12 @@ export async function onNextTurn(wrapped: () => Promise<unknown>) {
 					e.data.flags.mashup?.effectDuration?.durationType === type &&
 					shouldRemove(e, { nextInit, nextRound })
 				) {
-					if (e.data.flags.mashup?.afterEffect) {
-						t.token.actor.updateActiveEffect(e, ...e.data.flags.mashup.afterEffect);
-					} else {
-						toDelete.push(e.id);
-					}
+					toDelete.push(e.id);
 				}
 			}
 			toDelete = toDelete.filter((s): s is string => !!s);
 			if (toDelete.length) {
-				await t.actor.deleteEmbeddedDocuments('ActiveEffect', toDelete);
+				await t.actor.removeActiveEffects(toDelete);
 			}
 		}
 	}

@@ -55,4 +55,6 @@ export type ActiveEffectDocument = BaseDocument & {
 	};
 	img: string | null;
 	showEditDialog(): void;
+
+	handleAfterFailedSave(): void;
 };
