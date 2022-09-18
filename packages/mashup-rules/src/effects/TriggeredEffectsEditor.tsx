@@ -6,6 +6,7 @@ import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ConditionSelector } from '../conditions';
 import { InstantaneousEffectFields } from './instantaneous-effect-fields';
 import { TriggerSelector } from '../triggers/TriggerSelector';
+import { emptyInstantaneousEffect } from './defaults';
 
 const baseLens = Lens.identity<TriggeredEffect[]>().default([]);
 
@@ -26,12 +27,7 @@ export function TriggeredEffectsEditor({
 		baseLens.apply(triggeredEffects).onChangeValue((draft) => {
 			draft.push({
 				condition: null,
-				effect: {
-					damage: null,
-					healing: null,
-					activeEffectTemplate: null,
-					text: '',
-				},
+				effect: emptyInstantaneousEffect,
 				trigger: {
 					trigger: 'startOfTurn',
 					parameter: null,

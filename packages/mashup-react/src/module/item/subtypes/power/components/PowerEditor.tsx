@@ -253,7 +253,7 @@ function EffectRow({
 						className={classNames({
 							'overflow-hidden max-h-0 transition-all duration-300': !isNew,
 						})}>
-						<div className={classNames('p-4', { 'focus-within:opacity-100 opacity-75': isNew })}>
+						<div className={classNames('flex flex-col gap-1 p-4', { 'focus-within:opacity-100 opacity-75': isNew })}>
 							<PowerEffectFields fallbackImage={fallbackImage} {...props} />
 						</div>
 					</div>

@@ -11,6 +11,9 @@ export type InstantaneousEffect = {
 	healing: HealingEffect | null;
 	damage: DamageEffect | null;
 	activeEffectTemplate: ActiveEffectTemplate | null;
+
+	/** Bonuses that are in effect for this InstantaneousEffect. */
+	bonuses: FeatureBonus[] | null;
 };
 
 export type DamageEffect = {

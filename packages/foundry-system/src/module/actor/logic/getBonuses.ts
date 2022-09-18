@@ -2,6 +2,7 @@ import {
 	AuraEffect,
 	combinePoolLimits,
 	DynamicListTarget,
+	emptyInstantaneousEffect,
 	FullDynamicListEntry,
 	FullFeatureBonus,
 	FullTriggeredEffect,
@@ -162,7 +163,10 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 			)
 			.map(
 				(power): FullTriggeredEffect => ({
-					effect: { text: `Recharge ${power.name}`, healing: null, damage: null, activeEffectTemplate: null },
+					effect: {
+						...emptyInstantaneousEffect,
+						text: `Recharge ${power.name}`,
+					},
 					trigger: power.data.data.rechargeTrigger,
 					condition: null,
 					sources: [power],

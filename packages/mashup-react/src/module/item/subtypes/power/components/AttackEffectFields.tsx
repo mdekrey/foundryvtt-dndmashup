@@ -21,14 +21,17 @@ export const attackRollLens = Lens.from<PowerEffect, AttackRoll | null>(
 		const newAttackRoll = mutator(oldAttackRoll);
 		draft.attackRoll = newAttackRoll === undefined ? oldAttackRoll : newAttackRoll;
 		if (draft.attackRoll === null) draft.miss = null;
-		else if (draft.miss === null) draft.miss = { text: '', healing: null, damage: null, activeEffectTemplate: null };
+		else if (draft.miss === null)
+			draft.miss = { text: '', healing: null, damage: null, activeEffectTemplate: null, bonuses: null };
 	}
 );
 
 const missEffectLens = Lens.from<PowerEffect, InstantaneousEffect>(
-	(e) => e.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null },
+	(e) => e.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null, bonuses: null },
 	(mutator) => (draft) => {
-		const result = mutator(draft.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null });
+		const result = mutator(
+			draft.miss ?? { text: '', healing: null, damage: null, activeEffectTemplate: null, bonuses: null }
+		);
 		if (draft.attackRoll === null) draft.miss = null;
 		else if (result !== undefined) draft.miss = result;
 		return draft;

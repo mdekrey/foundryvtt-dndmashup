@@ -18,7 +18,8 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 	const firstEffect: PowerEffect | null = itemData.effects[0] ?? null;
 	const flavorText = itemData.flavorText ? <FlavorText>{itemData.flavorText}</FlavorText> : null;
 	function onDetails() {
-		applications.launchApplication('powerDetails', { power: item });
+		if (!item.isOwner) applications.launchApplication('powerDetails', { power: item });
+		else item.showEditDialog();
 	}
 	return (
 		<section
