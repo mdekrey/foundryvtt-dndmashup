@@ -19,5 +19,5 @@ export type FeatureBonusWithContext = FeatureBonus & {
 };
 export type FullFeatureBonus = FeatureBonusWithSource & FeatureBonusWithContext;
 export type BonusByType = {
-	[k: string]: number;
+	[K in string]: K extends '' ? string | number : number;
 };

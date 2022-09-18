@@ -3,7 +3,12 @@ import { AbilityTerm } from './AbilityTerm';
 export function simplifyDice<D extends object>(expression: string, data?: D) {
 	const roll = new Roll(expression, data);
 
-	return Roll.fromTerms(roll.terms.map(simplifyTerm)).formula.replace(/ /g, '');
+	const finalRoll = Roll.fromTerms(roll.terms.map(simplifyTerm));
+	console.log(finalRoll);
+
+	if (finalRoll.isDeterministic) return finalRoll.evaluate({ async: false }).total;
+
+	return finalRoll.formula.replace(/ /g, '');
 }
 
 function simplifyTerm(term: RollTerm): RollTerm {

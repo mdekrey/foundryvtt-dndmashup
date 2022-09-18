@@ -1,9 +1,10 @@
 import { groupBy } from 'lodash/fp';
 import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { simplifyDice } from '../dice';
+import { ensureSign } from '@foundryvtt-dndmashup/core';
 
 const max = (v: number[]) => Math.max(...v);
 
-// TODO: don't evaluate the dice... somehow.
 export function evaluateAndRoll(
 	bonusesWithContext: FeatureBonusWithContext[],
 	initialBonuses?: BonusByType
@@ -23,17 +24,17 @@ export function evaluateAndRoll(
 		Object.entries(byType)
 			.map(([k, v]) => {
 				if (k === '') {
-					const determinateBonuses = v
-						.map(({ amount, context }) => evaluateAmount(amount, context))
-						.reduce((a, b) => a + b, 0);
+					const determinateBonuses = v.map(({ amount, context }) =>
+						typeof amount === 'number' ? amount : simplifyDice(amount, context)
+					);
+					const resultValue = determinateBonuses.some((bonus) => typeof bonus === 'string')
+						? determinateBonuses.map((v) => ensureSign(v)).reduce((a, b) => a + b, '')
+						: determinateBonuses.reduce((a, b) => Number(a) + Number(b), 0);
 
-					return [[k, determinateBonuses]];
+					return [[k, resultValue]];
 				}
-				const value = max(
-					v.map(({ amount, context }) =>
-						typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total
-					)
-				);
+
+				const value = max(v.map(({ amount, context }) => evaluateAmount(amount, context)));
 				return [[k, value]];
 			})
 			.flat()
