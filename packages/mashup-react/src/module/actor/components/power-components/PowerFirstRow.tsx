@@ -11,11 +11,6 @@ const usageTypeColors: Record<PowerUsage, string> = {
 	'item-consumable': (<i className="bg-orange-dark" />).props.className,
 	'item-healing-surge': (<i className="bg-orange-dark" />).props.className,
 	other: (<i className="bg-blue-dark" />).props.className,
-	'recharge-2': (<i className="bg-blue-dark" />).props.className,
-	'recharge-3': (<i className="bg-blue-dark" />).props.className,
-	'recharge-4': (<i className="bg-blue-dark" />).props.className,
-	'recharge-5': (<i className="bg-blue-dark" />).props.className,
-	'recharge-6': (<i className="bg-blue-dark" />).props.className,
 };
 
 export function PowerFirstRow({

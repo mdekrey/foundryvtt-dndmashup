@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { AppButton, FormInput, Modal, SelectItem } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
-import { Trigger } from './types';
+import { Trigger, TriggerType } from './types';
 import { triggersRegistry } from './registry';
 
-const triggerTypeLens = Lens.fromProp<Trigger>()('trigger');
+const triggerTypeLens = Lens.from<Trigger, TriggerType>(
+	(trigger) => trigger.trigger,
+	(mutator) => (draft) => {
+		const newTriggerType = mutator(draft.trigger);
+		if (draft.trigger === newTriggerType) return draft;
+		return { trigger: newTriggerType, parameter: triggersRegistry[newTriggerType].defaultParameter } as Trigger;
+	}
+);
 
 export function TriggerSelector({ className, ...state }: Stateful<Trigger> & { className?: string }) {
 	const [isOpen, setOpen] = useState(false);

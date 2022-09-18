@@ -3,7 +3,7 @@ import { pipeJsx, neverEver } from '@foundryvtt-dndmashup/core';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { ActionType, AttackRoll, PowerDocument, PowerEffect, PowerUsage } from '../dataSourceData';
-import { Defense, getEffectText } from '@foundryvtt-dndmashup/mashup-rules';
+import { Defense, getEffectText, toTriggerText, Trigger } from '@foundryvtt-dndmashup/mashup-rules';
 import { D6_2Icon, D6_3Icon, D6_4Icon, D6_5Icon, D6_6Icon } from './icons';
 import capitalize from 'lodash/fp/capitalize';
 import { AttackTypeInfo } from './AttackTypeInfo';
@@ -50,7 +50,7 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 						{flavorText}
 						<div>
 							<p className="font-bold">
-								{powerUsage(itemData.usage)}
+								{powerUsage(itemData.usage, itemData.rechargeTrigger)}
 								{itemData.keywords.length ? <> ✦ {itemData.keywords.map(capitalize).join(', ')}</> : null}
 							</p>
 							<div className="flex">
@@ -121,14 +121,65 @@ function defense(defense: Defense) {
 	return defense.toUpperCase();
 }
 
-function powerUsage(usage: PowerUsage) {
+function powerUsage(usage: PowerUsage, rechargeTrigger: Trigger | null) {
+	if (rechargeTrigger?.trigger === 'd6' && usage !== 'at-will') {
+		switch (rechargeTrigger.parameter.number) {
+			case 2:
+				return (
+					<>
+						Recharge
+						<D6_2Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+					</>
+				);
+			case 3:
+				return (
+					<>
+						Recharge
+						<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+					</>
+				);
+			case 4:
+				return (
+					<>
+						Recharge
+						<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+					</>
+				);
+			case 5:
+				return (
+					<>
+						Recharge
+						<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
+						<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+					</>
+				);
+			case 6:
+			default:
+				return (
+					<>
+						Recharge
+						<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
+					</>
+				);
+		}
+	}
+	const rechargeText = rechargeTrigger && toTriggerText(rechargeTrigger);
 	switch (usage) {
 		case 'at-will':
 			return 'At-Will';
 		case 'encounter':
-			return 'Encounter';
+			return rechargeText ? `Encounter (recharge ${rechargeText})` : 'Encounter';
 		case 'daily':
-			return 'Daily';
+			return rechargeText ? `Daily (recharge ${rechargeText})` : 'Daily';
 		case 'item':
 			return 'Daily (Item)';
 		case 'item-consumable':
@@ -137,51 +188,6 @@ function powerUsage(usage: PowerUsage) {
 			return 'Healing Surge';
 		case 'other':
 			return '';
-		case 'recharge-2':
-			return (
-				<>
-					Recharge
-					<D6_2Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
-				</>
-			);
-		case 'recharge-3':
-			return (
-				<>
-					Recharge
-					<D6_3Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
-				</>
-			);
-		case 'recharge-4':
-			return (
-				<>
-					Recharge
-					<D6_4Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
-				</>
-			);
-		case 'recharge-5':
-			return (
-				<>
-					Recharge
-					<D6_5Icon className="pl-1 h-4 align-sub inline-block" />
-					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
-				</>
-			);
-		case 'recharge-6':
-			return (
-				<>
-					Recharge
-					<D6_6Icon className="pl-1 h-4 align-sub inline-block" />
-				</>
-			);
 		default:
 			return neverEver(usage);
 	}

@@ -51,8 +51,7 @@ export type PowerUsage =
 	| 'item'
 	| 'item-consumable'
 	| 'item-healing-surge'
-	| 'other'
-	| `recharge-${2 | 3 | 4 | 5 | 6}`;
+	| 'other';
 export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate' | 'none';
 
 export type EffectTypeAndRange =
