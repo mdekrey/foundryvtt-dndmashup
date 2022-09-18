@@ -18,7 +18,7 @@ export const secondWind: CommonAction = {
 			spendHealingSurge: true,
 			additionalUpdates: { 'data.health.secondWindUsed': true },
 		});
-		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration, false);
+		await actor.createActiveEffect(totalDefenseEffect, totalDefenseDuration, false, [actor]);
 		chatDispatch.sendChatMessage(
 			'plain-text',
 			actor,

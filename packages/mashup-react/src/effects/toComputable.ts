@@ -69,6 +69,8 @@ export function toComputable(
 					auras,
 					afterEffect,
 					afterFailedSave,
+					// TODO: sources
+					originalSources: [],
 				},
 			},
 		},

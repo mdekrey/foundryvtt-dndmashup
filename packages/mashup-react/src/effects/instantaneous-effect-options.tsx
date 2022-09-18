@@ -1,5 +1,5 @@
 import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
-import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { BaseDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import {
@@ -113,6 +113,7 @@ export function InstantaneousEffectOptions({
 			applications.launchApplication('applyEffect', {
 				// TODO - better image
 				effectParams: toComputable(activeEffectTemplate, actor, power?.img ?? ''),
+				sources: [actor, power].filter(Boolean) as BaseDocument[],
 			});
 		};
 	}

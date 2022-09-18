@@ -39,7 +39,11 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 	override async delete(context?: DocumentModificationContext): Promise<this | undefined> {
 		if (this.data.flags.mashup?.afterEffect) {
 			return await this.update(
-				createFinalEffectConstructorData(this.data.flags.mashup?.afterEffect, this.parent as MashupActor)
+				createFinalEffectConstructorData(
+					this.data.flags.mashup?.afterEffect,
+					this.parent as MashupActor,
+					this.data.flags.mashup?.originalSources
+				)
 			);
 		} else {
 			return await super.delete(context);
@@ -49,7 +53,11 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 	async handleAfterFailedSave(): Promise<this | undefined> {
 		if (this.data.flags.mashup?.afterFailedSave) {
 			return await this.update(
-				createFinalEffectConstructorData(this.data.flags.mashup.afterFailedSave, this.parent as MashupActor)
+				createFinalEffectConstructorData(
+					this.data.flags.mashup.afterFailedSave,
+					this.parent as MashupActor,
+					this.data.flags.mashup?.originalSources
+				)
 			);
 		}
 		return this;

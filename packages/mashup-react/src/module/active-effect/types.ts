@@ -31,6 +31,7 @@ export type ActiveEffectFlags = {
 		afterEffect?: ActiveEffectDocumentConstructorParams | null;
 		afterFailedSave?: ActiveEffectDocumentConstructorParams | null;
 		effectDuration?: EffectDurationInfo;
+		originalSources?: string[]; // mashup ids
 	};
 };
 

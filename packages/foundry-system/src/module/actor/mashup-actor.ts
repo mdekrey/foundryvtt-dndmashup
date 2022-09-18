@@ -12,7 +12,7 @@ import {
 	isRuleApplicable,
 	UnappliedAura,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { BaseDocument, SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	isClass,
 	PowerDocument,
@@ -218,7 +218,13 @@ export class MashupActor extends Actor implements ActorDocument {
 			.map(([effect]) => effect.id as string);
 		const toUpdate = withAfterEffects
 			.filter((t): t is [MashupActiveEffect, ActiveEffectDocumentConstructorParams] => !!t[1])
-			.map(([effect, afterEffect]) => [effect, createFinalEffectConstructorData(afterEffect, this)] as const);
+			.map(
+				([effect, afterEffect]) =>
+					[
+						effect,
+						createFinalEffectConstructorData(afterEffect, this, effect.data.flags.mashup?.originalSources),
+					] as const
+			);
 		if (toUpdate.length)
 			for (const [effect, data] of toUpdate) {
 				await effect.update(data, {
@@ -233,7 +239,8 @@ export class MashupActor extends Actor implements ActorDocument {
 	async createActiveEffect(
 		effect: ActiveEffectDocumentConstructorData,
 		duration: ComputableEffectDurationInfo,
-		useStandardStats: boolean
+		useStandardStats: boolean,
+		sources: BaseDocument[]
 	) {
 		if (effect.flags?.core?.statusId) {
 			const toRemove = this.effects.filter(
@@ -247,7 +254,11 @@ export class MashupActor extends Actor implements ActorDocument {
 				);
 			}
 		}
-		const result = createFinalEffectConstructorData([effect, duration, useStandardStats], this);
+		const result = createFinalEffectConstructorData(
+			[effect, duration, useStandardStats],
+			this,
+			sources.map(toMashupId)
+		);
 		await ActiveEffect.create(result, {
 			parent: this,
 		});
@@ -454,7 +465,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			await (power.parent as MashupItemEquipment).decreaseQuantity(1);
 
 		if (power.data.data.selfApplied) {
-			await this.createActiveEffect(...toComputable(power.data.data.selfApplied, this, power.img ?? ''));
+			await this.createActiveEffect(...toComputable(power.data.data.selfApplied, this, power.img ?? ''), [this, power]);
 		}
 
 		return true;

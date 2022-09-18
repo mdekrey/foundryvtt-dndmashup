@@ -1,4 +1,4 @@
-import { SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
+import { BaseDocument, SimpleDocument, SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	BonusByType,
 	DynamicListTarget,
@@ -57,6 +57,8 @@ export type DerivedCache = {
 	};
 };
 
+type CreateActiveEffectParams = [...params: ActiveEffectDocumentConstructorParams, sources: BaseDocument[]];
+
 export type ActorDocument<T extends PossibleActorType = PossibleActorType> = SimpleDocument<ActorDataSource<T>> & {
 	readonly derivedData: ActorDerivedData<T>;
 	readonly token: null | TokenDocument;
@@ -77,7 +79,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 
 	applyHealing(options: HealingOptions): Promise<void>;
 
-	createActiveEffect(...params: ActiveEffectDocumentConstructorParams): Promise<void>;
+	createActiveEffect(...params: CreateActiveEffectParams): Promise<void>;
 
 	applyShortRest(healingSurges: number, healingBonusByType: BonusByType): Promise<boolean>;
 	applyLongRest(): Promise<boolean>;

@@ -1,4 +1,5 @@
 import { AppButton, BlockHeader } from '@foundryvtt-dndmashup/components';
+import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	auraToText,
 	bonusToText,
@@ -11,10 +12,12 @@ import { ActorDocument } from '../../module/actor/documentType';
 export function ApplyEffectDisplay({
 	effectParams,
 	targets,
+	sources,
 	onClose,
 }: {
 	effectParams: ActiveEffectDocumentConstructorParams;
 	targets: ActorDocument[];
+	sources: BaseDocument[];
 	onClose: () => void;
 }) {
 	return (
@@ -45,7 +48,7 @@ export function ApplyEffectDisplay({
 
 	async function onApplyEffect() {
 		for (const target of targets) {
-			target.createActiveEffect(...effectParams);
+			target.createActiveEffect(...effectParams, sources);
 		}
 		onClose();
 	}

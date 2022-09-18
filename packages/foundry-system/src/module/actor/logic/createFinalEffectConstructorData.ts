@@ -7,7 +7,8 @@ import { MashupActor } from '../mashup-actor';
 
 export function createFinalEffectConstructorData(
 	[effect, duration, useStandardStats]: ActiveEffectDocumentConstructorParams,
-	actor: ActorDocument
+	actor: ActorDocument,
+	originalSources: string[] | undefined
 ): ActiveEffectDataConstructorData {
 	let result: ActiveEffectDataConstructorData;
 
@@ -28,6 +29,8 @@ export function createFinalEffectConstructorData(
 		result.flags.core ??= {};
 		result.flags.mashup ??= {};
 	}
+
+	result.flags.mashup.originalSources = originalSources;
 
 	let rounds: number | undefined;
 	let resultDurationInfo: EffectDurationInfo | undefined;

@@ -3,11 +3,16 @@ import { ApplyEffectDisplay } from '@foundryvtt-dndmashup/mashup-react';
 import { isGame } from '../../../core/foundry/isGame';
 import type { MashupActor } from '../../actor';
 
-applicationRegistry.applyEffect = async ({ effectParams }, resolve, reject) => {
+applicationRegistry.applyEffect = async ({ effectParams, sources }, resolve, reject) => {
 	return {
 		content: (
 			<div className="flex flex-col h-full p-2 gap-2">
-				<ApplyEffectDisplay targets={getTargets()} effectParams={effectParams} onClose={() => resolve(null)} />
+				<ApplyEffectDisplay
+					targets={getTargets()}
+					effectParams={effectParams}
+					sources={sources}
+					onClose={() => resolve(null)}
+				/>
 			</div>
 		),
 		title: 'Apply Effect',
