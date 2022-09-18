@@ -29,15 +29,19 @@ import {
 	isBasicAttackLens,
 	powerSpecialTextLens,
 	selfAppliedTemplateLens,
+	powerRechargeLens,
 } from './sheetLenses';
 import classNames from 'classnames';
 import { PowerData, PowerEffect } from '../dataSourceData';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AttackTypeInfo } from './AttackTypeInfo';
 import { useEffect, useReducer, useRef, useState } from 'react';
-import { ActiveEffectTemplateEditorButton } from '@foundryvtt-dndmashup/mashup-rules';
+import { ActiveEffectTemplateEditorButton, TriggerSelector } from '@foundryvtt-dndmashup/mashup-rules';
 
 export function PowerEditor({ itemState: documentState }: { itemState: Stateful<SimpleDocumentData<PowerData>> }) {
+	const { usage } = documentState.value.data;
+	const canHaveRecharge =
+		usage !== 'at-will' && usage !== 'item-consumable' && usage !== 'item-healing-surge' && usage !== 'item';
 	return (
 		<>
 			<div className="h-full flex flex-col gap-1">
@@ -67,11 +71,17 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 					</div>
 				</div>
 				<div className="grid grid-cols-12 gap-x-1 items-end">
-					<FormInput className="col-span-6">
+					<FormInput className={canHaveRecharge ? 'col-span-4' : 'col-span-6'}>
 						<FormInput.Select {...powerUsageLens.apply(documentState)} options={usageOptions} />
 						<FormInput.Label>Usage</FormInput.Label>
 					</FormInput>
-					<FormInput className="col-span-6 self-end">
+					{canHaveRecharge ? (
+						<FormInput className={canHaveRecharge ? 'col-span-4' : 'col-span-6'}>
+							<TriggerSelector className="col-span-4" {...powerRechargeLens.apply(documentState)} />
+							<FormInput.Label>Recharges</FormInput.Label>
+						</FormInput>
+					) : null}
+					<FormInput className={canHaveRecharge ? 'col-span-4' : 'col-span-6'}>
 						<FormInput.TextField {...keywordsLens.apply(documentState)} />
 						<FormInput.Label>Keywords</FormInput.Label>
 					</FormInput>

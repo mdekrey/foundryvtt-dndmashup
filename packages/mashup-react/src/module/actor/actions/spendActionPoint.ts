@@ -15,14 +15,12 @@ export const spendActionPoint: CommonAction = {
 	use: async (actor, { chatDispatch }) => {
 		if (actor.type !== 'monster' && actor.data.data.actionPoints.usedThisEncounter) return;
 		if (actor.data.data.actionPoints.value < 1) return;
-		await actor.update(
-			{
-				'data.actionPoints.usedThisEncounter': true,
-				'data.actionPoints.value': actor.data.data.actionPoints.value - 1,
-			},
-			{}
+		const otherEffects = await actor.spendActionPoint();
+		if (otherEffects === null) return;
+		chatDispatch.sendChatMessage(
+			'plain-text',
+			actor,
+			`spends an action point to get another action! ${  otherEffects.join(' ')}`
 		);
-		// TODO: action point additional effects
-		chatDispatch.sendChatMessage('plain-text', actor, 'spends an action point to get another action!');
 	},
 };

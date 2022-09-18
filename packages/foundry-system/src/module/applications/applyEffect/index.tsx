@@ -1,7 +1,7 @@
 import { applicationRegistry } from '@foundryvtt-dndmashup/foundry-compat';
 import { ApplyEffectDisplay } from '@foundryvtt-dndmashup/mashup-react';
 import { isGame } from '../../../core/foundry/isGame';
-import type { MashupActor } from '../../actor/mashup-actor';
+import type { MashupActor } from '../../actor';
 
 applicationRegistry.applyEffect = async ({ effectParams }, resolve, reject) => {
 	return {

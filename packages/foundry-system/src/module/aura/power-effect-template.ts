@@ -13,7 +13,7 @@ import { fromMashupId, isGame } from '../../core/foundry';
 import { systemName } from '../constants';
 import { neverEver } from '@foundryvtt-dndmashup/core';
 import { getBounds } from './getBounds';
-import { MashupActor } from '../actor/mashup-actor';
+import { MashupActor } from '../actor';
 import { MashupItem } from '../item/mashup-item';
 
 type MeasuredTemplateFactory<T extends EffectTypeAndRange['type'] = EffectTypeAndRange['type']> = {

@@ -1,7 +1,7 @@
 import { ActiveEffectDocument, ActiveEffectFlags } from '@foundryvtt-dndmashup/mashup-react';
 import { Aura, FeatureBonus, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { createFinalEffectConstructorData } from '../actor/logic/createFinalEffectConstructorData';
-import { MashupActor } from '../actor/mashup-actor';
+import { MashupActor } from '../actor';
 
 declare global {
 	interface FlagConfig {

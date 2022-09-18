@@ -1,5 +1,6 @@
 import { isGame } from '../../core/foundry';
-import { MashupActor } from '../actor/mashup-actor';
+import { MashupActiveEffect } from '../active-effect';
+import { MashupActor } from '../actor';
 
 type TokenConstructor = ConstructorParameters<ConstructorOf<TokenDocument>>[0];
 type MeasuredTemplateConstructor = ConstructorParameters<ConstructorOf<MeasuredTemplateDocument>>[0];
@@ -60,13 +61,18 @@ export function handleUpdateAuras() {
 			updateAllTokens(canvas.scene);
 		}
 	});
-	Hooks.on('deleteActiveEffect', () => {
-		if (canvas?.scene) {
+	Hooks.on('deleteActiveEffect', (activeEffect) => {
+		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
 			updateAllTokens(canvas.scene);
 		}
 	});
-	Hooks.on('createActiveEffect', () => {
-		if (canvas?.scene) {
+	Hooks.on('updateActiveEffect', (activeEffect) => {
+		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
+			updateAllTokens(canvas.scene);
+		}
+	});
+	Hooks.on('createActiveEffect', (activeEffect) => {
+		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
 			updateAllTokens(canvas.scene);
 		}
 	});
@@ -78,5 +84,16 @@ export function handleUpdateAuras() {
 	}
 	function updateToken(token: TokenDocument) {
 		token.actor?.updateAuras();
+	}
+}
+
+declare global {
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Hooks {
+		interface StaticCallbacks {
+			createActiveEffect: (activeEffect: MashupActiveEffect, options: unknown, id: string) => void;
+			updateActiveEffect: (activeEffect: MashupActiveEffect, updates: unknown, options: unknown, id: string) => void;
+			deleteActiveEffect: (activeEffect: MashupActiveEffect, options: unknown, id: string) => void;
+		}
 	}
 }

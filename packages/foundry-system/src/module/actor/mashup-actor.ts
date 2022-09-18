@@ -235,7 +235,6 @@ export class MashupActor extends Actor implements ActorDocument {
 		duration: ComputableEffectDurationInfo,
 		useStandardStats: boolean
 	) {
-		// TODO: remove existing one if it has the same core id
 		if (effect.flags?.core?.statusId) {
 			const toRemove = this.effects.filter(
 				(oldEffect) => oldEffect.data.flags?.core?.statusId === effect.flags?.core?.statusId
@@ -258,7 +257,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
 	}
 
-	allPowers(includeNestedPowers = true) {
+	allPowers(includeNestedPowers = true): PowerDocument[] {
 		return this.items.contents.flatMap((item: ItemDocument) =>
 			isPower(item) && (!includeNestedPowers || (item.data.data.effects?.length ?? 0) > 0)
 				? item
@@ -468,6 +467,23 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (pool.value === 0) return true;
 		if (poolMaxes.maxBetweenRest !== null && pool.usedSinceRest >= poolMaxes.maxBetweenRest) return true;
 		return false;
+	}
+
+	async spendActionPoint(): Promise<null | string[]> {
+		if (this.data.data.actionPoints.value === 0) return null;
+
+		const descriptions: string[] = [];
+		const updates = {
+			'data.actionPoints.usedThisEncounter': true,
+			'data.actionPoints.value': this.data.data.actionPoints.value - 1,
+		};
+		Hooks.callAll<'preActionPointSpent'>('preActionPointSpent', this, updates, descriptions);
+
+		await this.update(updates, {});
+
+		Hooks.callAll('actionPointSpent', this);
+
+		return descriptions;
 	}
 
 	async applyShortRest(healingSurges: number, healingBonusByType: BonusByType) {

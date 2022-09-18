@@ -1,7 +1,7 @@
 import { deferredPromise } from '@foundryvtt-dndmashup/core';
 import { PossibleItemType } from '@foundryvtt-dndmashup/mashup-react';
 import { noop } from 'lodash/fp';
-import { MashupActor } from '../../module/actor/mashup-actor';
+import { MashupActor } from '../../module/actor';
 import { MashupItem } from '../../module/item/mashup-item';
 import { ImportDialog } from './getImportExportButtons';
 

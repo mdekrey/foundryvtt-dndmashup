@@ -11,7 +11,7 @@ import {
 	PowerChatMessage,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerEffectTemplate } from '../../aura/power-effect-template';
-import { MashupActor } from '../../actor/mashup-actor';
+import { MashupActor } from '../../actor';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;

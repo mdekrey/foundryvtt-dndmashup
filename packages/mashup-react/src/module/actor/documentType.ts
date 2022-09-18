@@ -73,6 +73,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	isReady(power: PowerDocument): boolean;
 	toggleReady(power: PowerDocument): Promise<boolean>;
 	applyUsage(power: PowerDocument): Promise<boolean>;
+	spendActionPoint(): Promise<null | string[]>;
 
 	applyHealing(options: HealingOptions): Promise<void>;
 

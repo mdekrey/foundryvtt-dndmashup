@@ -24,6 +24,12 @@ export const selfAppliedTemplateLens = powerSourceDataLens
 	.toField('selfApplied')
 	.combine(activeEffectTemplateDefaultLens);
 export const powerUsageLens = powerSourceDataLens.toField('usage');
+export const powerRechargeLens = powerSourceDataLens
+	.toField('rechargeTrigger')
+	.default(
+		{ trigger: 'manual' as const, parameter: { triggerText: 'never' } },
+		(t) => t.trigger === 'manual' && t.parameter.triggerText === 'never'
+	);
 export const powerActionTypeLens = powerSourceDataLens.toField('actionType');
 export const powerRequirementLens = powerSourceDataLens.toField('requirement').combine(undefinedString);
 export const powerPrerequisiteLens = powerSourceDataLens.toField('prerequisite').combine(undefinedString);

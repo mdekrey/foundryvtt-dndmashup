@@ -1,5 +1,4 @@
-import { MashupActor } from './actor/mashup-actor';
-import { MashupActorSheet } from './actor/mashup-actor-sheet';
+import { MashupActor, MashupActorSheet } from './actor';
 import { MashupItemProxy } from './item/mashup-item-proxy';
 import { MashupItemBase } from './item/mashup-item';
 import { MashupItemSheet } from './item/mashup-item-sheet';

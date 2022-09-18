@@ -1,5 +1,11 @@
 import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
-import { Defense, PoolLimits, InstantaneousEffect, ActiveEffectTemplate } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	Defense,
+	PoolLimits,
+	InstantaneousEffect,
+	ActiveEffectTemplate,
+	Trigger,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
@@ -7,6 +13,7 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	type: string;
 	flavorText: string;
 	usage: PowerUsage;
+	rechargeTrigger: Trigger | null;
 	keywords: string[];
 	actionType: ActionType;
 	special: string;

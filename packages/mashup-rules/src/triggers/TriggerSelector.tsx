@@ -6,7 +6,7 @@ import { triggersRegistry } from './registry';
 
 const triggerTypeLens = Lens.fromProp<Trigger>()('trigger');
 
-export function TriggerSelector(state: Stateful<Trigger>) {
+export function TriggerSelector({ className, ...state }: Stateful<Trigger> & { className?: string }) {
 	const [isOpen, setOpen] = useState(false);
 	const selectTriggers: SelectItem<keyof Triggers>[] = [
 		...Object.entries(triggersRegistry).map(([key, { text }]): SelectItem<keyof Triggers> => {
@@ -22,16 +22,16 @@ export function TriggerSelector(state: Stateful<Trigger>) {
 	const trigger = state.value;
 
 	return (
-		<div>
+		<div className={className}>
 			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
-				{toRuleText(trigger)}
+				{toTriggerText(trigger)}
 			</AppButton>
 			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Trigger" options={{ resizable: true }}>
 				<div className="min-h-64 flex flex-col">
 					<div className="flex-grow">
 						<FormInput.Select {...triggerTypeLens.apply(state)} options={selectTriggers} className="text-center" />
 						<hr className="my-1" />
-						{toEditor(state)}
+						{toTriggerParamterEditor(state)}
 					</div>
 					<AppButton className="w-full" onClick={() => setOpen(false)}>
 						Close
@@ -42,12 +42,12 @@ export function TriggerSelector(state: Stateful<Trigger>) {
 	);
 }
 
-export function toRuleText(trigger: Trigger) {
+export function toTriggerText(trigger: Trigger) {
 	return triggersRegistry[trigger.trigger].text(trigger.parameter as never);
 }
 
 const parameterLens = Lens.fromProp<Trigger>()('parameter');
-export function toEditor(state: Stateful<Trigger>) {
+function toTriggerParamterEditor(state: Stateful<Trigger>) {
 	const Editor = triggersRegistry[state.value.trigger].editor;
 	return <Editor {...(parameterLens.apply(state) as never)} />;
 }

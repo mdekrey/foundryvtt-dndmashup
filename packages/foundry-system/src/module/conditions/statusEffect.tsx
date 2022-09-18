@@ -1,7 +1,7 @@
 import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens } from '@foundryvtt-dndmashup/core';
 import { ConditionRuleContext, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
-import { MashupActor } from '../actor/mashup-actor';
+import { MashupActor } from '../actor';
 
 type StatusEffectConditionParameter = {
 	coreStatusId: string;

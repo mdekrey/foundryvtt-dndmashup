@@ -3,7 +3,7 @@ import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { DamageType } from '@foundryvtt-dndmashup/mashup-rules';
 import { chatMessageRegistry, DamageResult, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { fromMashupId, isGame } from '../../../core/foundry';
-import { MashupActor } from '../../actor/mashup-actor';
+import { MashupActor } from '../../actor';
 
 chatMessageRegistry.damageResult = async (actor, { result, powerId, damageTypes, flavor }) => {
 	return { flags: { roll: result, powerId, damageTypes }, flavor, sound: 'sounds/dice.wav' };
