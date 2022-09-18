@@ -9,10 +9,12 @@ import {
 	ResolvedPoolBonus,
 	SourcedPoolBonus,
 	SourcedPoolLimits,
+	Trigger,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import uniq from 'lodash/fp/uniq';
 import type { MashupActiveEffect } from '../../active-effect';
 import { getRelevantAuras } from '../../aura/getAuras';
+import { MashupPower } from '../../item/subtypes/power/class';
 import type { MashupActor } from '../mashup-actor';
 
 function appliedAuraEffect(actor: MashupActor, predicate: (aura: AuraEffect) => boolean) {
@@ -151,7 +153,24 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 		...actor.data.items.contents.flatMap((item) =>
 			item.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { actor: actor, item } }))
 		),
+		...Object.entries(actor.data.data.powerUsage ?? {})
+			.map(([powerId, used]) => used !== 0 && actor.allPowers(true).find((p) => p.powerGroupId === powerId))
+			.filter((p): p is MashupPower => !!p && p.type === 'power')
+			.filter(
+				(power): power is MashupPower & { data: { data: { rechargeTrigger: Trigger } } } =>
+					!!power.data.data.rechargeTrigger
+			)
+			.map(
+				(power): FullTriggeredEffect => ({
+					effect: { text: `Recharge ${power.name}`, healing: null, damage: null, activeEffectTemplate: null },
+					trigger: power.data.data.rechargeTrigger,
+					condition: null,
+					sources: [power],
+					context: { actor, item: power },
+				})
+			),
 	];
+	console.log(actor.name, actor.data.data.powerUsage, actor, internal);
 
 	return [
 		...internal,
