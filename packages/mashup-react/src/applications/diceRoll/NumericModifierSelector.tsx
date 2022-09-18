@@ -73,15 +73,10 @@ export function NumericModifierSelector({
 		[indeterminate, toolBonuses.indeterminate, extraBonusLists.indeterminate]
 	);
 
-	const { bonusFormula, bonusByType, selectedBonuses } = useMemo(() => {
+	const { bonusFormula, bonusByType, displayedBonuses } = useMemo(() => {
 		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
-		const selectedBonuses: FullFeatureBonus[] = [
-			...applied,
-			...toolBonuses.applied,
-			...extraBonusLists.applied,
-			...selectedIndeterminateBonuses,
-		];
-		const actualInput: FeatureBonusWithContext[] = [...selectedBonuses];
+		const displayedBonuses: FullFeatureBonus[] = [...applied, ...toolBonuses.applied, ...extraBonusLists.applied];
+		const actualInput: FeatureBonusWithContext[] = [...displayedBonuses, ...selectedIndeterminateBonuses];
 		if (additionalModifiersState.value.trim()) {
 			actualInput.push({
 				target: rollTarget,
@@ -94,7 +89,7 @@ export function NumericModifierSelector({
 		return {
 			bonusFormula: fromBonusesToFormula(bonusByType),
 			bonusByType,
-			selectedBonuses,
+			displayedBonuses,
 		};
 	}, [
 		selectedBonusesState.value,
@@ -111,11 +106,11 @@ export function NumericModifierSelector({
 
 	return (
 		<>
-			{selectedBonuses.length > 0 ? (
+			{displayedBonuses.length > 0 ? (
 				<>
 					<p>Applied:</p>
 					<ul className="list-disc ml-4">
-						{selectedBonuses.map((bonus) => {
+						{displayedBonuses.map((bonus) => {
 							const text = `${bonusToText(bonus)} from ${bonus.source.name}`;
 							return (
 								<li
