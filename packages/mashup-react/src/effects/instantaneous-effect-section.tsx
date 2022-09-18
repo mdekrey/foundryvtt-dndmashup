@@ -2,7 +2,7 @@ import { InstantaneousEffectOptionsProps, InstantaneousEffectOptions } from './i
 
 export function InstantaneousEffectSection({ effect, mode, ...effectProps }: InstantaneousEffectOptionsProps) {
 	return (
-		<div className="flex flex-row items-center pl-2">
+		<div className="flex flex-row items-center">
 			<span className="flex-1">{mode}</span>
 
 			<InstantaneousEffectOptions effect={effect} mode={mode} {...effectProps} />

@@ -1,5 +1,6 @@
 import { neverEver } from '@foundryvtt-dndmashup/core';
 import { EffectTypeAndRange } from '../dataSourceData';
+import { effectTypeAndRangeText } from '../effectTypeAndRangeText';
 import { AttackTypeIcon } from './AttackTypeIcon';
 
 function attackType(type: EffectTypeAndRange['type']) {
@@ -25,26 +26,7 @@ export function AttackTypeInfo({ typeAndRange, isBasic }: { typeAndRange: Effect
 	return (
 		<>
 			<AttackTypeIcon attackType={typeAndRange.type} isBasic={isBasic} className="h-4 align-top inline-block" />{' '}
-			<span className="font-bold">{attackType(typeAndRange.type)}</span> {rangeInfo()}
+			<span className="font-bold">{attackType(typeAndRange.type)}</span> {effectTypeAndRangeText(typeAndRange, true)}
 		</>
 	);
-
-	function rangeInfo() {
-		switch (typeAndRange.type) {
-			case 'melee':
-				return typeAndRange.range;
-			case 'area':
-				return `${typeAndRange.shape} ${typeAndRange.size} within ${typeAndRange.within}`;
-			case 'close':
-				return `${typeAndRange.shape} ${typeAndRange.size}`;
-			case 'personal':
-				return '';
-			case 'ranged':
-				return typeAndRange.range;
-			case 'within':
-				return typeAndRange.size;
-			default:
-				return neverEver(typeAndRange);
-		}
-	}
 }

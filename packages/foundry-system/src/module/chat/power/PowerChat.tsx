@@ -5,9 +5,11 @@ import {
 	AttackRoll,
 	EffectTypeAndRange,
 	PowerEffect,
+	InstantaneousEffectOptions,
+	PowerPreview,
+	PowerDocument,
+	effectTypeAndRangeText,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerPreview } from '@foundryvtt-dndmashup/mashup-react';
-import { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 
@@ -98,7 +100,8 @@ function PowerEffectOptions({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string) => void;
 } & PowerEffectTemplateProps) {
-	const effectProps = { prefix: `${power.name} ${effect.name}`, actor, power, source: power };
+	const prefix = `${power.name} ${effect.name}`.trim();
+	const effectProps = { prefix: prefix, actor, power, source: power };
 	const missSection = showSection(effect.miss) ? (
 		<InstantaneousEffectSection
 			effect={effect.miss}
@@ -112,10 +115,11 @@ function PowerEffectOptions({
 		<IconButton
 			className="text-lg"
 			iconClassName="fas fa-ruler-combined"
-			title="Place Template"
+			title={`Place Template for ${effectTypeAndRangeText(effect.typeAndRange)}`}
 			onClick={() => createEffect(effect.typeAndRange)}
 		/>
 	);
+	const hasHitOrMiss = !!effect.attackRoll;
 	const attackRollButton = effect.attackRoll && (
 		<IconButton
 			className="text-lg"
@@ -130,22 +134,33 @@ function PowerEffectOptions({
 		<div className={classNames('grid grid-cols-1 w-full')}>
 			{hasRow1 && (
 				<div className="flex flex-row items-center bg-gradient-to-r from-transparent to-white text-black h-7">
-					<span className="flex-1 font-bold pl-1">{effect.name}</span>
+					<span className="flex-1 font-bold pl-1">{effect.name || power.name}</span>
 
 					{placeTemplateButton}
 					{attackRollButton}
+					{!hasHitOrMiss ? (
+						<InstantaneousEffectOptions
+							effect={effect.hit}
+							mode={`${prefix} Effect`.trim()}
+							{...effectProps}
+							allowToolSelection={true}
+							allowCritical={true}
+						/>
+					) : null}
 				</div>
 			)}
-			<div className="text-gray-800">
-				<InstantaneousEffectSection
-					effect={effect.hit}
-					mode={(effect.attackRoll ? 'Hit' : 'Effect') + (hasRow1 ? '' : ` ${effect.name}`)}
-					{...effectProps}
-					allowToolSelection={true}
-					allowCritical={true}
-				/>
-				{missSection}
-			</div>
+			{hasHitOrMiss && (
+				<div className="text-gray-800 pl-4">
+					<InstantaneousEffectSection
+						effect={effect.hit}
+						mode={`Hit${hasRow1 ? '' : ` ${effect.name}`}`}
+						{...effectProps}
+						allowToolSelection={true}
+						allowCritical={true}
+					/>
+					{missSection}
+				</div>
+			)}
 		</div>
 	);
 
