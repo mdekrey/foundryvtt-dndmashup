@@ -1,8 +1,9 @@
 import { EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams, ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { isGame } from '../../../core/foundry';
+import { fromMashupId, isGame, toMashupId } from '../../../core/foundry';
 import { v4 as uuid } from 'uuid';
+import { MashupActor } from '../mashup-actor';
 
 export function createFinalEffectConstructorData(
 	[effect, duration, useStandardStats]: ActiveEffectDocumentConstructorParams,
@@ -19,6 +20,8 @@ export function createFinalEffectConstructorData(
 		result.flags.mashup.bonuses = [...(result.flags.mashup.bonuses ?? []), ...(effect.flags.mashup?.bonuses ?? [])];
 		result.flags.mashup.triggers = [...(result.flags.mashup.triggers ?? []), ...(effect.flags.mashup?.triggers ?? [])];
 		result.flags.mashup.auras = [...(result.flags.mashup.auras ?? []), ...(effect.flags.mashup?.auras ?? [])];
+		result.flags.mashup.afterEffect = effect.flags.mashup?.afterEffect ?? null;
+		result.flags.mashup.afterFailedSave = effect.flags.mashup?.afterFailedSave ?? null;
 	} else {
 		result = deepClone(effect);
 		result.flags ??= {};
@@ -29,12 +32,16 @@ export function createFinalEffectConstructorData(
 	let rounds: number | undefined;
 	let resultDurationInfo: EffectDurationInfo | undefined;
 	if (duration.durationType === 'endOfTurn' || duration.durationType === 'startOfTurn') {
-		const current = getCurrentInitiative(duration.actor);
+		const relevantActor = typeof duration.actor === 'string' ? (fromMashupId(duration.actor) as MashupActor) : actor;
+		const relevantActorId = typeof duration.actor === 'string' ? duration.actor : toMashupId(actor);
+		const current = getCurrentInitiative(relevantActor);
 		if (current !== undefined) {
 			rounds = current.currentInitiative <= current.combatantInitiative ? current.round + 1 : current.round;
 			resultDurationInfo = {
 				durationType: duration.durationType,
 				durationTurnInit: current.combatantInitiative,
+				actorId: relevantActorId,
+				actorName: relevantActor?.name ?? '',
 			};
 		} else {
 			resultDurationInfo = undefined;

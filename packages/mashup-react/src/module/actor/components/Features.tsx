@@ -126,6 +126,8 @@ export function Features({
 			const result = await resultPromise;
 			if (result >= 10) {
 				item.delete();
+			} else if (item.data.flags.mashup?.afterFailedSave) {
+				actor.updateActiveEffect(item, ...item.data.flags.mashup.afterFailedSave);
 			}
 		};
 	}

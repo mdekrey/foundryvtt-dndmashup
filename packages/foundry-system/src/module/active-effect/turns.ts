@@ -14,18 +14,35 @@ export async function onNextTurn(wrapped: () => Promise<unknown>) {
 
 	// Helper.rechargeItems(game.combat.turns[nextTurn].actor, ["round"]);
 
-	for (const t of game.combat.turns) {
-		let toDelete: string[] = [];
-		if (!t.token?.actor || !t.actor) continue;
-		for (const e of t.token.actor.effects) {
-			if (e.id && shouldRemove(e, { nextInit, nextRound })) toDelete.push(e.id);
-		}
-		toDelete = toDelete.filter((s): s is string => !!s);
-		if (toDelete.length) {
-			await t.actor.deleteEmbeddedDocuments('ActiveEffect', toDelete);
+	await endEffects(game.combat, 'endOfTurn');
+	const result = await wrapped();
+	await endEffects(game.combat, 'startOfTurn');
+
+	return result;
+
+	async function endEffects(combat: StoredDocument<Combat>, type: 'endOfTurn' | 'startOfTurn') {
+		for (const t of combat.turns) {
+			let toDelete: string[] = [];
+			if (!t.token?.actor || !t.actor) continue;
+			for (const e of t.token.actor.effects) {
+				if (
+					e.id &&
+					e.data.flags.mashup?.effectDuration?.durationType === type &&
+					shouldRemove(e, { nextInit, nextRound })
+				) {
+					if (e.data.flags.mashup?.afterEffect) {
+						t.token.actor.updateActiveEffect(e, ...e.data.flags.mashup.afterEffect);
+					} else {
+						toDelete.push(e.id);
+					}
+				}
+			}
+			toDelete = toDelete.filter((s): s is string => !!s);
+			if (toDelete.length) {
+				await t.actor.deleteEmbeddedDocuments('ActiveEffect', toDelete);
+			}
 		}
 	}
-	return await wrapped();
 }
 
 function shouldRemove(
@@ -34,18 +51,17 @@ function shouldRemove(
 ): boolean {
 	const effectData = e.data.flags.mashup?.effectDuration;
 
-	if (effectData?.durationType === 'endOfTurn') {
-		if (e.data.duration.rounds === undefined || nextInit === null) {
-			return false;
-		}
-		return combatTime(e.data.duration.rounds, effectData.durationTurnInit) <= combatTime(nextRound, nextInit);
-	} else if (effectData?.durationType === 'startOfTurn') {
-		if (e.data.duration.rounds === undefined || nextInit === null) {
-			return false;
-		}
+	if (effectData?.durationType === 'endOfTurn' || effectData?.durationType === 'startOfTurn') {
+		if (e.data.duration.rounds === undefined) return false;
 		const effectTime = combatTime(e.data.duration.rounds, effectData.durationTurnInit);
-		const targetTime = combatTime(nextRound, nextInit);
-		return effectTime <= targetTime;
+		const targetTime = nextInit && combatTime(nextRound, nextInit);
+		if (!targetTime) return false;
+		if (effectData.durationType === 'endOfTurn') {
+			if (!nextInit) return false;
+			return effectTime < targetTime;
+		} else if (effectData.durationType === 'startOfTurn') {
+			return effectTime <= targetTime;
+		}
 	}
 
 	return false;

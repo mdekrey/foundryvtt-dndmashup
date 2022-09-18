@@ -1,8 +1,8 @@
 export type EffectDurationType = 'endOfTurn' | 'startOfTurn' | 'saveEnds' | 'shortRest' | 'longRest' | 'other';
 
 export interface EffectDurationTypeData {
-	endOfTurn: { durationTurnInit: number };
-	startOfTurn: { durationTurnInit: number };
+	endOfTurn: { durationTurnInit: number; actorId: string; actorName: string };
+	startOfTurn: { durationTurnInit: number; actorId: string; actorName: string };
 	other: { description: string };
 }
 

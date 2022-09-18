@@ -18,8 +18,14 @@ type Convert<T extends EffectDurationType> = (
 const toComputableDuration: {
 	[T in EffectDurationType]: Convert<T>;
 } = {
-	endOfTurn: (template, caster) => ({ actor: template.useTargetActor ? undefined : caster }),
-	startOfTurn: (template, caster) => ({ actor: template.useTargetActor ? undefined : caster }),
+	endOfTurn: (template, caster) => ({
+		actor: template.useTargetActor ? undefined : caster.mashupId,
+		actorName: template.useTargetActor ? undefined : caster?.name ?? undefined,
+	}),
+	startOfTurn: (template, caster) => ({
+		actor: template.useTargetActor ? undefined : caster.mashupId,
+		actorName: template.useTargetActor ? undefined : caster?.name ?? undefined,
+	}),
 	saveEnds: (template) => template,
 	shortRest: (template) => template,
 	longRest: (template) => template,

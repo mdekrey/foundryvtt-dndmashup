@@ -7,11 +7,10 @@ import {
 	FeatureBonus,
 	TriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import type { ActorDocument } from '../actor';
 
 interface ComputableEffectDurationTypeData {
-	endOfTurn: { actor?: ActorDocument };
-	startOfTurn: { actor?: ActorDocument };
+	endOfTurn: { actor?: string; actorName?: string };
+	startOfTurn: { actor?: string; actorName?: string };
 	other: EffectDurationTypeData['other'];
 }
 
@@ -29,8 +28,8 @@ export type ActiveEffectFlags = {
 		bonuses?: FeatureBonus[];
 		triggers?: TriggeredEffect[];
 		auras?: Aura[];
-		afterEffect?: ActiveEffectDocumentConstructorParams;
-		afterFailedSave?: ActiveEffectDocumentConstructorParams;
+		afterEffect?: ActiveEffectDocumentConstructorParams | null;
+		afterFailedSave?: ActiveEffectDocumentConstructorParams | null;
 		effectDuration?: EffectDurationInfo;
 	};
 };

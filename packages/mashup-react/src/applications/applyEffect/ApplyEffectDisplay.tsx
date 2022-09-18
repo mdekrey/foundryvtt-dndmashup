@@ -54,13 +54,13 @@ function durationToText(duration: ComputableEffectDurationInfo<EffectDurationTyp
 	switch (duration.durationType) {
 		case 'endOfTurn':
 			if (duration.actor) {
-				return `end of ${duration.actor.name}'s next turn`;
+				return `end of ${duration.actorName}'s next turn`;
 			} else {
 				return `end of the target's next turn`;
 			}
 		case 'startOfTurn':
 			if (duration.actor) {
-				return `start of ${duration.actor.name}'s next turn`;
+				return `start of ${duration.actorName}'s next turn`;
 			} else {
 				return `start of the target's next turn`;
 			}

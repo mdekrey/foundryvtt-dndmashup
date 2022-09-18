@@ -34,8 +34,9 @@ import {
 	toComputable,
 	ActiveEffectDocumentConstructorData,
 	DerivedCache,
+	ActiveEffectDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { expandObjectsAndArrays, isGame } from '../../core/foundry';
+import { expandObjectsAndArrays, isGame, toMashupId } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
 import { PossibleActorData, SpecificActorData } from './types';
@@ -89,6 +90,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		this.subActorFunctions = actorSubtypeConfig[this.data.type] as typeof this.subActorFunctions;
 		super.prepareData();
 		this.handleHealthUpdate();
+	}
+
+	get mashupId(): string {
+		return toMashupId(this);
 	}
 
 	get appliedClass() {
@@ -220,8 +225,22 @@ export class MashupActor extends Actor implements ActorDocument {
 				);
 			}
 		}
-		await ActiveEffect.create(createFinalEffectConstructorData([effect, duration, useStandardStats], this), {
+		const result = createFinalEffectConstructorData([effect, duration, useStandardStats], this);
+		await ActiveEffect.create(result, {
 			parent: this,
+		});
+	}
+	async updateActiveEffect(
+		activeEffect: ActiveEffectDocument,
+		effect: ActiveEffectDocumentConstructorData,
+		duration: ComputableEffectDurationInfo,
+		useStandardStats: boolean
+	) {
+		const result = createFinalEffectConstructorData([effect, duration, useStandardStats], this);
+		await activeEffect.update(result, {
+			overwrite: true,
+			diff: false,
+			recursive: false,
 		});
 	}
 

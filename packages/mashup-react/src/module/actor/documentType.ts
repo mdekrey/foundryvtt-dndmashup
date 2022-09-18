@@ -10,7 +10,7 @@ import {
 	SourcedPoolBonus,
 	SourcedPoolLimits,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActiveEffectDocumentConstructorParams } from '../active-effect/types';
+import { ActiveEffectDocument, ActiveEffectDocumentConstructorParams } from '../active-effect/types';
 import { PossibleItemType } from '../item';
 import { EquipmentData } from '../item/subtypes/equipment/dataSourceData';
 import { EquippedItemSlot } from '../item/subtypes/equipment/item-slots';
@@ -61,6 +61,8 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	readonly derivedData: ActorDerivedData<T>;
 	readonly token: null | TokenDocument;
 
+	get mashupId(): string;
+
 	get derivedCache(): DerivedCache;
 	get halfLevel(): number;
 	get milestones(): number;
@@ -75,6 +77,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	applyHealing(options: HealingOptions): Promise<void>;
 
 	createActiveEffect(...params: ActiveEffectDocumentConstructorParams): Promise<void>;
+	updateActiveEffect(item: ActiveEffectDocument, ...params: ActiveEffectDocumentConstructorParams): Promise<void>;
 
 	applyShortRest(healingSurges: number, healingBonusByType: BonusByType): Promise<boolean>;
 	applyLongRest(): Promise<boolean>;
