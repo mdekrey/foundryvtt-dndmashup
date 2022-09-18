@@ -8,6 +8,8 @@ import {
 	DamageEffect,
 	HealingEffect,
 	DropIcon,
+	FeatureBonusWithContext,
+	FeatureBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
@@ -20,6 +22,7 @@ export type InstantaneousEffectOptionsProps = {
 	power?: PowerDocument;
 	allowToolSelection: boolean;
 	allowCritical: boolean;
+	extraBonuses: FeatureBonusWithContext[];
 };
 
 export function InstantaneousEffectOptions({
@@ -30,6 +33,7 @@ export function InstantaneousEffectOptions({
 	power,
 	allowToolSelection,
 	allowCritical,
+	extraBonuses,
 }: InstantaneousEffectOptionsProps) {
 	const applications = useApplicationDispatcher();
 	return (
@@ -67,6 +71,8 @@ export function InstantaneousEffectOptions({
 				baseDamageTypes: damageEffect.damageTypes,
 				allowToolSelection,
 				allowCritical,
+
+				extraBonuses: [...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])],
 			});
 		};
 	}
@@ -84,6 +90,8 @@ export function InstantaneousEffectOptions({
 				spendHealingSurge: healingEffect.spendHealingSurge,
 				healingSurge: healingEffect.healingSurge,
 				isTemporary: healingEffect.isTemporary,
+
+				extraBonuses: [...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])],
 			});
 		};
 	}
@@ -96,4 +104,8 @@ export function InstantaneousEffectOptions({
 			});
 		};
 	}
+}
+
+export function addContextToFeatureBonus(actor: ActorDocument | undefined, power: PowerDocument | undefined) {
+	return (b: FeatureBonus): FeatureBonusWithContext => ({ ...b, context: { actor, item: power } });
 }

@@ -137,6 +137,7 @@ function ToolExtraEffects({
 					actor={actor}
 					allowToolSelection={false}
 					allowCritical={false}
+					extraBonuses={[]}
 				/>
 			)}
 			{additionalEffects['critical-hit'] && (
@@ -148,6 +149,7 @@ function ToolExtraEffects({
 					actor={actor}
 					allowToolSelection={false}
 					allowCritical={false}
+					extraBonuses={[]}
 				/>
 			)}
 		</>

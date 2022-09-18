@@ -46,6 +46,7 @@ export const firstEffectLens = effectsLens.toField(0).default({
 	attackRoll: null,
 	hit: { text: '', healing: null, damage: null, activeEffectTemplate: null, bonuses: null },
 	miss: null,
+	bonuses: null,
 });
 const defaultNewEffect: PowerEffect = Object.freeze({
 	name: '',
@@ -56,6 +57,7 @@ const defaultNewEffect: PowerEffect = Object.freeze({
 	attackRoll: null,
 	hit: { text: '', healing: null, damage: null, activeEffectTemplate: null, bonuses: null },
 	miss: null,
+	bonuses: null,
 });
 export const newEffectLens = Lens.from<PowerEffect[], PowerEffect>(
 	() => defaultNewEffect,

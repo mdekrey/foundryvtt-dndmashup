@@ -5,6 +5,7 @@ import {
 	InstantaneousEffect,
 	ActiveEffectTemplate,
 	Trigger,
+	FeatureBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { CommonItemDocumentProperties } from '../../item-data-types-template';
 import { BaseItemTemplateDataSourceData } from '../../templates/bases';
@@ -42,6 +43,7 @@ export type PowerEffect = {
 	attackRoll: AttackRoll | null;
 	hit: InstantaneousEffect;
 	miss: InstantaneousEffect | null;
+	bonuses: FeatureBonus[] | null;
 };
 
 export type PowerUsage =

@@ -26,6 +26,7 @@ export type DamageRollApplicationParametersBase = {
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;
 	allowToolSelection: boolean;
+	extraBonuses?: FeatureBonusWithContext[];
 };
 
 export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & {

@@ -9,8 +9,9 @@ import {
 	PowerPreview,
 	PowerDocument,
 	effectTypeAndRangeText,
+	addContextToFeatureBonus,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
+import { FeatureBonusWithContext, InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 
 type PowerEffectTemplateProps = {
@@ -23,7 +24,7 @@ export function PowerChat({
 }: {
 	item: PowerDocument;
 	actor: ActorDocument;
-	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FeatureBonusWithContext[]) => void;
 } & PowerEffectTemplateProps) {
 	return (
 		<div className="flex flex-col items-center">
@@ -39,7 +40,7 @@ function PowerChatContents({
 }: {
 	item: PowerDocument;
 	actor: ActorDocument;
-	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FeatureBonusWithContext[]) => void;
 } & PowerEffectTemplateProps) {
 	const subPowers = item.allGrantedPowers();
 	return (
@@ -64,7 +65,7 @@ function PowerOptions({
 }: {
 	power: PowerDocument;
 	actor: ActorDocument;
-	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FeatureBonusWithContext[]) => void;
 } & PowerEffectTemplateProps) {
 	return (
 		<>
@@ -98,10 +99,11 @@ function PowerEffectOptions({
 	effect: PowerEffect;
 	power: PowerDocument;
 	actor: ActorDocument;
-	rollAttack: (attackRoll: AttackRoll, title: string) => void;
+	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FeatureBonusWithContext[]) => void;
 } & PowerEffectTemplateProps) {
+	const extraBonuses = effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [];
 	const prefix = `${power.name} ${effect.name}`.trim();
-	const effectProps = { prefix: prefix, actor, power, source: power };
+	const effectProps = { prefix: prefix, actor, power, source: power, extraBonuses };
 	const missSection = showSection(effect.miss) ? (
 		<InstantaneousEffectSection
 			effect={effect.miss}
@@ -165,6 +167,6 @@ function PowerEffectOptions({
 	);
 
 	function attackRoll(attackRoll: AttackRoll) {
-		return async () => rollAttack(attackRoll, effect.name || '');
+		return async () => rollAttack(attackRoll, effect.name || '', extraBonuses);
 	}
 }

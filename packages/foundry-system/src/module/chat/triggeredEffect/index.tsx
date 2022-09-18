@@ -34,16 +34,21 @@ function TriggeredEffectChat({ actor, triggeredEffect }: { actor: ActorDocument;
 	return (
 		<>
 			<p>
-				Has a trigger at {getTriggerText(triggeredEffect.trigger)} that: {getEffectText(triggeredEffect.effect)}
+				Activates a trigger: {getTriggerText(triggeredEffect.trigger)}: {getEffectText(triggeredEffect.effect)}
 			</p>
-			<InstantaneousEffectSection
-				effect={triggeredEffect.effect}
-				prefix="Trigger"
-				mode="Trigger"
-				actor={actor}
-				allowToolSelection={true}
-				allowCritical={true}
-			/>
+			{triggeredEffect.effect.activeEffectTemplate ||
+			triggeredEffect.effect.damage ||
+			triggeredEffect.effect.healing ? (
+				<InstantaneousEffectSection
+					effect={triggeredEffect.effect}
+					prefix="Trigger"
+					mode="Trigger"
+					actor={actor}
+					allowToolSelection={true}
+					allowCritical={true}
+					extraBonuses={[]}
+				/>
+			) : null}
 		</>
 	);
 }

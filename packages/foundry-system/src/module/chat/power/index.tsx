@@ -12,6 +12,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerEffectTemplate } from '../../aura/power-effect-template';
 import { MashupActor } from '../../actor';
+import { FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 
 chatMessageRegistry.power = powerChatMessage;
 chatAttachments['power'] = PowerChatRef;
@@ -65,7 +66,7 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			});
 	}
 
-	function rollAttack(attackRoll: AttackRoll, title: string) {
+	function rollAttack(attackRoll: AttackRoll, title: string, extraBonuses: FeatureBonusWithContext[]) {
 		applications.launchApplication('attackRoll', {
 			baseDice: `1d20 + ${attackRoll.attack}`,
 			title: `${item.name} ${title}`.trim(),
@@ -74,6 +75,7 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			rollType: 'attack-roll',
 			defense: attackRoll.defense,
 			allowToolSelection: true,
+			extraBonuses,
 		});
 	}
 }
