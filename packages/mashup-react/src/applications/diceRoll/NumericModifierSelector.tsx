@@ -11,8 +11,12 @@ import {
 	ruleResultIndeterminate,
 	fromBonusesToFormula,
 	RollComponent,
+	bonusToText,
+	FullFeatureBonus,
+	FeatureBonusWithSource,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
+import { addContextToFeatureBonus } from '../../effects';
 
 export function NumericModifierSelector({
 	actor,
@@ -27,7 +31,7 @@ export function NumericModifierSelector({
 	rollTarget: NumericBonusTarget;
 	actor: ActorDocument;
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
-	extraBonuses?: FeatureBonusWithContext[];
+	extraBonuses?: FullFeatureBonus[];
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onBonusesChange(bonusFormula: RollComponent, bonusByType: BonusByType): void;
 }) {
@@ -37,10 +41,11 @@ export function NumericModifierSelector({
 	const toolBonuses = useMemo(() => {
 		if (tool === null) return { indeterminate: [], applied: [] };
 		const allToolBonuses = tool.allGrantedBonuses(true);
-		const filtered = filterConditions(
+		const filtered = filterConditions<FullFeatureBonus>(
 			allToolBonuses
 				.filter((b) => b.target === rollTarget)
-				.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor, item: tool } })),
+				.map((b): FeatureBonusWithSource => ({ ...b, source: tool }))
+				.map(addContextToFeatureBonus(actor, tool)),
 			runtimeBonusParameters,
 			true
 		);
@@ -52,9 +57,7 @@ export function NumericModifierSelector({
 	const extraBonusLists = useMemo(() => {
 		if (!extraBonuses) return { indeterminate: [], applied: [] };
 		const filtered = filterConditions(
-			extraBonuses
-				.filter((b) => b.target === rollTarget)
-				.map((bonus): FeatureBonusWithContext => ({ ...bonus, context: { actor: actor } })),
+			extraBonuses.filter((b) => b.target === rollTarget),
 			runtimeBonusParameters,
 			true
 		);
@@ -70,26 +73,28 @@ export function NumericModifierSelector({
 		[indeterminate, toolBonuses.indeterminate, extraBonusLists.indeterminate]
 	);
 
-	const { bonusFormula, bonusByType } = useMemo(() => {
+	const { bonusFormula, bonusByType, selectedBonuses } = useMemo(() => {
 		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
-		const selectedBonuses: FeatureBonusWithContext[] = [
+		const selectedBonuses: FullFeatureBonus[] = [
 			...applied,
 			...toolBonuses.applied,
 			...extraBonusLists.applied,
 			...selectedIndeterminateBonuses,
 		];
+		const actualInput: FeatureBonusWithContext[] = [...selectedBonuses];
 		if (additionalModifiersState.value.trim()) {
-			selectedBonuses.push({
+			actualInput.push({
 				target: rollTarget,
 				amount: additionalModifiersState.value.trim(),
 				condition: null,
 				context: { actor },
 			});
 		}
-		const bonusByType = evaluateBonuses(selectedBonuses);
+		const bonusByType = evaluateBonuses(actualInput);
 		return {
 			bonusFormula: fromBonusesToFormula(bonusByType),
 			bonusByType,
+			selectedBonuses,
 		};
 	}, [
 		selectedBonusesState.value,
@@ -106,6 +111,23 @@ export function NumericModifierSelector({
 
 	return (
 		<>
+			{selectedBonuses.length > 0 ? (
+				<>
+					<p>Applied:</p>
+					<ul className="list-disc ml-4">
+						{selectedBonuses.map((bonus) => {
+							const text = `${bonusToText(bonus)} from ${bonus.source.name}`;
+							return (
+								<li
+									className="pl-8 -indent-8 mb-2 even:bg-gradient-to-r from-transparent to-white odd:bg-transparent"
+									key={text}>
+									{text}
+								</li>
+							);
+						})}
+					</ul>
+				</>
+			) : null}
 			{indeterminateBonuses.map((b, index) => (
 				<FormInput.Inline key={index}>
 					<FormInput.Checkbox
@@ -114,7 +136,7 @@ export function NumericModifierSelector({
 					/>
 					<span>
 						{typeof b.amount === 'number' ? ensureSign(b.amount) : b.amount}{' '}
-						{b.amount < 0 ? 'penalty' : `${b.type ? `${b.type} ` : ''}bonus`.trim()} if{' '}
+						{b.amount < 0 ? 'penalty' : `${b.type ? `${b.type} ` : ''}bonus`.trim()}{' '}
 						{b.condition ? getRuleText(b.condition) : '...?'}
 					</span>
 				</FormInput.Inline>

@@ -10,23 +10,28 @@ import {
 	DropIcon,
 	FeatureBonusWithContext,
 	FeatureBonus,
+	FullFeatureBonus,
+	Source,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
+import { ItemDocument } from '../module/item';
 
 export type InstantaneousEffectOptionsProps = {
 	effect: InstantaneousEffect;
+	source: Source;
 	prefix?: string;
 	mode: string;
 	actor: ActorDocument;
 	power?: PowerDocument;
 	allowToolSelection: boolean;
 	allowCritical: boolean;
-	extraBonuses: FeatureBonusWithContext[];
+	extraBonuses: FullFeatureBonus[];
 };
 
 export function InstantaneousEffectOptions({
 	effect,
+	source,
 	prefix,
 	mode,
 	actor,
@@ -61,6 +66,7 @@ export function InstantaneousEffectOptions({
 
 	function damageRoll(damageEffect: DamageEffect) {
 		return () => {
+			console.log([...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])]);
 			applications.launchApplication('damage', {
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
@@ -72,7 +78,10 @@ export function InstantaneousEffectOptions({
 				allowToolSelection,
 				allowCritical,
 
-				extraBonuses: [...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])],
+				extraBonuses: [
+					...extraBonuses,
+					...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)).map(addSource) ?? []),
+				],
 			});
 		};
 	}
@@ -91,7 +100,10 @@ export function InstantaneousEffectOptions({
 				healingSurge: healingEffect.healingSurge,
 				isTemporary: healingEffect.isTemporary,
 
-				extraBonuses: [...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])],
+				extraBonuses: [
+					...extraBonuses,
+					...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)).map(addSource) ?? []),
+				],
 			});
 		};
 	}
@@ -104,8 +116,12 @@ export function InstantaneousEffectOptions({
 			});
 		};
 	}
+
+	function addSource(b: FeatureBonusWithContext): FullFeatureBonus {
+		return { ...b, source };
+	}
 }
 
-export function addContextToFeatureBonus(actor: ActorDocument | undefined, power: PowerDocument | undefined) {
-	return (b: FeatureBonus): FeatureBonusWithContext => ({ ...b, context: { actor, item: power } });
+export function addContextToFeatureBonus(actor: ActorDocument | undefined, item: ItemDocument | undefined) {
+	return <T extends FeatureBonus>(b: T): T & FeatureBonusWithContext => ({ ...b, context: { actor, item } });
 }

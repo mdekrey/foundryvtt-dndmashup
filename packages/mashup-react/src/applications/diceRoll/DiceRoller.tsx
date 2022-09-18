@@ -6,6 +6,7 @@ import {
 	FeatureBonusWithContext,
 	combineRollComponents,
 	RollComponent,
+	FullFeatureBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { EquipmentDocument } from '../../module/item';
@@ -24,7 +25,7 @@ export type DiceRollerRequiredProps = {
 	baseDice: string;
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
-	extraBonuses?: FeatureBonusWithContext[];
+	extraBonuses?: FullFeatureBonus[];
 
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: RollDetails): void;

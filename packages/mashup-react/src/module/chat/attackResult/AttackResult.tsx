@@ -133,6 +133,7 @@ function ToolExtraEffects({
 					effect={additionalEffects.hit}
 					mode="Hit"
 					prefix={tool.name ?? undefined}
+					source={tool}
 					power={power}
 					actor={actor}
 					allowToolSelection={false}
@@ -145,6 +146,7 @@ function ToolExtraEffects({
 					effect={additionalEffects['critical-hit']}
 					mode="Critical Hit"
 					prefix={tool.name ?? undefined}
+					source={tool}
 					power={power}
 					actor={actor}
 					allowToolSelection={false}

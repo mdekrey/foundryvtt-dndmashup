@@ -4,7 +4,7 @@ import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { SkillEntry } from '../types';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../documentType';
-import { abilities, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { abilities, FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 const baseLens = Lens.identity<SkillEntry[]>().to(
 	(v) => v,
@@ -49,14 +49,16 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 					context: { actor },
 					target: 'check',
 					type: 'rank',
+					source: actor,
 				},
 				...abilities.map(
-					(ability): FeatureBonusWithContext => ({
+					(ability): FullFeatureBonus => ({
 						condition: { rule: 'manual', parameter: { conditionText: `${ability.toUpperCase()} applies` } },
 						type: 'ability',
 						target: 'check',
 						amount: `+${ability.toUpperCase()}`,
 						context: { actor },
+						source: actor,
 					})
 				),
 			],

@@ -9,6 +9,7 @@ import {
 	RollComponent,
 	DamageType,
 	DynamicListTarget,
+	FullFeatureBonus,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { EquipmentDocument } from '../../module/item';
@@ -28,6 +29,7 @@ export type DamageRollerRequiredProps = {
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;
 	baseDice: string;
+	extraBonuses?: FullFeatureBonus[];
 	baseDamageTypes: DamageType[];
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
@@ -40,6 +42,7 @@ export type DamageRollerRequiredProps = {
 export function DamageRoller({
 	actor,
 	baseDice,
+	extraBonuses,
 	baseDamageTypes,
 	possibleTools,
 	rollType,
@@ -71,6 +74,7 @@ export function DamageRoller({
 				actor={actor}
 				tool={tool}
 				evaluateBonuses={evaluateBonuses}
+				extraBonuses={extraBonuses}
 				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
 				rollTarget={rollType}
 				runtimeBonusParameters={runtimeBonusParameters}

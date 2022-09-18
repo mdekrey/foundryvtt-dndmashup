@@ -4,7 +4,17 @@ import { getToolsForPower } from './getToolsForPower';
 import { DisplayDialogProps } from './damage-roll';
 
 export function displayDamageDialog(
-	{ baseDice, baseDamageTypes, actor, power, rollType, listType, tool, allowToolSelection }: DisplayDialogProps,
+	{
+		baseDice,
+		baseDamageTypes,
+		actor,
+		power,
+		rollType,
+		listType,
+		tool,
+		allowToolSelection,
+		extraBonuses,
+	}: DisplayDialogProps,
 	onComplete: (rollProps: DamageRollDetails) => void,
 	onCritical?: (rollProps: DamageRollDetails) => void
 ) {
@@ -22,6 +32,7 @@ export function displayDamageDialog(
 			rollType={rollType}
 			listType={listType}
 			baseDice={baseDice}
+			extraBonuses={extraBonuses}
 			baseDamageTypes={baseDamageTypes}
 			onRoll={onComplete}
 			runtimeBonusParameters={

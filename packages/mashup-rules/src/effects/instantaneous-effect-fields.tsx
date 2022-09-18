@@ -1,18 +1,21 @@
-import { BlockHeader, FormInput } from '@foundryvtt-dndmashup/components';
+import { useState } from 'react';
+import { BlockHeader, FormInput, Modal } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { DamageFields } from './DamageFields';
 import { HealingFields } from './HealingFields';
 import { InstantaneousEffect } from './types';
 import { ReactComponent as DropIcon } from './drop.svg';
-import { HeartIcon, LightningBoltIcon } from '@heroicons/react/solid';
+import { HeartIcon, LightningBoltIcon, PlusIcon } from '@heroicons/react/solid';
 import { activeEffectTemplateDefaultLens } from './lenses';
 import { ActiveEffectTemplateEditorButton } from './ActiveEffectTemplateEditorButton';
+import { BonusesEditor, bonusToText } from '../bonuses';
 
 const instantaneousEffectFieldLens = Lens.fromProp<InstantaneousEffect>();
 
 const damageEffectLens = instantaneousEffectFieldLens('damage');
 const effectTextLens = instantaneousEffectFieldLens('text');
 const healingEffectLens = instantaneousEffectFieldLens('healing');
+const bonusesLens = instantaneousEffectFieldLens('bonuses').default([]);
 
 const activeEffectTemplateLens = instantaneousEffectFieldLens('activeEffectTemplate').combine(
 	activeEffectTemplateDefaultLens
@@ -23,6 +26,7 @@ export function InstantaneousEffectFields({
 	prefix,
 	...props
 }: { prefix?: string; fallbackImage?: string | null } & Stateful<InstantaneousEffect>) {
+	const [bonusesOpen, setBonusesOpen] = useState(false);
 	return (
 		<>
 			{prefix ? <BlockHeader>{prefix}</BlockHeader> : null}
@@ -48,6 +52,18 @@ export function InstantaneousEffectFields({
 					activeEffectTemplate={activeEffectTemplateLens.apply(props)}
 				/>
 			</div>
+			<button
+				type="button"
+				className="flex flex-row gap-1 items-baseline text-left"
+				onClick={() => setBonusesOpen((b) => !b)}>
+				<PlusIcon className="h-5 w-5" />
+				<p className="flex-grow">
+					{props.value.bonuses?.length ? props.value.bonuses?.map(bonusToText).join(' ') : 'No bonuses'}
+				</p>
+			</button>
+			<Modal title={`Bonuses during ${prefix}`} isOpen={bonusesOpen} onClose={() => setBonusesOpen(false)}>
+				<BonusesEditor bonuses={bonusesLens.apply(props)} />
+			</Modal>
 		</>
 	);
 }

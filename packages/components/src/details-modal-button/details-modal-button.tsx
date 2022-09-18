@@ -62,7 +62,7 @@ export function DetailsModalButton({
 				onClick={disabled ? undefined : () => setOpen(true)}>
 				{buttonContents}
 			</button>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title={modalTitle}>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title={modalTitle} options={{ resizable: false }}>
 				<detailsModalContext.Provider value={detailsModalContextValue}>
 					<div
 						onBlur={onBlur}

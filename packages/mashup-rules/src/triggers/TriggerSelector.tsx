@@ -33,7 +33,7 @@ export function TriggerSelector({ className, ...state }: Stateful<Trigger> & { c
 			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
 				{toTriggerText(trigger)}
 			</AppButton>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Trigger" options={{ resizable: true }}>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Trigger">
 				<div className="min-h-64 flex flex-col">
 					<div className="flex-grow">
 						<FormInput.Select {...triggerTypeLens.apply(state)} options={selectTriggers} className="text-center" />

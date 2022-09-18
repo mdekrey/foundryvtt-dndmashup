@@ -37,7 +37,7 @@ export function ConditionSelector(state: Stateful<SimpleConditionRule>) {
 			<AppButton className="w-full" onClick={() => setOpen((c) => !c)}>
 				{toRuleText(conditionRule)}
 			</AppButton>
-			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition" options={{ resizable: true }}>
+			<Modal isOpen={isOpen} onClose={() => setOpen(false)} title="Condition">
 				<div className="min-h-64 flex flex-col">
 					<div className="flex-grow">
 						<FormInput.Select {...ruleTypeLens.apply(state)} options={selectConditions} className="text-center" />

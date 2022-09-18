@@ -58,6 +58,7 @@ export function Abilities({
 					context: { actor },
 					target: 'check',
 					type: 'ability',
+					source: actor,
 				},
 				{
 					condition: { rule: 'manual', parameter: { conditionText: 'half-level applies' } },
@@ -65,6 +66,7 @@ export function Abilities({
 					target: 'check',
 					amount: actor.halfLevel,
 					context: { actor },
+					source: actor,
 				},
 			],
 		});

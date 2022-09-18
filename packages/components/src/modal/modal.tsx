@@ -15,14 +15,17 @@ export function Modal({ children, title, options, isOpen, onClose: onCloseCallba
 	const application = useModalDispatcher();
 	const dialogRef = useRef<UpdatableModal>();
 	if (dialogRef.current === undefined) {
-		dialogRef.current = application.launchModal({ content: <>{children}</>, title, options }, () => {
-			dialogRef.current = undefined;
+		dialogRef.current = application.launchModal(
+			{ content: <>{children}</>, title, options: { ...options, resizable: options?.resizable ?? true } },
+			() => {
+				dialogRef.current = undefined;
 
-			if (isOpenRef.current) {
-				isOpenRef.current = false;
-				onCloseCallback();
+				if (isOpenRef.current) {
+					isOpenRef.current = false;
+					onCloseCallback();
+				}
 			}
-		});
+		);
 	}
 	useEffect(() => dialogRef.current?.updateContent(<>{children}</>), [children]);
 	useEffect(() => {

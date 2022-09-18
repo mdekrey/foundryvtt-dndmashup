@@ -41,6 +41,7 @@ function TriggeredEffectChat({ actor, triggeredEffect }: { actor: ActorDocument;
 			triggeredEffect.effect.healing ? (
 				<InstantaneousEffectSection
 					effect={triggeredEffect.effect}
+					source={actor /* TODO - not the right source, but otherwise I don't think we have it */}
 					prefix="Trigger"
 					mode="Trigger"
 					actor={actor}
