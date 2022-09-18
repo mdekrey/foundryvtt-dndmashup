@@ -1,20 +1,6 @@
-import { useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
-
-function RenderCallback({ children, onRender }: { children?: React.ReactNode; onRender: () => void }) {
-	useEffect(() => {
-		onRender();
-	}, [onRender]);
-	return <>{children}</>;
-}
+import { renderToString } from 'react-dom/server';
 
 export async function renderReactToHtml(el: JSX.Element) {
-	const target = $(`<div></div>`)[0];
-	const root = createRoot(target);
-	try {
-		await new Promise((resolve) => root.render(<RenderCallback onRender={() => resolve(null)}>{el}</RenderCallback>));
-		return target.innerHTML;
-	} finally {
-		root.unmount();
-	}
+	const result = renderToString(el);
+	return result;
 }
