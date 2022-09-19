@@ -1,8 +1,8 @@
 import { groupBy } from 'lodash/fp';
-import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, ConditionRuleContext, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 import { simplifyDice } from '../dice';
 import { ensureSign } from '@foundryvtt-dndmashup/core';
-import { buildConditionContext } from '@foundryvtt-dndmashup/mashup-react';
+import { emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
 
@@ -16,7 +16,7 @@ export function evaluateAndRoll(
 			target: '' as never,
 			type,
 			condition: null,
-			context: buildConditionContext({ actor: undefined, item: undefined, activeEffectSources: undefined }),
+			context: { ...emptyConditionContext },
 		})
 	);
 	const byType = groupBy((e) => e.type || '', [...bonusesWithContext, ...extraBonuses]);
@@ -44,6 +44,6 @@ export function evaluateAndRoll(
 	return finalBonuses;
 }
 
-function evaluateAmount(amount: string | number, context: Partial<ConditionGrantingContext>) {
+function evaluateAmount(amount: string | number, context: ConditionRuleContext) {
 	return typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total;
 }

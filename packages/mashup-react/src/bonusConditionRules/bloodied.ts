@@ -1,7 +1,8 @@
 import { ActorDocument } from '../module/actor/documentType';
-import { conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import { conditionsRegistry, ruleResultIndeterminate } from '@foundryvtt-dndmashup/mashup-rules';
 
-export function bloodied({ actor }: { actor: ActorDocument }) {
+export function bloodied({ actor }: { actor: ActorDocument | undefined }) {
+	if (!actor) return ruleResultIndeterminate;
 	if (actor.data.data.health.hp.value < actor.derivedData.health.hp.max) return true;
 	return false;
 }

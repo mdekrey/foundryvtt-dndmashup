@@ -12,10 +12,10 @@ import {
 	FeatureBonus,
 	FullFeatureBonus,
 	Source,
+	ConditionRuleContext,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
-import { buildConditionContext } from '../bonusConditionRules';
 
 export type InstantaneousEffectOptionsProps = {
 	effect: InstantaneousEffect;
@@ -131,9 +131,9 @@ export function InstantaneousEffectOptions({
 	}
 }
 
-export function addContextToFeatureBonus(...params: Parameters<typeof buildConditionContext>) {
+export function addContextToFeatureBonus(context: ConditionRuleContext) {
 	return <T extends FeatureBonus>(b: T): T & FeatureBonusWithContext => ({
 		...b,
-		context: buildConditionContext(...params),
+		context,
 	});
 }

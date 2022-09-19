@@ -1,5 +1,6 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { ConditionRuleContext, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import { TokenDocument } from '../module';
 
 declare global {
 	interface ConditionGrantingContext {
@@ -7,7 +8,7 @@ declare global {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionRulesRuntimeParameters {
-		// TODO: targets
+		targets: TokenDocument[];
 	}
 }
 

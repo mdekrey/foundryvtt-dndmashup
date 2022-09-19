@@ -22,6 +22,8 @@ export type TokenDocument = {
 	id: string | null;
 	name: string | null;
 
+	actor: ActorDocument | null;
+
 	readonly isOwner: boolean;
 	control?(options?: { releaseOthers?: boolean }): boolean;
 };

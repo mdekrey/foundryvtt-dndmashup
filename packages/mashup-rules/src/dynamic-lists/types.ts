@@ -14,7 +14,7 @@ export type DynamicListEntryWithSource = DynamicListEntry & {
 };
 
 export type DynamicListEntryWithContext = DynamicListEntry & {
-	context: Partial<ConditionRuleContext>;
+	context: ConditionRuleContext;
 };
 
 export type FullDynamicListEntry = DynamicListEntryWithSource & DynamicListEntryWithContext;

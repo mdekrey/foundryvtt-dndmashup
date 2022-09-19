@@ -1,5 +1,5 @@
 import { isEquipment, WeaponItemSlotTemplate } from '@foundryvtt-dndmashup/mashup-react';
-import { conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import { conditionsRegistry, ruleResultIndeterminate } from '@foundryvtt-dndmashup/mashup-rules';
 
 type SwordmageEquipmentConditionParameter = { conditionText: string };
 
@@ -14,6 +14,7 @@ conditionsRegistry.swordmageEquipment = {
 		'when you are wielding a blade in one hand and have your other hand free (not carrying a shield, an off-hand weapon, a two-handed weapon, or anything else).',
 	ruleEditor: () => null,
 	rule: (input) => {
+		if (!input.actor) return ruleResultIndeterminate;
 		const equipment = input.actor.items.contents.filter(isEquipment);
 		if (equipment.some((eq) => eq.data.data.equipped.includes('off-hand'))) return false;
 		if (

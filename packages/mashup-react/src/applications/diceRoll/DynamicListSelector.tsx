@@ -32,7 +32,12 @@ export function DynamicListSelector({
 		const filtered = filterConditions(
 			allToolDynamicList
 				.filter((b) => b.target === listType)
-				.map((entry): DynamicListEntryWithContext => ({ ...entry, context: { actor: actor, item: tool } })),
+				.map(
+					(entry): DynamicListEntryWithContext => ({
+						...entry,
+						context: { actor, item: tool, activeEffectSources: undefined },
+					})
+				),
 			runtimeBonusParameters,
 			true
 		);

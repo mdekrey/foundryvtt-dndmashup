@@ -12,9 +12,9 @@ import {
 } from '@foundryvtt-dndmashup/mashup-rules';
 import {
 	ActorDerivedData,
-	buildConditionContext,
 	DerivedCache,
 	DerivedCacheType,
+	emptyConditionContext,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
@@ -85,7 +85,7 @@ class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureB
 				.map((bonus) => ({
 					...bonus,
 					source: this.actor,
-					context: buildConditionContext({ actor: this.actor, item: undefined, activeEffectSources: undefined }),
+					context: { ...emptyConditionContext, actor: this.actor },
 				})),
 			...getBonuses(this.actor, target),
 		];

@@ -1,7 +1,7 @@
-export type IntentionalConditionContext = {
-	[K in keyof ConditionGrantingContext]: ConditionGrantingContext[K] | undefined;
-};
+import { ConditionRuleContext } from '@foundryvtt-dndmashup/mashup-rules';
 
-export function buildConditionContext(context: IntentionalConditionContext): IntentionalConditionContext {
-	return context;
-}
+export const emptyConditionContext: ConditionRuleContext = {
+	actor: undefined,
+	item: undefined,
+	activeEffectSources: undefined,
+};

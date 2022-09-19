@@ -10,7 +10,9 @@ export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> =
 		parameter: ConditionRules[K];
 	};
 }[TType];
-export type ConditionRuleContext = ConditionGrantingContext;
+export type ConditionRuleContext = {
+	[K in keyof ConditionGrantingContext]: ConditionGrantingContext[K] | undefined;
+};
 
 export const ruleResultIndeterminate = Symbol('indeterminate');
 export type ConditionRuleIndeterminateResult = typeof ruleResultIndeterminate;

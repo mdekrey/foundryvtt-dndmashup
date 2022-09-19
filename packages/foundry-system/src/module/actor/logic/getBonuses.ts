@@ -1,5 +1,5 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { buildConditionContext } from '@foundryvtt-dndmashup/mashup-react';
+import { emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 import {
 	AuraEffect,
 	combinePoolLimits,
@@ -54,12 +54,10 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 		...actor.data._source.data.bonuses.map((bonus) => ({
 			...bonus,
 			source: actor,
-			context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+			context: { ...emptyConditionContext, actor },
 		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item
-				.allGrantedBonuses()
-				.map((bonus) => ({ ...bonus, context: buildConditionContext({ actor, item, activeEffectSources: undefined }) }))
+			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
 
@@ -72,7 +70,7 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 					(b): FullFeatureBonus => ({
 						...b,
 						source: aura.sources[0],
-						context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+						context: { ...emptyConditionContext, actor, item: undefined },
 					})
 				)
 		),
@@ -85,7 +83,7 @@ function addEffectContext(effect: MashupActiveEffect, actor: MashupActor) {
 		.filter(Boolean) as BaseDocument[];
 	return (bonus: FeatureBonus): FullFeatureBonus => ({
 		...bonus,
-		context: buildConditionContext({ actor, item: undefined, activeEffectSources: originalSources }),
+		context: { ...emptyConditionContext, actor, activeEffectSources: originalSources },
 		source: effect,
 	});
 }
@@ -96,12 +94,10 @@ export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 		...actor.data._source.data.bonuses.map((bonus) => ({
 			...bonus,
 			source: actor,
-			context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+			context: { ...emptyConditionContext, actor },
 		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item
-				.allGrantedBonuses()
-				.map((bonus) => ({ ...bonus, context: buildConditionContext({ actor, item, activeEffectSources: undefined }) }))
+			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	];
 
@@ -112,7 +108,7 @@ export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 				(b): FullFeatureBonus => ({
 					...b,
 					source: aura.sources[0],
-					context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+					context: { ...emptyConditionContext, actor },
 				})
 			)
 		),
@@ -125,9 +121,13 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 		// ...actor.effects.contents.flatMap((effect) =>
 		// 	effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: actor }, source: effect }))
 		// ),
-		...actor.data._source.data.dynamicList.map((list) => ({ ...list, source: actor, context: { actor: actor } })),
+		...actor.data._source.data.dynamicList.map((list) => ({
+			...list,
+			source: actor,
+			context: { ...emptyConditionContext, actor },
+		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item.allDynamicList().map((bonus) => ({ ...bonus, context: { actor: actor, item } }))
+			item.allDynamicList().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
 
@@ -144,9 +144,13 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 
 export function getAllLists(actor: MashupActor): FullDynamicListEntry[] {
 	return [
-		...actor.data._source.data.dynamicList.map((bonus) => ({ ...bonus, source: actor, context: { actor: actor } })),
+		...actor.data._source.data.dynamicList.map((bonus) => ({
+			...bonus,
+			source: actor,
+			context: { ...emptyConditionContext, actor },
+		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item.allDynamicList().map((entry) => ({ ...entry, context: { actor: actor, item } }))
+			item.allDynamicList().map((entry) => ({ ...entry, context: { ...emptyConditionContext, actor, item } }))
 		),
 		// TODO: auras grant list entries
 		// ...appliedAuraEffect(actor, (aura) => aura..length > 0)

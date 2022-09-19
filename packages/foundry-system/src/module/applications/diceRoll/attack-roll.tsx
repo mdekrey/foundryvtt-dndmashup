@@ -7,6 +7,9 @@ import { displayDialog } from './displayDialog';
 import { roll } from './roll';
 
 applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => {
+	const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
+
+	// TODO: indeterminate effects from targets' defenses
 	return {
 		content: displayDialog(baseParams, onRoll),
 		title: `${baseParams.title} Attack`,
@@ -26,7 +29,6 @@ applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => 
 
 		// TODO: check each target for extra bonuses/penalties, like combat advantage?
 
-		const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
 		const targetRolls =
 			targets.length === 0
 				? [{ roll: (await roll(dice, { actor: baseParams.actor, item: tool })).toJSON() as never }]
