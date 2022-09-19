@@ -1,8 +1,11 @@
+import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { buildConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 import {
 	AuraEffect,
 	combinePoolLimits,
 	DynamicListTarget,
 	emptyInstantaneousEffect,
+	FeatureBonus,
 	FullDynamicListEntry,
 	FullFeatureBonus,
 	FullTriggeredEffect,
@@ -13,6 +16,7 @@ import {
 	Trigger,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import uniq from 'lodash/fp/uniq';
+import { fromMashupId } from '../../../core/foundry';
 import type { MashupActiveEffect } from '../../active-effect';
 import { getRelevantAuras } from '../../aura/getAuras';
 import { MashupPower } from '../../item/subtypes/power/class';
@@ -46,12 +50,16 @@ function getTokenAndScene(actor: MashupActor): [TokenDocument, Scene] | null {
 
 export function getBonuses(actor: MashupActor, target: NumericBonusTarget): FullFeatureBonus[] {
 	const internal: FullFeatureBonus[] = [
-		...actor.effects.contents.flatMap((effect) =>
-			effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: actor }, source: effect }))
-		),
-		...actor.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: actor, context: { actor: actor } })),
+		...actor.effects.contents.flatMap((effect) => effect.allBonuses().map(addEffectContext(effect, actor))),
+		...actor.data._source.data.bonuses.map((bonus) => ({
+			...bonus,
+			source: actor,
+			context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: actor, item } }))
+			item
+				.allGrantedBonuses()
+				.map((bonus) => ({ ...bonus, context: buildConditionContext({ actor, item, activeEffectSources: undefined }) }))
 		),
 	].filter((b) => b.target === target);
 
@@ -60,26 +68,53 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 		...appliedAuraEffect(actor, (aura) => aura.bonuses.filter((b) => b.target === target).length > 0).flatMap((aura) =>
 			aura.bonuses
 				.filter((b) => b.target === target)
-				.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: actor } }))
+				.map(
+					(b): FullFeatureBonus => ({
+						...b,
+						source: aura.sources[0],
+						context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+					})
+				)
 		),
 	];
 }
 
+function addEffectContext(effect: MashupActiveEffect, actor: MashupActor) {
+	const originalSources = effect.data.flags.mashup?.originalSources
+		?.map(fromMashupId)
+		.filter(Boolean) as BaseDocument[];
+	return (bonus: FeatureBonus): FullFeatureBonus => ({
+		...bonus,
+		context: buildConditionContext({ actor, item: undefined, activeEffectSources: originalSources }),
+		source: effect,
+	});
+}
+
 export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 	const internal: FullFeatureBonus[] = [
-		...actor.effects.contents.flatMap((effect) =>
-			effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: actor }, source: effect }))
-		),
-		...actor.data._source.data.bonuses.map((bonus) => ({ ...bonus, source: actor, context: { actor: actor } })),
+		...actor.effects.contents.flatMap((effect) => effect.allBonuses().map(addEffectContext(effect, actor))),
+		...actor.data._source.data.bonuses.map((bonus) => ({
+			...bonus,
+			source: actor,
+			context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+		})),
 		...actor.data.items.contents.flatMap((item) =>
-			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { actor: actor, item } }))
+			item
+				.allGrantedBonuses()
+				.map((bonus) => ({ ...bonus, context: buildConditionContext({ actor, item, activeEffectSources: undefined }) }))
 		),
 	];
 
 	return [
 		...internal,
 		...appliedAuraEffect(actor, (aura) => aura.bonuses.length > 0).flatMap((aura) =>
-			aura.bonuses.map((b): FullFeatureBonus => ({ ...b, source: aura.sources[0], context: { actor: actor } }))
+			aura.bonuses.map(
+				(b): FullFeatureBonus => ({
+					...b,
+					source: aura.sources[0],
+					context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
+				})
+			)
 		),
 	];
 }

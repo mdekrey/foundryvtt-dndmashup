@@ -14,6 +14,8 @@ export function createFinalEffectConstructorData(
 
 	if (effect.flags?.core?.statusId && useStandardStats) {
 		result = deepClone(CONFIG.statusEffects.find((e) => e.id === effect.flags?.core?.statusId) ?? effect);
+		result.label = effect.label;
+		result.icon = effect.icon;
 		result.flags ??= {};
 		result.flags.core ??= {};
 		result.flags.core.statusId = effect.flags?.core?.statusId;

@@ -101,7 +101,10 @@ function PowerEffectOptions({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FullFeatureBonus[]) => void;
 } & PowerEffectTemplateProps) {
-	const extraBonuses = effect.bonuses?.map(addContextToFeatureBonus(actor, power)).map(addSource) ?? [];
+	const extraBonuses =
+		effect.bonuses
+			?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
+			.map(addSource) ?? [];
 	const prefix = `${power.name} ${effect.name}`.trim();
 	const effectProps = { prefix: prefix, actor, power, source: power, extraBonuses };
 	const missSection = showSection(effect.miss) ? (

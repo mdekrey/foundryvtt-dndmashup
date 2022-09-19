@@ -10,7 +10,12 @@ import {
 	DynamicListTarget,
 	FullTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDerivedData, DerivedCache, DerivedCacheType } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	ActorDerivedData,
+	buildConditionContext,
+	DerivedCache,
+	DerivedCacheType,
+} from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
 import { pcStandardBonuses, monsterStandardBonuses } from './standardBonuses';
@@ -80,7 +85,7 @@ class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureB
 				.map((bonus) => ({
 					...bonus,
 					source: this.actor,
-					context: { actor: this.actor },
+					context: buildConditionContext({ actor: this.actor, item: undefined, activeEffectSources: undefined }),
 				})),
 			...getBonuses(this.actor, target),
 		];

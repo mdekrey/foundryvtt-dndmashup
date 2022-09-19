@@ -15,7 +15,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
-import { ItemDocument } from '../module/item';
+import { buildConditionContext } from '../bonusConditionRules';
 
 export type InstantaneousEffectOptionsProps = {
 	effect: InstantaneousEffect;
@@ -66,7 +66,11 @@ export function InstantaneousEffectOptions({
 
 	function damageRoll(damageEffect: DamageEffect) {
 		return () => {
-			console.log([...extraBonuses, ...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)) ?? [])]);
+			console.log([
+				...extraBonuses,
+				...(effect.bonuses?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined })) ??
+					[]),
+			]);
 			applications.launchApplication('damage', {
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
@@ -80,7 +84,9 @@ export function InstantaneousEffectOptions({
 
 				extraBonuses: [
 					...extraBonuses,
-					...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)).map(addSource) ?? []),
+					...(effect.bonuses
+						?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
+						.map(addSource) ?? []),
 				],
 			});
 		};
@@ -102,7 +108,9 @@ export function InstantaneousEffectOptions({
 
 				extraBonuses: [
 					...extraBonuses,
-					...(effect.bonuses?.map(addContextToFeatureBonus(actor, power)).map(addSource) ?? []),
+					...(effect.bonuses
+						?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
+						.map(addSource) ?? []),
 				],
 			});
 		};
@@ -123,6 +131,9 @@ export function InstantaneousEffectOptions({
 	}
 }
 
-export function addContextToFeatureBonus(actor: ActorDocument | undefined, item: ItemDocument | undefined) {
-	return <T extends FeatureBonus>(b: T): T & FeatureBonusWithContext => ({ ...b, context: { actor, item } });
+export function addContextToFeatureBonus(...params: Parameters<typeof buildConditionContext>) {
+	return <T extends FeatureBonus>(b: T): T & FeatureBonusWithContext => ({
+		...b,
+		context: buildConditionContext(...params),
+	});
 }

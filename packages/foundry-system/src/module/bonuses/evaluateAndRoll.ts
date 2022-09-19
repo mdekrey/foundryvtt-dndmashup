@@ -2,6 +2,7 @@ import { groupBy } from 'lodash/fp';
 import { BonusByType, FeatureBonusWithContext } from '@foundryvtt-dndmashup/mashup-rules';
 import { simplifyDice } from '../dice';
 import { ensureSign } from '@foundryvtt-dndmashup/core';
+import { buildConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
 
@@ -15,7 +16,7 @@ export function evaluateAndRoll(
 			target: '' as never,
 			type,
 			condition: null,
-			context: {},
+			context: buildConditionContext({ actor: undefined, item: undefined, activeEffectSources: undefined }),
 		})
 	);
 	const byType = groupBy((e) => e.type || '', [...bonusesWithContext, ...extraBonuses]);

@@ -5,6 +5,7 @@ import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AbilityScores } from '../types';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../documentType';
+import { buildConditionContext } from '../../../bonusConditionRules';
 
 const baseLens = Lens.identity<AbilityScores>();
 
@@ -55,7 +56,7 @@ export function Abilities({
 				{
 					amount: actor.derivedCache.bonuses.getValue(`ability-${ability}`),
 					condition: null,
-					context: { actor },
+					context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
 					target: 'check',
 					type: 'ability',
 					source: actor,
@@ -65,7 +66,7 @@ export function Abilities({
 					type: 'rank',
 					target: 'check',
 					amount: actor.halfLevel,
-					context: { actor },
+					context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
 					source: actor,
 				},
 			],

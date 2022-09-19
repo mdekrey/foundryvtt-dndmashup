@@ -41,6 +41,7 @@ const standardEffects: SelectItem<string>[] = [
 	{ key: 'dying', value: 'dying', label: 'Dying', typeaheadLabel: 'Dying' },
 	{ key: 'helpless', value: 'helpless', label: 'Helpless', typeaheadLabel: 'Helpless' },
 	{ key: 'immobilized', value: 'immobilized', label: 'Immobilized', typeaheadLabel: 'Immobilized' },
+	{ key: 'marked', value: 'marked', label: 'Marked', typeaheadLabel: 'Marked' },
 
 	{ key: 'petrified', value: 'petrified', label: 'Petrified', typeaheadLabel: 'Petrified' },
 	{ key: 'prone', value: 'prone', label: 'Prone', typeaheadLabel: 'Prone' },

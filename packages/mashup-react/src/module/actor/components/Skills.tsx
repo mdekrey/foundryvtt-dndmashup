@@ -5,6 +5,7 @@ import { SkillEntry } from '../types';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../documentType';
 import { abilities, FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import { buildConditionContext } from '../../../bonusConditionRules';
 
 const baseLens = Lens.identity<SkillEntry[]>().to(
 	(v) => v,
@@ -46,7 +47,7 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 				{
 					amount: skill.ranks,
 					condition: null,
-					context: { actor },
+					context: { actor, item: undefined, activeEffectSources: undefined },
 					target: 'check',
 					type: 'rank',
 					source: actor,
@@ -57,7 +58,7 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 						type: 'ability',
 						target: 'check',
 						amount: `+${ability.toUpperCase()}`,
-						context: { actor },
+						context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
 						source: actor,
 					})
 				),

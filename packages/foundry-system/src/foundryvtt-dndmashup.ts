@@ -71,7 +71,18 @@ Hooks.once('init', async () => {
 		{ id: 'dying', label: 'Dying', icon: dyingIcon },
 		{ id: 'helpless', label: 'Helpless', icon: helplessIcon },
 		{ id: 'immobilized', label: 'Immobilized', icon: immobilizedIcon },
-		// marked is a different effect since it needs the marking character id
+		{
+			id: 'marked',
+			label: 'Marked',
+			icon: CONFIG.statusEffects.find((se) => se.id === 'target')?.icon,
+			flags: {
+				mashup: {
+					bonuses: [
+						{ target: 'attack-roll', amount: -2, condition: { rule: 'targetsDoNotIncludeSource', parameter: null } },
+					],
+				},
+			},
+		},
 		{ id: 'petrified', label: 'Petrified', icon: petrifiedIcon },
 		{
 			id: 'prone',

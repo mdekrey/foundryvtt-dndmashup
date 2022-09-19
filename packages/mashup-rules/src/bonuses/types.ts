@@ -15,7 +15,7 @@ export type FeatureBonusWithSource = FeatureBonus & {
 };
 
 export type FeatureBonusWithContext = FeatureBonus & {
-	context: Partial<ConditionRuleContext>;
+	context: { [K in keyof ConditionRuleContext]: undefined | ConditionRuleContext[K] };
 };
 export type FullFeatureBonus = FeatureBonusWithSource & FeatureBonusWithContext;
 export type BonusByType = {

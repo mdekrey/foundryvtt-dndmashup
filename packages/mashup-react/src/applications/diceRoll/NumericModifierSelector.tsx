@@ -17,6 +17,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { addContextToFeatureBonus } from '../../effects';
+import { buildConditionContext } from '../../bonusConditionRules';
 
 export function NumericModifierSelector({
 	actor,
@@ -45,7 +46,7 @@ export function NumericModifierSelector({
 			allToolBonuses
 				.filter((b) => b.target === rollTarget)
 				.map((b): FeatureBonusWithSource => ({ ...b, source: tool }))
-				.map(addContextToFeatureBonus(actor, tool)),
+				.map(addContextToFeatureBonus({ actor, item: tool, activeEffectSources: undefined })),
 			runtimeBonusParameters,
 			true
 		);
@@ -82,7 +83,7 @@ export function NumericModifierSelector({
 				target: rollTarget,
 				amount: additionalModifiersState.value.trim(),
 				condition: null,
-				context: { actor },
+				context: buildConditionContext({ actor, item: undefined, activeEffectSources: undefined }),
 			});
 		}
 		const bonusByType = evaluateBonuses(actualInput);
