@@ -1,12 +1,24 @@
 import { applicationRegistry, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { BonusByType, combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
-import { toMashupId } from '../../../core/foundry';
+import { isGame, toMashupId } from '../../../core/foundry';
 import { sendChatMessage } from '../../chat/sendChatMessage';
 import { displayDialog } from './displayDialog';
 import { roll } from './roll';
 
-applicationRegistry.healing = async ({ spendHealingSurge, healingSurge, isTemporary, ...baseParams }, resolve) => {
+applicationRegistry.healing = async (
+	{ spendHealingSurge, healingSurge, isTemporary, runtimeBonusParameters, ...otherParams },
+	resolve
+) => {
+	const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
+	const baseParams = {
+		...otherParams,
+		runtimeBonusParameters: {
+			...runtimeBonusParameters,
+			targets,
+		},
+	};
+
 	return {
 		content: displayDialog(baseParams, onRoll),
 		title: `${baseParams.title} Healing`,

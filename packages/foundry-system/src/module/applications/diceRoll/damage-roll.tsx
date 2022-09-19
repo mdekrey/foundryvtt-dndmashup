@@ -5,7 +5,7 @@ import {
 	DamageRollDetails,
 	DamageRollApplicationParametersBase,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { toMashupId } from '../../../core/foundry';
+import { isGame, toMashupId } from '../../../core/foundry';
 import { applicationDispatcher } from '../../../components/foundry/apps-provider';
 import { sendChatMessage } from '../../chat/sendChatMessage';
 import { roll } from './roll';
@@ -16,7 +16,16 @@ export type DisplayDialogProps = DamageRollApplicationParametersBase & {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
 };
 
-applicationRegistry.damage = async ({ allowCritical, ...baseParams }, resolve, reject) => {
+applicationRegistry.damage = async ({ allowCritical, runtimeBonusParameters, ...otherParams }, resolve, reject) => {
+	const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
+	const baseParams = {
+		...otherParams,
+		runtimeBonusParameters: {
+			...runtimeBonusParameters,
+			targets,
+		},
+	};
+
 	return {
 		content: displayDamageDialog(baseParams, onRoll, allowCritical ? onCritical : undefined),
 		title: `${baseParams.title} Damage`,

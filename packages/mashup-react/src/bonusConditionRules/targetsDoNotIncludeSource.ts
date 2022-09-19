@@ -3,6 +3,7 @@ import {
 	ConditionRuleContext,
 	ConditionRulesRuntimeParameters,
 	conditionsRegistry,
+	ruleResultIndeterminate,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { TokenDocument } from '../module';
 
@@ -10,7 +11,6 @@ declare global {
 	interface ConditionGrantingContext {
 		activeEffectSources: BaseDocument[];
 	}
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionRulesAllRuntimeParameters {
 		targets: TokenDocument[];
 	}
@@ -19,11 +19,13 @@ declare global {
 export function targetsDoNotIncludeSource(
 	{ activeEffectSources }: ConditionRuleContext,
 	parameter: null,
-	runtime: ConditionRulesRuntimeParameters
+	{ targets }: ConditionRulesRuntimeParameters
 ) {
-	console.log(targetsDoNotIncludeSource.name, { activeEffectSources, parameter, runtime });
-	// TODO
-	return false;
+	if (!activeEffectSources || !targets) return ruleResultIndeterminate;
+	const targetsIncludesMarked = targets
+		.map((token) => token.actor)
+		.some((targetActor) => activeEffectSources.some((source) => source === targetActor));
+	return !targetsIncludesMarked;
 }
 
 declare global {

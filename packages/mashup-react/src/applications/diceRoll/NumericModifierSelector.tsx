@@ -68,16 +68,28 @@ export function NumericModifierSelector({
 		return { indeterminate, applied };
 	}, [extraBonuses]);
 
-	const applied = actor.derivedCache.bonuses.getApplied(rollTarget);
-	const indeterminate = actor.derivedCache.bonuses.getIndeterminate(rollTarget);
+	const actorLists = useMemo(() => {
+		const applied = actor.derivedCache.bonuses.getApplied(rollTarget);
+		const indeterminate = actor.derivedCache.bonuses.getIndeterminate(rollTarget);
+		const filtered = filterConditions(indeterminate, runtimeBonusParameters, true);
+
+		return {
+			indeterminate: filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus),
+			applied: [...applied, ...filtered.filter(([, result]) => result === true).map(([bonus]) => bonus)],
+		};
+	}, [actor.derivedCache]);
 	const indeterminateBonuses = useMemo(
-		() => [...indeterminate, ...toolBonuses.indeterminate, ...extraBonusLists.indeterminate],
-		[indeterminate, toolBonuses.indeterminate, extraBonusLists.indeterminate]
+		() => [...actorLists.indeterminate, ...toolBonuses.indeterminate, ...extraBonusLists.indeterminate],
+		[actorLists.indeterminate, toolBonuses.indeterminate, extraBonusLists.indeterminate]
 	);
 
 	const { bonusFormula, bonusByType, displayedBonuses } = useMemo(() => {
 		const selectedIndeterminateBonuses = indeterminateBonuses.filter((_, index) => selectedBonusesState.value[index]);
-		const displayedBonuses: FullFeatureBonus[] = [...applied, ...toolBonuses.applied, ...extraBonusLists.applied];
+		const displayedBonuses: FullFeatureBonus[] = [
+			...actorLists.applied,
+			...toolBonuses.applied,
+			...extraBonusLists.applied,
+		];
 		const actualInput: FeatureBonusWithContext[] = [...displayedBonuses, ...selectedIndeterminateBonuses];
 		if (additionalModifiersState.value.trim()) {
 			actualInput.push({
@@ -96,7 +108,7 @@ export function NumericModifierSelector({
 	}, [
 		selectedBonusesState.value,
 		indeterminateBonuses,
-		applied,
+		actorLists.applied,
 		toolBonuses.applied,
 		extraBonusLists.applied,
 		additionalModifiersState.value,

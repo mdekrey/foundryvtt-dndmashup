@@ -2,7 +2,6 @@ import { Stateful } from '@foundryvtt-dndmashup/core';
 import { ConditionRuleContext, ConditionRuleIndeterminateResult, ConditionRulesRuntimeParameters } from './types';
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionRules {
 		'': never;
 	}

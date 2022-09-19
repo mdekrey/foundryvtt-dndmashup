@@ -5,7 +5,6 @@ import { ActorDocument } from '../module/actor/documentType';
 import { getItemSlotInfo, isEquipment, ItemDocument, ItemSlot, itemSlotOptions, PowerDocument } from '../module/item';
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionGrantingContext {
 		actor: ActorDocument;
 		item: ItemDocument;

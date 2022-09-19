@@ -6,8 +6,15 @@ import { sendChatMessage } from '../../chat/sendChatMessage';
 import { displayDialog } from './displayDialog';
 import { roll } from './roll';
 
-applicationRegistry.attackRoll = async ({ defense, ...baseParams }, resolve) => {
+applicationRegistry.attackRoll = async ({ defense, runtimeBonusParameters, ...otherParams }, resolve) => {
 	const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
+	const baseParams = {
+		...otherParams,
+		runtimeBonusParameters: {
+			...runtimeBonusParameters,
+			targets,
+		},
+	};
 
 	// TODO: indeterminate effects from targets' defenses
 	return {
