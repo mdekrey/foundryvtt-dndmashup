@@ -30,7 +30,9 @@ applicationRegistry.healing = async ({ spendHealingSurge, healingSurge, isTempor
 
 		await sendChatMessage('healingResult', baseParams.actor, {
 			result,
-			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
+			powerId: baseParams.runtimeBonusParameters.power
+				? toMashupId(baseParams.runtimeBonusParameters.power)
+				: undefined,
 			toolId: tool ? toMashupId(tool) : undefined,
 			flavor: `${baseParams.title} Healing${tool ? ` using ${tool.name}` : ''}`.trim(),
 			spendHealingSurge,

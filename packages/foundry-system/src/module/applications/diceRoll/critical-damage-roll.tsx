@@ -24,7 +24,9 @@ applicationRegistry.criticalDamage = async ({ ...baseParams }, resolve) => {
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
+			powerId: baseParams.runtimeBonusParameters.power
+				? toMashupId(baseParams.runtimeBonusParameters.power)
+				: undefined,
 			flavor: `${baseParams.title} critical ${oxfordComma(damageTypes)} damage${
 				tool ? ` using ${tool.name}` : ''
 			}`.trim(),

@@ -39,7 +39,7 @@ export type SourcedTriggeredEffect = TriggeredEffect & {
 };
 
 export type FullTriggeredEffect = SourcedTriggeredEffect & {
-	context: Partial<ConditionRuleContext>;
+	context: ConditionRuleContext;
 };
 
 export type ActiveEffectTemplate = {

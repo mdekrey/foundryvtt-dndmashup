@@ -1,14 +1,17 @@
-import { ConditionRuleContext, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	ConditionRuleContext,
+	ConditionRulesRuntimeParameters,
+	conditionsRegistry,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../module/actor/documentType';
 import { ItemDocument, PowerDocument } from '../module/item';
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionGrantingContext {
 		actor: ActorDocument;
 		item: ItemDocument;
 	}
-	interface ConditionRulesRuntimeParameters {
+	interface ConditionRulesAllRuntimeParameters {
 		power: PowerDocument;
 	}
 }
@@ -16,7 +19,7 @@ declare global {
 export function proficientIn(
 	{ actor, item }: ConditionRuleContext,
 	parameter: null,
-	{ power }: Partial<ConditionRulesRuntimeParameters>
+	{ power }: ConditionRulesRuntimeParameters
 ) {
 	// proficiency doesn't matter if it's not a "weapon" power!
 	if (power && !power.data.data.keywords.includes('weapon')) return false;

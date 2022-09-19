@@ -33,7 +33,9 @@ applicationRegistry.damage = async ({ allowCritical, ...baseParams }, resolve, r
 		await sendChatMessage('damageResult', baseParams.actor, {
 			result,
 			damageTypes,
-			powerId: baseParams.power ? toMashupId(baseParams.power) : undefined,
+			powerId: baseParams.runtimeBonusParameters.power
+				? toMashupId(baseParams.runtimeBonusParameters.power)
+				: undefined,
 			flavor: `${baseParams.title} ${oxfordComma(damageTypes)} damage${tool ? ` using ${tool.name}` : ''}`.trim(),
 		});
 		resolve(null);

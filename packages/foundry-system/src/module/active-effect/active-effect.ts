@@ -2,6 +2,8 @@ import { ActiveEffectDocument, ActiveEffectFlags } from '@foundryvtt-dndmashup/m
 import { Aura, FeatureBonus, TriggeredEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { createFinalEffectConstructorData } from '../actor/logic/createFinalEffectConstructorData';
 import { MashupActor } from '../actor';
+import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { fromMashupId } from '../../core/foundry';
 
 declare global {
 	interface FlagConfig {
@@ -12,6 +14,9 @@ declare global {
 }
 
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
+	getOriginalSources(): BaseDocument[] {
+		return this.data.flags.mashup?.originalSources?.map(fromMashupId).filter(Boolean) as BaseDocument[];
+	}
 	allAuras(): Aura[] {
 		return this.data.flags.mashup?.auras ?? [];
 	}

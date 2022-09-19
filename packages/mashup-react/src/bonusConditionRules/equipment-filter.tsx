@@ -10,7 +10,7 @@ declare global {
 		actor: ActorDocument;
 		item: ItemDocument;
 	}
-	interface ConditionRulesRuntimeParameters {
+	interface ConditionRulesAllRuntimeParameters {
 		power: PowerDocument;
 	}
 }

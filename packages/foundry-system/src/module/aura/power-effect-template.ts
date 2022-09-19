@@ -7,7 +7,7 @@ import {
 	Source,
 	TriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { EffectTypeAndRange } from '@foundryvtt-dndmashup/mashup-react';
+import { EffectTypeAndRange, emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 import { MeasuredTemplateDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/measuredTemplateData';
 import { fromMashupId, isGame } from '../../core/foundry';
 import { systemName } from '../constants';
@@ -351,6 +351,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 					condition: aura.condition,
 					sources: sources,
 					context: {
+						...emptyConditionContext,
 						actor,
 						item,
 					},

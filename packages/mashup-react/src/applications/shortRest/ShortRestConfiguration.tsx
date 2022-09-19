@@ -11,6 +11,7 @@ import {
 	RollComponent,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
+import { emptyConditionRuntime } from '../../bonusConditionRules';
 
 export function ShortRestConfiguration({
 	actor,
@@ -60,7 +61,7 @@ export function ShortRestConfiguration({
 				evaluateBonuses={evaluateBonuses}
 				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
 				rollTarget={'surges-value'}
-				runtimeBonusParameters={{}}
+				runtimeBonusParameters={emptyConditionRuntime}
 			/>
 			<BlockHeader>Short Rest Effects</BlockHeader>
 			<ul className="list-disc ml-4 min-h-64">

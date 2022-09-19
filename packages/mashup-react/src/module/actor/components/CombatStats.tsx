@@ -4,6 +4,7 @@ import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { PlayerCharacterDataSourceData } from '../types';
 import { ActorDocument } from '../documentType';
 import { ActorDerivedData } from '../derivedDataType';
+import { emptyConditionRuntime } from '../../../bonusConditionRules';
 
 const deathSavingThrowLens = Lens.fromProp<PlayerCharacterDataSourceData>()('health').toField('deathSavesRemaining');
 const encountersSinceLongRest = Lens.fromProp<PlayerCharacterDataSourceData>()('encountersSinceLongRest');
@@ -63,6 +64,7 @@ function SavingThrowSection({ actor }: { actor: ActorDocument }) {
 			sendToChat: true,
 			title: `${actor.name}'s Saving Throw`,
 			flavor: '... makes a saving throw',
+			runtimeBonusParameters: { ...emptyConditionRuntime },
 		});
 	}
 }
@@ -94,6 +96,7 @@ function DeathSavingThrowSection({ actor, ...deathSavingThrowState }: { actor: A
 				sendToChat: true,
 				title: `${actor.name}'s Death Saving Throw`,
 				flavor: `${actor.name} is in the throws of death`,
+				runtimeBonusParameters: { ...emptyConditionRuntime },
 			});
 			const rollResult = await result;
 			if (rollResult < 10) {

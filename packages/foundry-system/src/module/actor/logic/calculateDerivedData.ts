@@ -15,6 +15,7 @@ import {
 	DerivedCache,
 	DerivedCacheType,
 	emptyConditionContext,
+	emptyConditionRuntime,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
 import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
@@ -89,7 +90,7 @@ class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureB
 				})),
 			...getBonuses(this.actor, target),
 		];
-		const filtered = filterConditions(bonuses, {}, true);
+		const filtered = filterConditions(bonuses, emptyConditionRuntime, true);
 		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
 		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
 
@@ -113,7 +114,7 @@ class ListsCache
 
 	protected override buildCache(target: DynamicListTarget) {
 		const bonuses: FullDynamicListEntry[] = getList(this.actor, target);
-		const filtered = filterConditions(bonuses, {}, true);
+		const filtered = filterConditions(bonuses, emptyConditionRuntime, true);
 		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
 		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
 

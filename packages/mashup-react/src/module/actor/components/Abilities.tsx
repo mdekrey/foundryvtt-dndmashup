@@ -5,7 +5,7 @@ import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AbilityScores } from '../types';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../documentType';
-import { emptyConditionContext } from '../../../bonusConditionRules';
+import { emptyConditionContext, emptyConditionRuntime } from '../../../bonusConditionRules';
 
 const baseLens = Lens.identity<AbilityScores>();
 
@@ -52,6 +52,7 @@ export function Abilities({
 			sendToChat: true,
 			title: `${ability.toUpperCase()} Check`,
 			flavor: `uses ${ability.toUpperCase()}`,
+			runtimeBonusParameters: { ...emptyConditionRuntime },
 			extraBonuses: [
 				{
 					amount: actor.derivedCache.bonuses.getValue(`ability-${ability}`),

@@ -8,6 +8,7 @@ import {
 	ruleResultIndeterminate,
 	DynamicListTarget,
 	DynamicListEntryWithContext,
+	ConditionRulesRuntimeParameters,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 
@@ -21,7 +22,7 @@ export function DynamicListSelector({
 	tool: EquipmentDocument<'weapon' | 'implement'> | null;
 	listType: DynamicListTarget;
 	actor: ActorDocument;
-	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
+	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 	onListChange(dynamicListEntries: string[]): void;
 }) {
 	const selectedDynamicListState = lensFromState(useState<boolean[]>([]));

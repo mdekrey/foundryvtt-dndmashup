@@ -1,4 +1,3 @@
-import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 import {
 	AuraEffect,
@@ -16,7 +15,6 @@ import {
 	Trigger,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import uniq from 'lodash/fp/uniq';
-import { fromMashupId } from '../../../core/foundry';
 import type { MashupActiveEffect } from '../../active-effect';
 import { getRelevantAuras } from '../../aura/getAuras';
 import { MashupPower } from '../../item/subtypes/power/class';
@@ -78,9 +76,8 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 }
 
 function addEffectContext(effect: MashupActiveEffect, actor: MashupActor) {
-	const originalSources = effect.data.flags.mashup?.originalSources
-		?.map(fromMashupId)
-		.filter(Boolean) as BaseDocument[];
+	const originalSources = effect.getOriginalSources();
+
 	return (bonus: FeatureBonus): FullFeatureBonus => ({
 		...bonus,
 		context: { ...emptyConditionContext, actor, activeEffectSources: originalSources },
@@ -188,10 +185,14 @@ export function getPoolResult(
 export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 	const internal: FullTriggeredEffect[] = [
 		...actor.effects.contents.flatMap((effect: MashupActiveEffect) =>
-			effect.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { actor: actor }, sources: [effect] }))
+			effect.allTriggeredEffects().map((bonus) => ({
+				...bonus,
+				context: { ...emptyConditionContext, actor, activeEffectSources: effect.getOriginalSources() },
+				sources: [effect],
+			}))
 		),
 		...actor.data.items.contents.flatMap((item) =>
-			item.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { actor: actor, item } }))
+			item.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 		...Object.entries(actor.data.data.powerUsage ?? {})
 			.map(([powerId, used]) => used !== 0 && actor.allPowers(true).find((p) => p.powerGroupId === powerId))
@@ -209,7 +210,7 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 					trigger: power.data.data.rechargeTrigger,
 					condition: null,
 					sources: [power],
-					context: { actor, item: power },
+					context: { ...emptyConditionContext, actor, item: power },
 				})
 			),
 	];
@@ -219,7 +220,7 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 		...internal,
 		...appliedAuraEffect(actor, (aura) => aura.triggeredEffects.length > 0).flatMap((aura) =>
 			aura.triggeredEffects.map(
-				(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: { actor: actor } })
+				(b): FullTriggeredEffect => ({ ...b, sources: aura.sources, context: { ...emptyConditionContext, actor } })
 			)
 		),
 	];

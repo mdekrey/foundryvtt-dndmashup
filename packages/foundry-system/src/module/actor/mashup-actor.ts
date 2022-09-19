@@ -35,6 +35,7 @@ import {
 	ActiveEffectDocumentConstructorData,
 	DerivedCache,
 	ActiveEffectDocumentConstructorParams,
+	emptyConditionContext,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame, toMashupId } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
@@ -283,15 +284,21 @@ export class MashupActor extends Actor implements ActorDocument {
 	getAuras(predicate: (aura: AuraEffect) => boolean): FullAura[] {
 		const auras: UnappliedAura[] = [
 			...this.items.contents.flatMap((item: ItemDocument) =>
-				item.allGrantedAuras().map((aura) => ({ ...aura, context: { actor: this, item } }))
+				item.allGrantedAuras().map((aura) => ({ ...aura, context: { ...emptyConditionContext, actor: this, item } }))
 			),
 			...this.effects.contents.flatMap((effect) =>
-				effect.allAuras().map((aura): UnappliedAura => ({ ...aura, context: { actor: this }, sources: [effect] }))
+				effect.allAuras().map(
+					(aura): UnappliedAura => ({
+						...aura,
+						context: { ...emptyConditionContext, actor: this },
+						sources: [effect],
+					})
+				)
 			),
 		];
 		return auras
 			.filter(predicate)
-			.filter((aura) => aura.condition === null || isRuleApplicable(aura.condition, aura.context, {}))
+			.filter((aura) => aura.condition === null || isRuleApplicable(aura.condition, aura.context))
 			.map(({ range, ...aura }): FullAura => {
 				return {
 					...aura,

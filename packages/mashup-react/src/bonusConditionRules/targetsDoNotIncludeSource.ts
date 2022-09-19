@@ -1,5 +1,9 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import { ConditionRuleContext, conditionsRegistry } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	ConditionRuleContext,
+	ConditionRulesRuntimeParameters,
+	conditionsRegistry,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { TokenDocument } from '../module';
 
 declare global {
@@ -7,7 +11,7 @@ declare global {
 		activeEffectSources: BaseDocument[];
 	}
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	interface ConditionRulesRuntimeParameters {
+	interface ConditionRulesAllRuntimeParameters {
 		targets: TokenDocument[];
 	}
 }
@@ -15,7 +19,7 @@ declare global {
 export function targetsDoNotIncludeSource(
 	{ activeEffectSources }: ConditionRuleContext,
 	parameter: null,
-	runtime: Partial<ConditionRulesRuntimeParameters>
+	runtime: ConditionRulesRuntimeParameters
 ) {
 	console.log(targetsDoNotIncludeSource.name, { activeEffectSources, parameter, runtime });
 	// TODO

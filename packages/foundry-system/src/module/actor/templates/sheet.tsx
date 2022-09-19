@@ -1,4 +1,5 @@
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { emptyConditionRuntime } from '@foundryvtt-dndmashup/mashup-react';
 import { isGame } from '../../../core/foundry';
 import { SpecificActor } from '../mashup-actor';
 import { MashupActorSheet } from '../mashup-actor-sheet';
@@ -29,6 +30,7 @@ export function ActorSheetJsx({ sheet }: { sheet: MashupActorSheet }) {
 				allowToolSelection: false,
 				sendToChat: true,
 				flavor: `${actor.name} rolls for initiative!`,
+				runtimeBonusParameters: { ...emptyConditionRuntime },
 			});
 			return;
 		}

@@ -1,6 +1,8 @@
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionGrantingContext {}
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	interface ConditionRulesAllRuntimeParameters {}
 }
 
 export type ConditionRuleType = keyof ConditionRules;
@@ -12,6 +14,9 @@ export type ConditionRule<TType extends ConditionRuleType = ConditionRuleType> =
 }[TType];
 export type ConditionRuleContext = {
 	[K in keyof ConditionGrantingContext]: ConditionGrantingContext[K] | undefined;
+};
+export type ConditionRulesRuntimeParameters = {
+	[K in keyof ConditionRulesAllRuntimeParameters]: ConditionRulesAllRuntimeParameters[K] | undefined;
 };
 
 export const ruleResultIndeterminate = Symbol('indeterminate');

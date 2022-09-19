@@ -1,23 +1,20 @@
 import { Stateful } from '@foundryvtt-dndmashup/core';
-import { ConditionRuleContext, ConditionRuleIndeterminateResult } from './types';
+import { ConditionRuleContext, ConditionRuleIndeterminateResult, ConditionRulesRuntimeParameters } from './types';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface ConditionRules {
 		'': never;
 	}
-
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	interface ConditionRulesRuntimeParameters {}
 }
 
 export type ConditionRuleRegistryEntry<TType extends keyof ConditionRules> = {
-	ruleText: (parameter?: ConditionRules[TType], runtime?: Partial<ConditionRulesRuntimeParameters>) => string;
+	ruleText: (parameter?: ConditionRules[TType], runtime?: ConditionRulesRuntimeParameters) => string;
 	ruleEditor: React.FC<Stateful<ConditionRules[TType] | undefined>>;
 	rule(
 		input: ConditionRuleContext,
 		parameter: ConditionRules[TType],
-		runtime: Partial<ConditionRulesRuntimeParameters>
+		runtime: ConditionRulesRuntimeParameters
 	): boolean | ConditionRuleIndeterminateResult;
 };
 

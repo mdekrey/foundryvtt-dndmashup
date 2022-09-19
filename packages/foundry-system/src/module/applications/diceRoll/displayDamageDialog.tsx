@@ -8,12 +8,12 @@ export function displayDamageDialog(
 		baseDice,
 		baseDamageTypes,
 		actor,
-		power,
 		rollType,
 		listType,
 		tool,
 		allowToolSelection,
 		extraBonuses,
+		runtimeBonusParameters,
 	}: DisplayDialogProps,
 	onComplete: (rollProps: DamageRollDetails) => void,
 	onCritical?: (rollProps: DamageRollDetails) => void
@@ -22,8 +22,8 @@ export function displayDamageDialog(
 		? undefined
 		: tool
 		? [tool]
-		: power
-		? getToolsForPower(actor, power)
+		: runtimeBonusParameters.power
+		? getToolsForPower(actor, runtimeBonusParameters.power)
 		: undefined;
 
 	return (
@@ -35,11 +35,7 @@ export function displayDamageDialog(
 			extraBonuses={extraBonuses}
 			baseDamageTypes={baseDamageTypes}
 			onRoll={onComplete}
-			runtimeBonusParameters={
-				{
-					/* TODO - parameters for passing to bonuses to determine if they apply or not */
-				}
-			}
+			runtimeBonusParameters={runtimeBonusParameters}
 			evaluateBonuses={evaluateAndRoll}
 			possibleTools={possibleTools}
 			onCriticalRoll={onCritical}

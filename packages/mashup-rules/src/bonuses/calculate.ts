@@ -1,5 +1,10 @@
 import { groupBy } from 'lodash/fp';
-import { ConditionRuleContext, isRuleApplicable, SimpleConditionRule } from '../conditions';
+import {
+	ConditionRuleContext,
+	ConditionRulesRuntimeParameters,
+	isRuleApplicable,
+	SimpleConditionRule,
+} from '../conditions';
 
 const sum = (v: number[]) => v.reduce((prev, next: number) => prev + next, 0);
 
@@ -11,7 +16,7 @@ export function byTarget<TType extends string, TEntry extends { target: TType }>
 
 export function filterConditions<
 	T extends { condition: SimpleConditionRule; disabled?: boolean; context: ConditionRuleContext }
->(bonusesWithContext: T[], runtimeParameters: Partial<ConditionRulesRuntimeParameters>, includeIndeterminate: boolean) {
+>(bonusesWithContext: T[], runtimeParameters: ConditionRulesRuntimeParameters, includeIndeterminate: boolean) {
 	return bonusesWithContext
 		.filter((bonus) => !bonus.disabled)
 		.map((bonus) => {

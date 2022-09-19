@@ -32,5 +32,5 @@ export type AuraEffect = {
 	triggeredEffects: TriggeredEffect[];
 	sources: Source[];
 	condition: SimpleConditionRule;
-	context: Partial<ConditionRuleContext>;
+	context: ConditionRuleContext;
 };

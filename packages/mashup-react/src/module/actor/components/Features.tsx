@@ -8,6 +8,7 @@ import { Stateful } from '@foundryvtt-dndmashup/core';
 import { ActiveEffectDocument } from '../../active-effect';
 import { ImageButton } from '@foundryvtt-dndmashup/components';
 import { ActorDocument } from '../documentType';
+import { emptyConditionRuntime } from '../../../bonusConditionRules';
 
 const features: {
 	key: React.Key;
@@ -122,6 +123,7 @@ export function Features({
 				sendToChat: true,
 				title: `${actor.name}'s Saving Throw vs. ${item.name}`,
 				flavor: `... makes a saving throw vs. ${item.name}`,
+				runtimeBonusParameters: { ...emptyConditionRuntime },
 			});
 			const result = await resultPromise;
 			if (result >= 10) {

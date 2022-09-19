@@ -1,7 +1,13 @@
-import { DamageType, Defense, DynamicListTarget, FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
+import {
+	ConditionRulesRuntimeParameters,
+	DamageType,
+	Defense,
+	DynamicListTarget,
+	FullFeatureBonus,
+} from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { NumericBonusTarget } from '@foundryvtt-dndmashup/mashup-rules';
-import { EquipmentDocument, PowerDocument } from '../../module/item';
+import { EquipmentDocument } from '../../module/item';
 
 export * from './DiceRoller';
 export * from './DamageRoller';
@@ -10,11 +16,11 @@ export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
 	actor: ActorDocument;
-	power?: PowerDocument;
 	rollType: NumericBonusTarget;
 	allowToolSelection: boolean;
 	flavor?: string;
 	extraBonuses?: FullFeatureBonus[];
+	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 };
 
 export type DamageRollApplicationParametersBase = {
@@ -22,11 +28,11 @@ export type DamageRollApplicationParametersBase = {
 	baseDamageTypes: DamageType[];
 	title: string;
 	actor: ActorDocument;
-	power?: PowerDocument;
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;
 	allowToolSelection: boolean;
 	extraBonuses?: FullFeatureBonus[];
+	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 };
 
 export type DiceRollApplicationParameters = DiceRollApplicationParametersBase & {

@@ -16,6 +16,7 @@ import {
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { LightningBoltIcon } from '@heroicons/react/solid';
 import { toComputable } from './toComputable';
+import { emptyConditionRuntime } from '../bonusConditionRules';
 
 export type InstantaneousEffectOptionsProps = {
 	effect: InstantaneousEffect;
@@ -75,7 +76,6 @@ export function InstantaneousEffectOptions({
 				baseDice: damageEffect.damage,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
-				power,
 				rollType: 'damage',
 				listType: 'damageTypes',
 				baseDamageTypes: damageEffect.damageTypes,
@@ -88,6 +88,7 @@ export function InstantaneousEffectOptions({
 						?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
 						.map(addSource) ?? []),
 				],
+				runtimeBonusParameters: { ...emptyConditionRuntime, power },
 			});
 		};
 	}
@@ -98,7 +99,6 @@ export function InstantaneousEffectOptions({
 				baseDice: healingEffect.healing,
 				title: prefix ? `${prefix} ${mode}` : mode,
 				actor,
-				power,
 				rollType: 'healing',
 				allowToolSelection,
 
@@ -112,6 +112,7 @@ export function InstantaneousEffectOptions({
 						?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
 						.map(addSource) ?? []),
 				],
+				runtimeBonusParameters: { ...emptyConditionRuntime, power },
 			});
 		};
 	}

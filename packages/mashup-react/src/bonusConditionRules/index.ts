@@ -3,4 +3,4 @@ import './proficient';
 import './equipment-filter';
 import './targetsDoNotIncludeSource';
 
-export * from './buildConditionContext';
+export * from './emptyConditionContext';

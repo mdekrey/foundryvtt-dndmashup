@@ -9,6 +9,7 @@ import {
 	chatMessageRegistry,
 	PowerDocument,
 	PowerChatMessage,
+	emptyConditionRuntime,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerEffectTemplate } from '../../aura/power-effect-template';
 import { MashupActor } from '../../actor';
@@ -71,11 +72,11 @@ function RenderPowerChat({ item, actor }: { item: PowerDocument; actor: ActorDoc
 			baseDice: `1d20 + ${attackRoll.attack}`,
 			title: `${item.name} ${title}`.trim(),
 			actor,
-			power: item,
 			rollType: 'attack-roll',
 			defense: attackRoll.defense,
 			allowToolSelection: true,
 			extraBonuses,
+			runtimeBonusParameters: { ...emptyConditionRuntime, power: item },
 		});
 	}
 }

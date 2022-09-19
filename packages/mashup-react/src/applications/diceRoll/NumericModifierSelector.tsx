@@ -14,6 +14,7 @@ import {
 	bonusToText,
 	FullFeatureBonus,
 	FeatureBonusWithSource,
+	ConditionRulesRuntimeParameters,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { addContextToFeatureBonus } from '../../effects';
@@ -31,7 +32,7 @@ export function NumericModifierSelector({
 	tool: EquipmentDocument<'weapon' | 'implement'> | null;
 	rollTarget: NumericBonusTarget;
 	actor: ActorDocument;
-	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
+	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 	extraBonuses?: FullFeatureBonus[];
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onBonusesChange(bonusFormula: RollComponent, bonusByType: BonusByType): void;

@@ -10,6 +10,7 @@ import {
 	DamageType,
 	DynamicListTarget,
 	FullFeatureBonus,
+	ConditionRulesRuntimeParameters,
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument } from '../../module/actor';
 import { EquipmentDocument } from '../../module/item';
@@ -32,7 +33,7 @@ export type DamageRollerRequiredProps = {
 	extraBonuses?: FullFeatureBonus[];
 	baseDamageTypes: DamageType[];
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
-	runtimeBonusParameters: Partial<ConditionRulesRuntimeParameters>;
+	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 
 	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: DamageRollDetails): void;

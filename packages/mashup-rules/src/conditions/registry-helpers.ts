@@ -1,9 +1,9 @@
-import { ConditionRule, ConditionRuleContext, ConditionRuleType } from './types';
+import { ConditionRule, ConditionRuleContext, ConditionRulesRuntimeParameters, ConditionRuleType } from './types';
 import { ConditionRuleRegistryEntry, conditionsRegistry } from './registry';
 
 export function getRuleText<TType extends ConditionRuleType>(
 	rule: ConditionRule<TType>,
-	runtime?: Partial<ConditionRulesRuntimeParameters>
+	runtime?: ConditionRulesRuntimeParameters
 ) {
 	const registryEntry: ConditionRuleRegistryEntry<TType> = conditionsRegistry[rule.rule];
 	return registryEntry.ruleText(rule.parameter, runtime);
@@ -11,9 +11,13 @@ export function getRuleText<TType extends ConditionRuleType>(
 
 export function isRuleApplicable<TType extends ConditionRuleType>(
 	rule: ConditionRule<TType>,
-	context: Partial<ConditionRuleContext>,
-	runtime?: Partial<ConditionRulesRuntimeParameters>
+	context: ConditionRuleContext,
+	runtime?: ConditionRulesRuntimeParameters
 ) {
 	const registryEntry: ConditionRuleRegistryEntry<TType> = conditionsRegistry[rule.rule];
-	return registryEntry.rule(context as ConditionRuleContext, rule.parameter, runtime ?? {});
+	return registryEntry.rule(
+		context as ConditionRuleContext,
+		rule.parameter,
+		runtime ?? ({} as ConditionRulesRuntimeParameters)
+	);
 }

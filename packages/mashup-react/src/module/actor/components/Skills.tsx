@@ -5,7 +5,7 @@ import { SkillEntry } from '../types';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../documentType';
 import { abilities, FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
-import { emptyConditionContext } from '../../../bonusConditionRules';
+import { emptyConditionContext, emptyConditionRuntime } from '../../../bonusConditionRules';
 
 const baseLens = Lens.identity<SkillEntry[]>().to(
 	(v) => v,
@@ -42,6 +42,7 @@ export function Skills({ actor, skillsState }: { actor: ActorDocument; skillsSta
 			sendToChat: true,
 			title: `${skill.name} Check`,
 			flavor: `uses the skill ${skill.name}`,
+			runtimeBonusParameters: { ...emptyConditionRuntime },
 
 			extraBonuses: [
 				{
