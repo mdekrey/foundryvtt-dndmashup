@@ -3,10 +3,11 @@ import { ConditionRuleRegistryEntry, conditionsRegistry } from './registry';
 
 export function getRuleText<TType extends ConditionRuleType>(
 	rule: ConditionRule<TType>,
+	context?: ConditionRuleContext,
 	runtime?: ConditionRulesRuntimeParameters
 ) {
 	const registryEntry: ConditionRuleRegistryEntry<TType> = conditionsRegistry[rule.rule];
-	return registryEntry.ruleText(rule.parameter, runtime);
+	return registryEntry.ruleText(rule.parameter, context, runtime);
 }
 
 export function isRuleApplicable<TType extends ConditionRuleType>(

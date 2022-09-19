@@ -1,6 +1,6 @@
 import { neverEver } from '@foundryvtt-dndmashup/core';
 import { bonusToText } from '../bonuses';
-import { getRuleText } from '../conditions';
+import { ConditionRuleContext, getRuleText } from '../conditions';
 import { getTriggeredEffectText } from '../effects';
 import { DispositionType } from './filterDisposition';
 import { Aura } from './types';
@@ -25,12 +25,12 @@ function dispositionTypeToText(dispositionType: DispositionType | null) {
 	}
 }
 
-export function auraToText(aura: Aura) {
+export function auraToText(aura: Aura & { context?: ConditionRuleContext }) {
 	const selfExclusionText = aura.excludeSelf ? '' : 'you and';
 	const dispositionText = dispositionTypeToText(aura.dispositionType);
 	const rangeText = `within ${aura.range} squares of you`;
 	const descriptive = 'gain the following effects';
-	const conditionText = aura.condition ? getRuleText(aura.condition) : null;
+	const conditionText = aura.condition ? getRuleText(aura.condition, aura.context) : null;
 	const introSentence = `${[selfExclusionText, dispositionText, rangeText, descriptive, conditionText].join(' ')}:`;
 	return [introSentence, ...aura.bonuses.map(bonusToText), ...aura.triggeredEffects.map(getTriggeredEffectText)].join(
 		' '

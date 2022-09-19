@@ -5,7 +5,7 @@ import {
 	conditionsRegistry,
 	ruleResultIndeterminate,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { TokenDocument } from '../module';
+import { ActorDocument, TokenDocument } from '../module';
 
 declare global {
 	interface ConditionGrantingContext {
@@ -35,7 +35,15 @@ declare global {
 }
 
 conditionsRegistry.targetsDoNotIncludeSource = {
-	ruleText: () => 'when the targets do not include the source', // TODO: need the condition granting context
+	ruleText: (parameter, context) => {
+		if (context && context.activeEffectSources) {
+			const actor = context.activeEffectSources.find((s): s is ActorDocument => s.collectionName === 'actors');
+			if (actor) {
+				return `when the targets do not include ${actor.name}`;
+			}
+		}
+		return 'when the targets do not include the source';
+	},
 	ruleEditor: () => null,
 	rule: targetsDoNotIncludeSource,
 };

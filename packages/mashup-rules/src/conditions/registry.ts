@@ -8,7 +8,11 @@ declare global {
 }
 
 export type ConditionRuleRegistryEntry<TType extends keyof ConditionRules> = {
-	ruleText: (parameter?: ConditionRules[TType], runtime?: ConditionRulesRuntimeParameters) => string;
+	ruleText: (
+		parameter?: ConditionRules[TType],
+		context?: ConditionRuleContext,
+		runtime?: ConditionRulesRuntimeParameters
+	) => string;
 	ruleEditor: React.FC<Stateful<ConditionRules[TType] | undefined>>;
 	rule(
 		input: ConditionRuleContext,

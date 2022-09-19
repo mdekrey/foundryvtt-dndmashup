@@ -19,7 +19,6 @@ function hasStance({ actor }: ConditionRuleContext, { coreStatusId, label }: Sta
 	const found = actor.effects.find(
 		(e) => e.data.flags?.core?.statusId === coreStatusId && (!label || e.name === label)
 	);
-	console.log({ actor, found });
 	return !!found;
 }
 

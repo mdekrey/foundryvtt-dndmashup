@@ -214,7 +214,6 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 				})
 			),
 	];
-	console.log(actor.name, actor.data.data.powerUsage, actor, internal);
 
 	return [
 		...internal,
