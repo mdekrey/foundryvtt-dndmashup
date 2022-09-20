@@ -1,6 +1,6 @@
 import { chatAttachments } from '../attach';
 import { AttackRollResult, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
-import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, Defense, sumFinalBonuses } from '@foundryvtt-dndmashup/mashup-rules';
 import {
 	chatMessageRegistry,
 	AttackResult,
@@ -18,11 +18,16 @@ type ResultEntry = {
 
 chatMessageRegistry.attackResult = async (actor, properties) => {
 	const results = properties.results.map(
-		({ target, roll }): ResultEntry => ({
+		({ target, bonuses, roll }): ResultEntry => ({
 			tokenId: target?.id ?? null,
 			tokenName: target?.name ?? null,
 			roll: roll,
-			rollResult: toResult(roll as never as ReturnType<Roll['toJSON']>, target?.id ?? null, properties.defense),
+			rollResult: toResult(
+				roll as never as ReturnType<Roll['toJSON']>,
+				target?.id ?? null,
+				bonuses,
+				properties.defense
+			),
 		})
 	);
 	return {
@@ -66,12 +71,20 @@ chatAttachments['attackResult'] = ({ flags: { results, powerId, toolId }, speake
 	);
 };
 
-function toResult(roll: ReturnType<Roll['toJSON']>, tokenId: string | null, defense: Defense): AttackRollResult | null {
+function toResult(
+	roll: ReturnType<Roll['toJSON']>,
+	tokenId: string | null,
+	bonuses: BonusByType | undefined,
+	defense: Defense
+): AttackRollResult | null {
 	const token = (isGame(game) && tokenId ? game.canvas.tokens?.get(tokenId) : null) ?? null;
 
 	const d20Term = roll.terms.find((t: any): t is DiceTerm => t.faces === 20 && t.number === 1);
 	if (d20Term && d20Term.total === 1) return 'critical-miss';
-	const defenseValue = token?.actor?.derivedCache.bonuses.getValue(`defense-${defense}`);
+	const defenseValue = bonuses
+		? sumFinalBonuses(bonuses)
+		: token?.actor?.derivedCache.bonuses.getValue(`defense-${defense}`);
+	console.log(tokenId, defenseValue, bonuses);
 	if (!defenseValue || roll.total === undefined) return null;
 	if (d20Term && d20Term.number === 20 && roll.total >= defenseValue) return 'critical-hit';
 	if (d20Term && d20Term.number === 20) return 'maybe-critical-hit';

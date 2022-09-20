@@ -4,24 +4,11 @@ import { lensFromState } from '@foundryvtt-dndmashup/core';
 import { ActorDocument } from '../../module/actor/documentType';
 import { useChatMessageDispatcher } from '../../module';
 import { NumericModifierSelector } from '../diceRoll/NumericModifierSelector';
-import {
-	BonusByType,
-	combineRollComponents,
-	FeatureBonusWithContext,
-	RollComponent,
-} from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, combineRollComponents, RollComponent } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 import { emptyConditionRuntime } from '../../bonusConditionRules';
 
-export function ShortRestConfiguration({
-	actor,
-	evaluateBonuses,
-	onClose,
-}: {
-	actor: ActorDocument;
-	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
-	onClose: () => void;
-}) {
+export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocument; onClose: () => void }) {
 	const spendHealingSurges = lensFromState(useState(0));
 	const [{ bonusFormula, bonusByType }, setBonusInfo] = useState<{
 		bonusFormula: RollComponent;
@@ -58,7 +45,6 @@ export function ShortRestConfiguration({
 			<NumericModifierSelector
 				actor={actor}
 				tool={null}
-				evaluateBonuses={evaluateBonuses}
 				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
 				rollTarget={'surges-value'}
 				runtimeBonusParameters={emptyConditionRuntime}

@@ -4,15 +4,25 @@ import {
 	DiceRollApplicationParametersBase,
 	EquipmentDocument,
 } from '@foundryvtt-dndmashup/mashup-react';
-import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
+import { NumericBonusTarget } from '@foundryvtt-dndmashup/mashup-rules';
 import { getToolsForPower } from './getToolsForPower';
 
 export type DisplayDialogProps = DiceRollApplicationParametersBase & {
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
+	runtimeTargetsRollType?: NumericBonusTarget;
 };
 
 export function displayDialog(
-	{ baseDice, actor, rollType, extraBonuses, tool, allowToolSelection, runtimeBonusParameters }: DisplayDialogProps,
+	{
+		baseDice,
+		actor,
+		rollType,
+		extraBonuses,
+		tool,
+		allowToolSelection,
+		runtimeBonusParameters,
+		runtimeTargetsRollType,
+	}: DisplayDialogProps,
 	onComplete: (rollProps: RollDetails) => void
 ) {
 	const possibleTools = !allowToolSelection
@@ -27,11 +37,11 @@ export function displayDialog(
 		<DiceRoller
 			actor={actor}
 			rollType={rollType}
+			runtimeTargetsRollType={runtimeTargetsRollType}
 			baseDice={baseDice}
 			onRoll={onComplete}
 			runtimeBonusParameters={runtimeBonusParameters}
 			extraBonuses={extraBonuses}
-			evaluateBonuses={(bonuses) => evaluateAndRoll(bonuses)}
 			possibleTools={possibleTools}
 		/>
 	);

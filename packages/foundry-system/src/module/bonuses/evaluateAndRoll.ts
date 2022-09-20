@@ -6,7 +6,8 @@ import { emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 
 const max = (v: number[]) => Math.max(...v);
 
-export function evaluateAndRoll(
+// TODO: consider moving this to context
+export function evaluateBonusByType(
 	bonusesWithContext: FeatureBonusWithContext[],
 	initialBonuses?: BonusByType
 ): BonusByType {

@@ -18,7 +18,7 @@ import {
 	emptyConditionRuntime,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
-import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
+import { evaluateBonusByType } from '../../bonuses/evaluateAndRoll';
 import { pcStandardBonuses, monsterStandardBonuses } from './standardBonuses';
 import {
 	getAllBonuses,
@@ -94,7 +94,7 @@ class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureB
 		const indeterminate = filtered.filter(([, result]) => result === ruleResultIndeterminate).map(([bonus]) => bonus);
 		const applied = filtered.filter(([, result]) => result === true).map(([bonus]) => bonus);
 
-		const evaluatedBonuses = evaluateAndRoll(applied);
+		const evaluatedBonuses = evaluateBonusByType(applied);
 		const value = sumFinalBonuses(evaluatedBonuses);
 		return {
 			value,
@@ -173,7 +173,7 @@ class TriggersCache implements DerivedTriggersCache {
 export class DerivedTotals implements DerivedCache {
 	constructor(private actor: MashupActor) {}
 
-	readonly bonuses = new BonusCache(this.actor);
+	readonly bonuses: DerivedCache['bonuses'] = new BonusCache(this.actor);
 	readonly lists = new ListsCache(this.actor);
 	readonly pools = new PoolsCache(this.actor);
 	readonly triggeredEffects = new TriggersCache(this.actor);

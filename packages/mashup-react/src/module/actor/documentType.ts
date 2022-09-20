@@ -24,6 +24,8 @@ export type TokenDocument = {
 
 	actor: ActorDocument | null;
 
+	data: { img: string | null };
+
 	readonly isOwner: boolean;
 	control?(options?: { releaseOthers?: boolean }): boolean;
 };

@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
 import { AttackRollResult, RollInfo, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActorDocument, TokenDocument } from '../../actor';
 import { EquipmentDocument, PowerDocument } from '../../item';
 import { InstantaneousEffectSection, AttackEffectTrigger } from '../../../effects';
+import { useControlTokenOnClick, useHoverToken } from '../../../components';
 
 export type AttackResultEntryProps = {
 	tokenId: string | null;
@@ -54,41 +54,13 @@ function AttackResultEntry({
 }: AttackResultEntryProps & {
 	lookupToken: () => TokenDocument | undefined;
 }) {
-	const hovered = useRef<TokenDocument>();
-
-	function onMouseEnter(event: React.MouseEvent) {
-		onMouseLeave(event);
-		hovered.current = lookupToken();
-		if (hovered.current) {
-			// FIXME: this is using internal methods
-			const temp: any = hovered.current;
-			if (temp._onHoverIn) {
-				temp._onHoverIn(event.nativeEvent);
-			}
-		}
-	}
-	function onMouseLeave(event: React.MouseEvent) {
-		if (hovered.current) {
-			// FIXME: this is using internal methods
-			const temp: any = hovered.current;
-			if (temp._onHoverOut) {
-				temp._onHoverOut(event.nativeEvent);
-			}
-			hovered.current = undefined;
-		}
-	}
-
-	function onClick(event: React.MouseEvent) {
-		const releaseOthers = !event.shiftKey;
-		if (hovered.current) {
-			hovered.current.control?.({ releaseOthers });
-		}
-	}
+	const hover = useHoverToken()(lookupToken);
+	const control = useControlTokenOnClick()(lookupToken);
 
 	return (
 		// TODO: the following styles are a blantant rip-off from Foundry 9. If they break, I'll need to rebuild them somehow.
-		<div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-			<div onClick={onClick}>
+		<div {...hover}>
+			<div {...control}>
 				<p>
 					<span className="font-bold">Target: </span>
 					{tokenName ?? 'Unknown'}

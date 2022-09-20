@@ -1,5 +1,4 @@
 import { DamageRoller, DamageRollDetails } from '@foundryvtt-dndmashup/mashup-react';
-import { evaluateAndRoll } from '../../bonuses/evaluateAndRoll';
 import { getToolsForPower } from './getToolsForPower';
 import { DisplayDialogProps } from './damage-roll';
 
@@ -36,7 +35,6 @@ export function displayDamageDialog(
 			baseDamageTypes={baseDamageTypes}
 			onRoll={onComplete}
 			runtimeBonusParameters={runtimeBonusParameters}
-			evaluateBonuses={evaluateAndRoll}
 			possibleTools={possibleTools}
 			onCriticalRoll={onCritical}
 		/>

@@ -19,6 +19,7 @@ import {
 import { ActorDocument } from '../../module/actor';
 import { addContextToFeatureBonus } from '../../effects';
 import { emptyConditionContext } from '../../bonusConditionRules';
+import { useEvaluateBonusByType } from '../../components';
 
 export function NumericModifierSelector({
 	actor,
@@ -26,7 +27,7 @@ export function NumericModifierSelector({
 	rollTarget,
 	runtimeBonusParameters,
 	extraBonuses,
-	evaluateBonuses,
+	showApplied = false,
 	onBonusesChange,
 }: {
 	tool: EquipmentDocument<'weapon' | 'implement'> | null;
@@ -34,9 +35,10 @@ export function NumericModifierSelector({
 	actor: ActorDocument;
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 	extraBonuses?: FullFeatureBonus[];
-	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
+	showApplied?: boolean;
 	onBonusesChange(bonusFormula: RollComponent, bonusByType: BonusByType): void;
 }) {
+	const evaluateBonusByType = useEvaluateBonusByType();
 	const selectedBonusesState = lensFromState(useState<boolean[]>([]));
 	const additionalModifiersState = lensFromState(useState(''));
 
@@ -99,7 +101,7 @@ export function NumericModifierSelector({
 				context: { ...emptyConditionContext, actor },
 			});
 		}
-		const bonusByType = evaluateBonuses(actualInput);
+		const bonusByType = evaluateBonusByType(actualInput);
 		return {
 			bonusFormula: fromBonusesToFormula(bonusByType),
 			bonusByType,
@@ -120,7 +122,7 @@ export function NumericModifierSelector({
 
 	return (
 		<>
-			{displayedBonuses.length > 0 ? (
+			{showApplied && displayedBonuses.length > 0 ? (
 				<>
 					<p>Applied:</p>
 					<ul className="list-disc ml-4">

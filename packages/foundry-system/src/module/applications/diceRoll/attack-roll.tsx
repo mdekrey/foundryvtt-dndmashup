@@ -3,20 +3,20 @@ import { EquipmentDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { BonusByType, combineRollComponents, fromBonusesToFormula } from '@foundryvtt-dndmashup/mashup-rules';
 import { isGame, toMashupId } from '../../../core/foundry';
 import { sendChatMessage } from '../../chat/sendChatMessage';
-import { displayDialog } from './displayDialog';
+import { displayDialog, DisplayDialogProps } from './displayDialog';
 import { roll } from './roll';
 
 applicationRegistry.attackRoll = async ({ defense, runtimeBonusParameters, ...otherParams }, resolve) => {
 	const targets = isGame(game) && game.user ? Array.from(game.user.targets) : [];
-	const baseParams = {
+	const baseParams: DisplayDialogProps = {
 		...otherParams,
 		runtimeBonusParameters: {
 			...runtimeBonusParameters,
 			targets,
 		},
+		runtimeTargetsRollType: `defense-${defense}`,
 	};
 
-	// TODO: indeterminate effects from targets' defenses
 	return {
 		content: displayDialog(baseParams, onRoll),
 		title: `${baseParams.title} Attack`,
@@ -27,14 +27,14 @@ applicationRegistry.attackRoll = async ({ defense, runtimeBonusParameters, ...ot
 		baseDice,
 		resultBonusesByType,
 		tool,
+		targetBonuses,
 	}: {
 		baseDice: string;
 		resultBonusesByType: BonusByType;
 		tool?: EquipmentDocument<'weapon' | 'implement'>;
+		targetBonuses: Record<string, BonusByType>;
 	}) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
-
-		// TODO: check each target for extra bonuses/penalties, like combat advantage?
 
 		const targetRolls =
 			targets.length === 0
@@ -42,7 +42,7 @@ applicationRegistry.attackRoll = async ({ defense, runtimeBonusParameters, ...ot
 				: await Promise.all(
 						targets.map(async (target) => {
 							const rollResult = await roll(dice, { actor: baseParams.actor, item: tool });
-							return { target, roll: rollResult.toJSON() as never };
+							return { target, bonuses: targetBonuses[target.id], roll: rollResult.toJSON() as never };
 						})
 				  );
 		await sendChatMessage('attackResult', baseParams.actor, {

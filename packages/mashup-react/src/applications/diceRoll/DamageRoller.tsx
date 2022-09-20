@@ -4,7 +4,6 @@ import { AppButton, BlockHeader } from '@foundryvtt-dndmashup/components';
 import {
 	BonusByType,
 	NumericBonusTarget,
-	FeatureBonusWithContext,
 	combineRollComponents,
 	RollComponent,
 	DamageType,
@@ -35,7 +34,6 @@ export type DamageRollerRequiredProps = {
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 
-	evaluateBonuses(bonusesWithContext: FeatureBonusWithContext[]): BonusByType;
 	onRoll(rollDetails: DamageRollDetails): void;
 	onCriticalRoll?(rollDetails: DamageRollDetails): void;
 };
@@ -49,7 +47,6 @@ export function DamageRoller({
 	rollType,
 	listType,
 	runtimeBonusParameters,
-	evaluateBonuses,
 	onRoll,
 	onCriticalRoll,
 }: DamageRollerRequiredProps) {
@@ -74,7 +71,6 @@ export function DamageRoller({
 			<NumericModifierSelector
 				actor={actor}
 				tool={tool}
-				evaluateBonuses={evaluateBonuses}
 				extraBonuses={extraBonuses}
 				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
 				rollTarget={rollType}
