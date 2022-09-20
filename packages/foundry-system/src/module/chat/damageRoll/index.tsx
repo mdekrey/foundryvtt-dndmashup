@@ -46,7 +46,19 @@ function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType
 	if (amount === 0) return;
 	const health = actor.data.data.health;
 
-	const effectiveAmount = amount; // TODO - apply resistance/vulnerabilities
+	const allResistance =
+		actor.derivedCache.bonuses.getValue('all-resistance') - actor.derivedCache.bonuses.getValue('all-vulnerability');
+	const minResistance = Math.min(
+		0,
+		...damageTypes.map(
+			(damageType) =>
+				actor.derivedCache.bonuses.getValue(`${damageType}-resistance`) -
+				actor.derivedCache.bonuses.getValue(`${damageType}-vulnerability`)
+		)
+	);
+	const resistance = allResistance + minResistance;
+
+	const effectiveAmount = Math.max(0, amount - resistance);
 	if (effectiveAmount === 0) return;
 
 	const tempHpRemaining = Math.max(0, health.temporaryHp - effectiveAmount);
