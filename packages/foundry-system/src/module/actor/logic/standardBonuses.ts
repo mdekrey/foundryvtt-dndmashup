@@ -5,7 +5,6 @@ function manual(text: string): { condition: ConditionRule<'manual'> } {
 }
 
 const base = { condition: null } as const;
-// TODO: pc vs monster differences
 
 const commonBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
@@ -14,13 +13,6 @@ const commonBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
 	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
 	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
-	{ ...base, target: 'defense-ac', amount: '@actor.data.data.baseDefenses.ac' },
-	{ ...base, target: 'defense-fort', amount: '@actor.data.data.baseDefenses.fort' },
-	{ ...base, target: 'defense-refl', amount: '@actor.data.data.baseDefenses.refl' },
-	{ ...base, target: 'defense-will', amount: '@actor.data.data.baseDefenses.will' },
-	{ ...base, target: 'maxHp', amount: `@actor.data.data.health.hp.maxBase`, type: 'base' },
-	{ ...base, target: 'initiative', amount: '@actor.data.data.initiativeBase', type: 'base' },
-	{ ...base, target: 'speed', amount: '@actor.data.data.speedBase', type: 'base' },
 
 	{ ...manual('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
 	{ ...manual('you are charging'), target: 'attack-roll', amount: 1 },
@@ -62,4 +54,14 @@ export const pcStandardBonuses: FeatureBonus[] = [
 	{ ...base, target: 'magic-item-uses', amount: '@actor.milestones' },
 ];
 
-export const monsterStandardBonuses: FeatureBonus[] = [...commonBonuses];
+export const monsterStandardBonuses: FeatureBonus[] = [
+	...commonBonuses,
+	{ ...base, target: 'maxHp', amount: `@actor.data.data.health.hp.maxBase`, type: 'base' },
+	{ ...base, target: 'initiative', amount: '@actor.data.data.initiativeBase', type: 'base' },
+	{ ...base, target: 'speed', amount: '@actor.data.data.speedBase', type: 'base' },
+
+	{ ...base, target: 'defense-ac', amount: '@actor.data.data.baseDefenses.ac' },
+	{ ...base, target: 'defense-fort', amount: '@actor.data.data.baseDefenses.fort' },
+	{ ...base, target: 'defense-refl', amount: '@actor.data.data.baseDefenses.refl' },
+	{ ...base, target: 'defense-will', amount: '@actor.data.data.baseDefenses.will' },
+];

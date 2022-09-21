@@ -53,6 +53,7 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 		if ((this.data.data.itemSlot === 'weapon' || this.data.data.itemSlot === 'implement') && !isForPowerUse)
 			return false;
 		if (!this.data.data.equipped?.length && this.data.data.itemSlot) return false;
+		if (this.parent?.type === 'monster') return false;
 		return true;
 	}
 	override allGrantedAuras(): SourcedAura[] {
