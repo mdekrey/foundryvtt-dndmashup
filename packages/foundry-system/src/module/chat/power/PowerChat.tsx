@@ -133,7 +133,11 @@ function PowerEffectOptions({
 			onClick={attackRoll(effect.attackRoll)}
 		/>
 	);
-	const hasRow1 = missSection || canCreate(effect.typeAndRange) || attackRollButton;
+	const hasRow1 =
+		missSection ||
+		canCreate(effect.typeAndRange) ||
+		attackRollButton ||
+		(!hasHitOrMiss && (effect.hit.damage || effect.hit.healing || effect.hit.activeEffectTemplate));
 
 	return (
 		<div className={classNames('grid grid-cols-1 w-full')}>
