@@ -62,12 +62,18 @@ abstract class AggregateCache<TTarget extends string | symbol, TResult, TModifie
 	private getCache(target: TTarget): DerivedCacheEntry<TResult, TModifier> {
 		let cached = this.cache[target];
 		if (cached) return cached;
-		cached = this.buildCache(target);
-		this.cache[target] = cached;
-		return cached;
+		try {
+			cached = this.buildCache(target);
+			this.cache[target] = cached;
+			return cached;
+		} catch (ex) {
+			console.warn(`While resolving ${target} for ${this.actor.name}`, ex);
+			return this.getFailedCacheRecord();
+		}
 	}
 
 	protected abstract buildCache(target: TTarget): DerivedCacheEntry<TResult, TModifier>;
+	protected abstract getFailedCacheRecord(): DerivedCacheEntry<TResult, TModifier>;
 }
 
 class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureBonus> implements DerivedBonusCache {
@@ -102,6 +108,9 @@ class BonusCache extends AggregateCache<NumericBonusTarget, number, FullFeatureB
 			indeterminate,
 		};
 	}
+	protected override getFailedCacheRecord(): DerivedCacheEntry<number, FullFeatureBonus> {
+		return { value: 0, applied: [], indeterminate: [] };
+	}
 }
 
 class ListsCache
@@ -123,6 +132,9 @@ class ListsCache
 			applied,
 			indeterminate,
 		};
+	}
+	protected override getFailedCacheRecord(): DerivedCacheEntry<string[], FullDynamicListEntry> {
+		return { value: [], applied: [], indeterminate: [] };
 	}
 }
 
@@ -151,6 +163,20 @@ class PoolsCache extends AggregateCache<string, SourcedPoolLimits, SourcedPoolBo
 		return {
 			value: getPoolResult(this.actor, pool, bonuses),
 			applied: bonuses,
+			indeterminate: [],
+		};
+	}
+	protected override getFailedCacheRecord(): DerivedCacheEntry<SourcedPoolLimits, SourcedPoolBonus> {
+		return {
+			value: {
+				name: '',
+				max: 0,
+				longRest: null,
+				shortRest: null,
+				maxBetweenRest: null,
+				source: [],
+			},
+			applied: [],
 			indeterminate: [],
 		};
 	}
