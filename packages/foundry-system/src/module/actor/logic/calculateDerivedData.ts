@@ -30,6 +30,7 @@ import {
 	getPoolResult,
 	getTriggeredEffects,
 } from './getBonuses';
+import { isGame } from '../../../core/foundry';
 
 type DerivedCacheEntry<TResult, TModifier> = { value: TResult; applied: TModifier[]; indeterminate: TModifier[] };
 
@@ -62,12 +63,15 @@ abstract class AggregateCache<TTarget extends string | symbol, TResult, TModifie
 	private getCache(target: TTarget): DerivedCacheEntry<TResult, TModifier> {
 		let cached = this.cache[target];
 		if (cached) return cached;
+		if (!isGame(game) || !game.ready) {
+			return this.getFailedCacheRecord();
+		}
 		try {
 			cached = this.buildCache(target);
 			this.cache[target] = cached;
 			return cached;
 		} catch (ex) {
-			console.warn(`While resolving ${target} for ${this.actor.name}`, ex);
+			console.warn(`While resolving ${target} for ${this.actor.name}`, ex, (game as any).ready);
 			return this.getFailedCacheRecord();
 		}
 	}

@@ -26,6 +26,7 @@ import { libWrapper } from './libwrapper-shim';
 import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
 import { onNextTurn } from './module/active-effect/turns';
 import { handleUpdateAuras } from './module/aura/handleUpdateAuras';
+import { isGame } from './core/foundry';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -134,6 +135,12 @@ Hooks.once('setup', async () => {
 // When ready
 Hooks.once('ready', async () => {
 	// Do anything once the system is ready
+	if (!isGame(game)) return; // this return never happens, but gets TypeScript to recognize our game.
+
+	const allActors = [...(game.actors?.contents ?? []), ...(canvas?.scene?.tokens.map((t) => t.actor) ?? [])].filter(
+		(a): a is Exclude<typeof a, null> => !!a
+	);
+	allActors.forEach((a) => a.updateAuras()); // since caches don't get calculated until the game is ready, this corrects initiative/maxHp/etc.
 });
 
 // Add any additional hooks if necessary

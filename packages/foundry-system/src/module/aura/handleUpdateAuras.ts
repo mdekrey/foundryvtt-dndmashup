@@ -6,6 +6,10 @@ type TokenConstructor = ConstructorParameters<ConstructorOf<TokenDocument>>[0];
 type MeasuredTemplateConstructor = ConstructorParameters<ConstructorOf<MeasuredTemplateDocument>>[0];
 
 export function handleUpdateAuras() {
+	Hooks.once('canvasReady', async (arg: Canvas) => {
+		updateAllTokens(arg.scene);
+	});
+
 	Hooks.on<Hooks.UpdateDocument<TokenConstructor>>('updateActor', (arg: MashupActor) => {
 		if (isGame(game)) {
 			game.scenes?.contents?.forEach((scene) => {
