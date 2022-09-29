@@ -14,6 +14,9 @@ declare global {
 }
 
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
+	get displayName() {
+		return this.name;
+	}
 	getOriginalSources(): BaseDocument[] {
 		return this.data.flags.mashup?.originalSources?.map(fromMashupId).filter(Boolean) as BaseDocument[];
 	}

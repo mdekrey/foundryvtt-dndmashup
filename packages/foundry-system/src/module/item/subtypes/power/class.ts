@@ -13,7 +13,7 @@ import { PossibleItemType } from '../../types';
 import { MashupItemEquipment } from '../equipment/class';
 
 export class MashupPower extends MashupItem<'power'> implements PowerDocument {
-	override get name() {
+	override get displayName(): string | null {
 		if (this.data.data.usage === 'item-consumable') {
 			if (this.parent instanceof MashupItemEquipment)
 				return `${super.name} x${(this.parent as MashupItemEquipment).data.data.quantity}`;

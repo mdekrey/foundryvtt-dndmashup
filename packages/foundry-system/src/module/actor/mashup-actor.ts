@@ -98,6 +98,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		return toMashupId(this);
 	}
 
+	get displayName() {
+		return this.name;
+	}
+
 	get appliedClass() {
 		return (this.items.contents as SimpleDocument[]).find(isClass);
 	}
@@ -205,6 +209,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		user: BaseUser
 	): Promise<void> {
 		if (this.type === 'pc') {
+			// F10 TODO: this moved to prototypeToken
 			this.data.token.update({ vision: true, actorLink: true, disposition: 1 });
 		}
 	}

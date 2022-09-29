@@ -37,6 +37,11 @@ export class MashupItemBase extends Item implements ItemDocument {
 	}
 
 	override data!: PossibleItemData;
+
+	get displayName(): string | null {
+		return this.name;
+	}
+
 	allGrantedBonuses(): FeatureBonusWithSource[] {
 		return [];
 	}
@@ -57,9 +62,6 @@ export class MashupItemBase extends Item implements ItemDocument {
 	}
 	allTriggeredEffects(): SourcedTriggeredEffect[] {
 		return [];
-	}
-	override get type(): PossibleItemType {
-		return super.type as PossibleItemType;
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	canEmbedItem(type: PossibleItemType) {
@@ -253,9 +255,6 @@ export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	implements SimpleDocument<SpecificItemData<T>>
 {
 	override data!: SpecificItemData<T>;
-	override get type(): T {
-		return super.type as T;
-	}
 
 	abstract override allGrantedBonuses(): FeatureBonusWithSource[];
 	abstract override allDynamicList(): DynamicListEntryWithSource[];

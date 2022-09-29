@@ -17,7 +17,7 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 {
 	override data!: SpecificItemEquipmentData<TItemSlot> & EquipmentData<TItemSlot>;
 
-	override get name() {
+	override get displayName() {
 		if (this.data.data.quantity !== 1) {
 			return `${super.name} x${this.data.data.quantity}`;
 		}

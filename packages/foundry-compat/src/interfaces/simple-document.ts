@@ -33,6 +33,7 @@ export type BaseDocument = {
 export type SimpleDocument<TData = unknown> = BaseDocument & {
 	data: SimpleDocumentData<TData>;
 	type: TData extends { type: infer TType } ? TType : unknown;
+	displayName: string | null;
 	img: string | null;
 
 	readonly items: { contents: SimpleDocument[] };

@@ -4,6 +4,7 @@ import { BaseDocument } from '../interfaces';
 import { useApplicationDispatcher } from '../components';
 
 type ItemTableDocument = BaseDocument & {
+	displayName: string | null;
 	img: string | null;
 	showEditDialog(): void;
 };
@@ -54,7 +55,7 @@ function ItemTableRow<T extends ItemTableDocument>({
 				</td>
 				<td className="pl-1">
 					<button type="button" className="block w-full h-full text-left" onClick={edit}>
-						{item.name}
+						{item.displayName}
 					</button>
 				</td>
 				{body && body(item)}

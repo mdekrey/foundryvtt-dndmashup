@@ -48,6 +48,7 @@ export type ActiveEffectDocumentConstructorParams = [
 ];
 
 export type ActiveEffectDocument = BaseDocument & {
+	displayName: string | null;
 	data: {
 		flags: ActiveEffectFlags;
 		duration: {
