@@ -7,5 +7,6 @@ export function boundsIntersects(lhs: BoundsObject, rhs: BoundsObject) {
 	const tokenBounds = getBounds(rhs);
 	if (!tokenBounds) return false;
 
-	return templateBounds.intersects(tokenBounds);
+	return (templateBounds as any) /* FIXME: Foundry 10 types */
+		.intersects(tokenBounds);
 }

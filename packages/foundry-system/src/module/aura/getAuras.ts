@@ -22,7 +22,8 @@ export function getRelevantAuras(
 					.filter((aura) => {
 						const bounds = getBounds({ auraSize: aura.range, token: otherToken });
 						if (!bounds) return false;
-						return originalBounds.intersects(bounds);
+						return (originalBounds as any) /* FIXME: Foundry 10 types */
+							.intersects(bounds);
 					});
 			return [];
 		}),

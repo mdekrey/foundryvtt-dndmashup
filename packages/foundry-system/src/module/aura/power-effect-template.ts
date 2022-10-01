@@ -206,11 +206,11 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		return new PIXI.Polygon(points);
 	}
 
-	static getBlastShape(direction: number, distance: number): NormalizedRectangle {
-		if (direction < (1 * Math.PI) / 2) return new NormalizedRectangle(0, 0, distance, distance);
-		if (direction < (2 * Math.PI) / 2) return new NormalizedRectangle(-distance, 0, distance, distance);
-		if (direction < (3 * Math.PI) / 2) return new NormalizedRectangle(-distance, -distance, distance, distance);
-		return new NormalizedRectangle(0, -distance, distance, distance);
+	static getBlastShape(direction: number, distance: number): PIXI.Rectangle {
+		if (direction < (1 * Math.PI) / 2) return new PIXI.Rectangle(0, 0, distance, distance);
+		if (direction < (2 * Math.PI) / 2) return new PIXI.Rectangle(-distance, 0, distance, distance);
+		if (direction < (3 * Math.PI) / 2) return new PIXI.Rectangle(-distance, -distance, distance, distance);
+		return new PIXI.Rectangle(0, -distance, distance, distance);
 	}
 
 	override refresh(): this {
@@ -329,7 +329,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		}
 	}
 
-	getAurasAt(originalBounds: NormalizedRectangle): AuraEffect[] {
+	getAurasAt(originalBounds: PIXI.Rectangle): AuraEffect[] {
 		const systemInfo = this.data.flags[systemName] ?? {};
 		if (!systemInfo.auras?.length) return [];
 
@@ -337,7 +337,12 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			.map((aura): AuraEffect | null => {
 				if (!aura.sources.length) return null;
 				const bounds = getBounds(this.document);
-				if (!bounds || !originalBounds.intersects(bounds)) return null;
+				if (
+					!bounds ||
+					!(originalBounds as any) /* FIXME: Foundry 10 types */
+						.intersects(bounds)
+				)
+					return null;
 
 				const sources = aura.sources.map((s) => fromMashupId(s) as unknown as Source);
 				if (sources.some((s) => !s)) return null;
