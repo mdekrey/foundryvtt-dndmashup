@@ -11,7 +11,7 @@ import { cardRowFormat, FlavorText, RulesText } from '@foundryvtt-dndmashup/comp
 
 export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: boolean }) {
 	const applications = useApplicationDispatcher();
-	const { name, data: itemData } = item.data;
+	const { name, system: itemData } = item;
 	const rulesText = itemData.effects
 		.flatMap((effect, index) => effectToRules(effect, index === 0))
 		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);

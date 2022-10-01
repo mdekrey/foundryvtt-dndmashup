@@ -18,25 +18,25 @@ export class MashupItemClass extends MashupItem<'class'> implements ClassDocumen
 		return [
 			{
 				target: 'maxHp',
-				amount: `${this.data.data.hpBase} + ${this.data.data.hpPerLevel} * @actor.extraLevels`,
+				amount: `${this.system.hpBase} + ${this.system.hpPerLevel} * @actor.extraLevels`,
 				type: 'class',
 				condition: null,
 				source: this,
 			},
 			{
 				target: 'surges-max',
-				amount: this.data.data.healingSurgesBase,
+				amount: this.system.healingSurgesBase,
 				type: 'class',
 				condition: null,
 				source: this,
 			},
-			...this.data.data.grantedBonuses.map((b) => ({ ...b, source: this })),
+			...this.system.grantedBonuses.map((b) => ({ ...b, source: this })),
 			...this.items.contents.flatMap((item) => item.allGrantedBonuses()),
 		];
 	}
 	override allDynamicList(): DynamicListEntryWithSource[] {
 		return [
-			...this.data.data.dynamicList.map((b) => ({ ...b, source: this })),
+			...this.system.dynamicList.map((b) => ({ ...b, source: this })),
 			...this.items.contents.flatMap((item) => item.allDynamicList()),
 		];
 	}

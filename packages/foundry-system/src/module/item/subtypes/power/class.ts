@@ -14,9 +14,9 @@ import { MashupItemEquipment } from '../equipment/class';
 
 export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 	override get displayName(): string | null {
-		if (this.data.data.usage === 'item-consumable') {
+		if (this.system.usage === 'item-consumable') {
 			if (this.parent instanceof MashupItemEquipment)
-				return `${super.name} x${(this.parent as MashupItemEquipment).data.data.quantity}`;
+				return `${super.name} x${(this.parent as MashupItemEquipment).system.quantity}`;
 			else return `${super.name} x0`;
 		}
 		return super.name;
@@ -32,7 +32,7 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 		return [];
 	}
 	override allGrantedPools(): SourcedPoolLimits[] {
-		return this.data.data.grantedPools?.map((b) => ({ ...b, source: [this] })) ?? [];
+		return this.system.grantedPools?.map((b) => ({ ...b, source: [this] })) ?? [];
 	}
 	override allGrantedPoolBonuses(): SourcedPoolBonus[] {
 		return [];
@@ -40,7 +40,7 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 
 	get powerGroupId() {
 		const parent: SimpleDocument | null = this.parent;
-		if (this.data.data.usage === 'item' && parent && isEquipment(parent)) {
+		if (this.system.usage === 'item' && parent && isEquipment(parent)) {
 			return parent.id;
 		} else if (parent && isPower(parent)) {
 			return parent.id;

@@ -16,12 +16,12 @@ conditionsRegistry.swordmageEquipment = {
 	rule: (input) => {
 		if (!input.actor) return ruleResultIndeterminate;
 		const equipment = input.actor.items.contents.filter(isEquipment);
-		if (equipment.some((eq) => eq.data.data.equipped.includes('off-hand'))) return false;
+		if (equipment.some((eq) => eq.system.equipped.includes('off-hand'))) return false;
 		if (
 			!equipment.some((eq) => {
-				if (eq.data.data.itemSlot !== 'weapon') return false;
-				if (!eq.data.data.equipped.includes('primary-hand')) return false;
-				const group = (eq.data.data.equipmentProperties as WeaponItemSlotTemplate).group;
+				if (eq.system.itemSlot !== 'weapon') return false;
+				if (!eq.system.equipped.includes('primary-hand')) return false;
+				const group = (eq.system.equipmentProperties as WeaponItemSlotTemplate).group;
 				if (group !== 'heavy-blade' && group !== 'light-blade') return false;
 				return true;
 			})

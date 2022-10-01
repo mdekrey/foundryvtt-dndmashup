@@ -1,7 +1,6 @@
 import {
 	EquipmentDocument,
 	isEquipment,
-	ItemDocument,
 	ActorDocument,
 	PowerDocument,
 	EquippedItemSlot,
@@ -15,29 +14,29 @@ export const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
 export function getToolsForPower(actor: ActorDocument, power: PowerDocument) {
 	const toolType =
 		(power
-			? (intersection(toolKeywords, power.data.data.keywords)[0] as typeof toolKeywords[number] | undefined)
+			? (intersection(toolKeywords, power.system.keywords)[0] as typeof toolKeywords[number] | undefined)
 			: null) ?? null;
 	const isCorrectTool: (heldItem: EquipmentDocument) => heldItem is EquipmentDocument<'weapon' | 'implement'> =
 		toolType === 'weapon' ? isWeapon : isImplement(actor.derivedCache.lists.getValue('implements'));
 	const usesTool = toolType !== null;
 	if (!usesTool) return undefined;
-	return (actor.items.contents as ItemDocument[])
+	return actor.items.contents
 		.filter(isEquipment)
-		.filter((eq) => eq.data.data.equipped.some((slot) => heldSlots.includes(slot)))
+		.filter((eq) => eq.system.equipped.some((slot) => heldSlots.includes(slot)))
 		.filter(isCorrectTool);
 }
 
 function isWeapon(item: EquipmentDocument): item is EquipmentDocument<'weapon' | 'implement'> {
-	return item.data.data.itemSlot === 'weapon';
+	return item.system.itemSlot === 'weapon';
 }
 
 const kebab = /[^A-Za-z]+/g;
 function isImplement(allowedImplements: string[]) {
 	const implementKeywords = allowedImplements.map((keyword) => keyword.toLowerCase().replace(kebab, '-'));
 	return (item: EquipmentDocument): item is EquipmentDocument<'weapon' | 'implement'> => {
-		if (item.data.data.itemSlot === 'implement' || item.data.data.itemSlot === 'weapon') {
-			const keywords = itemSlots[item.data.data.itemSlot]
-				.keywords(item.data.data.equipmentProperties as never)
+		if (item.system.itemSlot === 'implement' || item.system.itemSlot === 'weapon') {
+			const keywords = itemSlots[item.system.itemSlot]
+				.keywords(item.system.equipmentProperties as never)
 				.map((keyword) => keyword.toLowerCase().replace(kebab, '-'));
 			return keywords.some((k) => implementKeywords.includes(k));
 		}

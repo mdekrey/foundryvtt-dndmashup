@@ -4,6 +4,7 @@ import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type EpicDestinyDataSourceData = BaseItemTemplateDataSourceData; // TODO
 
-export type EpicDestinyData = TypedData<'epicDestiny', EpicDestinyDataSourceData>;
+export type EpicDestinySystemData = EpicDestinyDataSourceData;
+export type EpicDestinyData = TypedData<'epicDestiny', EpicDestinySystemData>;
 
 export type EpicDestinyDocument = ItemDocument<EpicDestinyData>;

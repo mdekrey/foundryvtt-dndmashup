@@ -1,19 +1,14 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AppButton, Tabs } from '@foundryvtt-dndmashup/components';
-import { documentAsState, SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
-import {
-	ActiveEffectDocument,
-	ActorComponents,
-	PlayerCharacterDataSourceData,
-} from '@foundryvtt-dndmashup/mashup-react';
+import { documentAsState, StandardData } from '@foundryvtt-dndmashup/foundry-compat';
+import { ActiveEffectDocument, ActorComponents, PlayerCharacterSystemData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor, SpecificActor } from '../mashup-actor';
-import { SpecificActorData } from '../types';
-import { PossibleItemData } from '../../item/types';
+import { SpecificActorDataSource } from '../types';
 import { useMemo } from 'react';
 import { Defense } from '@foundryvtt-dndmashup/mashup-rules';
 
-const baseLens = Lens.identity<SpecificActorData<'pc'>>();
-const dataLens = baseLens.toField('data');
+const baseLens = Lens.identity<StandardData & SpecificActorDataSource<'pc'>>();
+const dataLens = baseLens.toField('system');
 const abilitiesLens = dataLens.toField('abilities');
 const healthLens = dataLens.toField('health');
 const actionPointsLens = dataLens.toField('actionPoints');
@@ -46,8 +41,8 @@ function usePoolLimits(actor: MashupActor) {
 }
 
 export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'>; onRollInitiative: () => void }) {
-	const documentState = documentAsState<SpecificActorData<'pc'>>(actor);
-	const dataState: Stateful<PlayerCharacterDataSourceData> = dataLens.apply(documentState);
+	const documentState = documentAsState<StandardData & SpecificActorDataSource<'pc'>>(actor);
+	const dataState: Stateful<PlayerCharacterSystemData> = dataLens.apply(documentState);
 
 	const data = actor.derivedData;
 	const defenses = useDefenses(actor);
@@ -63,7 +58,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 					<ActorComponents.Header
 						nameState={baseLens.toField('name').apply(documentState)}
 						imageState={baseLens.toField('img').apply(documentState)}
-						detailsState={baseLens.toField('data').toField('details').apply(documentState)}
+						detailsState={baseLens.toField('system').toField('details').apply(documentState)}
 						appliedClass={actor.appliedClass}
 						appliedRace={actor.appliedRace}
 						appliedParagonPath={actor.appliedParagonPath}
@@ -129,7 +124,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 									<ActorComponents.Features
 										actor={actor}
 										effects={actor.effects.contents as ActiveEffectDocument[]}
-										items={actor.items.contents as SimpleDocument<PossibleItemData>[]}
+										items={actor.items.contents}
 										bonuses={bonusesLens.apply(documentState)}
 										dynamicList={dynamicListLens.apply(documentState)}
 									/>

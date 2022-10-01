@@ -8,7 +8,7 @@ import { documentAsState, SimpleDocumentData } from '@foundryvtt-dndmashup/found
 
 const baseLens = Lens.identity<SimpleDocumentData<ParagonPathData>>();
 const imageLens = baseLens.toField('img');
-const dataLens = baseLens.toField('data');
+const dataLens = baseLens.toField('system');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 

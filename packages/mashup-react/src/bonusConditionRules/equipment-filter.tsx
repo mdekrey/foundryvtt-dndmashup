@@ -24,9 +24,9 @@ export function equipmentFilter({ actor }: ConditionRuleContext, parameter: Equi
 	if (!actor) return false;
 	const isWearing = actor.items.contents
 		.filter(isEquipment)
-		.filter((eq) => eq.data.data.equipped.length > 0 && eq.data.data.itemSlot === parameter.itemSlot)
+		.filter((eq) => eq.system.equipped.length > 0 && eq.system.itemSlot === parameter.itemSlot)
 		.some((eq) => {
-			const actualKeywords = getItemSlotInfo(parameter.itemSlot).keywords(eq.data.data.equipmentProperties as never);
+			const actualKeywords = getItemSlotInfo(parameter.itemSlot).keywords(eq.system.equipmentProperties as never);
 			return parameter.keywords.every((keyword) => actualKeywords.includes(keyword));
 		});
 

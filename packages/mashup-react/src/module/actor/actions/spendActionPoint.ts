@@ -7,20 +7,19 @@ export const spendActionPoint: CommonAction = {
 	usage: 'encounter',
 	hint: 'Once per encounter, spend an action point to gain an extra turn',
 	isReady: (actor) =>
-		actor.data.data.actionPoints.value > 0 &&
-		(actor.type === 'monster' || !actor.data.data.actionPoints.usedThisEncounter),
+		actor.system.actionPoints.value > 0 && (actor.type === 'monster' || !actor.system.actionPoints.usedThisEncounter),
 	setReady: (actor, ready) => {
 		actor.update({ 'data.actionPoints.usedThisEncounter': !ready }, {});
 	},
 	use: async (actor, { chatDispatch }) => {
-		if (actor.type !== 'monster' && actor.data.data.actionPoints.usedThisEncounter) return;
-		if (actor.data.data.actionPoints.value < 1) return;
+		if (actor.type !== 'monster' && actor.system.actionPoints.usedThisEncounter) return;
+		if (actor.system.actionPoints.value < 1) return;
 		const otherEffects = await actor.spendActionPoint();
 		if (otherEffects === null) return;
 		chatDispatch.sendChatMessage(
 			'plain-text',
 			actor,
-			`spends an action point to get another action! ${  otherEffects.join(' ')}`
+			`spends an action point to get another action! ${otherEffects.join(' ')}`
 		);
 	},
 };

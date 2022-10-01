@@ -25,7 +25,7 @@ const options = Object.entries(featureTypes).map(
 
 const baseLens = Lens.identity<SimpleDocumentData<FeatureData>>();
 const imageLens = baseLens.toField('img');
-const dataLens = baseLens.toField('data');
+const dataLens = baseLens.toField('system');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 const grantedPoolsLens = dataLens.toField('grantedPools').default([]);
@@ -50,14 +50,14 @@ export function FeatureSheet({ item }: { item: FeatureDocument }) {
 					<FormInput className="col-span-3">
 						<FormInput.Field>
 							<FormInput.Select
-								{...baseLens.toField('data').toField('featureType').apply(documentState)}
+								{...baseLens.toField('system').toField('featureType').apply(documentState)}
 								options={options}
 							/>
 						</FormInput.Field>
 						<FormInput.Label>Type</FormInput.Label>
 					</FormInput>
 					<FormInput className="col-span-12">
-						<FormInput.TextField {...baseLens.toField('data').toField('summary').apply(documentState)} />
+						<FormInput.TextField {...baseLens.toField('system').toField('summary').apply(documentState)} />
 						<FormInput.Label>Summary</FormInput.Label>
 					</FormInput>
 				</div>

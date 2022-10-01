@@ -8,21 +8,26 @@ import {
 	SourcedPoolLimits,
 	SourcedTriggeredEffect,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { isPower, ItemDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { PossibleItemData, PossibleItemType, SpecificItemData } from './types';
+import {
+	isPower,
+	ItemDocument,
+	PossibleItemDataSource,
+	PossibleItemSystemData,
+	SpecificItemDataSource,
+	SpecificItemSystemData,
+} from '@foundryvtt-dndmashup/mashup-react';
+import { PossibleItemType } from './types';
 import { expandObjectsAndArrays } from '../../core/foundry/expandObjectsAndArrays';
 import Document, {
-	Context,
 	Metadata,
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs';
 import { DocumentConstructor } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes';
 import { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs';
-import { AnyDocument } from '../../core/foundry';
 import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
 import type { PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
-import { SimpleDocument, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { SimpleDocument, SimpleDocumentData, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 
-export type MashupItemBaseType = typeof MashupItemBase & DocumentConstructor;
+export type MashupItemBaseType = typeof MashupItemBase & (new (...args: any[]) => MashupItemBase);
 
 const itemCollectionPath = 'data.items';
 
@@ -32,14 +37,11 @@ export class MashupItemBase extends Item implements ItemDocument {
 	// 	return MashupItemData as any;
 	// }
 
-	constructor(data?: ItemDataConstructorData | undefined, context?: Context<AnyDocument>) {
-		super(data, context as any);
-	}
-
-	override data!: PossibleItemData;
+	_source!: any;
+	system!: PossibleItemSystemData;
 
 	get displayName(): string | null {
-		return this.name;
+		return this._source.name;
 	}
 
 	allGrantedBonuses(): FeatureBonusWithSource[] {
@@ -75,7 +77,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 	private createEmbeddedItemsCollection(): EmbeddedCollection<MashupItemBaseType, AnyDocumentData> {
 		return new foundry.fixup.EmbeddedCollection(
 			this.data,
-			(this.data.data.items ?? []) as never as ItemDataConstructorData[],
+			(this.system.items ?? []) as never as ItemDataConstructorData[],
 			CONFIG.Item.documentClass
 		);
 	}
@@ -83,11 +85,14 @@ export class MashupItemBase extends Item implements ItemDocument {
 	override async createEmbeddedDocuments(embeddedName: any, data: any, context?: any): Promise<any> {
 		if (embeddedName !== 'Item') return super.createEmbeddedDocuments(embeddedName, data, context);
 		if (!Array.isArray(data)) data = [data];
-		const currentItems = [...(this.data.data.items ?? [])];
+		const currentItems = [...(this.system.items ?? [])];
 
 		if (data.length) {
 			for (const itemData of data) {
-				const theItem = new CONFIG.Item.documentClass({ ...itemData, _id: randomID() }, { parent: this });
+				const theItem = new CONFIG.Item.documentClass(
+					{ ...itemData, _id: randomID() },
+					{ parent: this as never /* Foundry officially requires parents to be actors */ }
+				);
 				if (!theItem) continue;
 				const theData = theItem.toJSON();
 				currentItems.push(theData as never);
@@ -119,10 +124,10 @@ export class MashupItemBase extends Item implements ItemDocument {
 		context?: DocumentModificationContext
 	): Promise<Document<any, this, Metadata<any>>[]> {
 		if (embeddedName !== 'Item') return super.updateEmbeddedDocuments(embeddedName, updates, context);
-		const contained = this.data.data.items ?? [];
+		const contained = this.system.items ?? [];
 		const allUpdates = Array.isArray(updates) ? updates : updates ? [updates] : [];
 		const updated: any[] = [];
-		const newContained = contained.map((existing): PossibleItemData => {
+		const newContained = contained.map((existing): PossibleItemDataSource => {
 			const theUpdate = allUpdates.find((update) => update['_id'] === existing._id);
 			if (theUpdate) {
 				const newData = mergeObject(theUpdate, existing, {
@@ -130,11 +135,11 @@ export class MashupItemBase extends Item implements ItemDocument {
 					insertKeys: true,
 					insertValues: true,
 					inplace: false,
-				}) as never as PossibleItemData;
+				}) as never as PossibleItemDataSource;
 				updated.push(newData);
 				return newData;
 			}
-			return existing as PossibleItemData;
+			return existing as PossibleItemDataSource;
 		});
 
 		if (updated.length > 0) {
@@ -169,7 +174,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 		context?: DocumentModificationContext
 	): Promise<Document<any, this, Metadata<any>>[]> {
 		if (embeddedName !== 'Item') return super.deleteEmbeddedDocuments(embeddedName, ids, context);
-		const containedItems = this.data.data.items;
+		const containedItems = this.system.items;
 		const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
 		const deletedItems = this.items.filter((item) => (item.id ? ids.includes(item.id) : false));
 		if (this.parent) {
@@ -177,7 +182,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 		} else {
 			await MashupItemBase.setCollection(this, newContained);
 		}
-		return deletedItems;
+		return deletedItems as never;
 	}
 
 	//   export async function deleteDocuments(wrapped, ids=[], context={parent: {}, pack: {}, options: {}}) {
@@ -198,7 +203,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 			// TODO: Managing embedded Documents which are not direct descendants of a primary Document is un-supported at this time.
 			super.prepareEmbeddedDocuments();
 		}
-		const containedItems = this.data.data.items ?? [];
+		const containedItems = this.system.items ?? [];
 
 		const items = this.items;
 		const oldIds = items.contents
@@ -209,12 +214,12 @@ export class MashupItemBase extends Item implements ItemDocument {
 			const currentItem = items.get(idata._id);
 			if (!currentItem) {
 				const theItem = new CONFIG.Item.documentClass(idata as never as ItemDataConstructorData, {
-					parent: this,
+					parent: this as never /* Foundry officially requires parents to be actors */,
 				});
 				if (theItem) items.set(idata._id, theItem, {});
 			} else {
 				// TODO see how to avoid this - here to make sure the contained items is correctly setup
-				currentItem.data.update(idata, { diff: false });
+				currentItem.data.update(idata as never, { diff: false });
 				currentItem.prepareData();
 				this.items.set(idata._id, currentItem, {});
 				currentItem.render(false);
@@ -252,9 +257,11 @@ export class MashupItemBase extends Item implements ItemDocument {
 
 export abstract class MashupItem<T extends PossibleItemType = PossibleItemType>
 	extends MashupItemBase
-	implements SimpleDocument<SpecificItemData<T>>
+	implements SimpleDocument<SpecificItemDataSource<T>>
 {
-	override data!: SpecificItemData<T>;
+	override data!: never;
+	override _source!: SimpleDocumentData<SpecificItemDataSource<T>>;
+	override system!: SpecificItemSystemData<T>;
 
 	abstract override allGrantedBonuses(): FeatureBonusWithSource[];
 	abstract override allDynamicList(): DynamicListEntryWithSource[];

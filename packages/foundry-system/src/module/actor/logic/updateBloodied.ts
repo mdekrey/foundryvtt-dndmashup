@@ -32,9 +32,9 @@ export async function updateBloodied(this: MashupActor) {
 	};
 
 	const calculated = this.derivedData;
-	const shouldBeDead = this.data.data.health.hp.value <= 0 && this.data.type === 'monster';
-	// const shouldBeDying = this.data.data.health.currentHp <= 0 && this.data.type === 'pc';
-	const shouldBeBloodied = !shouldBeDead && Math.floor(calculated.health.hp.max / 2) >= this.data.data.health.hp.value;
+	const shouldBeDead = this.system.health.hp.value <= 0 && this.data.type === 'monster';
+	// const shouldBeDying = this.system.health.currentHp <= 0 && this.data.type === 'pc';
+	const shouldBeBloodied = !shouldBeDead && Math.floor(calculated.health.hp.max / 2) >= this.system.health.hp.value;
 
 	const isBloodied = this.isStatus('bloodied');
 	const isDead = this.isStatus('dead');

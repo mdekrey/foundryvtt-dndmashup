@@ -15,6 +15,7 @@ export type FeatureDataSourceData = BaseItemTemplateDataSourceData &
 		triggeredEffects?: TriggeredEffect[];
 	};
 
-export type FeatureData = TypedData<'feature', FeatureDataSourceData>;
+export type FeatureSystemData = FeatureDataSourceData;
+export type FeatureData = TypedData<'feature', FeatureSystemData>;
 
 export type FeatureDocument = ItemDocument<FeatureData>;

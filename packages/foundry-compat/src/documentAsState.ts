@@ -1,12 +1,12 @@
-import { SimpleDocument, SimpleDocumentData } from './interfaces';
+import { DataSourceBase, SimpleDocument, SimpleDocumentData } from './interfaces';
 import { ImmutableMutator, ImmutableMutatorOptions, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { cloneDeep } from 'lodash/fp';
 
-function documentDataSource<TData>(document: SimpleDocument<TData>): SimpleDocumentData<TData> {
-	return '_source' in document.data ? (document.data as any)._source : document.data;
+function documentDataSource<TData extends DataSourceBase>(document: SimpleDocument<TData>): SimpleDocumentData<TData> {
+	return document._source;
 }
 
-export function documentAsState<TData>(
+export function documentAsState<TData extends DataSourceBase>(
 	document: SimpleDocument<TData>,
 	options: Partial<ImmutableMutatorOptions> = {}
 ): Stateful<SimpleDocumentData<TData>> {

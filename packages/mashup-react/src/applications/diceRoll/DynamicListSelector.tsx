@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { EquipmentDocument } from '../../module/item';
+import { EquipmentDocument, ItemDocument } from '../../module/item';
 import { lensFromState, Lens } from '@foundryvtt-dndmashup/core';
 import {
 	filterConditions,
@@ -36,7 +36,7 @@ export function DynamicListSelector({
 				.map(
 					(entry): DynamicListEntryWithContext => ({
 						...entry,
-						context: { actor, item: tool, activeEffectSources: undefined },
+						context: { actor, item: tool as ItemDocument, activeEffectSources: undefined },
 					})
 				),
 			runtimeBonusParameters,

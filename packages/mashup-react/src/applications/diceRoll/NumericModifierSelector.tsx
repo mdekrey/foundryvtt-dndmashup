@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FormInput } from '@foundryvtt-dndmashup/components';
-import { EquipmentDocument } from '../../module/item';
+import { EquipmentDocument, ItemDocument } from '../../module/item';
 import { lensFromState, Lens, ensureSign } from '@foundryvtt-dndmashup/core';
 import {
 	BonusByType,
@@ -49,7 +49,7 @@ export function NumericModifierSelector({
 			allToolBonuses
 				.filter((b) => b.target === rollTarget)
 				.map((b): FeatureBonusWithSource => ({ ...b, source: tool }))
-				.map(addContextToFeatureBonus({ actor, item: tool, activeEffectSources: undefined })),
+				.map(addContextToFeatureBonus({ actor, item: tool as ItemDocument, activeEffectSources: undefined })),
 			runtimeBonusParameters,
 			true
 		);

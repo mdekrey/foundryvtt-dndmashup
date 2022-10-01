@@ -45,7 +45,7 @@ export function getImportExportButtons(target: SimpleDocument): Application.Head
 	];
 
 	function getSource() {
-		const copy = { ...(target.data as any)._source };
+		const copy = { ...(target.system as any)._source };
 		delete copy._id;
 		delete copy.folder;
 		delete copy.sort;

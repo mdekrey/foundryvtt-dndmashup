@@ -14,7 +14,7 @@ const undefinedString = Lens.from<string | undefined | null, string>(
 
 export const imageLens = baseLens.toField('img');
 export const nameLens = baseLens.toField('name');
-export const powerSourceDataLens = baseLens.toField('data');
+export const powerSourceDataLens = baseLens.toField('system');
 export const sourceIdLens = powerSourceDataLens.toField('sourceId');
 export const powerTypeLens = powerSourceDataLens.toField('type');
 export const powerFlavorTextLens = powerSourceDataLens.toField('flavorText');
@@ -66,6 +66,6 @@ export const newEffectLens = Lens.from<PowerEffect[], PowerEffect>(
 	}
 ).default(defaultNewEffect);
 
-export const keywordsLens = Lens.fromProp<SimpleDocumentData<PowerData>>()('data')
+export const keywordsLens = Lens.fromProp<SimpleDocumentData<PowerData>>()('system')
 	.toField('keywords')
 	.combine(keywordsAsStringLens);

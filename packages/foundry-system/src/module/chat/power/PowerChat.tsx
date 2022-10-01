@@ -69,7 +69,7 @@ function PowerOptions({
 } & PowerEffectTemplateProps) {
 	return (
 		<>
-			{power.data.data.effects
+			{power.system.effects
 				.filter((e) => hasEffectInfo(e, effectProps.canCreateEffect))
 				.map((effect, index) => (
 					<PowerEffectOptions key={index} effect={effect} {...effectProps} actor={actor} power={power} />

@@ -7,5 +7,5 @@ export function isEquipment(item: SimpleDocument): item is EquipmentDocument {
 }
 
 export function isEquipmentSlot<T extends ItemSlot>(item: SimpleDocument, itemType: T): item is EquipmentDocument<T> {
-	return isEquipment(item) && item.data.data.itemSlot === itemType;
+	return isEquipment(item) && item.system.itemSlot === itemType;
 }

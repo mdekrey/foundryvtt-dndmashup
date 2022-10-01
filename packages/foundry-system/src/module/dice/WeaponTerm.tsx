@@ -60,10 +60,10 @@ export class WeaponTerm extends ParentheticalTerm {
 		const [number, weaponCode, flavor] = match.slice(1);
 
 		let weaponDice = '1d4'; // default for unarmed
-		if (weaponCode === 'W' && data.item && data.item.data.data.itemSlot === 'weapon') {
+		if (weaponCode === 'W' && data.item && data.item.system.itemSlot === 'weapon') {
 			const weapon = data.item as EquipmentDocument<'weapon'>;
-			if (weapon.data.data.equipmentProperties) {
-				weaponDice = weapon.data.data.equipmentProperties.damage;
+			if (weapon.system.equipmentProperties) {
+				weaponDice = weapon.system.equipmentProperties.damage;
 			}
 		} else {
 			// TODO: beast?

@@ -1,5 +1,4 @@
-import { PlayerCharacterDataSource, MonsterDataSource, ActorDataSource } from '@foundryvtt-dndmashup/mashup-react';
-import { ActorData } from './actor.types';
+import { ActorDataSource, PossibleActorType } from '@foundryvtt-dndmashup/mashup-react';
 
 declare global {
 	interface SourceConfig {
@@ -10,8 +9,6 @@ declare global {
 	}
 }
 
-export type PossibleActorData =
-	| ActorData<PlayerCharacterDataSource, PlayerCharacterDataSource>
-	| ActorData<MonsterDataSource, MonsterDataSource>;
+export type PossibleActorDataSource = ActorDataSource<'pc'> | ActorDataSource<'monster'>;
 
-export type SpecificActorData<T extends PossibleActorData['type']> = PossibleActorData & { type: T };
+export type SpecificActorDataSource<T extends PossibleActorType> = ActorDataSource<T>;

@@ -12,6 +12,7 @@ export type ClassDataSourceData = BaseItemTemplateDataSourceData & {
 	healingSurgesBase: number;
 };
 
-export type ClassData = TypedData<'class', ClassDataSourceData>;
+export type ClassSystemData = ClassDataSourceData;
+export type ClassData = TypedData<'class', ClassSystemData>;
 
 export type ClassDocument = ItemDocument<ClassData>;

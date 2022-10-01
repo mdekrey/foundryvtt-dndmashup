@@ -2,23 +2,23 @@ import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { defenses, DynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
 import capitalize from 'lodash/fp/capitalize';
-import { MonsterDataSourceData } from '../types';
+import { MonsterSystemData } from '../types';
 
-const base = Lens.fromProp<MonsterDataSourceData>();
+const base = Lens.fromProp<MonsterSystemData>();
 const initiativeLens = base('initiativeBase');
 const speedLens = base('speedBase');
 const healthLens = base('health');
 const defensesLens = base('baseDefenses').default({ ac: 10, fort: 10, refl: 10, will: 10 });
 const actionPointsLens = base('actionPoints');
 
-function getSenses(data: MonsterDataSourceData) {
+function getSenses(data: MonsterSystemData) {
 	return (data.dynamicList ?? [])
 		.filter((e) => e.target === 'senses')
 		.map((e) => capitalize(e.entry))
 		.join(', ');
 }
 
-const sensesLens = Lens.from<MonsterDataSourceData, string>(getSenses, (mutator) => (draft) => {
+const sensesLens = Lens.from<MonsterSystemData, string>(getSenses, (mutator) => (draft) => {
 	const senses = mutator(getSenses(draft));
 	draft.dynamicList = [
 		...(draft.dynamicList ?? []).filter((e) => e.target !== 'senses'),
@@ -30,7 +30,7 @@ const sensesLens = Lens.from<MonsterDataSourceData, string>(getSenses, (mutator)
 	];
 });
 
-export function MonsterVitals({ documentState }: { documentState: Stateful<MonsterDataSourceData> }) {
+export function MonsterVitals({ documentState }: { documentState: Stateful<MonsterSystemData> }) {
 	return (
 		<div className="grid grid-cols-12 grid-rows-2 gap-x-1">
 			<FormInput className="col-span-2">

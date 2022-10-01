@@ -1,6 +1,6 @@
 import { MashupItemBase } from './mashup-item';
-import { PossibleItemData, PossibleItemType } from './types';
-import { ClassSheet, SkillSheet } from '@foundryvtt-dndmashup/mashup-react';
+import { PossibleItemType } from './types';
+import { ClassSheet, PossibleItemDataSource, SkillSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { EquipmentSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { RaceSheet } from '@foundryvtt-dndmashup/mashup-react';
 import { FeatureSheet } from '@foundryvtt-dndmashup/mashup-react';
@@ -71,19 +71,19 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 	protected async _onDropItem(event: DragEvent, data: DropData<MashupItemBase>) {
 		const item = await MashupItemBase.fromDropData(data);
 		if (!item) return;
-		const itemData = item.toObject() as never as PossibleItemData;
+		const itemData = item.toObject() as never as PossibleItemDataSource;
 
 		if (item.parent?.id && item.parent?.id === this.item.parent?.id) return this._onSortItem(event, itemData);
 
 		return this._onDropItemCreate(itemData);
 	}
-	protected _onDropItemCreate(itemData: PossibleItemData) {
+	protected _onDropItemCreate(itemData: PossibleItemDataSource) {
 		if (!this.item.canEmbedItem(itemData.type)) return;
 		// TODO: filter for sub item type
 		return this.item.createEmbeddedDocuments('Item', itemData instanceof Array ? itemData : [itemData]);
 	}
 
-	_onSortItem(event: DragEvent, itemData: PossibleItemData) {
+	_onSortItem(event: DragEvent, itemData: PossibleItemDataSource) {
 		// TODO - see ActorSheet.prototype._onSortItem
 		console.log(event, itemData);
 	}

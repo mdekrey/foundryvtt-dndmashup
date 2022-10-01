@@ -4,6 +4,8 @@ import { BaseItemTemplateDataSourceData, ItemDescriptionItemTemplateDataSourceDa
 
 export type SkillDataSourceData = BaseItemTemplateDataSourceData & ItemDescriptionItemTemplateDataSourceData;
 
-export type SkillData = TypedData<'skill', SkillDataSourceData>;
+export type SkillSystemData = SkillDataSourceData;
+
+export type SkillData = TypedData<'skill', SkillSystemData>;
 
 export type SkillDocument = ItemDocument<SkillData>;

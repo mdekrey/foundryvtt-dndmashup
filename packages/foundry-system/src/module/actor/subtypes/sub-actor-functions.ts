@@ -1,7 +1,6 @@
-import { ActorDerivedData } from '@foundryvtt-dndmashup/mashup-react';
+import { ActorDerivedData, PossibleActorType } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor } from '../mashup-actor';
-import { PossibleActorData } from '../types';
 
-export type SubActorFunctions<T extends PossibleActorData['type']> = {
+export type SubActorFunctions<T extends PossibleActorType> = {
 	prepare: (data: ActorDerivedData<T>, actor: MashupActor) => void;
 };

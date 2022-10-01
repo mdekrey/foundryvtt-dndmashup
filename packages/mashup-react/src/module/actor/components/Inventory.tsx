@@ -27,7 +27,7 @@ export const orderedItemSlots: ItemSlot[] = [
 
 export function Inventory({ actor }: { actor: ActorDocument }) {
 	const inventoryBySlots = groupBy(
-		(i) => i.data.data.itemSlot,
+		(i) => i.system.itemSlot,
 		actor.items.contents.filter<EquipmentDocument>(isEquipment)
 	);
 	return (
@@ -40,7 +40,7 @@ export function Inventory({ actor }: { actor: ActorDocument }) {
 							items={inventoryBySlots[slot]}
 							key={slot}
 							slot={slot}
-							onEquip={actor.isOwner ? (item, equipSlot) => equip(item.data, equipSlot) : undefined}
+							onEquip={actor.isOwner ? (item, equipSlot) => equip(item._source, equipSlot) : undefined}
 						/>
 					) : null
 				)
@@ -99,7 +99,7 @@ function InventorySlotTable<T extends ItemSlot>({
 			)}
 			body={(item) => (
 				<>
-					<TableBody equipmentProperties={getEquipmentProperties<T>(item.data)} />
+					<TableBody equipmentProperties={getEquipmentProperties<T>(item._source)} />
 					{canEquip ? (
 						<td className="text-center w-12">
 							{equippedSlots.map((equipSlot) => (
@@ -107,9 +107,9 @@ function InventorySlotTable<T extends ItemSlot>({
 									key={equipSlot}
 									title={`Equip ${equippedItemSlots[equipSlot].label}`}
 									className={classNames({
-										'opacity-25': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) === -1,
+										'opacity-25': item.system.equipped && item.system.equipped.indexOf(equipSlot) === -1,
 										// fade out opposite hand
-										'opacity-50': item.data.data.equipped && item.data.data.equipped.indexOf(equipSlot) >= 1,
+										'opacity-50': item.system.equipped && item.system.equipped.indexOf(equipSlot) >= 1,
 									})}
 									iconClassName="fas fa-shield-alt"
 									onClick={onEquip && (() => onEquip(item, equipSlot))}

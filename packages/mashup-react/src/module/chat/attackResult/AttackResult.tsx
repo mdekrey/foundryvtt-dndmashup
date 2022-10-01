@@ -34,10 +34,10 @@ export const AttackResult = ({
 					key={index}
 				/>
 			))}
-			{tool?.data.data.equipmentProperties?.additionalEffects && actor ? (
+			{tool?.system.equipmentProperties?.additionalEffects && actor ? (
 				<ToolExtraEffects
 					tool={tool}
-					additionalEffects={tool?.data.data.equipmentProperties?.additionalEffects}
+					additionalEffects={tool?.system.equipmentProperties?.additionalEffects}
 					actor={actor}
 					power={power}
 				/>

@@ -9,7 +9,7 @@ import { SimpleDocumentData } from '@foundryvtt-dndmashup/foundry-compat';
 const baseLens = Lens.identity<SimpleDocumentData<EpicDestinyData>>();
 const nameLens = baseLens.toField('name');
 const imageLens = baseLens.toField('img');
-const dataLens = baseLens.toField('data');
+const dataLens = baseLens.toField('system');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 

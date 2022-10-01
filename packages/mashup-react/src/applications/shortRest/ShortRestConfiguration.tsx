@@ -24,7 +24,7 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 			: `${spendHealingSurges.value} * (${currentRoll})`;
 	const hpResult =
 		typeof rollTotal === 'number'
-			? Math.min(actor.derivedData.health.hp.max, actor.data.data.health.hp.value + rollTotal)
+			? Math.min(actor.derivedData.health.hp.max, actor.system.health.hp.value + rollTotal)
 			: null;
 
 	return (
@@ -34,13 +34,13 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 				<FormInput className="w-16 inline-block">
 					<FormInput.NumberField
 						min={0}
-						max={actor.data.data.health.surgesRemaining.value}
+						max={actor.system.health.surgesRemaining.value}
 						{...spendHealingSurges}
 						className="text-lg text-center"
 					/>
 					<FormInput.Label>To Spend</FormInput.Label>
 				</FormInput>
-				<span>of {actor.data.data.health.surgesRemaining.value} remaining healing surges</span>
+				<span>of {actor.system.health.surgesRemaining.value} remaining healing surges</span>
 			</div>
 			<NumericModifierSelector
 				actor={actor}
@@ -55,7 +55,7 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 				{spendHealingSurges.value > 0 ? (
 					<>
 						<li>
-							Heal {rollTotal} hp, raising from {actor.data.data.health.hp.value}
+							Heal {rollTotal} hp, raising from {actor.system.health.hp.value}
 							{hpResult ? (
 								<>
 									{' '}
@@ -84,7 +84,7 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 	);
 
 	async function onUseShortRest() {
-		const hpToRecover = hpResult === null ? null : hpResult - actor.data.data.health.hp.value;
+		const hpToRecover = hpResult === null ? null : hpResult - actor.system.health.hp.value;
 		if (!isDeterministic) return;
 		if (!(await actor.applyShortRest(spendHealingSurges.value, bonusByType))) return;
 		chatDispatch.sendChatMessage(

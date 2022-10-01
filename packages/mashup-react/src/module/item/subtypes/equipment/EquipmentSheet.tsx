@@ -26,11 +26,11 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 		details: Details,
 		additionalTabs,
 		defaultEquipmentInfo,
-	} = getItemSlotInfo<T>(item.data.data.itemSlot);
+	} = getItemSlotInfo<T>(item.system.itemSlot);
 
 	const baseLens = Lens.identity<SimpleDocumentData<EquipmentData<T>>>();
 	const imageLens = baseLens.toField('img');
-	const dataLens = baseLens.toField('data');
+	const dataLens = baseLens.toField('system');
 	const bonusesLens = dataLens.toField('grantedBonuses');
 	const dynamicListLens = dataLens.toField('dynamicList');
 	const equipmentPropertiesState: Stateful<ItemSlotTemplate<T>> = dataLens
@@ -41,9 +41,9 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 
 	function onChangeItemSlot(itemSlot: React.SetStateAction<ItemSlot>) {
 		documentState.onChangeValue((draft) => {
-			draft.data.itemSlot = (typeof itemSlot === 'function' ? itemSlot(draft.data.itemSlot) : itemSlot) as never;
-			draft.data.equipmentProperties = {
-				...itemSlots[draft.data.itemSlot].defaultEquipmentInfo,
+			draft.system.itemSlot = (typeof itemSlot === 'function' ? itemSlot(draft.system.itemSlot) : itemSlot) as never;
+			draft.system.equipmentProperties = {
+				...itemSlots[draft.system.itemSlot].defaultEquipmentInfo,
 			} as never;
 		});
 		setActiveTab('details');
@@ -63,18 +63,18 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 						<FormInput.Select
 							className="text-center"
 							options={itemSlotOptions}
-							value={item.data.data.itemSlot}
+							value={item.system.itemSlot}
 							onChange={item.isOwner ? onChangeItemSlot : undefined}
 						/>
 						<FormInput.Label className="text-sm">Item Slot</FormInput.Label>
 					</FormInput>
 					<FormInput.Inline className="col-span-12">
-						<FormInput.Checkbox {...baseLens.toField('data').toField('container').apply(documentState)} />
+						<FormInput.Checkbox {...baseLens.toField('system').toField('container').apply(documentState)} />
 						Is Container?
 					</FormInput.Inline>
 
 					<p className="col-span-12 text-xs">
-						<Summary equipmentProperties={getEquipmentProperties<T>(item.data)} />
+						<Summary equipmentProperties={getEquipmentProperties<T>(item._source)} />
 					</p>
 				</div>
 			}
@@ -94,7 +94,7 @@ export function EquipmentSheet<T extends ItemSlot = ItemSlot>({ item }: { item: 
 				<DynamicList dynamicList={dynamicListLens.apply(documentState)} />
 				<PoolBonusEditor pools={grantedPoolBonusesLens.apply(documentState)} />
 			</TabbedSheet.Tab>
-			{item.data.data.container ? (
+			{item.system.container ? (
 				<TabbedSheet.Tab name="contents" label="Contents">
 					<Contents item={item} />
 				</TabbedSheet.Tab>

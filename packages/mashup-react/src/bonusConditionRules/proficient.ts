@@ -22,7 +22,7 @@ export function proficientIn(
 	{ power }: ConditionRulesRuntimeParameters
 ) {
 	// proficiency doesn't matter if it's not a "weapon" power!
-	if (power && !power.data.data.keywords.includes('weapon')) return false;
+	if (power && !power.system.keywords.includes('weapon')) return false;
 	if (!actor || !item) return false;
 
 	// TODO: "heavy blades" is written with a space, but "military heavy blades" can't be fully split up and will not match

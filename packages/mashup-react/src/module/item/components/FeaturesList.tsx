@@ -19,28 +19,28 @@ const features: {
 	{
 		key: 'race-feature',
 		label: 'Racial Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'race-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as SimpleDocument<FeatureData>} />,
 	},
 	{
 		key: 'class-feature',
 		label: 'Class Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'class-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as SimpleDocument<FeatureData>} />,
 	},
 	{
 		key: 'paragon-feature',
 		label: 'Paragon Path Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'paragon-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as SimpleDocument<FeatureData>} />,
 	},
 	{
 		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'epic-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as SimpleDocument<FeatureData>} />,
 	},
@@ -75,5 +75,5 @@ function FeatureHeader() {
 }
 
 function FeatureBody({ item }: { item: SimpleDocument<FeatureData> }) {
-	return <td className="text-left">{item.data.data.summary}</td>;
+	return <td className="text-left">{item.system.summary}</td>;
 }

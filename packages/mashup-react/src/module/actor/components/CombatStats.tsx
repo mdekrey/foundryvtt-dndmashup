@@ -1,13 +1,13 @@
 import { ensureSign, Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { FormInput, ImageButton } from '@foundryvtt-dndmashup/components';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
-import { PlayerCharacterDataSourceData } from '../types';
+import { PlayerCharacterSystemData } from '../types';
 import { ActorDocument } from '../documentType';
 import { ActorDerivedData } from '../derivedDataType';
 import { emptyConditionRuntime } from '../../../bonusConditionRules';
 
-const deathSavingThrowLens = Lens.fromProp<PlayerCharacterDataSourceData>()('health').toField('deathSavesRemaining');
-const encountersSinceLongRest = Lens.fromProp<PlayerCharacterDataSourceData>()('encountersSinceLongRest');
+const deathSavingThrowLens = Lens.fromProp<PlayerCharacterSystemData>()('health').toField('deathSavesRemaining');
+const encountersSinceLongRest = Lens.fromProp<PlayerCharacterSystemData>()('encountersSinceLongRest');
 
 export function CombatStats({
 	actor,
@@ -18,7 +18,7 @@ export function CombatStats({
 	actor: ActorDocument;
 	data: ActorDerivedData;
 	onRollInitiative: () => void;
-	dataState: Stateful<PlayerCharacterDataSourceData>;
+	dataState: Stateful<PlayerCharacterSystemData>;
 }) {
 	return (
 		<div className="flex text-lg justify-around items-center">

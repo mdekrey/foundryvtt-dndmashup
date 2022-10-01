@@ -1,5 +1,7 @@
 import { SimpleApplication } from '@foundryvtt-dndmashup/components';
 
+export type DataSourceBase = { system: unknown };
+
 /** See @type ItemDataBaseProperties */
 export type StandardData = {
 	_id: string | null;
@@ -30,8 +32,12 @@ export type BaseDocument = {
 /**
  * Represents a simple document without using the Foundry types to try to speed up conpilation
  */
-export type SimpleDocument<TData = unknown> = BaseDocument & {
-	data: SimpleDocumentData<TData>;
+export type SimpleDocument<
+	TData extends DataSourceBase = unknown & DataSourceBase,
+	TDerivedData = unknown
+> = BaseDocument & {
+	_source: SimpleDocumentData<TData>;
+	system: TData['system'] & TDerivedData;
 	type: TData extends { type: infer TType } ? TType : unknown;
 	displayName: string | null;
 	img: string | null;

@@ -22,14 +22,14 @@ const poolBonusTargetText: Record<PoolBonusTarget, string> = {
 };
 
 export function EquipmentPreview({ item, simple }: { item: EquipmentDocument; simple?: boolean }) {
-	const { name, data: itemData } = item.data;
+	const { name, system: itemData } = item;
 	// const applications = useApplicationDispatcher();
 	const { statsPreview: StatsPreview } = itemSlots[itemData.itemSlot];
 	const flavorText = itemData.description.text ? (
 		<FlavorText dangerouslySetInnerHTML={{ __html: itemData.description.text }} />
 	) : null;
 
-	const equipmentContents = item.data.data.container
+	const equipmentContents = item.system.container
 		? item.items.contents
 				.filter(isEquipment)
 				.map((eq) => eq.name)
@@ -54,19 +54,19 @@ export function EquipmentPreview({ item, simple }: { item: EquipmentDocument; si
 					<>
 						{flavorText}
 						<div>
-							<StatsPreview equipmentProperties={item.data.data.equipmentProperties as never} />
+							<StatsPreview equipmentProperties={item.system.equipmentProperties as never} />
 						</div>
-						{item.data.data.grantedBonuses.map(bonusToText).map((text) => (
+						{item.system.grantedBonuses.map(bonusToText).map((text) => (
 							<RulesText label="Bonus" key={text}>
 								{text}
 							</RulesText>
 						))}
-						{Object.entries(groupBy((e) => e.target, item.data.data.dynamicList)).map(([target, entries]) => (
+						{Object.entries(groupBy((e) => e.target, item.system.dynamicList)).map(([target, entries]) => (
 							<RulesText label={dynamicListTargetNames[target as DynamicListTarget].label} key={target}>
 								{oxfordComma(entries.map((e) => e.entry))}
 							</RulesText>
 						))}
-						{Object.entries(groupBy((e) => e.name, item.data.data.grantedPoolBonuses ?? [])).map(
+						{Object.entries(groupBy((e) => e.name, item.system.grantedPoolBonuses ?? [])).map(
 							([pool, poolBonuses], index) => (
 								<RulesText label={pool} key={pool}>
 									{poolBonuses
@@ -75,7 +75,7 @@ export function EquipmentPreview({ item, simple }: { item: EquipmentDocument; si
 								</RulesText>
 							)
 						)}
-						{item.data.data.container ? (
+						{item.system.container ? (
 							<RulesText label="Contents">
 								{equipmentContents.length ? oxfordComma(equipmentContents) : 'None'}
 							</RulesText>
