@@ -92,7 +92,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	 */
 
 	override prepareData(): void {
-		this.subActorFunctions = actorSubtypeConfig[this.data.type] as typeof this.subActorFunctions;
+		this.subActorFunctions = actorSubtypeConfig[this.type] as typeof this.subActorFunctions;
 		super.prepareData();
 		this.handleHealthUpdate();
 	}
@@ -174,7 +174,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	private recalculateDerived() {
 		this._derivedCache = new DerivedTotals(this);
 		this._derivedData = calculateDerivedData.call(this);
-		mergeObject(this.data, { data: this._derivedData }, { recursive: true, inplace: true });
+		mergeObject(this.system, this._derivedData, { recursive: true, inplace: true });
 	}
 
 	private handleHealthUpdate() {
@@ -274,7 +274,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	isStatus(statusToCheck: string): boolean {
-		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
+		return !!this.effects.find((effect) => effect.flags.core?.statusId === statusToCheck);
 	}
 
 	allPowers(includeNestedPowers = true): PowerDocument[] {

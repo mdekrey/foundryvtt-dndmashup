@@ -54,7 +54,7 @@ export function getBonuses(actor: MashupActor, target: NumericBonusTarget): Full
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
@@ -93,7 +93,7 @@ export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	];
@@ -123,7 +123,7 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allDynamicList().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
@@ -146,7 +146,7 @@ export function getAllLists(actor: MashupActor): FullDynamicListEntry[] {
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allDynamicList().map((entry) => ({ ...entry, context: { ...emptyConditionContext, actor, item } }))
 		),
 		// TODO: auras grant list entries
@@ -191,7 +191,7 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 				sources: [effect],
 			}))
 		),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 		...Object.entries(actor.system.powerUsage ?? {})

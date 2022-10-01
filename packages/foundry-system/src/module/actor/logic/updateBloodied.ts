@@ -1,5 +1,6 @@
 import { isGame } from '../../../core/foundry';
 import { MashupActor } from '../mashup-actor';
+import { isActorType } from '../templates/isActorType';
 
 export async function updateBloodied(this: MashupActor) {
 	const findEffectId = (statusToCheck: string) => {
@@ -32,7 +33,7 @@ export async function updateBloodied(this: MashupActor) {
 	};
 
 	const calculated = this.derivedData;
-	const shouldBeDead = this.system.health.hp.value <= 0 && this.data.type === 'monster';
+	const shouldBeDead = this.system.health.hp.value <= 0 && isActorType(this, 'monster');
 	// const shouldBeDying = this.system.health.currentHp <= 0 && this.data.type === 'pc';
 	const shouldBeBloodied = !shouldBeDead && Math.floor(calculated.health.hp.max / 2) >= this.system.health.hp.value;
 

@@ -4,6 +4,7 @@ import { ItemDataSource } from '@league-of-foundry-developers/foundry-vtt-types/
 import { MashupItemBase } from '../item/mashup-item';
 import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
 import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
+import { isActorType } from './templates/isActorType';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
@@ -37,8 +38,7 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 
 		const skills = itemData.filter((i) => i.type === 'skill');
 
-		// FIXME: filter actor type rather than checking type directly
-		if (skills.length > 0 && this.actor.type === 'pc' && 'skills' in this.actor.system) {
+		if (skills.length > 0 && isActorType(this.actor, 'pc')) {
 			const data: Record<`data.skills`, SkillEntry[]> = {
 				'data.skills': this.actor.system.skills ?? [],
 			};

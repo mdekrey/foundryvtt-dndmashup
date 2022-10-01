@@ -1,12 +1,12 @@
 /* eslint-disable eqeqeq,no-eval,@typescript-eslint/no-non-null-assertion,@typescript-eslint/ban-types,@typescript-eslint/no-namespace */
 // SPDX-License-Identifier: MIT
 // Copyright © 2021 fvtt-lib-wrapper Rui Pinheiro
-// Source: https://github.com/ruipin/fvtt-lib-wrapper/blob/866a8d004321059556a94a1d44c60685252ce7a6/shim/shim.js
+// Source: https://github.com/ruipin/fvtt-lib-wrapper/blob/e2864f7c1bfda871e57378899d4074b5328f0784/shim/shim.js
 
 // A shim for the libWrapper library
 export let libWrapper: typeof LibWrapperShim;
 
-export const VERSIONS = [1, 12, 1];
+export const VERSIONS = [1, 12, 2];
 export const TGT_SPLIT_RE = new RegExp('([^.[]+|\\[(\'([^\'\\\\]|\\\\.)+?\'|"([^"\\\\]|\\\\.)+?")\\])', 'g');
 export const TGT_CLEANUP_RE = new RegExp('(^\\[\'|\'\\]$|^\\["|"\\]$)', 'g');
 
@@ -120,10 +120,11 @@ Hooks.once('init', () => {
 					: [null, null];
 			if (match[1] === 'systems')
 				return dirs.find((n) => n && (game as Game).system.id === n)
-					? [(game as Game).system.id, (game as Game).system.data.title]
+					? [(game as Game).system.id, (game as any).system.title ?? (game as any).system.data.title]
 					: [null, null];
 			const id = dirs.find((n) => n && (game as Game).modules.has(n))!;
-			return [id, (game as Game).modules.get(id)?.data?.title];
+			const mdl = (game as Game).modules.get(id) as any;
+			return [id, mdl?.title ?? mdl?.data?.title];
 		})();
 
 		if (!PACKAGE_ID || !PACKAGE_TITLE) {

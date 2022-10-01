@@ -76,7 +76,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 	}
 	private createEmbeddedItemsCollection(): EmbeddedCollection<MashupItemBaseType, AnyDocumentData> {
 		return new foundry.fixup.EmbeddedCollection(
-			this.data,
+			this,
 			(this.system.items ?? []) as never as ItemDataConstructorData[],
 			CONFIG.Item.documentClass
 		);
@@ -207,7 +207,7 @@ export class MashupItemBase extends Item implements ItemDocument {
 
 		const items = this.items;
 		const oldIds = items.contents
-			.map((c) => c.data._id)
+			.map((c) => c._source._id)
 			.filter((id) => !containedItems.some((item) => item._id === id));
 		oldIds.forEach((id) => items.delete(id, {}));
 		for (const idata of containedItems) {
@@ -219,8 +219,8 @@ export class MashupItemBase extends Item implements ItemDocument {
 				if (theItem) items.set(idata._id, theItem, {});
 			} else {
 				// TODO see how to avoid this - here to make sure the contained items is correctly setup
-				currentItem.data.update(idata as never, { diff: false });
-				currentItem.prepareData();
+				// FIXME: Foundry 10 types: updateSource is added in Foundry 10
+				(currentItem as any).updateSource(idata, {});
 				this.items.set(idata._id, currentItem, {});
 				currentItem.render(false);
 			}

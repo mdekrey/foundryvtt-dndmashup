@@ -4,6 +4,7 @@ import { createFinalEffectConstructorData } from '../actor/logic/createFinalEffe
 import { MashupActor } from '../actor';
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { fromMashupId } from '../../core/foundry';
+import { CoreFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
 
 declare global {
 	interface FlagConfig {
@@ -14,6 +15,8 @@ declare global {
 }
 
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
+	flags!: FlagConfig['ActiveEffect'] & CoreFlags;
+
 	get displayName() {
 		return this.name;
 	}
