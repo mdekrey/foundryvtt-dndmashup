@@ -214,7 +214,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 	}
 
 	override refresh(): this {
-		if (!this.template || !this.hud.icon) return this;
+		if (!this.template || !this.controlIcon) return this;
 		// Should be basically identical to the original target, but doesn't draw the ray.
 		this.position.set(this.data.x, this.data.y);
 
@@ -241,8 +241,8 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		this.template.lineStyle(this._borderThickness, 0x000000).beginFill(0x000000, 0.5).drawCircle(0, 0, 6);
 
 		// Update the HUD
-		this.hud.icon.visible = this.layer._active;
-		this.hud.icon.border.visible = this._hover;
+		this.controlIcon.visible = this.layer._active;
+		this.controlIcon.border.visible = this._hover;
 		this._refreshRulerText.call(this);
 		return this;
 	}
@@ -299,6 +299,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 	}
 
 	protected override _refreshRulerText(): void {
+		const ruler = (this as any).ruler as typeof this['hud']['ruler'];
 		if (this.data.t === 'circle') {
 			let d;
 			let text;
@@ -316,13 +317,12 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 					break;
 			}
 
-			if (this.hud.ruler) {
-				this.hud.ruler.text = text;
-				// this.hud.ruler.position.set(this.ray.dx + 10, this.ray.dy + 5);
+			if (ruler) {
+				ruler.text = text;
 			}
 		} else if (this.data.flags[systemName]?.text) {
-			if (this.hud.ruler) {
-				this.hud.ruler.text = this.data.flags[systemName]?.text as string;
+			if (ruler) {
+				ruler.text = this.data.flags[systemName]?.text as string;
 			}
 		} else {
 			return super._refreshRulerText();

@@ -11,6 +11,7 @@ export function getRelevantAuras(
 	if (!originalBounds) return [];
 	return [
 		...scene.tokens.contents.flatMap((otherToken) => {
+			if (otherToken === token) return [];
 			const source = otherToken.actor;
 			if (source)
 				return source
