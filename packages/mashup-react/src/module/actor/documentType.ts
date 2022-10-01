@@ -26,6 +26,8 @@ export type TokenDocument = {
 
 	data: { img: string | null };
 
+	disposition: number;
+
 	readonly isOwner: boolean;
 	control?(options?: { releaseOthers?: boolean }): boolean;
 };

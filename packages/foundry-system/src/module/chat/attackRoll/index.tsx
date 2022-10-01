@@ -63,7 +63,7 @@ chatAttachments['attackResult'] = ({ flags: { results, powerId, toolId }, speake
 	return (
 		<AttackResult
 			entries={props}
-			lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)}
+			lookupToken={(tokenId) => myGame.canvas?.tokens?.get(tokenId)?.document}
 			actor={actor}
 			power={power}
 			tool={tool}

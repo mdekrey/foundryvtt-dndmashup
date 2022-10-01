@@ -1,9 +1,10 @@
 import { AuraEffect, filterDisposition } from '@foundryvtt-dndmashup/mashup-rules';
 import { PowerEffectTemplate } from './power-effect-template';
 import { getBounds } from './getBounds';
+import { MashupTokenDocument } from '../token/mashup-token-document';
 
 export function getRelevantAuras(
-	token: TokenDocument,
+	token: MashupTokenDocument,
 	scene: Scene,
 	predicate: (aura: AuraEffect) => boolean
 ): AuraEffect[] {
@@ -16,9 +17,7 @@ export function getRelevantAuras(
 			if (source)
 				return source
 					.getAuras(predicate)
-					.filter((aura) =>
-						filterDisposition(aura.dispositionType, otherToken.data.disposition, token.data.disposition)
-					)
+					.filter((aura) => filterDisposition(aura.dispositionType, otherToken.disposition, token.disposition))
 					.filter((aura) => !aura.excludeSelf || otherToken.actor !== token.actor)
 					.filter((aura) => {
 						const bounds = getBounds({ auraSize: aura.range, token: otherToken });

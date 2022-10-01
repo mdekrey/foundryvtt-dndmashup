@@ -18,6 +18,7 @@ import uniq from 'lodash/fp/uniq';
 import type { MashupActiveEffect } from '../../active-effect';
 import { getRelevantAuras } from '../../aura/getAuras';
 import { MashupPower } from '../../item/subtypes/power/class';
+import { MashupTokenDocument } from '../../token/mashup-token-document';
 import type { MashupActor } from '../mashup-actor';
 
 function appliedAuraEffect(actor: MashupActor, predicate: (aura: AuraEffect) => boolean) {
@@ -31,7 +32,7 @@ function appliedAuraEffect(actor: MashupActor, predicate: (aura: AuraEffect) => 
 	return [];
 }
 
-function getTokenAndScene(actor: MashupActor): [TokenDocument, Scene] | null {
+function getTokenAndScene(actor: MashupActor): [MashupTokenDocument, Scene] | null {
 	if (actor.isToken && actor.token && actor.token.parent) {
 		return [actor.token, actor.token.parent];
 	}

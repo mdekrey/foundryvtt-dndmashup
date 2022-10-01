@@ -16,9 +16,7 @@ declare global {
 
 function hasStance({ actor }: ConditionRuleContext, { coreStatusId, label }: StatusEffectConditionParameter) {
 	if (!(actor instanceof MashupActor)) return false;
-	const found = actor.effects.find(
-		(e) => e.data.flags?.core?.statusId === coreStatusId && (!label || e.name === label)
-	);
+	const found = actor.effects.find((e) => e.flags?.core?.statusId === coreStatusId && (!label || e.name === label));
 	return !!found;
 }
 
