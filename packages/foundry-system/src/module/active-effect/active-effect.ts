@@ -16,31 +16,33 @@ declare global {
 
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
 	flags!: FlagConfig['ActiveEffect'] & CoreFlags;
+	icon!: string | null;
+	label!: string | null;
 
 	get displayName() {
 		return this.name;
 	}
 	getOriginalSources(): BaseDocument[] {
-		return this.data.flags.mashup?.originalSources?.map(fromMashupId).filter(Boolean) as BaseDocument[];
+		return this.flags.mashup?.originalSources?.map(fromMashupId).filter(Boolean) as BaseDocument[];
 	}
 	allAuras(): Aura[] {
-		return this.data.flags.mashup?.auras ?? [];
+		return this.flags.mashup?.auras ?? [];
 	}
 
 	allBonuses(): FeatureBonus[] {
-		return this.data.flags.mashup?.bonuses ?? [];
+		return this.flags.mashup?.bonuses ?? [];
 	}
 
 	allTriggeredEffects(): TriggeredEffect[] {
-		return this.data.flags.mashup?.triggers ?? [];
+		return this.flags.mashup?.triggers ?? [];
 	}
 
 	get img(): string | null {
-		return this.data.icon ?? null;
+		return this.icon ?? null;
 	}
 
 	override get name(): string | null {
-		return this.data.label;
+		return this.label;
 	}
 
 	showEditDialog(): void {
@@ -48,12 +50,12 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 	}
 
 	override async delete(context?: DocumentModificationContext): Promise<this | undefined> {
-		if (this.data.flags.mashup?.afterEffect) {
+		if (this.flags.mashup?.afterEffect) {
 			return await this.update(
 				createFinalEffectConstructorData(
-					this.data.flags.mashup?.afterEffect,
+					this.flags.mashup?.afterEffect,
 					this.parent as MashupActor,
-					this.data.flags.mashup?.originalSources
+					this.flags.mashup?.originalSources
 				)
 			);
 		} else {
@@ -62,12 +64,12 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 	}
 
 	async handleAfterFailedSave(): Promise<this | undefined> {
-		if (this.data.flags.mashup?.afterFailedSave) {
+		if (this.flags.mashup?.afterFailedSave) {
 			return await this.update(
 				createFinalEffectConstructorData(
-					this.data.flags.mashup.afterFailedSave,
+					this.flags.mashup.afterFailedSave,
 					this.parent as MashupActor,
-					this.data.flags.mashup?.originalSources
+					this.flags.mashup?.originalSources
 				)
 			);
 		}

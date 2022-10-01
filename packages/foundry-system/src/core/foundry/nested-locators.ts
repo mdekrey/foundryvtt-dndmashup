@@ -9,9 +9,9 @@ export function fromMashupId(originalId: string): AnyDocument | undefined {
 				throw new Error(`Unable to locate object at ${steps.slice(index).join(':')}`);
 			}
 			const collection = prev[collectionName];
-			if (!(collection instanceof foundry.utils.Collection)) {
+			if (!(collection instanceof foundry.utils.Collection) && !(collection instanceof Map)) {
 				throw new Error(
-					`Unable to locate collection ${collectionName} in ${
+					`Unable to locate collection ${collectionName} for ${
 						index === 0 ? 'game' : steps.slice(index).join(':')
 					} while resolving ${originalId}`
 				);
