@@ -10,7 +10,8 @@ function innerToMashupId(target: BaseDocument): string {
 	if (target.parent) {
 		const parentMashupId = innerToMashupId(target.parent);
 
-		if ((target.parent as any)[target.collectionName] instanceof foundry.utils.Collection) {
+		const collection = (target.parent as any)[target.collectionName];
+		if (collection instanceof foundry.utils.Collection || collection instanceof Map) {
 			return `${parentMashupId}:${current}`;
 		}
 		// not a standard embedded document
@@ -24,3 +25,5 @@ function innerToMashupId(target: BaseDocument): string {
 	}
 	return current;
 }
+
+(window as any).toMashupId = toMashupId;
