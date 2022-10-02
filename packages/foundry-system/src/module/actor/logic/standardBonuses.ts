@@ -14,6 +14,8 @@ const commonBonuses: FeatureBonus[] = [
 	{ ...base, target: 'ability-wis', amount: '@actor.system.abilities.wis.base', type: 'base' },
 	{ ...base, target: 'ability-cha', amount: '@actor.system.abilities.cha.base', type: 'base' },
 
+	{ ...base, target: 'surges-value', amount: 'floor(@actor.system.health.hp.max / 4)', type: 'base' },
+
 	{ ...manual('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
 	{ ...manual('you are charging'), target: 'attack-roll', amount: 1 },
 	{ ...manual('the target has concealment from you'), target: 'attack-roll', amount: -2 },
