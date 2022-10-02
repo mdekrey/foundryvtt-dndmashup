@@ -183,11 +183,11 @@ export class MashupActor extends Actor implements ActorDocument {
 			const dhp = newHealth - this.prevHealth;
 			if (dhp !== 0) {
 				const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
+				console.log(this, dhp, tokens);
 				for (const t of tokens) {
-					const hud: ObjectHUD | undefined = (t as any)?.hud;
-					if (!hud?.createScrollingText) continue; // This is undefined prior to v9-p2
+					if (!t) continue;
 					const pct = Math.clamped(Math.abs(dhp) / this.system.health.hp.max, 0, 1);
-					hud.createScrollingText(dhp.signedString(), {
+					(canvas?.interface as any)?.createScrollingText(t.center, dhp.signedString(), {
 						anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
 						fontSize: 16 + 32 * pct, // Range between [16, 48]
 						fill: tokenHpColors[dhp < 0 ? 'damage' : 'healing'],
