@@ -16,10 +16,10 @@ export class MashupPower extends MashupItem<'power'> implements PowerDocument {
 	override get displayName(): string | null {
 		if (this.system.usage === 'item-consumable') {
 			if (this.parent instanceof MashupItemEquipment)
-				return `${super.name} x${(this.parent as MashupItemEquipment).system.quantity}`;
-			else return `${super.name} x0`;
+				return `${this.name} x${(this.parent as MashupItemEquipment).system.quantity}`;
+			else return `${this.name} x0`;
 		}
-		return super.name;
+		return this.name;
 	}
 
 	override canEmbedItem(type: PossibleItemType): boolean {
