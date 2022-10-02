@@ -66,17 +66,17 @@ export function handleUpdateAuras() {
 		}
 	});
 	Hooks.on('deleteActiveEffect', (activeEffect) => {
-		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
+		if (canvas?.scene && activeEffect.flags.mashup?.auras?.length) {
 			updateAllTokens(canvas.scene);
 		}
 	});
 	Hooks.on('updateActiveEffect', (activeEffect) => {
-		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
+		if (canvas?.scene && activeEffect.flags.mashup?.auras?.length) {
 			updateAllTokens(canvas.scene);
 		}
 	});
 	Hooks.on('createActiveEffect', (activeEffect) => {
-		if (canvas?.scene && activeEffect.data.flags.mashup?.auras?.length) {
+		if (canvas?.scene && activeEffect.flags.mashup?.auras?.length) {
 			updateAllTokens(canvas.scene);
 		}
 	});

@@ -93,7 +93,7 @@ export function Features({
 					header={() => <th className="w-7" />}
 					body={(item) => (
 						<td>
-							{item.data.flags.mashup?.effectDuration?.durationType === 'saveEnds' ? (
+							{item.flags.mashup?.effectDuration?.durationType === 'saveEnds' ? (
 								<ImageButton
 									className="w-7 h-7"
 									title="Roll Saving Throw"

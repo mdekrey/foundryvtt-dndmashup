@@ -16,6 +16,7 @@ declare global {
 
 export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocument {
 	flags!: FlagConfig['ActiveEffect'] & CoreFlags;
+
 	icon!: string | null;
 	label!: string | null;
 

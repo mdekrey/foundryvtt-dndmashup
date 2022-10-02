@@ -25,11 +25,7 @@ export async function onNextTurn(wrapped: () => Promise<unknown>) {
 			let toDelete: string[] = [];
 			if (!t.token?.actor || !t.actor) continue;
 			for (const e of t.token.actor.effects) {
-				if (
-					e.id &&
-					e.data.flags.mashup?.effectDuration?.durationType === type &&
-					shouldRemove(e, { nextInit, nextRound })
-				) {
+				if (e.id && e.flags.mashup?.effectDuration?.durationType === type && shouldRemove(e, { nextInit, nextRound })) {
 					toDelete.push(e.id);
 				}
 			}
@@ -45,11 +41,11 @@ function shouldRemove(
 	e: ActiveEffectDocument,
 	{ nextInit, nextRound }: { nextInit: number | null; nextRound: number }
 ): boolean {
-	const effectData = e.data.flags.mashup?.effectDuration;
+	const effectData = e.flags.mashup?.effectDuration;
 
 	if (effectData?.durationType === 'endOfTurn' || effectData?.durationType === 'startOfTurn') {
-		if (e.data.duration.rounds === undefined) return false;
-		const effectTime = combatTime(e.data.duration.rounds, effectData.durationTurnInit);
+		if (typeof e.duration.rounds !== 'number') return false;
+		const effectTime = combatTime(e.duration.rounds, effectData.durationTurnInit);
 		const targetTime = nextInit && combatTime(nextRound, nextInit);
 		if (!targetTime) return false;
 		if (effectData.durationType === 'endOfTurn') {
