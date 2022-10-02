@@ -1,6 +1,6 @@
 import { AttackRollResult, RollInfo, RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { InstantaneousEffect } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDocument, TokenDocument } from '../../actor';
+import { ActorDocument, TokenInstance } from '../../actor';
 import { EquipmentDocument, PowerDocument } from '../../item';
 import { InstantaneousEffectSection, AttackEffectTrigger } from '../../../effects';
 import { useControlTokenOnClick, useHoverToken } from '../../../components';
@@ -20,7 +20,7 @@ export const AttackResult = ({
 	tool,
 }: {
 	entries: AttackResultEntryProps[];
-	lookupToken: (tokenId: string) => TokenDocument | undefined;
+	lookupToken: (tokenId: string) => TokenInstance | undefined;
 	actor?: ActorDocument;
 	power?: PowerDocument;
 	tool?: EquipmentDocument<'weapon' | 'implement'>;
@@ -52,7 +52,7 @@ function AttackResultEntry({
 	tokenName,
 	lookupToken,
 }: AttackResultEntryProps & {
-	lookupToken: () => TokenDocument | undefined;
+	lookupToken: () => TokenInstance | undefined;
 }) {
 	const hover = useHoverToken()(lookupToken);
 	const control = useControlTokenOnClick()(lookupToken);

@@ -1,6 +1,6 @@
 import { RollJson } from '@foundryvtt-dndmashup/foundry-compat';
 import { BonusByType, Defense } from '@foundryvtt-dndmashup/mashup-rules';
-import { TokenDocument } from '../../actor';
+import { TokenInstance } from '../../actor';
 
 export * from './AttackResult';
 
@@ -9,7 +9,7 @@ export type AttackResultChatMessage = {
 	toolId: undefined | string;
 	flavor: string;
 	defense: Defense;
-	results: { target?: TokenDocument; bonuses?: BonusByType; roll: RollJson }[];
+	results: { target?: TokenInstance; bonuses?: BonusByType; roll: RollJson }[];
 };
 
 declare global {

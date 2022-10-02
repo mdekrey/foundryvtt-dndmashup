@@ -5,14 +5,14 @@ import {
 	conditionsRegistry,
 	ruleResultIndeterminate,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDocument, TokenDocument } from '../module';
+import { ActorDocument, TokenInstance } from '../module';
 
 declare global {
 	interface ConditionGrantingContext {
 		activeEffectSources: BaseDocument[];
 	}
 	interface ConditionRulesAllRuntimeParameters {
-		targets: TokenDocument[];
+		targets: TokenInstance[];
 	}
 }
 

@@ -18,18 +18,31 @@ import { PowerDocument } from '../item/subtypes/power/dataSourceData';
 import { ActorDerivedData } from './derivedDataType';
 import { PossibleActorType, ActorDataSource } from './types';
 
+export type TokenInstance = {
+	id: string | null;
+	name: string | null;
+
+	actor: ActorDocument | null;
+
+	document: TokenDocument;
+
+	readonly isOwner: boolean;
+	control?(options?: { releaseOthers?: boolean }): boolean;
+};
+
 export type TokenDocument = {
 	id: string | null;
 	name: string | null;
 
 	actor: ActorDocument | null;
 
-	data: { img: string | null };
+	texture: {
+		src: string | null;
+	};
 
 	disposition: number;
 
 	readonly isOwner: boolean;
-	control?(options?: { releaseOthers?: boolean }): boolean;
 };
 
 export type HealingOptions = {

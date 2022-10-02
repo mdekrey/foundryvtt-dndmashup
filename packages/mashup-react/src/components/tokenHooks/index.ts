@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import type { TokenDocument } from '../../module/actor/documentType';
+import type { TokenInstance } from '../../module/actor/documentType';
 
 export function useHoverToken() {
-	const hovered = useRef<TokenDocument>();
+	const hovered = useRef<TokenInstance>();
 
-	return (getToken: () => TokenDocument | undefined) => {
+	return (getToken: () => TokenInstance | undefined) => {
 		function onMouseEnter(event: React.MouseEvent) {
 			onMouseLeave(event);
 			hovered.current = getToken();
@@ -30,7 +30,7 @@ export function useHoverToken() {
 	};
 }
 export function useControlTokenOnClick() {
-	return (getToken: () => TokenDocument | undefined) => {
+	return (getToken: () => TokenInstance | undefined) => {
 		function onClick(event: React.MouseEvent) {
 			const releaseOthers = !event.shiftKey;
 			const target = getToken();
