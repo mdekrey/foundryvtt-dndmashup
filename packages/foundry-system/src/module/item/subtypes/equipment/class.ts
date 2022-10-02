@@ -21,9 +21,9 @@ export class MashupItemEquipment<TItemSlot extends ItemSlot = ItemSlot>
 
 	override get displayName() {
 		if (this.system.quantity !== 1) {
-			return `${super.name} x${this.system.quantity}`;
+			return `${this.name} x${this.system.quantity}`;
 		}
-		return super.name;
+		return this.name;
 	}
 
 	override allGrantedBonuses(isForPowerUse?: boolean): FeatureBonusWithSource[] {
