@@ -2,7 +2,7 @@ import { RichTextEditorContextProvider, RichTextEditorContext } from '@foundryvt
 
 const richTextEditorContextValue: RichTextEditorContext = {
 	sanitizeHtml(input, options) {
-		return TextEditor.enrichHTML(input, options);
+		return (TextEditor as any).enrichHTML(input, { ...options, async: true });
 	},
 	activateEditor({ target, initialValue, onChange, onSave }) {
 		let editor: tinyMCE.Editor | null = null;

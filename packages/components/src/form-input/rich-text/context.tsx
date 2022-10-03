@@ -11,7 +11,7 @@ export type RichTextEditorContext = {
 			rolls: boolean;
 			rollData: object | (() => object);
 		}>
-	): string;
+	): Promise<string>;
 	activateEditor(options: {
 		target: HTMLElement;
 		initialValue: string;

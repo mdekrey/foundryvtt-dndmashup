@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Stateful } from '@foundryvtt-dndmashup/core';
 import { useRichTextEditor } from './context';
 
@@ -15,9 +15,12 @@ export function RichText({
 	rollData?: object | (() => object);
 } & Stateful<string>) {
 	const { sanitizeHtml, activateEditor: innerActivateEditor } = useRichTextEditor();
-	const enriched = sanitizeHtml(html ?? '', {
-		rollData,
-		/* TODO - parameters: secrets: owner, documents - but I'm not sure what they do */
+	const [htmlContent, setHtmlContent] = useState('');
+	useEffect(() => {
+		sanitizeHtml(html ?? '', {
+			rollData,
+			/* TODO - parameters: secrets: owner, documents - but I'm not sure what they do */
+		}).then((enrichedHtml) => setHtmlContent(enrichedHtml));
 	});
 	const editorContent = useRef<HTMLDivElement>(null);
 	const initialContent = useRef(html);
@@ -35,7 +38,7 @@ export function RichText({
 	return (
 		<>
 			<div className="editor relative h-full group">
-				<div className="h-full" ref={editorContent} dangerouslySetInnerHTML={{ __html: enriched }} />
+				<div className="h-full" ref={editorContent} dangerouslySetInnerHTML={{ __html: htmlContent }} />
 				{isEditor ? (
 					<button
 						type="button"
