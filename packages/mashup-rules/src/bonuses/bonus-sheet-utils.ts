@@ -39,5 +39,5 @@ export const numericBonusTargetNames: Record<NumericBonusTarget, { label: string
 	),
 
 	'all-resistance': { label: 'All Resistances', ruleText: 'resistance to all damage' },
-	'all-vulnerability': { label: 'All Vulnerabilitys', ruleText: 'vulnerability to all damage' },
+	'all-vulnerability': { label: 'All Vulnerabilities', ruleText: 'vulnerability to all damage' },
 };
