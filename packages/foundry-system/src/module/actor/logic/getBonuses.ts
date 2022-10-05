@@ -18,6 +18,7 @@ import uniq from 'lodash/fp/uniq';
 import type { MashupActiveEffect } from '../../active-effect';
 import { getRelevantAuras } from '../../aura/getAuras';
 import { MashupPower } from '../../item/subtypes/power/class';
+import { MashupTokenDocument } from '../../token/mashup-token-document';
 import type { MashupActor } from '../mashup-actor';
 
 function appliedAuraEffect(actor: MashupActor, predicate: (aura: AuraEffect) => boolean) {
@@ -31,7 +32,7 @@ function appliedAuraEffect(actor: MashupActor, predicate: (aura: AuraEffect) => 
 	return [];
 }
 
-function getTokenAndScene(actor: MashupActor): [TokenDocument, Scene] | null {
+function getTokenAndScene(actor: MashupActor): [MashupTokenDocument, Scene] | null {
 	if (actor.isToken && actor.token && actor.token.parent) {
 		return [actor.token, actor.token.parent];
 	}
@@ -49,12 +50,12 @@ function getTokenAndScene(actor: MashupActor): [TokenDocument, Scene] | null {
 export function getBonuses(actor: MashupActor, target: NumericBonusTarget): FullFeatureBonus[] {
 	const internal: FullFeatureBonus[] = [
 		...actor.effects.contents.flatMap((effect) => effect.allBonuses().map(addEffectContext(effect, actor))),
-		...actor.data._source.data.bonuses.map((bonus) => ({
+		...actor.system.bonuses.map((bonus) => ({
 			...bonus,
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
@@ -88,12 +89,12 @@ function addEffectContext(effect: MashupActiveEffect, actor: MashupActor) {
 export function getAllBonuses(actor: MashupActor): FullFeatureBonus[] {
 	const internal: FullFeatureBonus[] = [
 		...actor.effects.contents.flatMap((effect) => effect.allBonuses().map(addEffectContext(effect, actor))),
-		...actor.data._source.data.bonuses.map((bonus) => ({
+		...actor.system.bonuses.map((bonus) => ({
 			...bonus,
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allGrantedBonuses().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	];
@@ -118,12 +119,12 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 		// ...actor.effects.contents.flatMap((effect) =>
 		// 	effect.allBonuses().map((bonus) => ({ ...bonus, context: { actor: actor }, source: effect }))
 		// ),
-		...actor.data._source.data.dynamicList.map((list) => ({
+		...actor.system.dynamicList.map((list) => ({
 			...list,
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allDynamicList().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
 	].filter((b) => b.target === target);
@@ -141,12 +142,12 @@ export function getList(actor: MashupActor, target: DynamicListTarget): FullDyna
 
 export function getAllLists(actor: MashupActor): FullDynamicListEntry[] {
 	return [
-		...actor.data._source.data.dynamicList.map((bonus) => ({
+		...actor.system.dynamicList.map((bonus) => ({
 			...bonus,
 			source: actor,
 			context: { ...emptyConditionContext, actor },
 		})),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allDynamicList().map((entry) => ({ ...entry, context: { ...emptyConditionContext, actor, item } }))
 		),
 		// TODO: auras grant list entries
@@ -191,15 +192,14 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 				sources: [effect],
 			}))
 		),
-		...actor.data.items.contents.flatMap((item) =>
+		...actor.items.contents.flatMap((item) =>
 			item.allTriggeredEffects().map((bonus) => ({ ...bonus, context: { ...emptyConditionContext, actor, item } }))
 		),
-		...Object.entries(actor.data.data.powerUsage ?? {})
+		...Object.entries(actor.system.powerUsage ?? {})
 			.map(([powerId, used]) => used !== 0 && actor.allPowers(true).find((p) => p.powerGroupId === powerId))
 			.filter((p): p is MashupPower => !!p && p.type === 'power')
 			.filter(
-				(power): power is MashupPower & { data: { data: { rechargeTrigger: Trigger } } } =>
-					!!power.data.data.rechargeTrigger
+				(power): power is MashupPower & { system: { rechargeTrigger: Trigger } } => !!power.system.rechargeTrigger
 			)
 			.map(
 				(power): FullTriggeredEffect => ({
@@ -207,7 +207,7 @@ export function getTriggeredEffects(actor: MashupActor): FullTriggeredEffect[] {
 						...emptyInstantaneousEffect,
 						text: `Recharge ${power.name}`,
 					},
-					trigger: power.data.data.rechargeTrigger,
+					trigger: power.system.rechargeTrigger,
 					condition: null,
 					sources: [power],
 					context: { ...emptyConditionContext, actor, item: power },

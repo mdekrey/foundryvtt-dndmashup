@@ -32,7 +32,8 @@ export type PowerDataSourceData = BaseItemTemplateDataSourceData & {
 	grantedPools?: PoolLimits[];
 };
 
-export type PowerData = TypedData<'power', PowerDataSourceData>;
+export type PowerSystemData = PowerDataSourceData;
+export type PowerData = TypedData<'power', PowerSystemData>;
 
 export type PowerEffect = {
 	name: string;

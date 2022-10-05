@@ -48,11 +48,10 @@ export type ActiveEffectDocumentConstructorParams = [
 ];
 
 export type ActiveEffectDocument = BaseDocument & {
-	data: {
-		flags: ActiveEffectFlags;
-		duration: {
-			rounds: number | undefined;
-		};
+	displayName: string | null;
+	flags: ActiveEffectFlags;
+	duration: {
+		rounds?: number | null;
 	};
 	img: string | null;
 	showEditDialog(): void;

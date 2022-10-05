@@ -63,7 +63,12 @@ abstract class AggregateCache<TTarget extends string | symbol, TResult, TModifie
 	private getCache(target: TTarget): DerivedCacheEntry<TResult, TModifier> {
 		let cached = this.cache[target];
 		if (cached) return cached;
-		if (!isGame(game) || !game.ready) {
+		if (
+			!isGame(game) ||
+			!game.ready ||
+			!this.actor.isInitialized ||
+			(this.actor.token && !this.actor.token.isActorReady)
+		) {
 			return this.getFailedCacheRecord();
 		}
 		try {
@@ -71,7 +76,7 @@ abstract class AggregateCache<TTarget extends string | symbol, TResult, TModifie
 			this.cache[target] = cached;
 			return cached;
 		} catch (ex) {
-			console.warn(`While resolving ${target} for ${this.actor.name}`, ex, (game as any).ready);
+			console.warn(`While resolving ${target} for ${this.actor.name} (${this.actor.id})`, ex, (game as any).ready);
 			return this.getFailedCacheRecord();
 		}
 	}

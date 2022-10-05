@@ -4,7 +4,7 @@ import { lensFromState } from '@foundryvtt-dndmashup/core';
 import { ActorDocument } from '../../module/actor/documentType';
 import { useChatMessageDispatcher } from '../../module';
 import { NumericModifierSelector } from '../diceRoll/NumericModifierSelector';
-import { BonusByType, combineRollComponents, RollComponent } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, RollComponent } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 import { emptyConditionRuntime } from '../../bonusConditionRules';
 
@@ -15,16 +15,15 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 		bonusByType: BonusByType;
 	}>({ bonusFormula: '', bonusByType: {} });
 	const chatDispatch = useChatMessageDispatcher();
-	const currentRoll = combineRollComponents(actor.derivedCache.bonuses.getValue('surges-value'), bonusFormula);
 
-	const isDeterministic = typeof currentRoll === 'number';
+	const isDeterministic = typeof bonusFormula === 'number';
 	const rollTotal =
-		typeof currentRoll === 'number'
-			? currentRoll * spendHealingSurges.value
-			: `${spendHealingSurges.value} * (${currentRoll})`;
+		typeof bonusFormula === 'number'
+			? bonusFormula * spendHealingSurges.value
+			: `${spendHealingSurges.value} * (${bonusFormula})`;
 	const hpResult =
 		typeof rollTotal === 'number'
-			? Math.min(actor.derivedData.health.hp.max, actor.data.data.health.hp.value + rollTotal)
+			? Math.min(actor.derivedData.health.hp.max, actor.system.health.hp.value + rollTotal)
 			: null;
 
 	return (
@@ -34,13 +33,13 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 				<FormInput className="w-16 inline-block">
 					<FormInput.NumberField
 						min={0}
-						max={actor.data.data.health.surgesRemaining.value}
+						max={actor.system.health.surgesRemaining.value}
 						{...spendHealingSurges}
 						className="text-lg text-center"
 					/>
 					<FormInput.Label>To Spend</FormInput.Label>
 				</FormInput>
-				<span>of {actor.data.data.health.surgesRemaining.value} remaining healing surges</span>
+				<span>of {actor.system.health.surgesRemaining.value} remaining healing surges</span>
 			</div>
 			<NumericModifierSelector
 				actor={actor}
@@ -55,7 +54,7 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 				{spendHealingSurges.value > 0 ? (
 					<>
 						<li>
-							Heal {rollTotal} hp, raising from {actor.data.data.health.hp.value}
+							Heal {rollTotal} hp, raising from {actor.system.health.hp.value}
 							{hpResult ? (
 								<>
 									{' '}
@@ -84,7 +83,7 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 	);
 
 	async function onUseShortRest() {
-		const hpToRecover = hpResult === null ? null : hpResult - actor.data.data.health.hp.value;
+		const hpToRecover = hpResult === null ? null : hpResult - actor.system.health.hp.value;
 		if (!isDeterministic) return;
 		if (!(await actor.applyShortRest(spendHealingSurges.value, bonusByType))) return;
 		chatDispatch.sendChatMessage(

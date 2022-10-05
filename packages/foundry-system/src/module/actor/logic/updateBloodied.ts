@@ -1,14 +1,15 @@
 import { isGame } from '../../../core/foundry';
 import { MashupActor } from '../mashup-actor';
+import { isActorType } from '../templates/isActorType';
 
 export async function updateBloodied(this: MashupActor) {
 	const findEffectId = (statusToCheck: string) => {
-		return this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck)?.id ?? null;
+		return this.effects.find((effect) => effect.flags.core?.statusId === statusToCheck)?.id ?? null;
 	};
 	const setIfNotPresent = async (statusToCheck: string) => {
 		if (!isGame(game)) return;
 
-		const existingEffect = this.effects.find((x) => x.data.flags.core?.statusId === statusToCheck);
+		const existingEffect = this.effects.find((x) => x.flags.core?.statusId === statusToCheck);
 		if (existingEffect) return;
 
 		const status = CONFIG.statusEffects.find((x) => x.id === statusToCheck);
@@ -32,9 +33,9 @@ export async function updateBloodied(this: MashupActor) {
 	};
 
 	const calculated = this.derivedData;
-	const shouldBeDead = this.data.data.health.hp.value <= 0 && this.data.type === 'monster';
-	// const shouldBeDying = this.data.data.health.currentHp <= 0 && this.data.type === 'pc';
-	const shouldBeBloodied = !shouldBeDead && Math.floor(calculated.health.hp.max / 2) >= this.data.data.health.hp.value;
+	const shouldBeDead = this.system.health.hp.value <= 0 && isActorType(this, 'monster');
+	// const shouldBeDying = this.system.health.currentHp <= 0 && this.type === 'pc';
+	const shouldBeBloodied = !shouldBeDead && Math.floor(calculated.health.hp.max / 2) >= this.system.health.hp.value;
 
 	const isBloodied = this.isStatus('bloodied');
 	const isDead = this.isStatus('dead');

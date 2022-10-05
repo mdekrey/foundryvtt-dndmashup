@@ -44,7 +44,7 @@ chatAttachments['damageResult'] = ({ flags: { roll, powerId, damageTypes } }) =>
 
 function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType[]) {
 	if (amount === 0) return;
-	const health = actor.data.data.health;
+	const health = actor.system.health;
 
 	const allResistance =
 		actor.derivedCache.bonuses.getValue('all-resistance') - actor.derivedCache.bonuses.getValue('all-vulnerability');

@@ -5,7 +5,7 @@ export function getTemplateBoundingBox(template: MeasuredTemplateDocument) {
 
 	const shape = template.object.getBaseShape();
 	const templateObjectBounds = getShapeBounds();
-	return new NormalizedRectangle(
+	return new PIXI.Rectangle(
 		templateObjectBounds.x + template.data.x,
 		templateObjectBounds.y + template.data.y,
 		templateObjectBounds.width,

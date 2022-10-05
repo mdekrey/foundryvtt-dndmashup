@@ -21,9 +21,10 @@ export type EquipmentDataSourceData<TItemSlot extends ItemSlot = ItemSlot> = Bas
 		grantedAuras?: Aura[];
 	};
 
+export type EquipmentSystemData<TItemSlot extends ItemSlot = ItemSlot> = EquipmentDataSourceData<TItemSlot>;
 export type EquipmentData<TItemSlot extends ItemSlot = ItemSlot> = TypedData<
 	'equipment',
-	EquipmentDataSourceData<TItemSlot>
+	EquipmentSystemData<TItemSlot>
 >;
 
 export type EquipmentDocument<TItemSlot extends ItemSlot = ItemSlot> = ItemDocument<EquipmentData<TItemSlot>> & {

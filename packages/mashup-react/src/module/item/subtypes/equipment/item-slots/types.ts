@@ -5,7 +5,7 @@ import { ShieldItemSlotTemplate } from './shield/types';
 import { WeaponItemSlotTemplate } from './weapon/types';
 import React from 'react';
 import { ImplementItemSlotTemplate } from './implement/types';
-import { ItemDocument } from '../../../item-data-types-template';
+import { EquipmentDocument } from '..';
 
 export type ItemSlot =
 	| ''
@@ -66,7 +66,7 @@ export type ItemSlotInfo<T extends ItemSlot = ItemSlot> = {
 	defaultEquipmentInfo: ItemSlotTemplate<T>;
 	buildSummary: ItemSlotComponent<T>;
 	details: MutableItemSlotComponent<T>;
-	additionalTabs?: (state: Stateful<ItemSlotTemplate<T>>, item: ItemDocument) => React.ReactNode;
+	additionalTabs?: (state: Stateful<ItemSlotTemplate<T>>, item: EquipmentDocument<T>) => React.ReactNode;
 	inventoryTableHeader: React.FC;
 	inventoryTableBody: ItemSlotComponent<T>;
 	statsPreview: ItemSlotComponent<T>;

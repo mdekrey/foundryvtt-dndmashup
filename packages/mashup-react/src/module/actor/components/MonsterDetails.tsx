@@ -2,19 +2,19 @@ import { FormInput } from '@foundryvtt-dndmashup/components';
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { abilities, DynamicListEntry } from '@foundryvtt-dndmashup/mashup-rules';
 import capitalize from 'lodash/fp/capitalize';
-import { MonsterDataSourceData } from '../types';
+import { MonsterSystemData } from '../types';
 
-const base = Lens.fromProp<MonsterDataSourceData>();
+const base = Lens.fromProp<MonsterSystemData>();
 const abilitiesLens = base('abilities');
 
-function getLanguages(data: MonsterDataSourceData) {
+function getLanguages(data: MonsterSystemData) {
 	return (data.dynamicList ?? [])
 		.filter((e) => e.target === 'languagesKnown')
 		.map((e) => capitalize(e.entry))
 		.join(', ');
 }
 
-const LanguagesLens = Lens.from<MonsterDataSourceData, string>(getLanguages, (mutator) => (draft) => {
+const LanguagesLens = Lens.from<MonsterSystemData, string>(getLanguages, (mutator) => (draft) => {
 	const languages = mutator(getLanguages(draft));
 	draft.dynamicList = [
 		...(draft.dynamicList ?? []).filter((e) => e.target !== 'languagesKnown'),
@@ -26,7 +26,7 @@ const LanguagesLens = Lens.from<MonsterDataSourceData, string>(getLanguages, (mu
 	];
 });
 
-export function MonsterDetails({ documentState }: { documentState: Stateful<MonsterDataSourceData> }) {
+export function MonsterDetails({ documentState }: { documentState: Stateful<MonsterSystemData> }) {
 	return (
 		<div className="grid grid-cols-12 grid-rows-2 gap-x-1">
 			<FormInput className="col-span-12">

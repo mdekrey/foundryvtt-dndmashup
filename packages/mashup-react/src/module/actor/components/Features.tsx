@@ -1,6 +1,6 @@
 import { isFeature } from '../../item/subtypes/feature/isFeature';
 import { ItemTable, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
-import { PossibleItemSourceData } from '../../item/item-data-types-template';
+import { PossibleItemDataSource } from '../../item/item-data-types-template';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
 import { FeatureDocument } from '../../item/subtypes/feature/dataSourceData';
 import { DynamicList, DynamicListEntry, FeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
@@ -13,9 +13,9 @@ import { emptyConditionRuntime } from '../../../bonusConditionRules';
 const features: {
 	key: React.Key;
 	label: string;
-	filter: (item: SimpleDocument<PossibleItemSourceData>) => boolean;
+	filter: (item: SimpleDocument<PossibleItemDataSource>) => boolean;
 	header?: () => React.ReactNode;
-	body?: (item: SimpleDocument<PossibleItemSourceData>) => React.ReactNode;
+	body?: (item: SimpleDocument<PossibleItemDataSource>) => React.ReactNode;
 }[] = [
 	{
 		key: 'character-details',
@@ -26,35 +26,35 @@ const features: {
 	{
 		key: 'race-feature',
 		label: 'Racial Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'race-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'race-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'class-feature',
 		label: 'Class Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'class-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'class-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'paragon-feature',
 		label: 'Paragon Path Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'paragon-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'paragon-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'epic-feature',
 		label: 'Epic Destiny Feature',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'epic-feature',
+		filter: (item) => isFeature(item) && item.system.featureType === 'epic-feature',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
 	{
 		key: 'feats',
 		label: 'Feat',
-		filter: (item) => isFeature(item) && item.data.data.featureType === 'feat',
+		filter: (item) => isFeature(item) && item.system.featureType === 'feat',
 		header: () => <FeatureHeader />,
 		body: (item) => <FeatureBody item={item as FeatureDocument} />,
 	},
@@ -69,13 +69,13 @@ export function Features({
 }: {
 	actor: ActorDocument;
 	effects: ActiveEffectDocument[];
-	items: SimpleDocument<PossibleItemSourceData>[];
+	items: SimpleDocument<PossibleItemDataSource>[];
 	bonuses: Stateful<FeatureBonus[]>;
 	dynamicList: Stateful<DynamicListEntry[]>;
 }) {
 	const apps = useApplicationDispatcher();
 	const nonEquipment = items.filter(
-		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.data.data.featureType !== 'feat')
+		(i) => i.type !== 'equipment' && i.type !== 'power' && (!isFeature(i) || i.system.featureType !== 'feat')
 	);
 	const groups = features
 		.map(({ filter, ...others }) => ({
@@ -93,7 +93,7 @@ export function Features({
 					header={() => <th className="w-7" />}
 					body={(item) => (
 						<td>
-							{item.data.flags.mashup?.effectDuration?.durationType === 'saveEnds' ? (
+							{item.flags.mashup?.effectDuration?.durationType === 'saveEnds' ? (
 								<ImageButton
 									className="w-7 h-7"
 									title="Roll Saving Throw"
@@ -138,5 +138,5 @@ function FeatureHeader() {
 }
 
 function FeatureBody({ item }: { item: FeatureDocument }) {
-	return <td className="text-left">{item.data.data.summary}</td>;
+	return <td className="text-left">{item.system.summary}</td>;
 }

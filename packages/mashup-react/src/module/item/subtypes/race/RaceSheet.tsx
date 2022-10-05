@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 const baseLens = Lens.identity<SimpleDocumentData<RaceData>>();
 const imageLens = baseLens.toField('img');
-const dataLens = baseLens.toField('data');
+const dataLens = baseLens.toField('system');
 const bonusesLens = dataLens.toField('grantedBonuses');
 const dynamicListLens = dataLens.toField('dynamicList');
 
@@ -35,7 +35,10 @@ export function RaceSheet({
 					<FormInput className="col-span-4">
 						<FormInput.Structured>
 							<FormInput.Structured.Main>
-								<FormInput.NumberField plain {...baseLens.toField('data').toField('baseSpeed').apply(documentState)} />
+								<FormInput.NumberField
+									plain
+									{...baseLens.toField('system').toField('baseSpeed').apply(documentState)}
+								/>
 								<span className="flex-shrink-0">sq.</span>
 							</FormInput.Structured.Main>
 						</FormInput.Structured>
@@ -44,7 +47,7 @@ export function RaceSheet({
 					<FormInput className="col-span-4">
 						<FormInput.Select
 							options={sizeOptions}
-							{...baseLens.toField('data').toField('size').apply(documentState)}
+							{...baseLens.toField('system').toField('size').apply(documentState)}
 						/>
 						<FormInput.Label>Size</FormInput.Label>
 					</FormInput>

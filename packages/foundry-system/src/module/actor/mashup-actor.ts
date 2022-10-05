@@ -36,11 +36,14 @@ import {
 	DerivedCache,
 	ActiveEffectDocumentConstructorParams,
 	emptyConditionContext,
+	ActorDataSource,
+	ActorSystemData,
+	PossibleActorType,
+	PossibleItemDataSource,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { expandObjectsAndArrays, isGame, toMashupId } from '../../core/foundry';
 import { isClassSource, isRaceSource, isParagonPathSource, isEpicDestinySource } from './formulas';
 import { actorSubtypeConfig, SubActorFunctions } from './subtypes';
-import { PossibleActorData, SpecificActorData } from './types';
 import { calculateDerivedData, DerivedTotals } from './logic/calculateDerivedData';
 import { updateBloodied } from './logic/updateBloodied';
 import { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs';
@@ -69,8 +72,10 @@ const tokenHpColors = {
 export class MashupActor extends Actor implements ActorDocument {
 	private _isInitialized!: true | undefined; // will be undefined for first initialization
 	private prevHealth: number | undefined;
-	override data!: PossibleActorData & { data: ActorDerivedData };
-	subActorFunctions!: SubActorFunctions<PossibleActorData['type']>;
+	_source!: SimpleDocumentData<ActorDataSource>;
+	system!: ActorSystemData & ActorDerivedData;
+	subActorFunctions!: SubActorFunctions<PossibleActorType>;
+	prototypeToken!: TokenDocument; // FIXME: Foundry 10 added this, but it is PrototypeToken, not a TokenDocument, but this is close enough for us
 
 	get isInitialized() {
 		return this._isInitialized ?? false;
@@ -89,13 +94,17 @@ export class MashupActor extends Actor implements ActorDocument {
 	 */
 
 	override prepareData(): void {
-		this.subActorFunctions = actorSubtypeConfig[this.data.type] as typeof this.subActorFunctions;
+		this.subActorFunctions = actorSubtypeConfig[this.type] as typeof this.subActorFunctions;
 		super.prepareData();
 		this.handleHealthUpdate();
 	}
 
 	get mashupId(): string {
 		return toMashupId(this);
+	}
+
+	get displayName() {
+		return this.name;
 	}
 
 	get appliedClass() {
@@ -112,24 +121,24 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	get halfLevel() {
-		return Math.floor(this.data.data.details.level / 2);
+		return Math.floor(this.system.details.level / 2);
 	}
 	get milestones() {
-		return Math.floor((this.data.data.encountersSinceLongRest ?? 0) / 2);
+		return Math.floor((this.system.encountersSinceLongRest ?? 0) / 2);
 	}
 	get size(): Size {
 		return isActorType(this, 'pc')
-			? this.appliedRace?.data.data.size ?? 'medium'
+			? this.appliedRace?.system.size ?? 'medium'
 			: isActorType(this, 'monster')
-			? this.data._source.data.size
+			? this._source.system.size
 			: 'medium';
 	}
 
 	get extraLevels() {
-		return Math.max(1, this.data.data.details.level) - 1;
+		return Math.max(1, this.system.details.level) - 1;
 	}
 	get tier() {
-		return Math.floor((this.data.data.details.level - 1) / 10);
+		return Math.floor((this.system.details.level - 1) / 10);
 	}
 
 	private _derivedCache: DerivedCache = new DerivedTotals(this);
@@ -167,20 +176,20 @@ export class MashupActor extends Actor implements ActorDocument {
 	private recalculateDerived() {
 		this._derivedCache = new DerivedTotals(this);
 		this._derivedData = calculateDerivedData.call(this);
-		mergeObject(this.data, { data: this._derivedData }, { recursive: true, inplace: true });
+		mergeObject(this.system, this._derivedData, { recursive: true, inplace: true });
 	}
 
 	private handleHealthUpdate() {
-		const newHealth = this.data.data.health.hp.value + this.data.data.health.temporaryHp;
+		const newHealth = this.system.health.hp.value + this.system.health.temporaryHp;
 		if (this.prevHealth !== undefined) {
 			const dhp = newHealth - this.prevHealth;
 			if (dhp !== 0) {
 				const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
+				console.log(this, dhp, tokens);
 				for (const t of tokens) {
-					const hud: ObjectHUD | undefined = (t as any)?.hud;
-					if (!hud?.createScrollingText) continue; // This is undefined prior to v9-p2
-					const pct = Math.clamped(Math.abs(dhp) / this.data.data.health.hp.max, 0, 1);
-					hud.createScrollingText(dhp.signedString(), {
+					if (!t) continue;
+					const pct = Math.clamped(Math.abs(dhp) / this.system.health.hp.max, 0, 1);
+					(canvas?.interface as any)?.createScrollingText(t.center, dhp.signedString(), {
 						anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
 						fontSize: 16 + 32 * pct, // Range between [16, 48]
 						fill: tokenHpColors[dhp < 0 ? 'damage' : 'healing'],
@@ -205,7 +214,8 @@ export class MashupActor extends Actor implements ActorDocument {
 		user: BaseUser
 	): Promise<void> {
 		if (this.type === 'pc') {
-			this.data.token.update({ vision: true, actorLink: true, disposition: 1 });
+			// F10 TODO: this moved to prototypeToken
+			this.prototypeToken.update({ vision: true, actorLink: true, disposition: 1 });
 		}
 	}
 
@@ -213,7 +223,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		const withAfterEffects = ids
 			.map((id) => this.effects.get(id))
 			.filter((effect): effect is MashupActiveEffect => !!effect)
-			.map((effect) => [effect, effect.data.flags.mashup?.afterEffect] as const);
+			.map((effect) => [effect, effect.flags.mashup?.afterEffect] as const);
 		const toDelete = withAfterEffects
 			.filter(([effect, afterEffect]) => !afterEffect)
 			.map(([effect]) => effect.id as string);
@@ -221,10 +231,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			.filter((t): t is [MashupActiveEffect, ActiveEffectDocumentConstructorParams] => !!t[1])
 			.map(
 				([effect, afterEffect]) =>
-					[
-						effect,
-						createFinalEffectConstructorData(afterEffect, this, effect.data.flags.mashup?.originalSources),
-					] as const
+					[effect, createFinalEffectConstructorData(afterEffect, this, effect.flags.mashup?.originalSources)] as const
 			);
 		if (toUpdate.length)
 			for (const [effect, data] of toUpdate) {
@@ -245,7 +252,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	) {
 		if (effect.flags?.core?.statusId) {
 			const toRemove = this.effects.filter(
-				(oldEffect) => oldEffect.data.flags?.core?.statusId === effect.flags?.core?.statusId
+				(oldEffect) => oldEffect.flags?.core?.statusId === effect.flags?.core?.statusId
 			);
 			if (toRemove.length) {
 				console.log(toRemove);
@@ -266,14 +273,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	isStatus(statusToCheck: string): boolean {
-		return !!this.effects.find((effect) => effect.data.flags.core?.statusId === statusToCheck);
+		return !!this.effects.find((effect) => effect.flags.core?.statusId === statusToCheck);
 	}
 
 	allPowers(includeNestedPowers = true): PowerDocument[] {
 		return this.items.contents.flatMap((item: ItemDocument) =>
-			isPower(item) && (!includeNestedPowers || (item.data.data.effects?.length ?? 0) > 0)
-				? item
-				: item.allGrantedPowers()
+			isPower(item) && (!includeNestedPowers || (item.system.effects?.length ?? 0) > 0) ? item : item.allGrantedPowers()
 		);
 	}
 
@@ -322,7 +327,9 @@ export class MashupActor extends Actor implements ActorDocument {
 	): void {
 		super._preCreateEmbeddedDocuments(embeddedName, result, options, userId);
 		const itemTypesToRemove = singleItemTypes.filter((type) => result.some((i) => type(i as SourceConfig['Item'])));
-		const oldSingleItems = this.items.contents.filter((item) => itemTypesToRemove.some((t) => t(item.data._source)));
+		const oldSingleItems = this.items.contents.filter((item) =>
+			itemTypesToRemove.some((t) => t(item._source as PossibleItemDataSource))
+		);
 		oldSingleItems.forEach((item) => {
 			console.log('Removing', item.name, item);
 			item.delete();
@@ -330,12 +337,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	override async update(
-		data?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
+		changes?: DeepPartial<ActorDataConstructorData | (ActorDataConstructorData & Record<string, unknown>)>,
 		context?: DocumentModificationContext & MergeObjectOptions & { ignoreEmbedded?: boolean }
 	): Promise<this | undefined> {
-		// TODO: For Foundry v9, this is necessary. This appears to be fixed in v10
+		// TODO: For Foundry v9, this is necessary. This may be fixed in v10 (FIXME: check this)
 		const resultData = {
-			...(expandObjectsAndArrays(data as Record<string, unknown>) as ActorDataConstructorData),
+			...(expandObjectsAndArrays(changes as Record<string, unknown>) as ActorDataConstructorData),
 		};
 		if (context?.ignoreEmbedded) {
 			// Use embedded document creation process instead of update - this does weird/bad things. Plus, it's a huge recursive tree.
@@ -354,22 +361,20 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	equip(itemData: SimpleDocumentData<EquipmentData>, equipSlot: EquippedItemSlot) {
-		const { equippedSlots, slotsNeeded } = getItemSlotInfo(itemData.data.itemSlot);
+		const { equippedSlots, slotsNeeded } = getItemSlotInfo(itemData.system.itemSlot);
 
-		const wasEquipped = itemData.data.equipped && itemData.data.equipped[0] === equipSlot;
+		const wasEquipped = itemData.system.equipped && itemData.system.equipped[0] === equipSlot;
 		const next = wasEquipped ? [] : [equipSlot];
 		if (!wasEquipped && slotsNeeded(getEquipmentProperties(itemData)) > 1) {
 			next.push(...equippedSlots.filter((e) => e !== equipSlot));
 		}
 		const unequip = (this.items.contents as SimpleDocument[])
 			.filter(isEquipment)
-			.filter(
-				(eq) => eq.id !== itemData._id && eq.data.data.equipped && next.some((p) => eq.data.data.equipped.includes(p))
-			);
+			.filter((eq) => eq.id !== itemData._id && eq.system.equipped && next.some((p) => eq.system.equipped.includes(p)));
 
 		this.updateEmbeddedDocuments('Item', [
-			{ _id: itemData._id, data: { equipped: next } },
-			...unequip.map(({ id }) => ({ _id: id, data: { equipped: [] } })),
+			{ _id: itemData._id, system: { equipped: next } },
+			...unequip.map(({ id }) => ({ _id: id, system: { equipped: [] } })),
 		]);
 	}
 
@@ -390,7 +395,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			ui.notifications?.warn(`Healing amount was 0.`);
 			return;
 		}
-		const health = this.data.data.health;
+		const health = this.system.health;
 
 		if (spendHealingSurge && health.surgesRemaining.value <= 0) {
 			ui.notifications?.warn(`Not enough healing surges available on ${this.name}.`);
@@ -399,46 +404,46 @@ export class MashupActor extends Actor implements ActorDocument {
 
 		const effectiveAmount = amount + (addHealingSurgeValue ? this.derivedCache.bonuses.getValue('surges-value') : 0);
 
-		const data: Partial<
-			Record<'data.health.hp.value' | 'data.health.temporaryHp' | 'data.health.surgesRemaining.value', number>
+		const changes: Partial<
+			Record<'system.health.hp.value' | 'system.health.temporaryHp' | 'system.health.surgesRemaining.value', number>
 		> = {
 			...additionalUpdates,
 		};
 		if (spendHealingSurge) {
-			data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - 1;
+			changes['system.health.surgesRemaining.value'] = health.surgesRemaining.value - 1;
 		}
 		if (isTemporary) {
-			data['data.health.temporaryHp'] = health.temporaryHp + effectiveAmount;
+			changes['system.health.temporaryHp'] = health.temporaryHp + effectiveAmount;
 		} else {
-			data['data.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
+			changes['system.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
 		}
-		await this.update(data);
+		await this.update(changes);
 	}
 
 	isReady(power: PowerDocument) {
-		if (!this.data.data.powerUsage) return true;
+		if (!this.system.powerUsage) return true;
 		if (!power.powerGroupId) return false;
 
-		const pools = power.data.data.usedPools;
+		const pools = power.system.usedPools;
 		if (pools && pools.some((poolName) => this.isPoolDrained(poolName))) return false;
 
 		if (
-			power.data.data.usage === 'item' &&
-			this.data.data.magicItemUse.used >= this.derivedCache.bonuses.getValue('magic-item-uses')
+			power.system.usage === 'item' &&
+			this.system.magicItemUse.used >= this.derivedCache.bonuses.getValue('magic-item-uses')
 		)
 			return false;
 
 		if (
-			power.data.data.usage === 'item-consumable' &&
-			(!(power.parent instanceof MashupItemEquipment) || (power.parent as MashupItemEquipment).data.data.quantity < 1)
+			power.system.usage === 'item-consumable' &&
+			(!(power.parent instanceof MashupItemEquipment) || (power.parent as MashupItemEquipment).system.quantity < 1)
 		)
 			return false;
 
-		return !this.data.data.powerUsage[power.powerGroupId];
+		return !this.system.powerUsage[power.powerGroupId];
 	}
 	async toggleReady(power: PowerDocument): Promise<boolean> {
 		// intentionally does not update pools
-		await this.update({ [`data.powerUsage.${power.powerGroupId}`]: this.isReady(power) ? 1 : 0 });
+		await this.update({ [`system.powerUsage.${power.powerGroupId}`]: this.isReady(power) ? 1 : 0 });
 		return true;
 	}
 	private static readonly trackedPowerUsage: PowerUsage[] = ['encounter', 'daily', 'item', 'item-healing-surge'];
@@ -446,12 +451,12 @@ export class MashupActor extends Actor implements ActorDocument {
 		if (!this.isReady(power)) return false;
 
 		const updates: Record<string, unknown> = {};
-		if (MashupActor.trackedPowerUsage.includes(power.data.data.usage)) {
-			updates[`data.powerUsage.${power.powerGroupId}`] = this.isReady(power) ? 1 : 0;
+		if (MashupActor.trackedPowerUsage.includes(power.system.usage)) {
+			updates[`system.powerUsage.${power.powerGroupId}`] = this.isReady(power) ? 1 : 0;
 		}
-		const pools = power.data.data.usedPools;
+		const pools = power.system.usedPools;
 		if (pools) {
-			updates[`data.pools`] = this.data.data.pools.map((pool) => {
+			updates[`system.pools`] = this.system.pools.map((pool) => {
 				return pools.includes(pool.name)
 					? {
 							...pool,
@@ -462,24 +467,24 @@ export class MashupActor extends Actor implements ActorDocument {
 			});
 		}
 
-		if (power.data.data.usage === 'item') {
-			updates[`data.magicItemUse.used`] = this.data.data.magicItemUse.used + 1;
+		if (power.system.usage === 'item') {
+			updates[`system.magicItemUse.used`] = this.system.magicItemUse.used + 1;
 		}
 
 		if (Object.keys(updates).length) await this.update(updates);
 
-		if (power.data.data.usage === 'item-consumable' && power.parent instanceof MashupItemEquipment)
+		if (power.system.usage === 'item-consumable' && power.parent instanceof MashupItemEquipment)
 			await (power.parent as MashupItemEquipment).decreaseQuantity(1);
 
-		if (power.data.data.selfApplied) {
-			await this.createActiveEffect(...toComputable(power.data.data.selfApplied, this, power.img ?? ''), [this, power]);
+		if (power.system.selfApplied) {
+			await this.createActiveEffect(...toComputable(power.system.selfApplied, this, power.img ?? ''), [this, power]);
 		}
 
 		return true;
 	}
 
 	isPoolDrained(poolName: string) {
-		const pool = this.data.data.pools.find((p) => p.name === poolName);
+		const pool = this.system.pools.find((p) => p.name === poolName);
 		const poolMaxes = this.derivedCache.pools.getValue(poolName);
 		if (!pool || !poolMaxes) return true;
 		if (pool.value === 0) return true;
@@ -488,12 +493,12 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	async spendActionPoint(): Promise<null | string[]> {
-		if (this.data.data.actionPoints.value === 0) return null;
+		if (this.system.actionPoints.value === 0) return null;
 
 		const descriptions: string[] = [];
 		const updates = {
-			'data.actionPoints.usedThisEncounter': true,
-			'data.actionPoints.value': this.data.data.actionPoints.value - 1,
+			'system.actionPoints.usedThisEncounter': true,
+			'system.actionPoints.value': this.system.actionPoints.value - 1,
 		};
 		Hooks.callAll<'preActionPointSpent'>('preActionPointSpent', this, updates, descriptions);
 
@@ -505,7 +510,7 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	async applyShortRest(healingSurges: number, healingBonusByType: BonusByType) {
-		const health = this.data.data.health;
+		const health = this.system.health;
 		if (healingSurges > health.surgesRemaining.value) return false;
 
 		const effectiveHealingSurgeValue = combineRollComponents(
@@ -519,22 +524,22 @@ export class MashupActor extends Actor implements ActorDocument {
 		}
 		const effectiveAmount = healingSurges * effectiveHealingSurgeValue;
 
-		const data: Record<string, unknown> = {};
-		data['data.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
-		data['data.health.surgesRemaining.value'] = health.surgesRemaining.value - healingSurges;
-		data['data.health.secondWindUsed'] = false;
-		data['data.actionPoints.usedThisEncounter'] = false;
-		data['data.health.deathSavesRemaining'] = 3;
+		const changes: Record<string, unknown> = {};
+		changes['system.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
+		changes['system.health.surgesRemaining.value'] = health.surgesRemaining.value - healingSurges;
+		changes['system.health.secondWindUsed'] = false;
+		changes['system.actionPoints.usedThisEncounter'] = false;
+		changes['system.health.deathSavesRemaining'] = 3;
 
-		this.updatePoolRests('shortRest', data);
-		this.updatePowersForShortRest(data);
+		this.updatePoolRests('shortRest', changes);
+		this.updatePowersForShortRest(changes);
 
 		// TODO: what else?
 
-		await this.update(data);
+		await this.update(changes);
 
 		const toRemove = this.effects
-			.filter((e) => e.data.flags?.mashup?.effectDuration?.durationType === 'shortRest')
+			.filter((e) => e.flags?.mashup?.effectDuration?.durationType === 'shortRest')
 			.map((e) => e.id)
 			.filter((id): id is string => !!id);
 		await this.deleteEmbeddedDocuments('ActiveEffect', toRemove);
@@ -543,28 +548,28 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 
 	async applyLongRest() {
-		const data: Record<string, unknown> = {};
-		data['data.health.hp.value'] = this.data.data.health.hp.max;
-		data['data.health.surgesRemaining.value'] = this.derivedData.health.surgesRemaining.max;
-		data['data.health.secondWindUsed'] = false;
-		data['data.actionPoints.usedThisEncounter'] = false;
-		data['data.health.deathSavesRemaining'] = 3;
-		data['data.actionPoints.value'] = 1;
-		data['data.encountersSinceLongRest'] = 0;
-		data['data.magicItemUse.used'] = 0;
+		const changes: Record<string, unknown> = {};
+		changes['system.health.hp.value'] = this.system.health.hp.max;
+		changes['system.health.surgesRemaining.value'] = this.derivedData.health.surgesRemaining.max;
+		changes['system.health.secondWindUsed'] = false;
+		changes['system.actionPoints.usedThisEncounter'] = false;
+		changes['system.health.deathSavesRemaining'] = 3;
+		changes['system.actionPoints.value'] = 1;
+		changes['system.encountersSinceLongRest'] = 0;
+		changes['system.magicItemUse.used'] = 0;
 
-		this.updatePoolRests('longRest', data);
-		this.updatePowersForLongRest(data);
+		this.updatePoolRests('longRest', changes);
+		this.updatePowersForLongRest(changes);
 
 		// TODO: what else?
 
-		await this.update(data);
+		await this.update(changes);
 
 		const toRemove = this.effects
 			.filter(
 				(e) =>
-					e.data.flags?.mashup?.effectDuration?.durationType === 'shortRest' ||
-					e.data.flags?.mashup?.effectDuration?.durationType === 'longRest'
+					e.flags?.mashup?.effectDuration?.durationType === 'shortRest' ||
+					e.flags?.mashup?.effectDuration?.durationType === 'longRest'
 			)
 			.map((e) => e.id)
 			.filter((id): id is string => !!id);
@@ -573,8 +578,8 @@ export class MashupActor extends Actor implements ActorDocument {
 		return true;
 	}
 
-	updatePoolRests(restType: 'shortRest' | 'longRest', data: Record<string, unknown>) {
-		const poolsResult = deepClone(this.data.data.pools ?? []);
+	updatePoolRests(restType: 'shortRest' | 'longRest', changes: Record<string, unknown>) {
+		const poolsResult = deepClone(this.system.pools ?? []);
 		for (const poolName of this.derivedCache.pools.getPools()) {
 			const pool = this.derivedCache.pools.getValue(poolName);
 			let poolValue = poolsResult.find((p) => p.name === pool.name);
@@ -595,18 +600,18 @@ export class MashupActor extends Actor implements ActorDocument {
 			}
 			poolValue.value = pool.max === null ? newValue : Math.max(pool.max, newValue);
 		}
-		data['data.pools'] = poolsResult;
+		changes['system.pools'] = poolsResult;
 	}
 
-	updatePowersForShortRest(data: Record<string, unknown>) {
+	updatePowersForShortRest(changes: Record<string, unknown>) {
 		for (const power of this.allPowers(true)) {
-			if (power.data.data.usage === 'encounter' || power.data.data.usage.startsWith('recharge-'))
-				data[`data.powerUsage.${power.powerGroupId}`] = 0;
+			if (power.system.usage === 'encounter' || power.system.usage.startsWith('recharge-'))
+				changes[`system.powerUsage.${power.powerGroupId}`] = 0;
 		}
 	}
-	updatePowersForLongRest(data: Record<string, unknown>) {
+	updatePowersForLongRest(changes: Record<string, unknown>) {
 		for (const power of this.allPowers(true)) {
-			data[`data.powerUsage.${power.powerGroupId}`] = 0;
+			changes[`system.powerUsage.${power.powerGroupId}`] = 0;
 		}
 	}
 
@@ -625,6 +630,8 @@ export class MashupActor extends Actor implements ActorDocument {
 	}
 }
 
-export type SpecificActor<T extends PossibleActorData['type'] = PossibleActorData['type']> = MashupActor & {
-	data: SpecificActorData<T>;
+export type SpecificActor<T extends PossibleActorType = PossibleActorType> = MashupActor & {
+	type: T;
+	_source: ActorDataSource<T>;
+	system: ActorSystemData<T> & ActorDerivedData;
 };

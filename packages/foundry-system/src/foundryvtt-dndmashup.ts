@@ -53,7 +53,7 @@ Hooks.once('init', async () => {
 	// Set an id so styles work better
 	document.body.setAttribute('id', 'foundry-tailwind-hack');
 
-	CONFIG.Combat.initiative.formula = '1d20 + @actor.data.data.initiative + @actor.data.data.initiative/100';
+	CONFIG.Combat.initiative.formula = '1d20 + @actor.system.initiative + @actor.system.initiative/100';
 
 	CONFIG.Dice.termTypes['WeaponTerm'] = WeaponTerm;
 	CONFIG.Dice.termTypes['AbilityTerm'] = AbilityTerm;

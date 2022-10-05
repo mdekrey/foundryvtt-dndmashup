@@ -94,10 +94,12 @@ function getCurrentInitiative(
 	if (actor === undefined) return { round: combat.round, currentInitiative, combatantInitiative: currentInitiative };
 	const combatant = combat.combatants.find((c) => c.actor === actor);
 	if (!combatant) {
+		console.warn(`Target could not be found to determine turn's end.`, actor);
 		ui.notifications?.warn(`Target could not be found to determine turn's end.`);
 		return { round: combat.round, currentInitiative, combatantInitiative: currentInitiative };
 	}
 	if (combatant.initiative === null || combatant.initiative === undefined) {
+		console.warn(`Target had not rolled for initiative.`, actor);
 		ui.notifications?.warn(`Target had not rolled for initiative.`);
 		return { round: combat.round, currentInitiative, combatantInitiative: currentInitiative };
 	}

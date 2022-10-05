@@ -1,4 +1,4 @@
-import { TypedData } from '@foundryvtt-dndmashup/foundry-compat';
+import { StandardData, TypedData } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	Ability,
 	Currency,
@@ -102,15 +102,16 @@ export type MonsterActorTemplateDataSourceData = {
 	};
 };
 
-export type PlayerCharacterDataSourceData = BaseActorTemplateDataSourceData & PcActorTemplateDataSourceData;
-export type MonsterDataSourceData = BaseActorTemplateDataSourceData & MonsterActorTemplateDataSourceData;
+export type PlayerCharacterSystemData = BaseActorTemplateDataSourceData & PcActorTemplateDataSourceData;
+export type MonsterSystemData = BaseActorTemplateDataSourceData & MonsterActorTemplateDataSourceData;
 
-export type PlayerCharacterDataSource = TypedData<'pc', PlayerCharacterDataSourceData>;
-export type MonsterDataSource = TypedData<'monster', MonsterDataSourceData>;
-
-export interface PossibleActorTypeTemplates {
-	pc: PlayerCharacterDataSource;
-	monster: MonsterDataSource;
+export interface PossibleActorSystemDataTemplates {
+	pc: PlayerCharacterSystemData;
+	monster: MonsterSystemData;
 }
-export type PossibleActorType = keyof PossibleActorTypeTemplates;
-export type ActorDataSource<T extends PossibleActorType = PossibleActorType> = PossibleActorTypeTemplates[T];
+export type ActorSystemData<T extends PossibleActorType = PossibleActorType> = PossibleActorSystemDataTemplates[T];
+
+export type PossibleActorType = keyof PossibleActorSystemDataTemplates;
+export type ActorDataSource<T extends PossibleActorType = PossibleActorType> = {
+	[K in T]: StandardData & TypedData<K, PossibleActorSystemDataTemplates[K]>;
+}[T];

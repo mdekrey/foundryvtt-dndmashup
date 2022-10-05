@@ -1,9 +1,6 @@
+import { PossibleActorType } from '@foundryvtt-dndmashup/mashup-react';
 import { SpecificActor } from '../mashup-actor';
-import { PossibleActorData } from '../types';
 
-export function isActorType<T extends PossibleActorData['type']>(
-	actor: SpecificActor,
-	type: T
-): actor is SpecificActor<T> {
-	return actor.data.type === type;
+export function isActorType<T extends PossibleActorType>(actor: SpecificActor, type: T): actor is SpecificActor<T> {
+	return actor.type === type;
 }

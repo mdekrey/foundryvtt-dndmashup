@@ -15,10 +15,10 @@ export class MashupSkill extends MashupItem<'skill'> implements SkillDocument {
 		return type === 'feature' || type === 'power';
 	}
 	override allGrantedBonuses(): FeatureBonusWithSource[] {
-		return this.data.data.grantedBonuses.map((b) => ({ ...b, source: this }));
+		return this.system.grantedBonuses.map((b) => ({ ...b, source: this }));
 	}
 	override allDynamicList(): DynamicListEntryWithSource[] {
-		return this.data.data.dynamicList.map((b) => ({ ...b, source: this }));
+		return this.system.dynamicList.map((b) => ({ ...b, source: this }));
 	}
 	override allGrantedPools(): SourcedPoolLimits[] {
 		return [];

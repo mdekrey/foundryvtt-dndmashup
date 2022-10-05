@@ -4,6 +4,8 @@ import { BaseItemTemplateDataSourceData } from '../../templates/bases';
 
 export type ParagonPathDataSourceData = BaseItemTemplateDataSourceData; // TODO
 
-export type ParagonPathData = TypedData<'paragonPath', ParagonPathDataSourceData>;
+export type ParagonPathSystemData = ParagonPathDataSourceData;
+
+export type ParagonPathData = TypedData<'paragonPath', ParagonPathSystemData>;
 
 export type ParagonPathDocument = ItemDocument<ParagonPathData>;

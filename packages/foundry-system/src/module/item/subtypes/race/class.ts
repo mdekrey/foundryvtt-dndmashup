@@ -18,18 +18,18 @@ export class MashupItemRace extends MashupItem<'race'> implements RaceDocument {
 		return [
 			{
 				target: 'speed',
-				amount: this.data.data.baseSpeed,
+				amount: this.system.baseSpeed,
 				type: 'racial',
 				source: this,
 				condition: null,
 			},
-			...this.data.data.grantedBonuses.map((b) => ({ ...b, source: this })),
+			...this.system.grantedBonuses.map((b) => ({ ...b, source: this })),
 			...this.items.contents.flatMap((item) => item.allGrantedBonuses()),
 		];
 	}
 	override allDynamicList(): DynamicListEntryWithSource[] {
 		return [
-			...this.data.data.dynamicList.map((b) => ({ ...b, source: this })),
+			...this.system.dynamicList.map((b) => ({ ...b, source: this })),
 			...this.items.contents.flatMap((item) => item.allDynamicList()),
 		];
 	}

@@ -8,6 +8,7 @@ export type RaceDataSourceData = BaseItemTemplateDataSourceData & {
 	size: Size;
 };
 
-export type RaceData = TypedData<'race', RaceDataSourceData>;
+export type RaceSystemData = RaceDataSourceData;
+export type RaceData = TypedData<'race', RaceSystemData>;
 
 export type RaceDocument = ItemDocument<RaceData>;

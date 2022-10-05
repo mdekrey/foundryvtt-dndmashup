@@ -11,13 +11,15 @@
 			"discord": "DrinksDew#6095"
 		}
 	],
-	"minimumCoreVersion": "9",
-	"compatibleCoreVersion": "9",
+	"minimumCoreVersion": "10",
+	"compatibleCoreVersion": "10",
 	"scripts": [],
 	"esmodules": ["fixup.js", "polyfills.js", "runtime.js", "main.js"],
 	"styles": [],
 	"packs": [],
-	"dependencies": [],
+	"relationships": {
+		"requires": []
+	},
 	"languages": [
 		{
 			"lang": "en",

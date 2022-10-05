@@ -39,7 +39,7 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import { ActiveEffectTemplateEditorButton, TriggerSelector } from '@foundryvtt-dndmashup/mashup-rules';
 
 export function PowerEditor({ itemState: documentState }: { itemState: Stateful<SimpleDocumentData<PowerData>> }) {
-	const { usage } = documentState.value.data;
+	const { usage } = documentState.value.system;
 	const canHaveRecharge =
 		usage !== 'at-will' && usage !== 'item-consumable' && usage !== 'item-healing-surge' && usage !== 'item';
 	return (
@@ -108,7 +108,7 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 					</FormInput.Inline>
 					<FormInput.Inline
 						className={classNames('col-span-6', {
-							'opacity-50 focus-within:opacity-100': !documentState.value.data.selfApplied,
+							'opacity-50 focus-within:opacity-100': !documentState.value.system.selfApplied,
 						})}>
 						<span>Apply to User:</span>
 						<ActiveEffectTemplateEditorButton
@@ -123,7 +123,7 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !documentState.value.data.requirement,
+						'opacity-50 focus-within:opacity-100': !documentState.value.system.requirement,
 					})}>
 					<FormInput.TextField {...powerRequirementLens.apply(documentState)} />
 					<FormInput.Label>Requirement</FormInput.Label>
@@ -131,7 +131,7 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !documentState.value.data.prerequisite,
+						'opacity-50 focus-within:opacity-100': !documentState.value.system.prerequisite,
 					})}>
 					<FormInput.TextField {...powerPrerequisiteLens.apply(documentState)} />
 					<FormInput.Label>Prerequisite</FormInput.Label>
@@ -139,7 +139,7 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !documentState.value.data.trigger,
+						'opacity-50 focus-within:opacity-100': !documentState.value.system.trigger,
 					})}>
 					<FormInput.TextField {...powerTriggerLens.apply(documentState)} />
 					<FormInput.Label>Trigger</FormInput.Label>
@@ -147,7 +147,7 @@ export function PowerEditor({ itemState: documentState }: { itemState: Stateful<
 
 				<FormInput
 					className={classNames({
-						'opacity-50 focus-within:opacity-100': !documentState.value.data.special,
+						'opacity-50 focus-within:opacity-100': !documentState.value.system.special,
 					})}>
 					<FormInput.TextField {...powerSpecialTextLens.apply(documentState)} />
 					<FormInput.Label>Special</FormInput.Label>

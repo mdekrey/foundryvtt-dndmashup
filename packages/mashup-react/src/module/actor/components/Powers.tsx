@@ -19,32 +19,31 @@ const powerGroups: {
 		key: 'at-will-power',
 		label: 'At-Will Power',
 		className: (<i className="theme-green-dark" />).props.className,
-		filter: (item) => isPower(item) && item.data.data.usage === 'at-will',
+		filter: (item) => isPower(item) && item.system.usage === 'at-will',
 	},
 	{
 		key: 'encounter-power',
 		label: 'Encounter Power',
 		className: (<i className="theme-red-dark" />).props.className,
-		filter: (item) => isPower(item) && item.data.data.usage === 'encounter',
+		filter: (item) => isPower(item) && item.system.usage === 'encounter',
 	},
 	{
 		key: 'daily-power',
 		label: 'Daily Power',
 		className: (<i className="theme-gray-dark" />).props.className,
-		filter: (item) => isPower(item) && item.data.data.usage === 'daily',
+		filter: (item) => isPower(item) && item.system.usage === 'daily',
 	},
 	{
 		key: 'item-daily-powers',
 		label: 'Item Daily Powers (or Item Healing Surge)',
 		className: (<i className="theme-orange-dark" />).props.className,
-		filter: (item) =>
-			isPower(item) && (item.data.data.usage === 'item' || item.data.data.usage === 'item-healing-surge'),
+		filter: (item) => isPower(item) && (item.system.usage === 'item' || item.system.usage === 'item-healing-surge'),
 	},
 	{
 		key: 'item-consumable',
 		label: 'Consumables',
 		className: (<i className="theme-orange-dark" />).props.className,
-		filter: (item) => isPower(item) && item.data.data.usage === 'item-consumable',
+		filter: (item) => isPower(item) && item.system.usage === 'item-consumable',
 	},
 ];
 

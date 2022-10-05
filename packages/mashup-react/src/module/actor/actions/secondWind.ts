@@ -7,12 +7,12 @@ export const secondWind: CommonAction = {
 	action: 'standard',
 	usage: 'encounter',
 	hint: 'Once per encounter, spend a healing surge and defend yourself',
-	isReady: (actor) => !actor.data.data.health.secondWindUsed && actor.data.data.health.surgesRemaining.value > 0,
+	isReady: (actor) => !actor.system.health.secondWindUsed && actor.system.health.surgesRemaining.value > 0,
 	setReady: (actor, ready) => {
 		actor.update({ 'data.health.secondWindUsed': !ready }, {});
 	},
 	use: async (actor, { chatDispatch }) => {
-		if (actor.data.data.health.secondWindUsed) return;
+		if (actor.system.health.secondWindUsed) return;
 		await actor.applyHealing({
 			addHealingSurgeValue: true,
 			spendHealingSurge: true,

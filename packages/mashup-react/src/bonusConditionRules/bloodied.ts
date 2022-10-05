@@ -3,7 +3,7 @@ import { conditionsRegistry, ruleResultIndeterminate } from '@foundryvtt-dndmash
 
 export function bloodied({ actor }: { actor: ActorDocument | undefined }) {
 	if (!actor) return ruleResultIndeterminate;
-	if (actor.data.data.health.hp.value < actor.derivedData.health.hp.max) return true;
+	if (actor.system.health.hp.value < actor.derivedData.health.hp.max) return true;
 	return false;
 }
 

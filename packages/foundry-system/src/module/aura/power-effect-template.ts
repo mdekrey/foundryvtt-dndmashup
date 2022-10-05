@@ -76,6 +76,9 @@ const byEffectType: { [K in EffectTypeAndRange['type']]?: MeasuredTemplateFactor
 };
 
 export class PowerEffectTemplate extends MeasuredTemplate {
+	// Foundry 10 fixes
+	override document!: MeasuredTemplate['document'] & MeasuredTemplate['document']['data'];
+
 	static onCancel: undefined | (() => void);
 
 	static canCreate(typeAndRange: EffectTypeAndRange) {
@@ -102,12 +105,8 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		);
 		if (constructorData === null) return null;
 
-		console.log(constructorData);
-
 		const cls = CONFIG.MeasuredTemplate.documentClass;
 		const template = new cls({ ...partialData, ...constructorData }, { parent: canvas?.scene ?? undefined });
-
-		console.log(template);
 
 		return new this(template);
 	}
@@ -153,7 +152,8 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			if (now - moveTime <= 20) return;
 			const center = (event as any).data.getLocalPosition(this.layer);
 			const snapped = grid.getSnappedPosition(center.x, center.y, snapSize);
-			this.data.update({ x: snapped.x, y: snapped.y });
+			this.document.x = snapped.x;
+			this.document.y = snapped.y;
 			this.refresh();
 			moveTime = now;
 		};
@@ -172,19 +172,20 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		// Confirm the workflow (left-click)
 		handlers.leftClick = (event) => {
 			handlers.rightClick?.();
-			const destination = grid.getSnappedPosition(this.data.x, this.data.y, snapSize);
-			this.data.update(destination);
-			scene.createEmbeddedDocuments('MeasuredTemplate', [this.data as never]);
+			const destination = grid.getSnappedPosition(this.document.x, this.document.y, snapSize);
+			this.document._source.x = destination.x;
+			this.document._source.y = destination.y;
+			scene.createEmbeddedDocuments('MeasuredTemplate', [this.document._source]);
 		};
 
 		handlers.mouseWheel = (event) => {
 			if (event.ctrlKey) event.preventDefault(); // Avoid zooming the browser window
 			event.stopPropagation();
 
-			const rotate = this.data.flags?.[systemName]?.rotate;
+			const rotate = this.document.flags?.[systemName]?.rotate;
 			if (rotate) {
 				const delta = rotate;
-				this.data.update({ direction: this.data.direction + delta * Math.sign(event.deltaY) });
+				this.document.update({ direction: this.document.direction + delta * Math.sign(event.deltaY) });
 				this.refresh();
 			}
 		};
@@ -206,58 +207,50 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		return new PIXI.Polygon(points);
 	}
 
-	static getBlastShape(direction: number, distance: number): NormalizedRectangle {
-		if (direction < (1 * Math.PI) / 2) return new NormalizedRectangle(0, 0, distance, distance);
-		if (direction < (2 * Math.PI) / 2) return new NormalizedRectangle(-distance, 0, distance, distance);
-		if (direction < (3 * Math.PI) / 2) return new NormalizedRectangle(-distance, -distance, distance, distance);
-		return new NormalizedRectangle(0, -distance, distance, distance);
+	static getBlastShape(direction: number, distance: number): PIXI.Rectangle {
+		if (direction < (1 * Math.PI) / 2) return new PIXI.Rectangle(0, 0, distance, distance);
+		if (direction < (2 * Math.PI) / 2) return new PIXI.Rectangle(-distance, 0, distance, distance);
+		if (direction < (3 * Math.PI) / 2) return new PIXI.Rectangle(-distance, -distance, distance, distance);
+		return new PIXI.Rectangle(0, -distance, distance, distance);
 	}
 
-	override refresh(): this {
-		if (!this.template || !this.hud.icon) return this;
-		// Should be basically identical to the original target, but doesn't draw the ray.
-		this.position.set(this.data.x, this.data.y);
-
-		// Get the Template shape
-		this.shape = this.getBaseShape();
+	_refreshTemplate() {
+		// source: Foundry 10 MeasuredTemplate.prototype._refreshTemplate, removing `.drawCircle(this.ray.dx, this.ray.dy, 6)`
+		const t = (this as any).template.clear();
+		if (!(this as any).isVisible) return;
 
 		// Draw the Template outline
-		this.template
-			.clear()
-			.lineStyle(this._borderThickness, this.borderColor as number, 0.75)
-			.beginFill(0x000000, 0.0);
+		t.lineStyle(this._borderThickness, this.borderColor, 0.75).beginFill(0x000000, 0.0);
 
 		// Fill Color or Texture
-		if (this.texture)
-			this.template.beginTextureFill({
-				texture: this.texture,
-			});
-		else this.template.beginFill(0x000000, 0.0);
+		if (this.texture) t.beginTextureFill({ texture: this.texture });
+		else t.beginFill(0x000000, 0.0);
 
 		// Draw the shape
-		this.template.drawShape(this.shape);
+		t.drawShape(this.shape);
 
 		// Draw origin and destination points
-		this.template.lineStyle(this._borderThickness, 0x000000).beginFill(0x000000, 0.5).drawCircle(0, 0, 6);
+		t.lineStyle(this._borderThickness, 0x000000).beginFill(0x000000, 0.5).drawCircle(0, 0, 6).endFill();
+	}
 
-		// Update the HUD
-		this.hud.icon.visible = this.layer._active;
-		this.hud.icon.border.visible = this._hover;
-		this._refreshRulerText.call(this);
-		return this;
+	override _getCircleShape(distance: number) {
+		return PowerEffectTemplate.getBurstShape(distance) as never;
+	}
+	override _getConeShape(direction: number, angle: number, distance: number) {
+		return PowerEffectTemplate.getBlastShape(direction, distance) as never;
 	}
 
 	getBaseShape(): PIXI.Polygon | PIXI.Circle | PIXI.Ellipse | PIXI.Rectangle | PIXI.RoundedRectangle {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const d = canvas!.dimensions!;
-		let { direction, distance, width } = this.data;
+		let { direction, distance, width } = this.document;
 		distance *= d.size / d.distance;
 		width *= d.size / d.distance;
 		direction = Math.toRadians(direction);
 
-		(this as any).ray = Ray.fromAngle(this.data.x, this.data.y, direction, distance);
+		(this as any).ray = Ray.fromAngle(this.document.x, this.document.y, direction, distance);
 
-		switch (this.data.t) {
+		switch (this.document.t) {
 			case 'circle':
 				return PowerEffectTemplate.getBurstShape(distance);
 			case 'cone':
@@ -267,7 +260,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			case 'ray':
 				return this._getRayShape(direction, distance, width);
 			default:
-				return neverEver(this.data.t);
+				return neverEver(this.document.t);
 		}
 	}
 
@@ -299,45 +292,50 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 	}
 
 	protected override _refreshRulerText(): void {
-		if (this.data.t === 'circle') {
+		const ruler = (this as any).ruler as typeof this['hud']['ruler'];
+		if (this.document.t === 'circle') {
 			let d;
 			let text;
 
-			const closeBurst = this.data.flags[systemName]?.closeBurst ?? 'not-close';
+			const closeBurst = this.document.flags[systemName]?.closeBurst ?? 'not-close';
 
 			switch (closeBurst) {
 				case 'not-close':
-					d = Math.max(Math.round((this.data.distance - 0.5) * 10) / 10, 0);
+					d = Math.max(Math.round((this.document.distance - 0.5) * 10) / 10, 0);
 					text = `Burst ${d}`;
 					break;
 				default:
-					d = Math.max(Math.round((this.data.distance - sizeToTokenSize[closeBurst] / 2) * 10) / 10, 0);
+					d = Math.max(Math.round((this.document.distance - sizeToTokenSize[closeBurst] / 2) * 10) / 10, 0);
 					text = `Close Burst ${d} \n(${closeBurst})`;
 					break;
 			}
 
-			if (this.hud.ruler) {
-				this.hud.ruler.text = text;
-				// this.hud.ruler.position.set(this.ray.dx + 10, this.ray.dy + 5);
+			if (ruler) {
+				ruler.text = text;
 			}
-		} else if (this.data.flags[systemName]?.text) {
-			if (this.hud.ruler) {
-				this.hud.ruler.text = this.data.flags[systemName]?.text as string;
+		} else if (this.document.flags[systemName]?.text) {
+			if (ruler) {
+				ruler.text = this.document.flags[systemName]?.text as string;
 			}
 		} else {
 			return super._refreshRulerText();
 		}
 	}
 
-	getAurasAt(originalBounds: NormalizedRectangle): AuraEffect[] {
-		const systemInfo = this.data.flags[systemName] ?? {};
+	getAurasAt(originalBounds: PIXI.Rectangle): AuraEffect[] {
+		const systemInfo = this.document.flags[systemName] ?? {};
 		if (!systemInfo.auras?.length) return [];
 
 		return systemInfo.auras
 			.map((aura): AuraEffect | null => {
 				if (!aura.sources.length) return null;
 				const bounds = getBounds(this.document);
-				if (!bounds || !originalBounds.intersects(bounds)) return null;
+				if (
+					!bounds ||
+					!(originalBounds as any) // FIXME: Foundry 10 types
+						.intersects(bounds)
+				)
+					return null;
 
 				const sources = aura.sources.map((s) => fromMashupId(s) as unknown as Source);
 				if (sources.some((s) => !s)) return null;

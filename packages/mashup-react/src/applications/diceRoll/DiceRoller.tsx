@@ -8,7 +8,7 @@ import {
 	FullFeatureBonus,
 	ConditionRulesRuntimeParameters,
 } from '@foundryvtt-dndmashup/mashup-rules';
-import { ActorDocument, TokenDocument } from '../../module/actor';
+import { ActorDocument, TokenInstance } from '../../module/actor';
 import { EquipmentDocument } from '../../module/item';
 import { NumericModifierSelector } from './NumericModifierSelector';
 import { ToolSelector } from './ToolSelector';
@@ -89,7 +89,7 @@ export function DiceRoller({
 				<AdditionalTargetModifiers
 					rollTarget={runtimeTargetsRollType}
 					tokens={runtimeBonusParameters.targets.filter(
-						(target): target is TokenDocument & { id: string; actor: ActorDocument } => !!target.actor
+						(target): target is TokenInstance & { id: string; actor: ActorDocument } => !!target.actor
 					)}
 					runtimeBonusParameters={runtimeBonusParameters}
 					onBonusesChange={(targetId, bonusFormula, bonusByType) =>
@@ -108,7 +108,7 @@ function AdditionalTargetModifiers({
 	onBonusesChange,
 }: {
 	rollTarget: NumericBonusTarget;
-	tokens: (TokenDocument & { id: string; actor: ActorDocument })[];
+	tokens: (TokenInstance & { id: string; actor: ActorDocument })[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 	onBonusesChange(targetId: string, bonusFormula: RollComponent, bonusByType: BonusByType): void;
 }) {
@@ -118,13 +118,15 @@ function AdditionalTargetModifiers({
 	const [activeTab, setActiveTab] = useState(tokens[0]?.id ?? '');
 	if (tokens.length === 0) return null;
 
+	console.log(tokens);
+
 	return (
 		<div className="mt-4">
 			<Tabs.Controlled activeTab={activeTab} setActiveTab={setActiveTab} renderAllTabs>
 				<Tabs.Nav>
 					{tokens.map((token) => (
 						<Tabs.NavButton tabName={token.id} key={token.id}>
-							<img className="h-12 w-12 inline" src={token.data.img ?? ''} />
+							<img className="h-12 w-12 inline" src={token.document.texture.src ?? ''} />
 						</Tabs.NavButton>
 					))}
 				</Tabs.Nav>

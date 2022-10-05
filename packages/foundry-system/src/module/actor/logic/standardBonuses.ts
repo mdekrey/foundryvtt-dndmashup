@@ -7,12 +7,14 @@ function manual(text: string): { condition: ConditionRule<'manual'> } {
 const base = { condition: null } as const;
 
 const commonBonuses: FeatureBonus[] = [
-	{ ...base, target: 'ability-str', amount: '@actor.data.data.abilities.str.base', type: 'base' },
-	{ ...base, target: 'ability-con', amount: '@actor.data.data.abilities.con.base', type: 'base' },
-	{ ...base, target: 'ability-dex', amount: '@actor.data.data.abilities.dex.base', type: 'base' },
-	{ ...base, target: 'ability-int', amount: '@actor.data.data.abilities.int.base', type: 'base' },
-	{ ...base, target: 'ability-wis', amount: '@actor.data.data.abilities.wis.base', type: 'base' },
-	{ ...base, target: 'ability-cha', amount: '@actor.data.data.abilities.cha.base', type: 'base' },
+	{ ...base, target: 'ability-str', amount: '@actor.system.abilities.str.base', type: 'base' },
+	{ ...base, target: 'ability-con', amount: '@actor.system.abilities.con.base', type: 'base' },
+	{ ...base, target: 'ability-dex', amount: '@actor.system.abilities.dex.base', type: 'base' },
+	{ ...base, target: 'ability-int', amount: '@actor.system.abilities.int.base', type: 'base' },
+	{ ...base, target: 'ability-wis', amount: '@actor.system.abilities.wis.base', type: 'base' },
+	{ ...base, target: 'ability-cha', amount: '@actor.system.abilities.cha.base', type: 'base' },
+
+	{ ...base, target: 'surges-value', amount: 'floor(@actor.system.health.hp.max / 4)', type: 'base' },
 
 	{ ...manual('you have combat advantage against the target'), target: 'attack-roll', amount: 2 },
 	{ ...manual('you are charging'), target: 'attack-roll', amount: 1 },
@@ -56,12 +58,12 @@ export const pcStandardBonuses: FeatureBonus[] = [
 
 export const monsterStandardBonuses: FeatureBonus[] = [
 	...commonBonuses,
-	{ ...base, target: 'maxHp', amount: `@actor.data.data.health.hp.maxBase`, type: 'base' },
-	{ ...base, target: 'initiative', amount: '@actor.data.data.initiativeBase', type: 'base' },
-	{ ...base, target: 'speed', amount: '@actor.data.data.speedBase', type: 'base' },
+	{ ...base, target: 'maxHp', amount: `@actor.system.health.hp.maxBase`, type: 'base' },
+	{ ...base, target: 'initiative', amount: '@actor.system.initiativeBase', type: 'base' },
+	{ ...base, target: 'speed', amount: '@actor.system.speedBase', type: 'base' },
 
-	{ ...base, target: 'defense-ac', amount: '@actor.data.data.baseDefenses.ac' },
-	{ ...base, target: 'defense-fort', amount: '@actor.data.data.baseDefenses.fort' },
-	{ ...base, target: 'defense-refl', amount: '@actor.data.data.baseDefenses.refl' },
-	{ ...base, target: 'defense-will', amount: '@actor.data.data.baseDefenses.will' },
+	{ ...base, target: 'defense-ac', amount: '@actor.system.baseDefenses.ac' },
+	{ ...base, target: 'defense-fort', amount: '@actor.system.baseDefenses.fort' },
+	{ ...base, target: 'defense-refl', amount: '@actor.system.baseDefenses.refl' },
+	{ ...base, target: 'defense-will', amount: '@actor.system.baseDefenses.will' },
 ];

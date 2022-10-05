@@ -10,7 +10,7 @@ export async function roll(
 ): Promise<Roll<MashupDiceContext>> {
 	// Example full formula: 1d20 + 2[ability bonus] + 4[power bonus] + 2[bonus]
 	const roll = Roll.create(dice, context);
-	await roll.evaluate(evaluationOptions);
+	await roll.evaluate({ ...evaluationOptions, async: true });
 
 	if (sendToChatAs) {
 		await roll.toMessage({

@@ -27,7 +27,7 @@ export function PowerRow({
 			<Table.Body>
 				<PowerFirstRow
 					name={power.name ?? ''}
-					usage={power.data.data.usage}
+					usage={power.system.usage}
 					img={power.img ?? ''}
 					hint=""
 					isReady={actor.isReady(power)}

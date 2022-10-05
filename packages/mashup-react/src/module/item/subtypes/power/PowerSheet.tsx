@@ -11,7 +11,7 @@ import { FeaturesList } from '../../components/FeaturesList';
 
 export function PowerSheet({ item }: { item: PowerDocument }) {
 	const documentState = documentAsState(item, { deleteData: true });
-	const isNew = item.data.data.flavorText === '' && item.data.data.effects.length === 0;
+	const isNew = item.system.flavorText === '' && item.system.effects.length === 0;
 	const [activeTab, setActiveTab] = useState(
 		item.items.contents.length !== 0 && isNew ? 'sub-powers' : isNew ? 'editor' : 'preview'
 	);
