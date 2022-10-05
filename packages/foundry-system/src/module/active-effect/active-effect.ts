@@ -24,7 +24,15 @@ export class MashupActiveEffect extends ActiveEffect implements ActiveEffectDocu
 		return this.name;
 	}
 	getOriginalSources(): BaseDocument[] {
-		return this.flags.mashup?.originalSources?.map(fromMashupId).filter(Boolean) as BaseDocument[];
+		return this.flags.mashup?.originalSources
+			?.map((id) => {
+				try {
+					return fromMashupId(id);
+				} catch (ex) {
+					return null;
+				}
+			})
+			.filter(Boolean) as BaseDocument[];
 	}
 	allAuras(): Aura[] {
 		return this.flags.mashup?.auras ?? [];
