@@ -391,6 +391,7 @@ export class MashupActor extends Actor implements ActorDocument {
 		spendHealingSurge?: boolean;
 		additionalUpdates?: Record<string, unknown>;
 	}) {
+		if (isNaN(amount)) return;
 		if (amount === 0 && !addHealingSurgeValue) {
 			ui.notifications?.warn(`Healing amount was 0.`);
 			return;
@@ -413,7 +414,7 @@ export class MashupActor extends Actor implements ActorDocument {
 			changes['system.health.surgesRemaining.value'] = health.surgesRemaining.value - 1;
 		}
 		if (isTemporary) {
-			changes['system.health.temporaryHp'] = health.temporaryHp + effectiveAmount;
+			changes['system.health.temporaryHp'] = Math.max(health.temporaryHp, effectiveAmount);
 		} else {
 			changes['system.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
 		}
