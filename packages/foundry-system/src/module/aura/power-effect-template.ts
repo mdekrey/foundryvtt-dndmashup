@@ -105,12 +105,8 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		);
 		if (constructorData === null) return null;
 
-		console.log(constructorData);
-
 		const cls = CONFIG.MeasuredTemplate.documentClass;
 		const template = new cls({ ...partialData, ...constructorData }, { parent: canvas?.scene ?? undefined });
-
-		console.log(template);
 
 		return new this(template);
 	}
@@ -156,7 +152,8 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 			if (now - moveTime <= 20) return;
 			const center = (event as any).data.getLocalPosition(this.layer);
 			const snapped = grid.getSnappedPosition(center.x, center.y, snapSize);
-			this.document.update({ x: snapped.x, y: snapped.y });
+			this.document.x = snapped.x;
+			this.document.y = snapped.y;
 			this.refresh();
 			moveTime = now;
 		};
@@ -176,8 +173,9 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 		handlers.leftClick = (event) => {
 			handlers.rightClick?.();
 			const destination = grid.getSnappedPosition(this.document.x, this.document.y, snapSize);
-			this.document.update(destination);
-			scene.createEmbeddedDocuments('MeasuredTemplate', [this.document as never]);
+			this.document._source.x = destination.x;
+			this.document._source.y = destination.y;
+			scene.createEmbeddedDocuments('MeasuredTemplate', [this.document._source]);
 		};
 
 		handlers.mouseWheel = (event) => {
