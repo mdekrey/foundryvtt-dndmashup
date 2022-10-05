@@ -4,7 +4,7 @@ import { lensFromState } from '@foundryvtt-dndmashup/core';
 import { ActorDocument } from '../../module/actor/documentType';
 import { useChatMessageDispatcher } from '../../module';
 import { NumericModifierSelector } from '../diceRoll/NumericModifierSelector';
-import { BonusByType, combineRollComponents, RollComponent } from '@foundryvtt-dndmashup/mashup-rules';
+import { BonusByType, RollComponent } from '@foundryvtt-dndmashup/mashup-rules';
 import classNames from 'classnames';
 import { emptyConditionRuntime } from '../../bonusConditionRules';
 
@@ -15,13 +15,12 @@ export function ShortRestConfiguration({ actor, onClose }: { actor: ActorDocumen
 		bonusByType: BonusByType;
 	}>({ bonusFormula: '', bonusByType: {} });
 	const chatDispatch = useChatMessageDispatcher();
-	const currentRoll = combineRollComponents(actor.derivedCache.bonuses.getValue('surges-value'), bonusFormula);
 
-	const isDeterministic = typeof currentRoll === 'number';
+	const isDeterministic = typeof bonusFormula === 'number';
 	const rollTotal =
-		typeof currentRoll === 'number'
-			? currentRoll * spendHealingSurges.value
-			: `${spendHealingSurges.value} * (${currentRoll})`;
+		typeof bonusFormula === 'number'
+			? bonusFormula * spendHealingSurges.value
+			: `${spendHealingSurges.value} * (${bonusFormula})`;
 	const hpResult =
 		typeof rollTotal === 'number'
 			? Math.min(actor.derivedData.health.hp.max, actor.system.health.hp.value + rollTotal)
