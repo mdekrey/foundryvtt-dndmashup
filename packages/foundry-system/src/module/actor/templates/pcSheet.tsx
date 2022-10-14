@@ -1,6 +1,6 @@
 import { Lens, Stateful } from '@foundryvtt-dndmashup/core';
 import { AppButton, Tabs } from '@foundryvtt-dndmashup/components';
-import { documentAsState, StandardData } from '@foundryvtt-dndmashup/foundry-compat';
+import { documentAsState, StandardData, useUserPreference } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActiveEffectDocument, ActorComponents, PlayerCharacterSystemData } from '@foundryvtt-dndmashup/mashup-react';
 import { MashupActor, SpecificActor } from '../mashup-actor';
 import { SpecificActorDataSource } from '../types';
@@ -51,6 +51,8 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 	const healingSurgesPerDay = data.health.surgesRemaining.max;
 	const pools = usePoolLimits(actor);
 
+	const [activeTab, setActiveTab] = useUserPreference<string>('pc-sheet-tab', 'details');
+
 	return (
 		<>
 			<article className="flex flex-col h-full">
@@ -97,7 +99,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 							dataState={dataState}
 						/>
 						<div className="border-b-2 border-black"></div>
-						<Tabs defaultActiveTab="details">
+						<Tabs.Controlled activeTab={activeTab} setActiveTab={setActiveTab}>
 							<Tabs.Nav>
 								<Tabs.NavButton tabName="details">Biography</Tabs.NavButton>
 								<Tabs.NavButton tabName="inventory">Inventory</Tabs.NavButton>
@@ -146,7 +148,7 @@ export function PcSheet({ actor, onRollInitiative }: { actor: SpecificActor<'pc'
 									/>
 								</Tabs.Tab>
 							</section>
-						</Tabs>
+						</Tabs.Controlled>
 					</div>
 				</div>
 			</article>
