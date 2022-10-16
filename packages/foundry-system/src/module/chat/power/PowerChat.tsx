@@ -1,4 +1,5 @@
 import { IconButton } from '@foundryvtt-dndmashup/components';
+import { useIsPrerender } from '@foundryvtt-dndmashup/foundry-compat';
 import {
 	ActorDocument,
 	InstantaneousEffectSection,
@@ -101,6 +102,7 @@ function PowerEffectOptions({
 	actor: ActorDocument;
 	rollAttack: (attackRoll: AttackRoll, title: string, extraBonuses: FullFeatureBonus[]) => void;
 } & PowerEffectTemplateProps) {
+	const initialRender = useIsPrerender();
 	const extraBonuses =
 		effect.bonuses
 			?.map(addContextToFeatureBonus({ actor, item: power, activeEffectSources: undefined }))
@@ -145,16 +147,20 @@ function PowerEffectOptions({
 				<div className="flex flex-row items-center bg-gradient-to-r from-transparent to-white text-black h-7">
 					<span className="flex-1 font-bold pl-1">{effect.name || power.name}</span>
 
-					{placeTemplateButton}
-					{attackRollButton}
-					{!hasHitOrMiss ? (
-						<InstantaneousEffectOptions
-							effect={effect.hit}
-							mode={`${prefix} Effect`.trim()}
-							{...effectProps}
-							allowToolSelection={true}
-							allowCritical={true}
-						/>
+					{!initialRender ? (
+						<>
+							{placeTemplateButton}
+							{attackRollButton}
+							{!hasHitOrMiss ? (
+								<InstantaneousEffectOptions
+									effect={effect.hit}
+									mode={`${prefix} Effect`.trim()}
+									{...effectProps}
+									allowToolSelection={true}
+									allowCritical={true}
+								/>
+							) : null}
+						</>
 					) : null}
 				</div>
 			)}

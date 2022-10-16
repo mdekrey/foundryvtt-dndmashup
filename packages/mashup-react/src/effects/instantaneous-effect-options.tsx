@@ -1,5 +1,5 @@
 import { IconButton, SvgButton } from '@foundryvtt-dndmashup/components';
-import { BaseDocument, useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
+import { BaseDocument, useApplicationDispatcher, useIsPrerender } from '@foundryvtt-dndmashup/foundry-compat';
 import { ActorDocument } from '../module/actor/documentType';
 import { PowerDocument } from '../module/item/subtypes/power/dataSourceData';
 import {
@@ -42,6 +42,8 @@ export function InstantaneousEffectOptions({
 	extraBonuses,
 }: InstantaneousEffectOptionsProps) {
 	const applications = useApplicationDispatcher();
+	const initialRender = useIsPrerender();
+	if (initialRender) return null;
 	return (
 		<>
 			{effect.damage && (

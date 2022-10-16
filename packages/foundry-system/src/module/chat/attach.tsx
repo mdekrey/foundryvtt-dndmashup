@@ -23,9 +23,5 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 		createRoot(content[0]).render(<FoundryWrapper>{children}</FoundryWrapper>);
 	} catch (ex) {
 		console.error(ex);
-		content[0].prepend(
-			$('<p class="text-red-dark text-xs italic">Unable to attach message, check console for errors.</p>')[0]
-		);
-		content.css('pointer-events', 'none');
 	}
 }
