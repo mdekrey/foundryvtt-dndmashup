@@ -34,7 +34,7 @@ export function NumericModifierSelector({
 	rollTarget: NumericBonusTarget;
 	actor: ActorDocument;
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
-	extraBonuses?: FullFeatureBonus[];
+	extraBonuses?: readonly FullFeatureBonus[];
 	showApplied?: boolean;
 	onBonusesChange(bonusFormula: RollComponent, bonusByType: BonusByType): void;
 }) {

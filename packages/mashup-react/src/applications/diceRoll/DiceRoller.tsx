@@ -22,13 +22,13 @@ export type RollDetails = {
 };
 
 export type DiceRollerRequiredProps = {
-	actor: ActorDocument;
+	actor: ActorDocument | null;
 	rollType: NumericBonusTarget;
 	runtimeTargetsRollType?: NumericBonusTarget;
 	baseDice: string;
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
-	extraBonuses?: FullFeatureBonus[];
+	extraBonuses?: readonly FullFeatureBonus[];
 
 	onRoll(rollDetails: RollDetails): void;
 };
@@ -60,15 +60,17 @@ export function DiceRoller({
 		<div className="grid grid-cols-1 w-full gap-1">
 			<BlockHeader>{baseDice}</BlockHeader>
 			<ToolSelector possibleTools={possibleTools} tool={tool} onChangeTool={setTool} />
-			<NumericModifierSelector
-				showApplied
-				actor={actor}
-				tool={tool}
-				extraBonuses={extraBonuses}
-				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
-				rollTarget={rollType}
-				runtimeBonusParameters={runtimeBonusParameters}
-			/>
+			{actor ? (
+				<NumericModifierSelector
+					showApplied
+					actor={actor}
+					tool={tool}
+					extraBonuses={extraBonuses}
+					onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
+					rollTarget={rollType}
+					runtimeBonusParameters={runtimeBonusParameters}
+				/>
+			) : null}
 
 			<div className="flex flex-row gap-1">
 				<AppButton

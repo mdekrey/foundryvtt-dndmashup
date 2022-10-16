@@ -21,7 +21,7 @@ export function displayDamageDialog(
 		? undefined
 		: tool
 		? [tool]
-		: runtimeBonusParameters.power
+		: runtimeBonusParameters.power && actor
 		? getToolsForPower(actor, runtimeBonusParameters.power)
 		: undefined;
 

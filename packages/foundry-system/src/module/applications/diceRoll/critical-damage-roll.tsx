@@ -17,7 +17,7 @@ applicationRegistry.criticalDamage = async ({ ...baseParams }, resolve) => {
 	async function onRoll({ baseDice, damageTypes, resultBonusesByType, tool }: DamageRollDetails) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
-		const resultRoll = await roll(dice, { actor: baseParams.actor, item: tool });
+		const resultRoll = await roll(dice, { actor: baseParams.actor ?? undefined, item: tool });
 
 		const result = resultRoll.toJSON() as never as RollJson;
 

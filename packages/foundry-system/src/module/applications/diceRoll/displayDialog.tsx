@@ -29,7 +29,7 @@ export function displayDialog(
 		? undefined
 		: tool
 		? [tool]
-		: runtimeBonusParameters.power
+		: runtimeBonusParameters.power && actor
 		? getToolsForPower(actor, runtimeBonusParameters.power)
 		: undefined;
 

@@ -31,7 +31,7 @@ export class AbilityTerm extends NumericTerm {
 	}
 
 	static override fromMatch(match: RegExpMatchArray, data?: MashupDiceContext) {
-		if (!data) {
+		if (!data || !data.actor) {
 			return null as never as AbilityTerm;
 		}
 

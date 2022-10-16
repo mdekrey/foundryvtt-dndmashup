@@ -24,11 +24,13 @@ export async function sendChatMessage<T extends MashupChatMessageType>(
 			'attach-component': messageType,
 			...flags,
 		},
-		speaker: speaker && {
-			actor: speaker.id,
-			token: speaker.token?.id,
-			alias: speaker.name,
-		},
+		speaker: speaker
+			? {
+					actor: speaker.id,
+					token: speaker.token?.id,
+					alias: speaker.name,
+			  }
+			: {},
 		...result,
 	} as ChatMessageProps;
 	console.log('pre-html', messageInfo);

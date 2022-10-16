@@ -25,12 +25,12 @@ export type DamageRollDetails = {
 };
 
 export type DamageRollerRequiredProps = {
-	actor: ActorDocument;
+	actor: ActorDocument | null;
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;
 	baseDice: string;
-	extraBonuses?: FullFeatureBonus[];
-	baseDamageTypes: DamageType[];
+	extraBonuses?: readonly FullFeatureBonus[];
+	baseDamageTypes: readonly DamageType[];
 	possibleTools?: EquipmentDocument<'weapon' | 'implement'>[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 
@@ -68,21 +68,25 @@ export function DamageRoller({
 				{baseDice} {oxfordComma(baseDamageTypes)} damage
 			</BlockHeader>
 			<ToolSelector possibleTools={possibleTools} tool={tool} onChangeTool={setTool} />
-			<NumericModifierSelector
-				actor={actor}
-				tool={tool}
-				extraBonuses={extraBonuses}
-				onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
-				rollTarget={rollType}
-				runtimeBonusParameters={runtimeBonusParameters}
-			/>
-			<DynamicListSelector
-				actor={actor}
-				tool={tool}
-				onListChange={(dt) => setDamageTypes(dt as DamageType[])}
-				listType={listType}
-				runtimeBonusParameters={runtimeBonusParameters}
-			/>
+			{actor ? (
+				<>
+					<NumericModifierSelector
+						actor={actor}
+						tool={tool}
+						extraBonuses={extraBonuses}
+						onBonusesChange={(bonusFormula, bonusByType) => setBonusInfo({ bonusFormula, bonusByType })}
+						rollTarget={rollType}
+						runtimeBonusParameters={runtimeBonusParameters}
+					/>
+					<DynamicListSelector
+						actor={actor}
+						tool={tool}
+						onListChange={(dt) => setDamageTypes(dt as DamageType[])}
+						listType={listType}
+						runtimeBonusParameters={runtimeBonusParameters}
+					/>
+				</>
+			) : null}
 
 			<div className="flex flex-row gap-1">
 				<AppButton

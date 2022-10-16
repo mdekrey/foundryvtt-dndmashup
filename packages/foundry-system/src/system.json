@@ -18,7 +18,16 @@
 	"styles": [],
 	"packs": [],
 	"relationships": {
-		"requires": []
+		"requires": [
+			{
+				"id": "_chatcommands",
+				"type": "module",
+				"manifest": "https://github.com/League-of-Foundry-Developers/Chat-Commands-Lib/releases/download/1.4.0/module.json",
+				"compatibility": {
+					"verified": "1.4.0"
+				}
+			}
+		]
 	},
 	"languages": [
 		{

@@ -15,23 +15,23 @@ export * from './DamageRoller';
 export type DiceRollApplicationParametersBase = {
 	baseDice: string;
 	title: string;
-	actor: ActorDocument;
+	actor: ActorDocument | null;
 	rollType: NumericBonusTarget;
 	allowToolSelection: boolean;
 	flavor?: string;
-	extraBonuses?: FullFeatureBonus[];
+	extraBonuses?: readonly FullFeatureBonus[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 };
 
 export type DamageRollApplicationParametersBase = {
 	baseDice: string;
-	baseDamageTypes: DamageType[];
+	baseDamageTypes: readonly DamageType[];
 	title: string;
-	actor: ActorDocument;
+	actor: ActorDocument | null;
 	rollType: NumericBonusTarget;
 	listType: DynamicListTarget;
 	allowToolSelection: boolean;
-	extraBonuses?: FullFeatureBonus[];
+	extraBonuses?: readonly FullFeatureBonus[];
 	runtimeBonusParameters: ConditionRulesRuntimeParameters;
 };
 

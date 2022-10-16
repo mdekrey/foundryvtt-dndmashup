@@ -35,7 +35,7 @@ applicationRegistry.damage = async ({ allowCritical, runtimeBonusParameters, ...
 	async function onRoll({ baseDice, damageTypes, resultBonusesByType, tool }: DamageRollDetails) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
-		const resultRoll = await roll(dice, { actor: baseParams.actor, item: tool });
+		const resultRoll = await roll(dice, { actor: baseParams.actor ?? undefined, item: tool });
 
 		const result = resultRoll.toJSON() as never as RollJson;
 
@@ -53,7 +53,9 @@ applicationRegistry.damage = async ({ allowCritical, runtimeBonusParameters, ...
 	async function onCritical({ baseDice, damageTypes, resultBonusesByType, tool }: DamageRollDetails) {
 		const dice = `${combineRollComponents(baseDice, fromBonusesToFormula(resultBonusesByType))}`;
 
-		const resultRoll = await roll(dice, { actor: baseParams.actor, item: tool }, undefined, { maximize: true });
+		const resultRoll = await roll(dice, { actor: baseParams.actor ?? undefined, item: tool }, undefined, {
+			maximize: true,
+		});
 
 		const { result } = await applicationDispatcher.launchApplication('criticalDamage', {
 			...baseParams,

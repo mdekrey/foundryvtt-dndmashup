@@ -25,8 +25,8 @@ applicationRegistry.diceRoll = async ({ sendToChat, flavor, ...baseParams }, res
 		const result = (
 			await roll(
 				dice,
-				{ actor: baseParams.actor, item: tool },
-				sendToChat ? baseParams.actor : undefined,
+				{ actor: baseParams.actor ?? undefined, item: tool },
+				(sendToChat ? baseParams.actor : undefined) ?? undefined,
 				undefined,
 				flavor
 			)

@@ -38,10 +38,10 @@ applicationRegistry.attackRoll = async ({ defense, runtimeBonusParameters, ...ot
 
 		const targetRolls =
 			targets.length === 0
-				? [{ roll: (await roll(dice, { actor: baseParams.actor, item: tool })).toJSON() as never }]
+				? [{ roll: (await roll(dice, { actor: baseParams.actor ?? undefined, item: tool })).toJSON() as never }]
 				: await Promise.all(
 						targets.map(async (target) => {
-							const rollResult = await roll(dice, { actor: baseParams.actor, item: tool });
+							const rollResult = await roll(dice, { actor: baseParams.actor ?? undefined, item: tool });
 							return { target, bonuses: targetBonuses[target.id], roll: rollResult.toJSON() as never };
 						})
 				  );
