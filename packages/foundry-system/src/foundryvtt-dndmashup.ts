@@ -63,13 +63,56 @@ Hooks.once('init', async () => {
 		CONFIG.statusEffects.find((se) => se.id === 'dead')!,
 		{ id: 'bloodied', label: 'Bloodied', icon: bloodiedIcon },
 
-		// TODO: add standard effects. See #55
 		// The following are actual conditions in 4e:
-		{ id: 'blinded', label: 'Blinded', icon: CONFIG.statusEffects.find((se) => se.id === 'blind')!.icon },
+		{
+			id: 'blinded',
+			label: 'Blinded',
+			icon: CONFIG.statusEffects.find((se) => se.id === 'blind')!.icon,
+			flags: {
+				mashup: {
+					bonuses: [
+						{
+							target: 'check',
+							amount: -10,
+							condition: { rule: 'manual', parameter: { conditionText: 'perceiving using sight' } },
+						},
+					],
+				},
+			},
+		},
 		{ id: 'dazed', label: 'Dazed', icon: dazedIcon },
-		{ id: 'deafened', label: 'Deafened', icon: CONFIG.statusEffects.find((se) => se.id === 'deaf')!.icon },
+		{
+			id: 'deafened',
+			label: 'Deafened',
+			icon: CONFIG.statusEffects.find((se) => se.id === 'deaf')!.icon,
+			flags: {
+				mashup: {
+					bonuses: [
+						{
+							target: 'check',
+							amount: -10,
+							condition: { rule: 'manual', parameter: { conditionText: 'perceiving using sound' } },
+						},
+					],
+				},
+			},
+		},
 		{ id: 'dominated', label: 'Dominated', icon: dominatedIcon },
-		{ id: 'dying', label: 'Dying', icon: dyingIcon },
+		{
+			id: 'dying',
+			label: 'Dying',
+			icon: dyingIcon,
+			flags: {
+				mashup: {
+					bonuses: [
+						{ target: 'defense-ac', amount: -5, condition: null },
+						{ target: 'defense-fort', amount: -5, condition: null },
+						{ target: 'defense-refl', amount: -5, condition: null },
+						{ target: 'defense-will', amount: -5, condition: null },
+					],
+				},
+			},
+		},
 		{ id: 'helpless', label: 'Helpless', icon: helplessIcon },
 		{ id: 'immobilized', label: 'Immobilized', icon: immobilizedIcon },
 		{
@@ -84,20 +127,71 @@ Hooks.once('init', async () => {
 				},
 			},
 		},
-		{ id: 'petrified', label: 'Petrified', icon: petrifiedIcon },
+		{
+			id: 'petrified',
+			label: 'Petrified',
+			icon: petrifiedIcon,
+			flags: {
+				mashup: {
+					bonuses: [{ target: 'all-resistance', amount: 20, condition: null }],
+				},
+			},
+		},
 		{
 			id: 'prone',
 			label: 'Prone',
 			icon: CONFIG.statusEffects.find((se) => se.id === 'prone')!.icon,
-			// TODO: bonus to ranged defenses, etc.
+			flags: {
+				mashup: {
+					bonuses: [
+						{
+							target: 'defense-ac',
+							amount: 2,
+							condition: { rule: 'manual', parameter: { conditionText: 'targetted by a non-adjacent ranged attack' } },
+						},
+						{
+							target: 'defense-fort',
+							amount: 2,
+							condition: { rule: 'manual', parameter: { conditionText: 'targetted by a non-adjacent ranged attack' } },
+						},
+						{
+							target: 'defense-refl',
+							amount: 2,
+							condition: { rule: 'manual', parameter: { conditionText: 'targetted by a non-adjacent ranged attack' } },
+						},
+						{
+							target: 'defense-will',
+							amount: 2,
+							condition: { rule: 'manual', parameter: { conditionText: 'targetted by a non-adjacent ranged attack' } },
+						},
+						{ target: 'attack-roll', amount: -2, condition: null },
+					],
+				},
+			},
+		},
+		{
+			id: 'restrained',
+			label: 'Restrained',
+			icon: CONFIG.statusEffects.find((se) => se.id === 'restrain')!.icon,
 			flags: { mashup: { bonuses: [{ target: 'attack-roll', amount: -2, condition: null }] } },
 		},
-		{ id: 'restrained', label: 'Restrained', icon: CONFIG.statusEffects.find((se) => se.id === 'restrain')!.icon },
-		{ id: 'slowed', label: 'Slowed', icon: slowedIcon },
+		{ id: 'slowed', label: 'Slowed', icon: slowedIcon /* TODO: speed 2 - #70 */ },
 		{ id: 'stunned', label: 'Stunned', icon: stunnedIcon },
 		{ id: 'surprised', label: 'Surprised', icon: surprisedIcon },
-		CONFIG.statusEffects.find((se) => se.id === 'unconscious')!,
-		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon },
+		{
+			...CONFIG.statusEffects.find((se) => se.id === 'unconscious')!,
+			flags: {
+				mashup: {
+					bonuses: [
+						{ target: 'defense-ac', amount: -5, condition: null },
+						{ target: 'defense-fort', amount: -5, condition: null },
+						{ target: 'defense-refl', amount: -5, condition: null },
+						{ target: 'defense-will', amount: -5, condition: null },
+					],
+				},
+			},
+		},
+		{ id: 'weakened', label: 'Weakened', icon: weakenedIcon /* TODO: half-damage - #71 */ },
 	];
 
 	libWrapper.register(systemName, 'Combat.prototype.nextTurn', onNextTurn);
