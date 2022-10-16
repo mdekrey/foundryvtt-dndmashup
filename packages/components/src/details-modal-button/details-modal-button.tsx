@@ -1,8 +1,9 @@
 import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
 import { useState, useRef, createContext, useContext, useMemo } from 'react';
 import { Modal } from '../modal';
 import { noop } from 'lodash/fp';
+import { fieldClassName } from '../form-input/field';
+import classNames from 'classnames';
 
 type ModalContentsProps = {
 	onClose: () => void;
@@ -50,14 +51,7 @@ export function DetailsModalButton({
 		<>
 			<button
 				type="button"
-				className={twMerge(
-					classNames(
-						'px-2 py-1 border border-black',
-						'focus-within:ring-blue-bright-600 focus-within:ring-1',
-						'hover:ring-blue-bright-600 hover:ring-1'
-					),
-					className
-				)}
+				className={twMerge(classNames(fieldClassName, 'px-2 py-1 border-x border-t rounded'), className)}
 				ref={buttonRef}
 				onClick={disabled ? undefined : () => setOpen(true)}>
 				{buttonContents}
