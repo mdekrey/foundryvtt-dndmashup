@@ -82,6 +82,7 @@ export type ActorDocument<T extends PossibleActorType = PossibleActorType> = Sim
 	readonly derivedData: ActorDerivedData<T>;
 	readonly token: null | TokenDocument;
 
+	get uuid(): string;
 	get mashupId(): string;
 
 	get derivedCache(): DerivedCache;

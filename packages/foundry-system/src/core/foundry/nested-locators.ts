@@ -1,8 +1,13 @@
+import { MashupActor } from '../../module/actor';
 import { AnyDocument } from './types';
 
+declare function fromUuidSync(uuid: string): AnyDocument | null;
+
+// TODO: consider making this async
 export function fromMashupId(originalId: string): AnyDocument | undefined {
 	const steps = originalId.split(':');
 	const result = steps.reduce((prev: any, next, index) => {
+		if (!prev) return undefined;
 		if (next.includes('.')) {
 			const [collectionName, id] = next.split('.');
 			if (typeof prev !== 'object' || prev === null) {
@@ -21,5 +26,12 @@ export function fromMashupId(originalId: string): AnyDocument | undefined {
 			return prev[next];
 		}
 	}, game as unknown);
-	return result;
+	return result ?? fromUuidSync(originalId) ?? undefined;
+}
+
+export function getActorFromUuid(uuid: string): MashupActor | undefined {
+	const result = fromMashupId(uuid);
+	if (result instanceof TokenDocument) return result.actor ?? undefined;
+	if (result instanceof MashupActor) return result ?? undefined;
+	return undefined;
 }

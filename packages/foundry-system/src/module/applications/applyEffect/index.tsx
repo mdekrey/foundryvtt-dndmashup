@@ -1,11 +1,11 @@
 import { applicationRegistry } from '@foundryvtt-dndmashup/foundry-compat';
 import { ApplyEffectDisplay, ComputableEffectDurationInfo } from '@foundryvtt-dndmashup/mashup-react';
-import { fromMashupId } from '../../../core/foundry';
+import { getActorFromUuid } from '../../../core/foundry';
 import { isGame } from '../../../core/foundry/isGame';
 import type { MashupActor } from '../../actor';
 
 applicationRegistry.applyEffect = async ({ effectParams, sources }, resolve, reject) => {
-	verifyDuration(effectParams[1]);
+	await assertDuration(effectParams[1]);
 	return {
 		content: (
 			<div className="flex flex-col h-full p-2 gap-2">
@@ -30,14 +30,14 @@ function getTargets() {
 	return tokens.map((t) => t.actor).filter((t): t is MashupActor => !!t);
 }
 
-function verifyDuration(duration: ComputableEffectDurationInfo) {
+async function assertDuration(duration: ComputableEffectDurationInfo) {
 	if ('actor' in duration) {
 		const actorId = duration.actor;
-		if (actorId) verifyActorInCombat(actorId);
+		if (actorId) await assertActorInCombat(actorId);
 	}
 
-	function verifyActorInCombat(actorId: string) {
-		const actor = fromMashupId(actorId);
+	async function assertActorInCombat(actorId: string) {
+		const actor = await getActorFromUuid(actorId);
 		if (!actor) {
 			console.warn('Actor could not be located for duration', { actorId });
 			ui.notifications?.warn(`Actor could not be located for duration.`);

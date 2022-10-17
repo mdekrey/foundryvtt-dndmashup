@@ -9,11 +9,10 @@ import {
 } from '@foundryvtt-dndmashup/mashup-rules';
 import { EffectTypeAndRange, emptyConditionContext } from '@foundryvtt-dndmashup/mashup-react';
 import { MeasuredTemplateDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/measuredTemplateData';
-import { fromMashupId, isGame } from '../../core/foundry';
+import { getActorFromUuid, fromMashupId, isGame } from '../../core/foundry';
 import { systemName } from '../constants';
 import { neverEver } from '@foundryvtt-dndmashup/core';
 import { getBounds } from './getBounds';
-import { MashupActor } from '../actor';
 import { MashupItem } from '../item/mashup-item';
 
 type MeasuredTemplateFactory<T extends EffectTypeAndRange['type'] = EffectTypeAndRange['type']> = {
@@ -340,7 +339,7 @@ export class PowerEffectTemplate extends MeasuredTemplate {
 				const sources = aura.sources.map((s) => fromMashupId(s) as unknown as Source);
 				if (sources.some((s) => !s)) return null;
 
-				const actor = ((aura.actor && fromMashupId(aura.actor)) as MashupActor) ?? undefined;
+				const actor = getActorFromUuid(aura.actor) ?? undefined;
 				const item = ((aura.item && fromMashupId(aura.item)) as MashupItem) ?? undefined;
 
 				return {

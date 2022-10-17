@@ -23,6 +23,6 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 		createRoot(content[0]).render(<FoundryWrapper>{children}</FoundryWrapper>);
 	} catch (ex) {
 		content.children().addClass('sepia opacity-50 pointer-events-none');
-		console.error(data.message._id, ex);
+		console.warn(data.message._id, ex);
 	}
 }

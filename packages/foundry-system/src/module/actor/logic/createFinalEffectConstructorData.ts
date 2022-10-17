@@ -1,9 +1,8 @@
 import { EffectDurationInfo } from '@foundryvtt-dndmashup/mashup-rules';
 import { ActiveEffectDocumentConstructorParams, ActorDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { ActiveEffectDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/activeEffectData';
-import { fromMashupId, isGame, toMashupId } from '../../../core/foundry';
+import { getActorFromUuid, isGame, toMashupId } from '../../../core/foundry';
 import { v4 as uuid } from 'uuid';
-import { MashupActor } from '../mashup-actor';
 
 export function createFinalEffectConstructorData(
 	[effect, duration, useStandardStats]: ActiveEffectDocumentConstructorParams,
@@ -37,7 +36,7 @@ export function createFinalEffectConstructorData(
 	let rounds: number | undefined;
 	let resultDurationInfo: EffectDurationInfo | undefined;
 	if (duration.durationType === 'endOfTurn' || duration.durationType === 'startOfTurn') {
-		const relevantActor = typeof duration.actor === 'string' ? (fromMashupId(duration.actor) as MashupActor) : actor;
+		const relevantActor = typeof duration.actor === 'string' ? getActorFromUuid(duration.actor) : actor;
 		const relevantActorId = typeof duration.actor === 'string' ? duration.actor : toMashupId(actor);
 		const current = getCurrentInitiative(relevantActor);
 		if (current !== undefined) {

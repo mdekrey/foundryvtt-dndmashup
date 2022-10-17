@@ -1,7 +1,21 @@
 import { BaseDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { AnyDocument } from './types';
 
+declare function fromUuidSync(uuid: string): AnyDocument | null;
+
+// TODO - with use of target.uuid, we could obsolete this functionality
 export function toMashupId(target: BaseDocument): string {
 	const result = innerToMashupId(target);
+	// Debugging assistance
+	try {
+		if (fromUuidSync(target.uuid) !== target && !(target instanceof Actor)) {
+			console.error(target, 'uuid did not identify itself');
+		} else {
+			return target.uuid;
+		}
+	} catch (ex) {
+		console.error('error going to/from uuid for', target);
+	}
 	return result;
 }
 

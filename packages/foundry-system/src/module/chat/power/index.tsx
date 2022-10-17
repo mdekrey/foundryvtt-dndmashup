@@ -1,4 +1,4 @@
-import { fromMashupId, isGame, toMashupId } from '../../../core/foundry';
+import { fromMashupId, getActorFromUuid, isGame, toMashupId } from '../../../core/foundry';
 import { chatAttachments, ChatMessageProps } from '../attach';
 import { PowerChat } from './PowerChat';
 import { useApplicationDispatcher } from '@foundryvtt-dndmashup/foundry-compat';
@@ -12,7 +12,6 @@ import {
 	emptyConditionRuntime,
 } from '@foundryvtt-dndmashup/mashup-react';
 import { PowerEffectTemplate } from '../../aura/power-effect-template';
-import { MashupActor } from '../../actor';
 import { FullFeatureBonus } from '@foundryvtt-dndmashup/mashup-rules';
 
 chatMessageRegistry.power = powerChatMessage;
@@ -34,11 +33,11 @@ function PowerChatRef({ flags: { item: itemId, actor: actorId } }: ChatMessagePr
 		console.error('no game', game);
 		throw new Error('Could not attach');
 	}
-	const actor = typeof actorId !== 'string' ? null : (fromMashupId(actorId) as MashupActor);
+	const actor = typeof actorId !== 'string' ? null : getActorFromUuid(actorId);
 	const item = typeof itemId !== 'string' ? null : fromMashupId(itemId);
 
 	if (!actor || !item) {
-		console.error('no actor or item', { actor, item, actorId, itemId });
+		console.warn('no actor or item', { actor, item, actorId, itemId });
 		throw new Error('Could not attach');
 	}
 

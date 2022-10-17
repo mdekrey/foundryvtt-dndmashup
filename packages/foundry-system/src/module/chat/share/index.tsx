@@ -33,7 +33,7 @@ function ShareChatRef({ flags: { item: itemId }, speaker: { actor: actorId } }: 
 	const item = typeof itemId !== 'string' ? null : fromMashupId(itemId);
 
 	if (!actor || !item) {
-		console.error('no actor or item', { actor, item, actorId, itemId });
+		console.warn('no actor or item', { actor, item, actorId, itemId });
 		throw new Error('Could not attach');
 	}
 
