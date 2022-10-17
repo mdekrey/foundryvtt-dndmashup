@@ -1,5 +1,5 @@
 import { PowerDocument } from '../../item/subtypes/power/dataSourceData';
-import { commonActions, isPower, CommonAction } from '../actions';
+import { commonActions, isPowerOrCommonAction, CommonAction } from '../actions';
 import { ActorDocument } from '../documentType';
 import { PowerTable } from './power-components';
 
@@ -13,37 +13,38 @@ const powerGroups: {
 		key: 'common-action',
 		label: 'Common Action',
 		className: (<i className="theme-green-blue" />).props.className,
-		filter: (item) => !isPower(item),
+		filter: (item) => !isPowerOrCommonAction(item),
 	},
 	{
 		key: 'at-will-power',
 		label: 'At-Will Power',
 		className: (<i className="theme-green-dark" />).props.className,
-		filter: (item) => isPower(item) && item.system.usage === 'at-will',
+		filter: (item) => isPowerOrCommonAction(item) && item.system.usage === 'at-will',
 	},
 	{
 		key: 'encounter-power',
 		label: 'Encounter Power',
 		className: (<i className="theme-red-dark" />).props.className,
-		filter: (item) => isPower(item) && item.system.usage === 'encounter',
+		filter: (item) => isPowerOrCommonAction(item) && item.system.usage === 'encounter',
 	},
 	{
 		key: 'daily-power',
 		label: 'Daily Power',
 		className: (<i className="theme-gray-dark" />).props.className,
-		filter: (item) => isPower(item) && item.system.usage === 'daily',
+		filter: (item) => isPowerOrCommonAction(item) && item.system.usage === 'daily',
 	},
 	{
 		key: 'item-daily-powers',
 		label: 'Item Daily Powers (or Item Healing Surge)',
 		className: (<i className="theme-orange-dark" />).props.className,
-		filter: (item) => isPower(item) && (item.system.usage === 'item' || item.system.usage === 'item-healing-surge'),
+		filter: (item) =>
+			isPowerOrCommonAction(item) && (item.system.usage === 'item' || item.system.usage === 'item-healing-surge'),
 	},
 	{
 		key: 'item-consumable',
 		label: 'Consumables',
 		className: (<i className="theme-orange-dark" />).props.className,
-		filter: (item) => isPower(item) && item.system.usage === 'item-consumable',
+		filter: (item) => isPowerOrCommonAction(item) && item.system.usage === 'item-consumable',
 	},
 ];
 

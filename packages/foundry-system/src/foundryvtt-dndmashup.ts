@@ -28,6 +28,7 @@ import { onNextTurn } from './module/active-effect/turns';
 import { handleUpdateAuras } from './module/aura/handleUpdateAuras';
 import { isGame } from './core/foundry';
 import { environment } from './environments/environment';
+import { registerHotbarDrop } from './module/macros';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -244,3 +245,4 @@ Hooks.on('renderChatMessage', (app: ChatLog, html: JQuery<HTMLElement>, data: Ch
 });
 
 handleUpdateAuras();
+registerHotbarDrop();

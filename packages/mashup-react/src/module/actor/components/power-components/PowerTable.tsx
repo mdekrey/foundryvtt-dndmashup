@@ -1,5 +1,5 @@
 import { ActorDocument } from '../../documentType';
-import { isPower, CommonAction } from '../../actions';
+import { isPowerOrCommonAction, CommonAction } from '../../actions';
 import { AppButton, Table } from '@foundryvtt-dndmashup/components';
 import { PowerDocument } from '../../../item/subtypes/power/dataSourceData';
 import { Row } from './Row';
@@ -27,7 +27,7 @@ export function PowerTable({
 				</th>
 			</Table.HeaderRow>
 			{powers.map((power) => (
-				<Row key={isPower(power) ? power.id : power.name} power={power} actor={actor} />
+				<Row key={isPowerOrCommonAction(power) ? power.id : power.name} power={power} actor={actor} />
 			))}
 		</Table>
 	);

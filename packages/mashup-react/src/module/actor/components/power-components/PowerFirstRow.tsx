@@ -121,7 +121,10 @@ export function PowerFirstRow({
 			'text/plain',
 			JSON.stringify({
 				type: 'Item',
+				action: 'use-power',
 				uuid,
+				name,
+				img,
 			})
 		);
 	}

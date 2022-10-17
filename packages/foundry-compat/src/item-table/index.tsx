@@ -48,8 +48,8 @@ function ItemTableRow<T extends ItemTableDocument>({
 		<Table.Body>
 			<tr className="border-b-2 border-transparent" draggable={true} onDragStart={handleDragStart}>
 				<td className="flex flex-row gap-2">
-					<button type="button" className="block w-10 h-10" onClick={edit}>
-						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
+					<button type="button" className="block w-10 h-10 flex-shrink-0" onClick={edit}>
+						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block pointer-events-none" /> : null}
 					</button>
 					<button type="button" className="block flex-grow text-left" onClick={edit}>
 						{item.displayName}

@@ -5,6 +5,9 @@ declare function fromUuidSync(uuid: string): AnyDocument | null;
 
 // TODO: consider making this async
 export function fromMashupId(originalId: string): AnyDocument | undefined {
+	const builtinResult = fromUuidSync(originalId);
+	if (builtinResult) return builtinResult ?? undefined;
+
 	const steps = originalId.split(':');
 	const result = steps.reduce((prev: any, next, index) => {
 		if (!prev) return undefined;
@@ -26,7 +29,7 @@ export function fromMashupId(originalId: string): AnyDocument | undefined {
 			return prev[next];
 		}
 	}, game as unknown);
-	return result ?? fromUuidSync(originalId) ?? undefined;
+	return result ?? undefined;
 }
 
 export function getActorFromUuid(uuid: string): MashupActor | undefined {
