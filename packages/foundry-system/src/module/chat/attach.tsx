@@ -16,12 +16,13 @@ export function attachToChat(html: JQuery<HTMLElement>, data: ChatMessage.Messag
 	}
 
 	const content = html.children('div.message-content');
-	content.addClass('foundry-reset').addClass('dndmashup');
+	content.addClass('foundry-reset dndmashup');
 
 	try {
 		const children = component(data.message);
 		createRoot(content[0]).render(<FoundryWrapper>{children}</FoundryWrapper>);
 	} catch (ex) {
-		console.error(ex);
+		content.children().addClass('sepia opacity-50 pointer-events-none');
+		console.error(data.message._id, ex);
 	}
 }
