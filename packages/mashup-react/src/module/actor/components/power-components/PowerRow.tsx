@@ -42,7 +42,6 @@ export function PowerRow({
 					hasSubPowers={hasSubPowers}
 				/>
 				<tr>
-					<td></td>
 					<td colSpan={2}>
 						<div ref={detailRef} className="overflow-hidden max-h-0 transition-all duration-300">
 							<div className="max-w-md mx-auto border-4 border-white">

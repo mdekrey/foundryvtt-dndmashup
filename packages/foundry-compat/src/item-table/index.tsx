@@ -25,8 +25,7 @@ export function ItemTable<T extends ItemTableDocument>({
 	return (
 		<Table className={className}>
 			<Table.HeaderRow>
-				<th className="w-10" />
-				<th className="pl-1 text-left">{title}</th>
+				<th className="pl-12 text-left">{title}</th>
 				{header && header()}
 				<th className="w-0" />
 			</Table.HeaderRow>
@@ -47,14 +46,12 @@ function ItemTableRow<T extends ItemTableDocument>({
 	const apps = useApplicationDispatcher();
 	return (
 		<Table.Body>
-			<tr className="border-b-2 border-transparent">
-				<td className="w-10 h-10 px-1" draggable={true} onDragStart={handleDragStart}>
-					<button type="button" className="block w-full h-full" onClick={edit}>
+			<tr className="border-b-2 border-transparent" draggable={true} onDragStart={handleDragStart}>
+				<td className="flex flex-row gap-2">
+					<button type="button" className="block w-10 h-10" onClick={edit}>
 						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
 					</button>
-				</td>
-				<td className="pl-1" draggable={true} onDragStart={handleDragStart}>
-					<button type="button" className="block w-full h-full text-left" onClick={edit}>
+					<button type="button" className="block flex-grow text-left" onClick={edit}>
 						{item.displayName}
 					</button>
 				</td>

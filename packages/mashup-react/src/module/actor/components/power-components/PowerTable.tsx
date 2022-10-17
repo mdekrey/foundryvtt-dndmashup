@@ -18,8 +18,7 @@ export function PowerTable({
 	return (
 		<Table className={className}>
 			<Table.HeaderRow>
-				<th className="w-10" />
-				<th className="pl-1 text-left">{title}</th>
+				<th className="pl-12 text-left">{title}</th>
 				<th></th>
 				<th className="w-0">
 					<AppButton className="border-0" onClick={() => actor.importChildItem('power')}>

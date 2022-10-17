@@ -47,32 +47,34 @@ export function PowerFirstRow({
 	return (
 		<tr>
 			<td
-				className={classNames(twMerge('flex justify-center items-center', usage && usageTypeColors[usage]), {
+				className={classNames(twMerge('flex flex-row items-stretch gap-2'), {
 					'opacity-50': !isReady,
-					'w-10 h-10': !isSubPower,
-					'ml-2 w-8 h-8': isSubPower,
-					rounded: !isSubPower && !hasSubPowers,
-					'rounded-t rounded-bl': !isSubPower && hasSubPowers,
+					'ml-2': isSubPower,
 				})}
-				draggable={!!uuid}
+				draggable={true}
 				onDragStart={handleDragStart}>
-				{img ? (
-					<img src={img} alt="" className={classNames({ 'w-8 h-8': !isSubPower, 'w-6 h-6': isSubPower })} />
-				) : null}
-			</td>
-			<td
-				className={classNames('px-1 whitespace-nowrap', { 'opacity-50': !isReady })}
-				draggable={!!uuid}
-				onDragStart={handleDragStart}>
+				<div
+					className={classNames('p-1 flex-shrink-0', usage && usageTypeColors[usage], {
+						rounded: !isSubPower && !hasSubPowers,
+						'rounded-t rounded-bl': !isSubPower && hasSubPowers,
+					})}>
+					{img ? (
+						<img
+							src={img}
+							alt=""
+							className={classNames('pointer-events-none', { 'w-8 h-8': !isSubPower, 'w-6 h-6': isSubPower })}
+						/>
+					) : null}
+				</div>
 				{onClickName ? (
 					<button
 						type="button"
-						className="focus:ring-blue-bright-600 focus:ring-1 w-full h-full text-left whitespace-nowrap"
+						className="focus:ring-blue-bright-600 focus:ring-1 flex-grow text-left whitespace-nowrap"
 						onClick={onClickName}>
 						{name}
 					</button>
 				) : (
-					name
+					<span className="self-center">{name}</span>
 				)}
 			</td>
 			<td className={classNames({ 'opacity-50': !isReady })}>{hint}</td>
@@ -114,6 +116,7 @@ export function PowerFirstRow({
 	);
 
 	function handleDragStart(ev: React.DragEvent) {
+		if (!uuid) console.warn('TODO: no uuid - common action?', name);
 		ev.dataTransfer.setData(
 			'text/plain',
 			JSON.stringify({
