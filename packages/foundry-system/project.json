@@ -53,7 +53,7 @@
 					"vendorChunk": false
 				},
 				"development": {
-					"optimization": true,
+					"optimization": false,
 					"outputHashing": "none",
 					"sourceMap": true,
 					"namedChunks": false,

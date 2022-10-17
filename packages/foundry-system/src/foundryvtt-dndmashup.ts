@@ -27,6 +27,7 @@ import { AbilityTerm, parseWrapper, WeaponTerm } from './module/dice';
 import { onNextTurn } from './module/active-effect/turns';
 import { handleUpdateAuras } from './module/aura/handleUpdateAuras';
 import { isGame } from './core/foundry';
+import { environment } from './environments/environment';
 
 const bloodiedIcon = `${rootPath}/status-effects/icons/drop.svg`;
 const dazedIcon = `${rootPath}/status-effects/icons/star-swirl.svg`;
@@ -218,7 +219,7 @@ Hooks.on('getSceneControlButtons', function (controls) {
 	}
 });
 
-// CONFIG.debug.hooks = true;
+if (!environment.production) CONFIG.debug.hooks = true;
 
 // Setup system
 Hooks.once('setup', async () => {
