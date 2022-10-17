@@ -14,6 +14,7 @@ const usageTypeColors: Record<PowerUsage, string> = {
 };
 
 export function PowerFirstRow({
+	uuid,
 	name,
 	usage,
 	img,
@@ -28,6 +29,7 @@ export function PowerFirstRow({
 	onEdit,
 	onRemove,
 }: {
+	uuid?: string;
 	name: string;
 	usage: PowerUsage;
 	img: string;
@@ -51,12 +53,17 @@ export function PowerFirstRow({
 					'ml-2 w-8 h-8': isSubPower,
 					rounded: !isSubPower && !hasSubPowers,
 					'rounded-t rounded-bl': !isSubPower && hasSubPowers,
-				})}>
+				})}
+				draggable={!!uuid}
+				onDragStart={handleDragStart}>
 				{img ? (
 					<img src={img} alt="" className={classNames({ 'w-8 h-8': !isSubPower, 'w-6 h-6': isSubPower })} />
 				) : null}
 			</td>
-			<td className={classNames('px-1 whitespace-nowrap', { 'opacity-50': !isReady })}>
+			<td
+				className={classNames('px-1 whitespace-nowrap', { 'opacity-50': !isReady })}
+				draggable={!!uuid}
+				onDragStart={handleDragStart}>
 				{onClickName ? (
 					<button
 						type="button"
@@ -105,4 +112,14 @@ export function PowerFirstRow({
 			</td>
 		</tr>
 	);
+
+	function handleDragStart(ev: React.DragEvent) {
+		ev.dataTransfer.setData(
+			'text/plain',
+			JSON.stringify({
+				type: 'Item',
+				uuid,
+			})
+		);
+	}
 }

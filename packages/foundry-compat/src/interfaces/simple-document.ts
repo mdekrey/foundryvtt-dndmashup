@@ -14,6 +14,7 @@ export type StandardData = {
 export type SimpleDocumentData<TData = unknown> = TData & StandardData;
 
 export type BaseDocument = {
+	get uuid(): string;
 	id: string | null;
 	name: string | null;
 	isOwner: boolean;

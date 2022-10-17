@@ -26,6 +26,7 @@ export function PowerRow({
 		<>
 			<Table.Body>
 				<PowerFirstRow
+					uuid={power.uuid}
 					name={power.name ?? ''}
 					usage={power.system.usage}
 					img={power.img ?? ''}

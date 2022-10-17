@@ -48,12 +48,12 @@ function ItemTableRow<T extends ItemTableDocument>({
 	return (
 		<Table.Body>
 			<tr className="border-b-2 border-transparent">
-				<td className="w-10 h-10 px-1">
+				<td className="w-10 h-10 px-1" draggable={true} onDragStart={handleDragStart}>
 					<button type="button" className="block w-full h-full" onClick={edit}>
 						{item.img ? <img src={item.img} alt="" className="w-8 h-8 inline-block" /> : null}
 					</button>
 				</td>
-				<td className="pl-1">
+				<td className="pl-1" draggable={true} onDragStart={handleDragStart}>
 					<button type="button" className="block w-full h-full text-left" onClick={edit}>
 						{item.displayName}
 					</button>
@@ -83,5 +83,15 @@ function ItemTableRow<T extends ItemTableDocument>({
 			.then(({ result }) => result)
 			.catch(() => false);
 		if (result) item.delete();
+	}
+
+	function handleDragStart(ev: React.DragEvent) {
+		ev.dataTransfer.setData(
+			'text/plain',
+			JSON.stringify({
+				type: 'Item',
+				uuid: item.uuid,
+			})
+		);
 	}
 }
