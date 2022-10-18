@@ -73,7 +73,10 @@ export class MashupItemSheet extends ReactApplicationMixin<typeof ItemSheet>(Ite
 		if (!item) return;
 		const itemData = item.toObject() as never as PossibleItemDataSource;
 
-		if (item.parent?.id && item.parent?.id === this.item.parent?.id) return this._onSortItem(event, itemData);
+		console.log({ item, this: this.item });
+
+		if (item.parent?.id && item.parent?.id === this.item?.id) return this._onSortItem(event, itemData);
+		if (item.parent && item.parent?.isOwner && item.type === 'equipment') item.delete(); // move rather than copy
 
 		return this._onDropItemCreate(itemData);
 	}

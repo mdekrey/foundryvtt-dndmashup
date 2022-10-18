@@ -1,10 +1,11 @@
 import { ActorSheetJsx } from './templates/sheet';
 import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 import { ItemDataSource } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
-import { MashupItemBase } from '../item/mashup-item';
+import { MashupItem, MashupItemBase } from '../item/mashup-item';
 import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
 import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
 import { isActorType } from './templates/isActorType';
+import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
@@ -31,6 +32,20 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 
 	protected override _getJsx(): JSX.Element {
 		return <ActorSheetJsx sheet={this} />;
+	}
+
+	protected override async _onDropItem(event: DragEvent, data: DropData<MashupItemBase>) {
+		if (!this.actor.isOwner) return false;
+		const item = await MashupItemBase.fromDropData(data);
+		if (!item) return;
+		const itemData = item.toObject();
+
+		// Handle item sorting within the same Actor
+		if (this.actor.uuid === item.parent?.uuid) return this._onSortItem(event, itemData);
+		if (item.parent && item.parent?.isOwner && item.type === 'equipment') item.delete(); // move rather than copy
+
+		// Create the owned item
+		return this._onDropItemCreate(itemData);
 	}
 
 	protected override async _onDropItemCreate(itemData: ItemDataSource | ItemDataSource[]): Promise<MashupItemBase[]> {
