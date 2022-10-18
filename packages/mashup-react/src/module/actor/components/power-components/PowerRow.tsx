@@ -28,6 +28,7 @@ export function PowerRow({
 				<PowerFirstRow
 					uuid={power.uuid}
 					name={power.name ?? ''}
+					displayName={power.displayName ?? ''}
 					usage={power.system.usage}
 					img={power.img ?? ''}
 					hint=""

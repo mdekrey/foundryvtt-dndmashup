@@ -13,6 +13,7 @@ export function CommonActionRow({ actor, power }: { actor: ActorDocument; power:
 	return (
 		<PowerFirstRow
 			name={power.name}
+			displayName={power.name}
 			img={power.img}
 			hint={power.hint}
 			usage={power.usage}

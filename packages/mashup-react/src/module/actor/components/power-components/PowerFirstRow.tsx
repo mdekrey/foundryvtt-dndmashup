@@ -15,6 +15,7 @@ const usageTypeColors: Record<PowerUsage, string> = {
 
 export function PowerFirstRow({
 	uuid,
+	displayName,
 	name,
 	usage,
 	img,
@@ -30,6 +31,7 @@ export function PowerFirstRow({
 	onRemove,
 }: {
 	uuid?: string;
+	displayName: string;
 	name: string;
 	usage: PowerUsage;
 	img: string;
@@ -71,10 +73,10 @@ export function PowerFirstRow({
 						type="button"
 						className="focus:ring-blue-bright-600 focus:ring-1 flex-grow text-left whitespace-nowrap"
 						onClick={onClickName}>
-						{name}
+						{displayName}
 					</button>
 				) : (
-					<span className="self-center">{name}</span>
+					<span className="self-center">{displayName}</span>
 				)}
 			</td>
 			<td className={classNames({ 'opacity-50': !isReady })}>{hint}</td>
