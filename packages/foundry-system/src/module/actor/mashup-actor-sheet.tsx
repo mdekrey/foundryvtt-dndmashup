@@ -1,7 +1,7 @@
 import { ActorSheetJsx } from './templates/sheet';
 import { ReactApplicationMixin } from '../../core/react/react-application-mixin';
 import { ItemDataSource } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData';
-import { MashupItem, MashupItemBase } from '../item/mashup-item';
+import { MashupItemBase } from '../item/mashup-item';
 import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
 import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
 import { isActorType } from './templates/isActorType';
