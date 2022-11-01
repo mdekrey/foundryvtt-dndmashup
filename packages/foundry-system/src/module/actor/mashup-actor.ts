@@ -53,6 +53,7 @@ import { MashupItemEquipment } from '../item/subtypes/equipment/class';
 import { isActorType } from './templates/isActorType';
 import { simplifyDice } from '../dice';
 import { MashupActiveEffect } from '../active-effect';
+import { sendPlainChatMesage } from '../chat/sendChatMessage';
 
 const singleItemTypes: Array<(itemSource: SourceConfig['Item']) => boolean> = [
 	isClassSource,
@@ -415,8 +416,10 @@ export class MashupActor extends Actor implements ActorDocument {
 		}
 		if (isTemporary) {
 			changes['system.health.temporaryHp'] = Math.max(health.temporaryHp, effectiveAmount);
+			await sendPlainChatMesage(this, `${this.displayName} "gained" ${effectiveAmount} temporary hit points.`);
 		} else {
 			changes['system.health.hp.value'] = Math.min(health.hp.max, health.hp.value + effectiveAmount);
+			await sendPlainChatMesage(this, `${this.displayName} healed ${effectiveAmount} hit points.`);
 		}
 		await this.update(changes);
 	}

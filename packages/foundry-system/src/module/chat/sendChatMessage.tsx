@@ -6,6 +6,27 @@ import { renderReactToHtml } from '../../core/react/renderReactToHtml';
 import { chatAttachments, ChatMessageProps } from '.';
 import { FoundryWrapper } from '../../components/foundry/foundry-wrapper';
 
+export async function sendPlainChatMesage(speaker: ActorDocument | null, message: string): Promise<unknown> {
+	if (!isGame(game) || !game.user) return;
+
+	const elem = document.createElement('div');
+	elem.innerText = message;
+	const html = elem.innerHTML;
+
+	return ChatMessage.create({
+		user: game.user.id,
+		type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+		speaker: speaker
+			? {
+					actor: speaker.id,
+					token: speaker.token?.id,
+					alias: speaker.name,
+			  }
+			: {},
+		content: html,
+	});
+}
+
 export async function sendChatMessage<T extends MashupChatMessageType>(
 	messageType: T,
 	speaker: ActorDocument | null,

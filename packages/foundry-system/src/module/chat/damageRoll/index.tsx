@@ -4,6 +4,7 @@ import { DamageType } from '@foundryvtt-dndmashup/mashup-rules';
 import { chatMessageRegistry, DamageResult, PowerDocument } from '@foundryvtt-dndmashup/mashup-react';
 import { fromMashupId, isGame } from '../../../core/foundry';
 import { MashupActor } from '../../actor';
+import { sendPlainChatMesage } from '../sendChatMessage';
 
 chatMessageRegistry.damageResult = async (actor, { result, powerId, damageTypes, flavor }) => {
 	return { flags: { roll: result, powerId, damageTypes }, flavor, sound: 'sounds/dice.wav' };
@@ -36,13 +37,13 @@ chatAttachments['damageResult'] = ({ flags: { roll, powerId, damageTypes } }) =>
 		await Promise.all(
 			tokens.map(async (token) => {
 				if (!token.actor) return;
-				applyDamage(token.actor, value, damageTypes as never);
+				await applyDamage(token.actor, value, damageTypes as never);
 			})
 		);
 	}
 };
 
-function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType[]) {
+async function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType[]) {
 	if (amount === 0) return;
 	const health = actor.system.health;
 
@@ -67,5 +68,6 @@ function applyDamage(actor: MashupActor, amount: number, damageTypes: DamageType
 	const data: Partial<Record<'data.health.hp.value' | 'data.health.temporaryHp', number>> = {};
 	if (tempHpRemaining !== health.temporaryHp) data['data.health.temporaryHp'] = tempHpRemaining;
 	if (healthRemaining !== health.hp.value) data['data.health.hp.value'] = healthRemaining;
+	await sendPlainChatMesage(actor, `${actor.displayName} took ${effectiveAmount} damage.`);
 	actor.update(data);
 }
