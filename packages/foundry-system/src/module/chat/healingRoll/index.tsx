@@ -29,12 +29,12 @@ chatAttachments['healingResult'] = ({ flags: { roll, powerId, isTemporary, heali
 			power={power}
 			isTemporary={isTemporary as boolean}
 			spendHealingSurge={spendHealingSurge as boolean}
-			onApply={() => rollData.total && handleApplyHealing(rollData.total)}
+			onApply={() => typeof rollData.total === 'number' && handleApplyHealing(rollData.total)}
 		/>
 	);
 
 	async function handleApplyHealing(value: number) {
-		if (value === 0) return;
+		if (value === 0 && !healingSurge) return;
 		if (!isGame(game)) return;
 		const tokens = game.canvas?.tokens?.controlled ?? [];
 
