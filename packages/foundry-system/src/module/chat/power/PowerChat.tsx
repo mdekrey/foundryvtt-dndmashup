@@ -49,7 +49,7 @@ function PowerChatContents({
 			<div className="w-full border-4 border-white">
 				<PowerPreview item={item} simple />
 			</div>
-			{actor.isOwner ? <PowerOptions power={item} actor={actor} {...effectProps} /> : null}
+			<PowerOptions power={item} actor={actor} {...effectProps} />
 			<div className="ml-4">
 				{subPowers.map((subPower, index) => (
 					<PowerChatContents actor={actor} item={subPower} {...effectProps} key={subPower.id ?? index} />
