@@ -84,10 +84,10 @@ function toResult(
 	const defenseValue = bonuses
 		? sumFinalBonuses(bonuses)
 		: token?.actor?.derivedCache.bonuses.getValue(`defense-${defense}`);
-	console.log(tokenId, defenseValue, bonuses);
+	console.log(tokenId, defenseValue, bonuses, d20Term);
 	if (!defenseValue || roll.total === undefined) return null;
-	if (d20Term && d20Term.number === 20 && roll.total >= defenseValue) return 'critical-hit';
-	if (d20Term && d20Term.number === 20) return 'maybe-critical-hit';
+	if (d20Term && d20Term.total === 20 && roll.total >= defenseValue) return 'critical-hit';
+	if (d20Term && d20Term.total === 20) return 'maybe-critical-hit';
 	if (defenseValue > roll.total) return 'miss';
 	return 'hit';
 }
