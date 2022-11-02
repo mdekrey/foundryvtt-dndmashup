@@ -99,7 +99,7 @@ function ToolExtraEffects({
 	// TODO: Tool enhancement to damage double-dips here
 	return additionalEffects.hit || additionalEffects['critical-hit'] ? (
 		<>
-			<p>Additional effects:</p>
+			<p>Additional effects from selected tool (when applicable):</p>
 			{additionalEffects.hit && (
 				<InstantaneousEffectSection
 					effect={additionalEffects.hit}
