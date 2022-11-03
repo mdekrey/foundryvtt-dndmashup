@@ -29,7 +29,7 @@ import { SimpleDocument, SimpleDocumentData, TypedData } from '@foundryvtt-dndma
 
 export type MashupItemBaseType = typeof MashupItemBase & (new (...args: any[]) => MashupItemBase);
 
-const itemCollectionPath = 'data.items';
+const itemCollectionPath = 'system.items';
 
 export class MashupItemBase extends Item implements ItemDocument {
 	// TODO: schema support doesn't seem to be working in v9
