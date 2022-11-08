@@ -4,6 +4,7 @@
 	"projects": {
 		"components": "packages/components",
 		"core": "packages/core",
+		"foundry-bridge-api": "packages/foundry-bridge-api",
 		"foundry-compat": "packages/foundry-compat",
 		"foundry-system": "packages/foundry-system",
 		"mashup-react": "packages/mashup-react",

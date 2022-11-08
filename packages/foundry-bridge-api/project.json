@@ -1,0 +1,52 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/foundry-bridge-api/src",
+	"projectType": "library",
+	"targets": {
+		"generate-openapi": {
+			"executor": "nx:run-script",
+			"inputs": ["{workspaceRoot}/schemas/foundry-bridge.yaml"],
+			"outputs": ["{projectRoot}/src/api"],
+			"options": {
+				"script": "generate-openapi"
+			}
+		},
+		"build": {
+			"executor": "@nrwl/web:rollup",
+			"dependsOn": ["generate-openapi"],
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/packages/foundry-bridge-api",
+				"tsConfig": "packages/foundry-bridge-api/tsconfig.lib.json",
+				"project": "packages/foundry-bridge-api/package.json",
+				"entryFile": "packages/foundry-bridge-api/src/index.ts",
+				"external": ["react/jsx-runtime"],
+				"rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+				"compiler": "swc",
+				"assets": [
+					{
+						"glob": "packages/foundry-bridge-api/README.md",
+						"input": ".",
+						"output": "."
+					}
+				]
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/foundry-bridge-api/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/packages/foundry-bridge-api"],
+			"options": {
+				"jestConfig": "packages/foundry-bridge-api/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	},
+	"tags": []
+}

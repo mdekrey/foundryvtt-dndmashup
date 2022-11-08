@@ -17,6 +17,7 @@
 		"paths": {
 			"@foundryvtt-dndmashup/components": ["packages/components/src/index.ts"],
 			"@foundryvtt-dndmashup/core": ["./packages/core/src/index.ts"],
+			"@foundryvtt-dndmashup/foundry-bridge-api": ["packages/foundry-bridge-api/src/index.ts"],
 			"@foundryvtt-dndmashup/foundry-compat": ["packages/foundry-compat/src/index.ts"],
 			"@foundryvtt-dndmashup/mashup-react": ["./packages/mashup-react/src/index.ts"],
 			"@foundryvtt-dndmashup/mashup-rules": ["packages/mashup-rules/src/index.ts"]

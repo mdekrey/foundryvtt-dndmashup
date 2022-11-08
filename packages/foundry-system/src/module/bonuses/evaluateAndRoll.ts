@@ -44,6 +44,6 @@ export function evaluateBonusByType(
 	return finalBonuses;
 }
 
-function evaluateAmount(amount: string | number, context: ConditionRuleContext) {
+export function evaluateAmount(amount: string | number, context: ConditionRuleContext) {
 	return typeof amount === 'number' ? amount : new Roll(amount, context).roll({ async: false })._total;
 }

@@ -1,0 +1,8 @@
+{
+	"name": "@foundryvtt-dndmashup/foundry-bridge-api",
+	"version": "0.0.1",
+	"type": "commonjs",
+	"scripts": {
+		"generate-openapi": "openapi-codegen-typescript ../../schemas/foundry-bridge.yaml src/api/"
+	}
+}

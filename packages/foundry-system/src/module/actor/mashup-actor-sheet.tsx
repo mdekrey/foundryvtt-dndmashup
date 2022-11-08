@@ -6,6 +6,8 @@ import { SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
 import { getImportExportButtons } from '../../core/foundry/getImportExportButtons';
 import { isActorType } from './templates/isActorType';
 import { DropData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/abstract/client-document';
+import { getCharacterSheet } from '../../server/get-character-sheet';
+import { SpecificActor } from './mashup-actor';
 
 export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	static override get defaultOptions() {
@@ -27,6 +29,14 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 	protected override _getHeaderButtons(): Application.HeaderButton[] {
 		const result = super._getHeaderButtons();
 		result.unshift(...getImportExportButtons(this.actor));
+
+		if (this.actor.type === 'pc')
+			result.unshift({
+				label: 'Character Sheet',
+				class: 'item-download-data',
+				icon: 'fas fa-address-card',
+				onclick: () => getCharacterSheet(this.actor as SpecificActor<'pc'>),
+			});
 		return result;
 	}
 

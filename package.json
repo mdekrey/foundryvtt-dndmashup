@@ -41,6 +41,7 @@
 		"@nrwl/react": "^14.4.3",
 		"@nrwl/web": "14.4.3",
 		"@nrwl/workspace": "14.4.3",
+		"@principlestudios/openapi-codegen-typescript": "^0.4.0",
 		"@rollup/plugin-url": "^7.0.0",
 		"@svgr/rollup": "^6.3.1",
 		"@swc/cli": "~0.1.55",
@@ -96,5 +97,8 @@
 	"lint-staged": {
 		"*.(ts|js|cjs)": "nx run-many --all --target=lint --skip-nx-cache",
 		"*.(json|yml|css)": "prettier --write"
+	},
+	"dependencies": {
+		"tslib": "^2.3.0"
 	}
 }

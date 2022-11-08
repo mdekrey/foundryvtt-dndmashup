@@ -62,7 +62,7 @@ export type PcDetails = ActorDetails & {
 	age: string;
 	pronouns: string;
 	height: string;
-	width: string;
+	weight: string;
 	deity: string;
 	adventuringCompany: string;
 };

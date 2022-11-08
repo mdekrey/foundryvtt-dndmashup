@@ -1,0 +1,174 @@
+openapi: "3.0.2"
+info:
+  title: Mashup Web Bridge
+  version: "1.0"
+servers:
+  - url: /
+paths:
+  /foundry/actor:
+    post:
+      operationId: submitActor
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: { $ref: "#/components/schemas/Actor" }
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema: { type: string }
+        "400":
+          description: Bad Request
+        "409":
+          description: An error occurred, try again later.
+components:
+  schemas:
+    Actor:
+      type: object
+      properties:
+        name: { type: string }
+        level: { type: integer }
+        class: { type: string }
+        paragonPath: { type: string }
+        epicDestiny: { type: string }
+        totalXp: { type: integer }
+
+        race: { type: string }
+        size: { type: string }
+        age: { type: string }
+        height: { type: string }
+        weight: { type: string }
+        alignment: { type: string }
+        pronouns: { type: string }
+        deity: { type: string }
+        adventuringCompany: { type: string }
+
+        speed: { $ref: "#/components/schemas/Modifiers" }
+
+        abilities: { $ref: "#/components/schemas/AbilityScores" }
+
+        defenses:
+          type: object
+          required:
+            - ac
+            - acConditional
+            - fort
+            - fortConditional
+            - refl
+            - reflConditional
+            - will
+            - willConditional
+          properties:
+            ac: { $ref: "#/components/schemas/Modifiers" }
+            acConditional:
+              type: array
+              items: { type: string }
+            fort: { $ref: "#/components/schemas/Modifiers" }
+            fortConditional:
+              type: array
+              items: { type: string }
+            refl: { $ref: "#/components/schemas/Modifiers" }
+            reflConditional:
+              type: array
+              items: { type: string }
+            will: { $ref: "#/components/schemas/Modifiers" }
+            willConditional:
+              type: array
+              items: { type: string }
+
+        maxHp: { type: integer }
+        healingSurgeValue: { type: integer }
+        surgesPerDay: { type: integer }
+
+        savingThrowModifiers:
+          type: array
+          items: { type: string }
+        resistances:
+          type: array
+          items: { type: string }
+
+        raceFeatures:
+          type: array
+          items: { type: string }
+        classFeatures:
+          type: array
+          items: { type: string }
+        feats:
+          type: array
+          items: { type: string }
+        weaponArmorProficiencies:
+          type: array
+          items: { type: string }
+        languages:
+          type: array
+          items: { type: string }
+
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/Skill" }
+
+        currency: { $ref: "#/components/schemas/Currency" }
+
+        equipment:
+          type: array
+          items: { type: string }
+    ActorDetails:
+      type: object
+      properties:
+        level: { type: integer }
+        exp: { type: integer }
+        size: { type: string }
+        age: { type: string }
+        pronouns: { type: string }
+        height: { type: string }
+        width: { type: string }
+        deity: { type: string }
+        adventuringCompany: { type: string }
+        biography: { type: string }
+    AbilityScores:
+      type: object
+      required: [str, con, dex, int, wis, cha]
+      properties:
+        str: { type: integer }
+        con: { type: integer }
+        dex: { type: integer }
+        int: { type: integer }
+        wis: { type: integer }
+        cha: { type: integer }
+    Currency:
+      type: object
+      required: [cp, sp, gp, pp, ad]
+      properties:
+        cp: { type: integer }
+        sp: { type: integer }
+        gp: { type: integer }
+        pp: { type: integer }
+        ad: { type: integer }
+
+    Power:
+      type: object
+      required:
+        - name
+      properties:
+        name: { type: string }
+    Skill:
+      type: object
+      required:
+        - name
+        - modifiers
+      properties:
+        name: { type: string }
+        modifiers: { $ref: "#/components/schemas/Modifiers" }
+    Modifiers:
+      type: array
+      items: { $ref: "#/components/schemas/Modifier" }
+    Modifier:
+      type: object
+      required:
+        - type
+        - amount
+      properties:
+        type: { type: string }
+        amount: { type: integer }
