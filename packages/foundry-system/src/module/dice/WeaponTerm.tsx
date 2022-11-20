@@ -28,7 +28,11 @@ export class WeaponTerm extends ParentheticalTerm {
 		_total?: number;
 		options: RollTerm.Options;
 	}) {
-		super({ term: !isNil(number) ? `${number}*(${weaponDice})` : weaponDice, roll: undefined as never, options });
+		super({
+			term: !isNil(number) ? WeaponTerm.applyNumber(number, weaponDice) : weaponDice,
+			roll: undefined as never,
+			options,
+		});
 		this._total = _total;
 		this._evaluated = !isNil(_total);
 		this.number = number;
@@ -74,5 +78,16 @@ export class WeaponTerm extends ParentheticalTerm {
 			weaponCode: weaponCode,
 			options: { flavor },
 		});
+	}
+
+	static applyNumber(number: number, weaponDice: string) {
+		const matched = DiceTerm.matchTerm(weaponDice);
+		if (!matched) {
+			console.log({ number, weaponDice, expression: 'no match' });
+			return `${number}*(${weaponDice})`;
+		}
+		const diceTerm = DiceTerm.fromMatch(matched);
+		diceTerm.number = diceTerm.number * number;
+		return diceTerm.expression;
 	}
 }
