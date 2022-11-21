@@ -114,6 +114,10 @@ components:
         equipment:
           type: array
           items: { type: string }
+
+        powers:
+          type: array
+          items: { $ref: "#/components/schemas/Power" }
     ActorDetails:
       type: object
       properties:
@@ -151,8 +155,50 @@ components:
       type: object
       required:
         - name
+        - flavorText
+        - display
+        - usage
+        - keywords
+        - actionType
+        - attackType
+        - attackTypeDetails
+        - prerequisite
+        - requirement
+        - trigger
+        - target
+        - attack
+        - isBasic
       properties:
         name: { type: string }
+        flavorText: { type: string }
+        display: { type: string }
+        usage: { type: string }
+        keywords: { type: array, items: { type: string } }
+        actionType: { type: string }
+        attackType:
+          type: string
+          enum: ["Personal", "Ranged", "Melee", "Close", "Area"]
+          nullable: true
+        attackTypeDetails: { type: string }
+        prerequisite: { type: string, nullable: true }
+        requirement: { type: string, nullable: true }
+        trigger: { type: string, nullable: true }
+        target: { type: string, nullable: true }
+        attack: { type: string, nullable: true }
+        rulesText:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/PowerRulesText" },
+          }
+        isBasic: { type: boolean }
+    PowerRulesText:
+      type: object
+      required:
+        - label
+        - text
+      properties:
+        label: { type: string, nullable: true }
+        text: { type: string }
     Skill:
       type: object
       required:

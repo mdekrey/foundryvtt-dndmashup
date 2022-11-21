@@ -12,9 +12,7 @@ import { cardRowFormat, FlavorText, RulesText } from '@foundryvtt-dndmashup/comp
 export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: boolean }) {
 	const applications = useApplicationDispatcher();
 	const { name, system: itemData } = item;
-	const rulesText = itemData.effects
-		.flatMap((effect, index) => effectToRules(effect, index === 0))
-		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);
+	const rulesText = effectsToRules(itemData.effects);
 	const firstEffect: PowerEffect | null = itemData.effects[0] ?? null;
 	const flavorText = itemData.flavorText ? <FlavorText>{itemData.flavorText}</FlavorText> : null;
 	function onDetails() {
@@ -94,7 +92,13 @@ export function PowerPreview({ item, simple }: { item: PowerDocument; simple?: b
 	);
 }
 
-type RuleEntry = { label?: string | null; text: React.ReactNode };
+type RuleEntry = { label: string | null; text: string };
+
+export function effectsToRules(effects: PowerEffect[]) {
+	return effects
+		.flatMap((effect, index) => effectToRules(effect, index === 0))
+		.filter((e: null | RuleEntry): e is RuleEntry => e !== null);
+}
 
 function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | RuleEntry> {
 	const attackName = effect.name;
@@ -114,7 +118,7 @@ function effectToRules(effect: PowerEffect, isFirst: boolean): Array<null | Rule
 	];
 }
 
-function toAttackRollText(attackRoll: AttackRoll) {
+export function toAttackRollText(attackRoll: AttackRoll) {
 	return `${attackRoll.attack} vs. ${defense(attackRoll.defense)}`;
 }
 
@@ -194,12 +198,17 @@ function powerUsage(usage: PowerUsage, rechargeTrigger: Trigger | null) {
 	}
 }
 
-function actionType(actionType: ActionType) {
+type ActionTypeLegacy = ActionType | 'immediate';
+function actionType(actionType: ActionTypeLegacy) {
 	switch (actionType) {
 		case 'free':
 			return 'Free action';
 		case 'immediate':
-			return 'Immediate action';
+			return 'Immediate (???)';
+		case 'immediate-interrupt':
+			return 'Immediate Interrupt';
+		case 'immediate-reaction':
+			return 'Immediate Reaction';
 		case 'minor':
 			return 'Minor action';
 		case 'standard':

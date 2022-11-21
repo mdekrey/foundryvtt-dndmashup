@@ -33,10 +33,16 @@ export const actionTypeOptions: SelectItem<ActionType>[] = [
 		typeaheadLabel: 'Opportunity',
 	},
 	{
-		value: 'immediate',
-		key: 'immediate',
-		label: 'Immediate',
-		typeaheadLabel: 'Immediate',
+		value: 'immediate-interrupt',
+		key: 'immediate-interrupt',
+		label: 'Immediate Interrupt',
+		typeaheadLabel: 'Immediate Interrupt',
+	},
+	{
+		value: 'immediate-reaction',
+		key: 'immediate-reaction',
+		label: 'Immediate Reaction',
+		typeaheadLabel: 'Immediate Reaction',
 	},
 	{
 		value: 'none',

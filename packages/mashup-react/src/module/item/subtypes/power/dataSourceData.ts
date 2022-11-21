@@ -55,7 +55,15 @@ export type PowerUsage =
 	| 'item-consumable'
 	| 'item-healing-surge'
 	| 'other';
-export type ActionType = 'standard' | 'move' | 'minor' | 'free' | 'opportunity' | 'immediate' | 'none';
+export type ActionType =
+	| 'standard'
+	| 'move'
+	| 'minor'
+	| 'free'
+	| 'opportunity'
+	| 'immediate-interrupt'
+	| 'immediate-reaction'
+	| 'none';
 
 export type EffectTypeAndRange =
 	| MeleeEffectTypeAndRange

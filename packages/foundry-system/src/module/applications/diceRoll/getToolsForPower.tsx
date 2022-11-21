@@ -11,23 +11,30 @@ import { intersection } from 'lodash/fp';
 export const toolKeywords = ['weapon', 'implement'] as const;
 export const heldSlots: EquippedItemSlot[] = ['primary-hand', 'off-hand'];
 
-export function getToolsForPower(actor: ActorDocument, power: PowerDocument) {
+export function getToolsForPower(
+	actor: ActorDocument,
+	power: PowerDocument,
+	{ requireEquipped = true }: { requireEquipped?: boolean } = {}
+) {
 	const toolType =
 		(power
 			? (intersection(toolKeywords, power.system.keywords)[0] as typeof toolKeywords[number] | undefined)
 			: null) ?? null;
 	const isCorrectTool: (heldItem: EquipmentDocument) => heldItem is EquipmentDocument<'weapon' | 'implement'> =
-		toolType === 'weapon' ? isWeapon : isImplement(actor.derivedCache.lists.getValue('implements'));
+		toolType === 'weapon' ? isWeapon(power) : isImplement(actor.derivedCache.lists.getValue('implements'));
 	const usesTool = toolType !== null;
 	if (!usesTool) return undefined;
 	return actor.items.contents
 		.filter(isEquipment)
-		.filter((eq) => eq.system.equipped.some((slot) => heldSlots.includes(slot)))
+		.filter((eq) => !requireEquipped || eq.system.equipped.some((slot) => heldSlots.includes(slot)))
 		.filter(isCorrectTool);
 }
 
-function isWeapon(item: EquipmentDocument): item is EquipmentDocument<'weapon' | 'implement'> {
-	return item.system.itemSlot === 'weapon';
+function isWeapon(power: PowerDocument) {
+	return (item: EquipmentDocument): item is EquipmentDocument<'weapon' | 'implement'> => {
+		// TODO - filter the weapons allowed based on the power
+		return item.system.itemSlot === 'weapon';
+	};
 }
 
 const kebab = /[^A-Za-z]+/g;

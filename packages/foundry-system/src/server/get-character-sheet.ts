@@ -1,26 +1,50 @@
-import { isFeature, ItemDocument, SkillEntry } from '@foundryvtt-dndmashup/mashup-react';
+import {
+	ActionType,
+	effectsToRules,
+	EffectTypeAndRange,
+	effectTypeAndRangeText,
+	EquipmentDocument,
+	isFeature,
+	isPower,
+	ItemDocument,
+	PowerDocument,
+	PowerEffect,
+	PowerUsage,
+	SkillEntry,
+	toAttackRollText,
+} from '@foundryvtt-dndmashup/mashup-react';
 import { environment } from '../environments/environment';
 import { SpecificActor } from '../module/actor';
 import { MashupItemEquipment } from '../module/item/subtypes/equipment/class';
-import { Actor as ApiActor } from '@foundryvtt-dndmashup/foundry-bridge-api';
-import { damageTypes, FullFeatureBonus, toRuleText } from '@foundryvtt-dndmashup/mashup-rules';
+import { Actor as ApiActor, Power, PowerRulesText } from '@foundryvtt-dndmashup/foundry-bridge-api';
+import { DamageEffect, damageTypes, FullFeatureBonus, toRuleText } from '@foundryvtt-dndmashup/mashup-rules';
 import { evaluateAmount } from '../module/bonuses/evaluateAndRoll';
-import { ensureSign } from '@foundryvtt-dndmashup/core';
+import { ensureSign, neverEver, oxfordComma } from '@foundryvtt-dndmashup/core';
+import { capitalize, uniqBy } from 'lodash/fp';
+import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
+import { getToolsForPower } from '../module/applications/diceRoll/getToolsForPower';
+import { MashupDiceContext } from '../module/dice/MashupDiceContext';
+import { WeaponTerm } from '../module/dice';
 
 const remoteServerUrl = environment.production ? 'https://4e.dekrey.net' : 'https://localhost:5001';
 
 export async function getCharacterSheet(actor: SpecificActor<'pc'>) {
-	const characterSheetPath = (await $.ajax({
-		method: 'POST',
-		url: `${remoteServerUrl}/foundry/actor`,
-		dataType: 'json',
-		contentType: 'application/json',
-		data: JSON.stringify(toActorRequest(actor)),
-	})) as string;
-	window.open(remoteServerUrl + characterSheetPath);
+	try {
+		const characterSheetPath = (await $.ajax({
+			method: 'POST',
+			url: `${remoteServerUrl}/foundry/actor`,
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(await toActorRequest(actor)),
+		})) as string;
+		window.open(remoteServerUrl + characterSheetPath);
+	} catch (ex) {
+		console.error(ex);
+		ui.notifications?.error('Could not generate character sheet - see log');
+	}
 }
 
-function toActorRequest(actor: SpecificActor<'pc'>): ApiActor {
+async function toActorRequest(actor: SpecificActor<'pc'>): Promise<ApiActor> {
 	return {
 		name: actor.name ?? undefined,
 		// bonuses: actor.system.bonuses,
@@ -119,7 +143,201 @@ function toActorRequest(actor: SpecificActor<'pc'>): ApiActor {
 				),
 			]),
 		],
+
+		powers: await actor
+			.allPowers(true)
+			.flatMap((p) => [p, ...(p.items.contents as SimpleDocument[]).filter(isPower)])
+			.map(async (power) => {
+				const firstEffect = power.system.effects[0] ?? null;
+
+				return {
+					name: power.name ?? '',
+					flavorText: power.system.flavorText,
+					display: power.system.type,
+					usage: toStandardUsage(power.system.usage),
+					keywords: power.system.keywords.map(capitalize),
+					actionType: toActionType(power.system.actionType),
+					attackType: toAttackType(firstEffect?.typeAndRange?.type),
+					attackTypeDetails: firstEffect?.typeAndRange ? effectTypeAndRangeText(firstEffect?.typeAndRange, true) : '',
+					prerequisite: power.system.prerequisite ?? null,
+					requirement: power.system.requirement ?? null,
+					trigger: power.system.trigger ?? null,
+					target: firstEffect?.target,
+					attack: firstEffect?.attackRoll ? toAttackRollText(firstEffect?.attackRoll) : null,
+					rulesText: [...effectsToRules(power.system.effects), ...(await weaponCalculations(power, actor))],
+					isBasic: power.system.isBasic,
+				};
+			})
+			.reduce(async (a, b) => [...(await a), await b], Promise.resolve([] as Power[])),
 	};
+}
+
+async function weaponCalculations(power: PowerDocument, actor: SpecificActor<'pc'>): Promise<PowerRulesText[]> {
+	const tools = getToolsForPower(actor, power, { requireEquipped: false });
+	if (!tools?.length) {
+		const calculations = await power.system.effects
+			.map(async (e) => await applyCalculation(e, undefined))
+			.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
+		if (!calculations.length) return [];
+
+		return [{ label: 'Calculated', text: calculations.join(' / ') }];
+	} else {
+		const results = await tools
+			.map(async (tool) => {
+				const calculations = await power.system.effects
+					.map(async (e) => await applyCalculation(e, tool))
+					.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
+				if (!calculations.length) return [];
+
+				return [{ label: tool.name ?? '', text: calculations.join(' / ') }];
+			})
+			.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
+		return uniqBy<PowerRulesText>((v) => `${v.label}: ${v.text}`, results);
+	}
+
+	async function applyCalculation(powerEffect: PowerEffect, tool: EquipmentDocument | undefined) {
+		const result: string[] = [];
+		if (powerEffect.attackRoll) {
+			result.push(
+				toAttackRollText({
+					...powerEffect.attackRoll,
+					attack: await evaluateAttack(powerEffect.attackRoll.attack, tool),
+				})
+			);
+		}
+		if (powerEffect.hit?.damage) {
+			result.push(`hit ${await evaluateDamage(powerEffect.hit.damage, tool)}`);
+		}
+		if (powerEffect.miss?.damage) {
+			result.push(`miss ${await evaluateDamage(powerEffect.miss.damage, tool)}`);
+		}
+		if (powerEffect.name && result.length) {
+			return [`${powerEffect.name} (${result.join(' / ')})`];
+		}
+		return result;
+	}
+
+	async function evaluateAttack(attackBase: string, tool: EquipmentDocument | undefined) {
+		const context: MashupDiceContext = {
+			actor,
+			item: tool,
+		};
+		const bonusesFromTool =
+			tool
+				?.allGrantedBonuses(true)
+				?.filter((b) => b.target === 'attack-roll' && !b.condition)
+				.map((b) => `+ ${b.amount}`)
+				.join('') ?? '';
+		return ensureSign(await rollFormula(attackBase + bonusesFromTool, context));
+	}
+
+	async function evaluateDamage(damage: DamageEffect, tool: EquipmentDocument | undefined) {
+		const context: MashupDiceContext = {
+			actor,
+			item: tool,
+		};
+		const bonusesFromTool =
+			tool
+				?.allGrantedBonuses(true)
+				?.filter((b) => b.target === 'damage' && !b.condition)
+				.map((b) => `+ ${b.amount}`)
+				.join('') ?? '';
+		return `${await rollFormula(damage.damage + bonusesFromTool, context)} ${oxfordComma(damage.damageTypes)} damage`;
+	}
+}
+
+async function rollFormula(formula: string, context: MashupDiceContext) {
+	let roll = Roll.create(formula, context);
+	if (roll.isDeterministic) {
+		await roll.evaluate({ async: true });
+		return (roll.total ?? 0).toFixed(0);
+	}
+	roll = Roll.fromTerms(await combineTerms(await simplifyTerms(roll.terms, context), context));
+	return roll.formula;
+}
+
+async function simplifyTerms(terms: RollTerm[], context: MashupDiceContext): Promise<RollTerm[]> {
+	return terms
+		.map(async (term): Promise<RollTerm> => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (term instanceof WeaponTerm) return DiceTerm.fromMatch(DiceTerm.matchTerm(term.term)!);
+			return term;
+		})
+		.reduce(async (a, b) => [...(await a), await b], Promise.resolve<RollTerm[]>([]));
+}
+async function combineTerms(terms: RollTerm[], context: MashupDiceContext): Promise<RollTerm[]> {
+	const result: RollTerm[] = [];
+	let currentDeterministic: RollTerm[] = [];
+	for (const term of terms) {
+		if (term.isDeterministic) currentDeterministic.push(term);
+		else {
+			await determine();
+			result.push(term);
+		}
+	}
+	await determine();
+	return result;
+
+	async function determine() {
+		if (currentDeterministic.length === 0) return;
+		if (currentDeterministic.length === 1 && currentDeterministic[0] instanceof OperatorTerm) {
+			result.push(...currentDeterministic);
+			return;
+		}
+		const determined = await rollFormula(Roll.fromTerms(currentDeterministic).formula, context);
+		currentDeterministic = [];
+		const next = Roll.parse(determined, context);
+		if (result.length && !(next[0] instanceof OperatorTerm)) {
+			result.push(new OperatorTerm({ operator: '+' }));
+		}
+		result.push(...next);
+	}
+}
+
+function toStandardUsage(usage: PowerUsage) {
+	switch (usage) {
+		case 'at-will':
+			return 'At-Will';
+		case 'encounter':
+			return 'Encounter';
+		case 'daily':
+			return 'Daily';
+		case 'item':
+			return 'Item';
+		case 'item-consumable':
+			return 'Item (consumable)';
+		case 'item-healing-surge':
+			return 'Item (healing surge)';
+		case 'other':
+			return 'Special';
+		default:
+			return neverEver(usage);
+	}
+}
+type ActionTypeLegacy = ActionType | 'immediate';
+function toActionType(actionType: ActionTypeLegacy) {
+	switch (actionType) {
+		case 'standard':
+			return 'Standard';
+		case 'move':
+			return 'Move';
+		case 'minor':
+			return 'Minor';
+		case 'free':
+			return 'Free';
+		case 'opportunity':
+			return 'Opportunity';
+		case 'immediate':
+			return 'Immediate (???)';
+		case 'immediate-interrupt':
+			return 'Immediate Interrupt';
+		case 'immediate-reaction':
+			return 'Immediate Reaction';
+		case 'none':
+			return 'None';
+		default:
+			return neverEver(actionType);
+	}
 }
 function toEquipmentRequest(equipment: MashupItemEquipment) {
 	return equipment.displayName ?? '';
@@ -144,4 +362,24 @@ function toConditionalModifiers(
 }
 function toSkillRequest(skill: SkillEntry) {
 	return { name: skill.name, modifiers: [{ type: 'ranks', amount: skill.ranks }] };
+}
+function toAttackType(type: EffectTypeAndRange['type'] | null | undefined): Power['attackType'] | null {
+	switch (type) {
+		case undefined:
+		case null:
+			return null;
+		case 'melee':
+			return 'Melee';
+		case 'ranged':
+			return 'Ranged';
+		case 'within':
+		case 'close':
+			return 'Close';
+		case 'area':
+			return 'Area';
+		case 'personal':
+			return 'Personal';
+		default:
+			return neverEver(type);
+	}
 }
