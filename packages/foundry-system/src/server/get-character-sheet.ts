@@ -144,54 +144,61 @@ async function toActorRequest(actor: SpecificActor<'pc'>): Promise<ApiActor> {
 			]),
 		],
 
-		powers: await actor
-			.allPowers(true)
-			.flatMap((p) => [p, ...(p.items.contents as SimpleDocument[]).filter(isPower)])
-			.map(async (power) => {
-				const firstEffect = power.system.effects[0] ?? null;
+		powers: await Promise.all(
+			actor
+				.allPowers(true)
+				.flatMap((p) => [p, ...(p.items.contents as SimpleDocument[]).filter(isPower)])
+				.map((p) => toPower(p, actor))
+		),
+	};
+}
 
-				return {
-					name: power.name ?? '',
-					flavorText: power.system.flavorText,
-					display: power.system.type,
-					usage: toStandardUsage(power.system.usage),
-					keywords: power.system.keywords.map(capitalize),
-					actionType: toActionType(power.system.actionType),
-					attackType: toAttackType(firstEffect?.typeAndRange?.type),
-					attackTypeDetails: firstEffect?.typeAndRange ? effectTypeAndRangeText(firstEffect?.typeAndRange, true) : '',
-					prerequisite: power.system.prerequisite ?? null,
-					requirement: power.system.requirement ?? null,
-					trigger: power.system.trigger ?? null,
-					target: firstEffect?.target,
-					attack: firstEffect?.attackRoll ? toAttackRollText(firstEffect?.attackRoll) : null,
-					rulesText: [...effectsToRules(power.system.effects), ...(await weaponCalculations(power, actor))],
-					isBasic: power.system.isBasic,
-				};
-			})
-			.reduce(async (a, b) => [...(await a), await b], Promise.resolve([] as Power[])),
+async function toPower(power: PowerDocument, actor: SpecificActor<'pc'>): Promise<Power> {
+	const firstEffect = power.system.effects[0] ?? null;
+
+	return {
+		name: power.name ?? '',
+		flavorText: power.system.flavorText,
+		display: power.system.type,
+		usage: toStandardUsage(power.system.usage),
+		keywords: power.system.keywords.map(capitalize),
+		actionType: toActionType(power.system.actionType),
+		attackType: toAttackType(firstEffect?.typeAndRange?.type),
+		attackTypeDetails: firstEffect?.typeAndRange ? effectTypeAndRangeText(firstEffect?.typeAndRange, true) : '',
+		prerequisite: power.system.prerequisite ?? null,
+		requirement: power.system.requirement ?? null,
+		trigger: power.system.trigger ?? null,
+		target: firstEffect?.target,
+		attack: firstEffect?.attackRoll ? toAttackRollText(firstEffect?.attackRoll) : null,
+		rulesText: [...effectsToRules(power.system.effects), ...(await weaponCalculations(power, actor))],
+		isBasic: power.system.isBasic,
+
+		powers: await Promise.all(power.items.contents.filter(isPower).map((p) => toPower(p, actor))),
 	};
 }
 
 async function weaponCalculations(power: PowerDocument, actor: SpecificActor<'pc'>): Promise<PowerRulesText[]> {
 	const tools = getToolsForPower(actor, power, { requireEquipped: false });
 	if (!tools?.length) {
-		const calculations = await power.system.effects
-			.map(async (e) => await applyCalculation(e, undefined))
-			.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
-		if (!calculations.length) return [];
+		const calculations = (
+			await Promise.all(power.system.effects.map(async (e) => await applyCalculation(e, undefined)))
+		).filter(Boolean);
+		if (!calculations.length || !calculations.join(' / ')) return [];
 
 		return [{ label: 'Calculated', text: calculations.join(' / ') }];
 	} else {
-		const results = await tools
-			.map(async (tool) => {
-				const calculations = await power.system.effects
-					.map(async (e) => await applyCalculation(e, tool))
-					.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
-				if (!calculations.length) return [];
+		const results = (
+			await Promise.all(
+				tools.map(async (tool) => {
+					const calculations = (
+						await Promise.all(power.system.effects.map(async (e) => await applyCalculation(e, tool)))
+					).filter(Boolean);
+					if (!calculations.length) return [];
 
-				return [{ label: tool.name ?? '', text: calculations.join(' / ') }];
-			})
-			.reduce(async (a, b) => [...(await a), ...(await b)], Promise.resolve([]));
+					return [{ label: tool.name ?? '', text: calculations.join(' / ') }];
+				})
+			)
+		).flat();
 		return uniqBy<PowerRulesText>((v) => `${v.label}: ${v.text}`, results);
 	}
 
@@ -212,9 +219,9 @@ async function weaponCalculations(power: PowerDocument, actor: SpecificActor<'pc
 			result.push(`miss ${await evaluateDamage(powerEffect.miss.damage, tool)}`);
 		}
 		if (powerEffect.name && result.length) {
-			return [`${powerEffect.name} (${result.join(' / ')})`];
+			return `${powerEffect.name} (${result.join(', ')})`;
 		}
-		return result;
+		return result.join(', ');
 	}
 
 	async function evaluateAttack(attackBase: string, tool: EquipmentDocument | undefined) {
@@ -257,13 +264,13 @@ async function rollFormula(formula: string, context: MashupDiceContext) {
 }
 
 async function simplifyTerms(terms: RollTerm[], context: MashupDiceContext): Promise<RollTerm[]> {
-	return terms
-		.map(async (term): Promise<RollTerm> => {
+	return Promise.all(
+		terms.map(async (term): Promise<RollTerm> => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			if (term instanceof WeaponTerm) return DiceTerm.fromMatch(DiceTerm.matchTerm(term.term)!);
 			return term;
 		})
-		.reduce(async (a, b) => [...(await a), await b], Promise.resolve<RollTerm[]>([]));
+	);
 }
 async function combineTerms(terms: RollTerm[], context: MashupDiceContext): Promise<RollTerm[]> {
 	const result: RollTerm[] = [];

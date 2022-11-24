@@ -186,11 +186,12 @@ components:
         target: { type: string, nullable: true }
         attack: { type: string, nullable: true }
         rulesText:
-          {
-            type: array,
-            items: { $ref: "#/components/schemas/PowerRulesText" },
-          }
+          type: array
+          items: { $ref: "#/components/schemas/PowerRulesText" }
         isBasic: { type: boolean }
+        powers:
+          type: array
+          items: { $ref: "#/components/schemas/Power" }
     PowerRulesText:
       type: object
       required:
