@@ -33,7 +33,7 @@ export class MashupActorSheet extends ReactApplicationMixin(ActorSheet) {
 		if (this.actor.type === 'pc')
 			result.unshift({
 				label: 'Character Sheet',
-				class: 'item-download-data',
+				class: 'actor-export-sheet',
 				icon: 'fas fa-address-card',
 				onclick: () => getCharacterSheet(this.actor as SpecificActor<'pc'>),
 			});

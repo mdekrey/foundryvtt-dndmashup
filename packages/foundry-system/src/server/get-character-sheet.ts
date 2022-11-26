@@ -17,8 +17,15 @@ import { environment } from '../environments/environment';
 import { SpecificActor } from '../module/actor';
 import { MashupItemEquipment } from '../module/item/subtypes/equipment/class';
 import { Actor as ApiActor, Power, PowerRulesText } from '@foundryvtt-dndmashup/foundry-bridge-api';
-import { DamageEffect, damageTypes, FullFeatureBonus, toRuleText } from '@foundryvtt-dndmashup/mashup-rules';
-import { evaluateAmount } from '../module/bonuses/evaluateAndRoll';
+import {
+	DamageEffect,
+	damageTypes,
+	FeatureBonusWithContext,
+	fromBonusesToFormula,
+	FullFeatureBonus,
+	toRuleText,
+} from '@foundryvtt-dndmashup/mashup-rules';
+import { evaluateAmount, evaluateBonusByType } from '../module/bonuses/evaluateAndRoll';
 import { ensureSign, neverEver, oxfordComma } from '@foundryvtt-dndmashup/core';
 import { capitalize, uniqBy } from 'lodash/fp';
 import { SimpleDocument } from '@foundryvtt-dndmashup/foundry-compat';
@@ -229,13 +236,24 @@ async function weaponCalculations(power: PowerDocument, actor: SpecificActor<'pc
 			actor,
 			item: tool,
 		};
-		const bonusesFromTool =
-			tool
+
+		const bonuses = [
+			...actor.derivedCache.bonuses.getApplied('attack-roll'),
+			...(tool
 				?.allGrantedBonuses(true)
-				?.filter((b) => b.target === 'attack-roll' && !b.condition)
-				.map((b) => `+ ${b.amount}`)
-				.join('') ?? '';
-		return ensureSign(await rollFormula(attackBase + bonusesFromTool, context));
+				?.filter((b) => b.target === 'attack-roll')
+				.map(
+					(b): FeatureBonusWithContext => ({
+						...b,
+						context: { actor, item: tool as never, activeEffectSources: undefined },
+					})
+				) ?? []),
+		];
+		console.log(power.name, bonuses, tool?.name, tool?.allGrantedBonuses(true), tool?.allGrantedBonuses(false));
+
+		return ensureSign(
+			await rollFormula(`${attackBase} + ${fromBonusesToFormula(evaluateBonusByType(bonuses))}`, context)
+		);
 	}
 
 	async function evaluateDamage(damage: DamageEffect, tool: EquipmentDocument | undefined) {
