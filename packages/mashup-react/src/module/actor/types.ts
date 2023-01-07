@@ -69,7 +69,7 @@ export type PcDetails = ActorDetails & {
 
 export type SkillEntry = {
 	name: string;
-	img: string;
+	img: string | null;
 	ranks: number;
 };
 
